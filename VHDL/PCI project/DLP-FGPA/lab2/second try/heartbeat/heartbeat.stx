@@ -1,0 +1,35 @@
+Release 14.1 - xst P.15xf (nt64)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+--> Parameter TMPDIR set to C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/xst/projnav.tmp
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.18 secs
+ 
+--> Parameter xsthdpdir set to C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/xst
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.19 secs
+ 
+--> WARNING:Xst:3164 - Option "-debug" found multiple times in the command line. Only the first occurence is considered.
+
+=========================================================================
+*                          HDL Compilation                              *
+=========================================================================
+Compiling vhdl file "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/heartbeat.vhd" in Library work.
+Entity <heartbeat> compiled.
+ERROR:HDLParsers:808 - "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/heartbeat.vhd" Line 47. + can not have such operands in this context.
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.27 secs
+ 
+--> 
+
+Total memory usage is 209200 kilobytes
+
+Number of errors   :    1 (   0 filtered)
+Number of warnings :    1 (   0 filtered)
+Number of infos    :    0 (   0 filtered)
+

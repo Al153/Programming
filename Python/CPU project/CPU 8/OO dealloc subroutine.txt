@@ -1,0 +1,129 @@
+def tag gp0
+def found gp7
+def cla gp1
+#					def address gp2
+def last_addr gp3
+def two gp4
+def to_compare gp5
+def object_address gp 6
+
+def next_tag gp5
+
+def address_offset gp2
+def data gp3
+def address gp4
+def previous_address gp5
+def next_address gp6
+def max_address gp7
+
+				MOV found zro
+				MOV ind zro
+				LOD cla %end+3
+				ADD cla one 			#ind becomes address for now
+				MOV ind acc
+				LOD last_addr %end+2 @ldd
+				LOD two 2 @ldd
+
+%OO.dallocloop1	SUB ind two
+				CMP acc last_addr @wf
+				CGT E %OO.not_found
+
+				MOV ind acc
+				LOD to_compare 0 #uses ind to index
+				CMP tag to_compare @wf
+					CGT E %OO.dallocend1
+				GTO %OO.dallocloop1 @gd
+
+%OO.dallocend1	ADD ind one
+				MOV ind acc
+				LOD object_address 0 #indexed by ind
+				ADD ind one
+				MOV ind acc
+				
+				CMP cla ind @wf
+					CGT E %OO.dallocexit
+
+				LOD next_tag 0 
+				ADD ind one
+				MOV ind acc
+
+				LOD next_address 0 #indexed by ind 
+				SUB next_address object_address
+				MOV address_offset acc
+				SUB ind one
+				MOV ind acc
+
+
+				SUB ind two
+				MOV previous_address acc
+				MOV address ind #initialize address
+
+#variables needed from here onwards:
+	#Address - gp4
+	#CLA -gp1
+	#Previous address -gp5
+	#Object address - Acc
+	#Address offset -gp2
+	#tag -gp0
+	#data
+	#next address - gp6
+	#max_address
+
+
+
+%OO.dallocloop2	CMP ind cla @wf
+				CGT G %OO.dallocend2
+
+					MOV ind address
+					LOD tag 0
+					MOV ind previous_address
+					STR tag 0
+
+					ADD previous_address one
+					MOV previous_address acc
+					ADD address one
+					MOV address acc
+
+					MOV ind address
+					LOD acc 0				#acc is offset address
+					SUB acc address_offset 
+					LOD ind previous_address
+					STR acc 0
+
+					ADD previous_address one
+					MOV previous_address acc
+					ADD address one
+					MOV address acc					
+
+
+				GTO %OO.dallocloop2 @gr
+
+%OO.dallocend2	MOV address next_address
+				SUB address address_offset
+				MOV ind cla
+				LOD max_address 0 
+
+%OO.dallocloop3	CMP address max_address @wf
+				CGT G %OO.dallocexit
+
+					MOV ind address
+					LOD data 0
+					MOV ind previous_address
+					STR data 0
+
+					ADD previous_address one
+					MOV previous_address acc
+					ADD address one
+					MOV address acc		
+
+				GTO OO>dallocloop3
+
+
+%OO.dallocexit 	SUB cla two
+				MOV ind zro
+				STR acc %end+2
+				GTO jmp @gr
+
+%OO.address 		data 0
+%OO.previous_address data 0
+

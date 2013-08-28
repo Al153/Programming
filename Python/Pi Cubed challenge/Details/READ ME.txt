@@ -1,0 +1,67 @@
+Hi, and welcome to the Algomac 7.35 (Algorithm machine).
+
+This is Alexander Taylor's entry to the Pi Cubed programming challenge
+Algomac is a 16-bit CPU simulator, specifically for exploring the idea of
+algorithms and computer science.The Algomac 7.35 is a bridge between the Algomac 7.3
+and 7.4, due to it containing the text output functions of 7.4, but not its
+keyboard input (due to both the problem of hiding the TKinter window which 
+takes user input, whilst being platform independent and taking keypresses
+without the need for the user to press "enter" and the fact that taking
+changing user input would stop the program running from being a true algorithm!)
+Hence one day we may be seeing "Opermac - 7.4"!
+
+Because it does not take user input, everything that each algorithm does is
+based on the original state of the machine - much like a very fancy Turing machine.
+
+Specifications:
+
+Architecture: Von Neumann
+
+Main registers: 
+	- 16bit accumulator
+	- 8bit address register
+	- 2x8bit program counter registers
+	- 8bit Flags regsiter
+
+Memory:
+	- 65536 memory locations, each containing 16 bits ~128KiB
+	- 64 word stack
+
+multitasking:
+	- 4 sets of "context" storage - each containing a set of all main registers 
+	    and a stack
+	- Allows for 5 tasks or threads to be switched between (4 in storage, one being run)
+
+ALU:    
+	- 16 functions:
+		ADD
+		SUB
+		MUL
+		DIV
+		MOD
+		rev SUB
+		rev DIV
+		rev MOD
+		AND
+		OR
+		XOR
+		NOT
+		NAND
+		NOR
+		shift up
+		shift down
+
+GPU:	
+	- Outputs to a 256*256 pixel display
+	- Draws -lines according to a direction vector
+		- Lines linking two points
+	- Can toggle the state of each pixel individually
+
+VPU (vector processing unit):
+	-Allows for quick calculations involving coordinate (2*8bit unsigned) and
+	 directional (2*8bit 2's complement) vectors (useful for graphics).
+
+
+
+
+

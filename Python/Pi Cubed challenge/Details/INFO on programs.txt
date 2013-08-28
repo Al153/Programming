@@ -1,0 +1,38 @@
+I have included a small selection of example programs to go with the Algomac.
+To run these, simply start up Algomac and type in the name of the program.
+
+I could have made more complicated programs, utilizing more features, such as
+the VPU or context switching, but this takes alot of time and when it comes to
+debugging, there are three equally likely causes: your assembly code is plain wrong,
+your translation from assembly to machine code and copying is wrong, or there is 
+an actual bug in the python code. Hence my checking that everything works normally 
+takes the shape of incredibly unglamorous simple code.
+
+One program I am trying to implement is a 16 bit version of the SHA-256 algorithm. Also
+I have written a program for the Algomac 7.4 which uses a pair of contexts to firstly look
+for user input 10,000+ times a second then process it so that the program will store what you
+type until you press enter, when it prints out what has been stored.
+
+So here are a few examples which I feel are worth showing (none truly use up many resources,
+yet alone stretch the machine):
+
+Benchmark: checking the speed of the machine: counts up to 65536
+
+Curve: Draws a simple curve by linking (0,0) to (0,255), (0,1) to (0,254) etc
+
+gcd: an implementation of Euclid's algorithm
+
+fibonacci: plots the fibonacci sequnce on a graph
+
+Hello world: Do you really need me to tell you?
+
+Xorshift rng: uses a 16bit Xorshift psuedo random number generator to plot 65536 (or 65535, I can't remember) 
+	points on a graph (and if it plots the same point twice, it turns it on, 
+        then off). This is probably a better benchmark as it involves 2.3million
+        calculations. (Takes 30 seconds on AMD dualcore 2.2ghz laptop, so probably a
+	minute or two on the raspberry pi.
+
+	XOrshift RNG is probably the program here most worth trying out. 
+		- uses the stack to call a function
+
+circle: draws a circle with a predetermined centre and radius, utilizes the VPU

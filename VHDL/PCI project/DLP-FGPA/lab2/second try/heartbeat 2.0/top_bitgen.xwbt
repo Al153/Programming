@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=C:\Xilinx\Projects\DLP-FGPA\lab2\second try\heartbeat 2.0\top.ncd
+OUTFILE=C:\Xilinx\Projects\DLP-FGPA\lab2\second try\heartbeat 2.0\top.bit
+FAMILY=Spartan3E
+PART=xc3s250e-4tq144
+WORKINGDIR=C:\Xilinx\Projects\DLP-FGPA\lab2\second try\heartbeat 2.0
+LICENSE=WebPack
+USER_INFO=210690256_0_0_818

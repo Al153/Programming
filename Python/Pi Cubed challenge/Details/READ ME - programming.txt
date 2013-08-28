@@ -1,0 +1,75 @@
+The Algomac takes instructions which are 16bits in length:
+
+[00000000][00000000]
+
+The first 8 bits are the INSTR or Opcode, containing the actual intruction. 
+The second 8 bits are the parameter - often containing addresses or data.
+
+When programming, instructions are entered in sequence into a .txt file in
+hexadecimal.
+
+e.g.: here is the command for "LOAD ACCUMULATOR FROM ADDRESS 17": 21:11
+
+A typical program may look like this: (A program to add 0x1234 and 0x4321 together)
+
+38:03 - GOTO LINE 03 (uses a part goto - i.e. only the lower 8bits of the PC counter address are changed)
+1234 - DATA A
+4321 - DATA B
+21:01 - LOAD ACCUMULATOR FROM ADDRESS 01
+01:02 - ADD DATA FROM ADDRESS 02 ACCUMULATOR
+25:01 - WRITE ACCUMULATOR TO ADDRESS 01
+00:00 - HALT
+
+
+Programing notes:
+
+When writing a program, you can comment, but only using symbols and capital letters - 
+the preprocessor removes these, but lower case letters and numbers won't be removed
+and will cause bugs.
+
+I typically put most common variables in the addresses straight after address 0, which has a
+GOTO statement in order to give them a place which is not affected by the length of the program,
+which may be changeable.
+
+The parameter part of an instruction, is only 8 bits, but addresses are 16bit, therefore, an
+"address register" is used, which stores the top 8 bits of the address, and can be changed
+via instructions.
+
+If Statements:
+The structure of an if statement is as follows:
+	if accumulator = 5 (etc)
+	instructions....
+	end if [50:00]
+
+The end-if statement tells the CPU when the end of the conditional block ends (like the indentation of python)
+in the event that the if Statement is not true.
+A loop can be created with an if statement and a goto or jump instruction.
+
+
+Contexts and multitasking:
+The context storage contains four contexts, which are effectively values of the PC registers,
+address registers, Accumulator, flags register and stack. When a context is changed, the current 
+registers and stack are swapped with those from the specific context and the CPU continues exectution,
+much like passing the baton in a relay race.
+
+ One use of context switching is to efficiently implement defined functions:
+
+1) Setup
+     ||
+     \/
+2) switch context(0) <-----
+     || 		  |
+     \/			  |
+3) do function		  |
+     ||			  |
+     \/			  |
+4) GOTO -------------------
+
+
+
+Firstly a new context is created at 1)
+This is then switched to and runs setup (preparation of address register, etc)
+This reaches the switch context instruction, and flips the context back to the main
+program. Now whenever the context is changed to this one, the  function runs and 
+flips back to the main program when finished.
+

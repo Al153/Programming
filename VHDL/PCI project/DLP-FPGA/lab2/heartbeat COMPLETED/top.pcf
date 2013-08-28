@@ -1,0 +1,27 @@
+//! **************************************************************************
+// Written by: Map J.33 on Wed Jun 20 23:04:13 2007
+//! **************************************************************************
+
+SCHEMATIC START;
+COMP "heartbeat_led" LOCATE = SITE "P74" LEVEL 1;
+COMP "rst_in" LOCATE = SITE "P128" LEVEL 1;
+COMP "clk_in" LOCATE = SITE "P56" LEVEL 1;
+TIMEGRP Inst_low_dcm_CLKDV_BUF = BEL "Inst_heartbeat/count_0" BEL
+        "Inst_heartbeat/count_1" BEL "Inst_heartbeat/count_2" BEL
+        "Inst_heartbeat/count_3" BEL "Inst_heartbeat/count_4" BEL
+        "Inst_heartbeat/count_5" BEL "Inst_heartbeat/count_6" BEL
+        "Inst_heartbeat/count_7" BEL "Inst_heartbeat/count_8" BEL
+        "Inst_heartbeat/count_9" BEL "Inst_heartbeat/count_10" BEL
+        "Inst_heartbeat/count_11" BEL "Inst_heartbeat/count_12" BEL
+        "Inst_heartbeat/count_13" BEL "Inst_heartbeat/count_14" BEL
+        "Inst_heartbeat/count_15" BEL "Inst_heartbeat/count_16" BEL
+        "Inst_heartbeat/count_17";
+PIN Inst_low_dcm/DCM_SP_INST_pins<10> = BEL "Inst_low_dcm/DCM_SP_INST" PINNAME
+        CLKIN;
+TIMEGRP clk_in = PIN "Inst_low_dcm/DCM_SP_INST_pins<10>";
+TS_clk_in = PERIOD TIMEGRP "clk_in" 167 ns HIGH 50%;
+TS_Inst_low_dcm_CLKDV_BUF = PERIOD TIMEGRP "Inst_low_dcm_CLKDV_BUF" TS_clk_in
+        * 16 HIGH 50%;
+OFFSET = IN 10 ns BEFORE COMP "clk_in";
+OFFSET = OUT 10 ns AFTER COMP "clk_in";
+SCHEMATIC END;

@@ -1,0 +1,7 @@
+xst -intstyle ise -ifn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.xst" -ofn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.syr" 
+xst -intstyle ise -ifn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.xst" -ofn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.syr" 
+xst -intstyle ise -ifn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.xst" -ofn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.syr" 
+xst -intstyle ise -ifn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.xst" -ofn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.syr" 
+xst -intstyle ise -ifn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.xst" -ofn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.syr" 
+xst -intstyle ise -ifn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.xst" -ofn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.syr" 
+xst -intstyle ise -ifn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.xst" -ofn "C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/top_dummy.syr" 

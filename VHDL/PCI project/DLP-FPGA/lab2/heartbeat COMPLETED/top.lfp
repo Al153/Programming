@@ -1,0 +1,5 @@
+# begin LFP file C:\Xilinx\Projects\DLP-FPGA\lab2\heartbeat\top.lfp
+designfile top.vhd
+parttype xc3s250e-4-tq144
+bus_delimiter 0;
+set_busdelim_onsave 1;

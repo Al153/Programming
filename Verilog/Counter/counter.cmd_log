@@ -1,0 +1,21 @@
+xst -intstyle ise -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -ifn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.xst" -ofn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.syr" 
+xst -intstyle ise -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -ifn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.xst" -ofn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.syr" 
+ngdbuild -filter "iseconfig/filter.filter" -intstyle ise -dd _ngo -nt timestamp -i -p xc3s250e-tq144-4 "counter.ngc" counter.ngd  
+map -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -intstyle ise -p xc3s250e-tq144-4 -cm area -ir off -pr off -c 100 -o counter_map.ncd counter.ngd counter.pcf 
+par -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -w -intstyle ise -ol high -t 1 counter_map.ncd counter.ncd counter.pcf 
+trce -filter {C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter} -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml counter.twx counter.ncd -o counter.twr counter.pcf 
+bitgen -filter "iseconfig/filter.filter" -intstyle ise -f counter.ut counter.ncd 
+xst -intstyle ise -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -ifn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.xst" -ofn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.syr" 
+xst -intstyle ise -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -ifn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.xst" -ofn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.syr" 
+ngdbuild -filter "iseconfig/filter.filter" -intstyle ise -dd _ngo -nt timestamp -i -p xc3s250e-tq144-4 "counter.ngc" counter.ngd  
+map -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -intstyle ise -p xc3s250e-tq144-4 -cm area -ir off -pr off -c 100 -o counter_map.ncd counter.ngd counter.pcf 
+par -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -w -intstyle ise -ol high -t 1 counter_map.ncd counter.ncd counter.pcf 
+trce -filter {C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter} -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml counter.twx counter.ncd -o counter.twr counter.pcf 
+bitgen -filter "iseconfig/filter.filter" -intstyle ise -f counter.ut counter.ncd 
+xst -intstyle ise -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -ifn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.xst" -ofn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.syr" 
+xst -intstyle ise -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -ifn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.xst" -ofn "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/counter.syr" 
+ngdbuild -filter "iseconfig/filter.filter" -intstyle ise -dd _ngo -nt timestamp -i -p xc3s250e-tq144-4 "counter.ngc" counter.ngd  
+map -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -intstyle ise -p xc3s250e-tq144-4 -cm area -ir off -pr off -c 100 -o counter_map.ncd counter.ngd counter.pcf 
+par -filter "C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter" -w -intstyle ise -ol high -t 1 counter_map.ncd counter.ncd counter.pcf 
+trce -filter {C:/Users/Al taylor/Documents/Programming/Verilog/Counter/iseconfig/filter.filter} -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml counter.twx counter.ncd -o counter.twr counter.pcf 
+bitgen -filter "iseconfig/filter.filter" -intstyle ise -f counter.ut counter.ncd 

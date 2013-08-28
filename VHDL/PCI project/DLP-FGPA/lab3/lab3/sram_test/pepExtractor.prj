@@ -1,0 +1,5 @@
+work	"heartbeat.vhd"
+work	"low_dcm.vhd"
+work	"mid_dcm.vhd"
+work	"sram_sm.vhd"
+work	"top.vhd"

@@ -1,0 +1,19 @@
+LOD gp0 36 	@ldd
+CMP gp0 zro
+CJP L 2 	#if x<0
+JMP 2		@jd
+HLT
+LOD gp1 2 	@ldd #guess
+LOD gp2 10 	@ldd #number of iterations
+LOD gp4 2 	@ldd #div by 2 for averaging
+
+DIV gp0 gp1
+ADD acc gp1 #gp0 = x, gp1 = guess1, gp2 = iterations, gp3 = guess 2
+DIV acc gp4
+MOV gp1 acc
+
+SUB gp2 one
+MOV gp2 acc
+CMP gp2 zro
+CJP E 2 	
+JMP -18		@jd

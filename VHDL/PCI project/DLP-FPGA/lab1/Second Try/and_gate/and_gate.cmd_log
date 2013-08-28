@@ -1,0 +1,8 @@
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab1/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab1/and_gate.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab1/and_gate.syr" 
+ngdbuild -filter "iseconfig/filter.filter" -intstyle ise -dd _ngo -nt timestamp -i -p xc3s250e-tq144-4 and_gate.ngc and_gate.ngd  
+map -filter "C:/Xilinx/Projects/DLP-FGPA/lab1/iseconfig/filter.filter" -intstyle ise -p xc3s250e-tq144-4 -cm area -ir off -pr off -c 100 -o and_gate_map.ncd and_gate.ngd and_gate.pcf 
+map -filter "C:/Xilinx/Projects/DLP-FGPA/lab1/iseconfig/filter.filter" -intstyle ise -p xc3s250e-tq144-4 -cm area -ir off -pr off -c 100 -o and_gate_map.ncd and_gate.ngd and_gate.pcf 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab1/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab1/and_gate.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab1/and_gate.syr" 
+ngdbuild -filter "iseconfig/filter.filter" -intstyle ise -dd _ngo -nt timestamp -i -p xc3s250e-tq144-4 and_gate.ngc and_gate.ngd  
+map -filter "C:/Xilinx/Projects/DLP-FGPA/lab1/iseconfig/filter.filter" -intstyle ise -p xc3s250e-tq144-4 -cm area -ir off -pr off -c 100 -o and_gate_map.ncd and_gate.ngd and_gate.pcf 
+map -filter "C:/Xilinx/Projects/DLP-FGPA/lab1/iseconfig/filter.filter" -intstyle ise -p xc3s250e-tq144-4 -cm area -ir off -pr off -c 100 -o and_gate_map.ncd and_gate.ngd and_gate.pcf 

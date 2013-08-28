@@ -1,0 +1,8 @@
+		def i acc
+
+		LOD i -65535
+%loop	ADD i one
+		CMP i ons
+		CGT E %hlt
+		GTO %loop @gd
+%hlt	HLT

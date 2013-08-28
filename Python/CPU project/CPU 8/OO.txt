@@ -1,0 +1,133 @@
+<subroutine: OO.init>
+									#initializes object array to size of value in accumulator
+									#requires %end label at end of code
+									#%end+1 = last part of end command
+									#%end+2 = max size
+									#%end+3 = current size
+									#%end+4 = start of array
+				def size gp0
+				def two gp1
+
+				#calculate memory size requirements
+%OO.init		ADD one one
+				MUL acc size
+				ADD acc one	#accounts for max size
+				ADD acc one	#accounts for current size
+				MOV ind zro
+				STR acc %end+2 #max size
+				STR zro %end+3 #current size
+
+				#to calculate end of registry
+				LOD gp2 %end+2 @ldd
+				ADD gp2 acc
+				STR acc %end+5
+
+				GTO jmp @gr		 
+
+<end>
+
+
+
+
+<subroutine: OO.allocate>
+									#allocates memory to an object
+				def tag gp0 		#tag stored in gp0
+				def size gp1		#size stored in gp1
+				def current_end gp2
+				def to_return gp3
+				def spare_ind gp4
+				def current_size gp5
+				def max_size gp6
+
+%OO.allocate		LOD acc %end+3 	#loads current size
+
+				#get output
+				ADD acc acc 				#position of current end is %end + 4 + 2xcurrent size +1
+				ADD acc one					#							
+#				###########MOV ind acc
+				LOD current_end %end+5 		#setting to end+5 allows removal of line above and one below
+				MOV to_return current_end
+
+				#store tag in correct place
+				STR tag %end+4	
+
+				#admin - increase current size and test for breaks
+
+				MOV spare_ind ind 		#to allow clearing of ind
+				MOV ind zro
+				LOD current_size %end+3
+				LOD max_size %end+2
+
+				CMP current_size max_size @wf
+				CGT E %OO.overflow
+
+
+				________________________HERE______________________________
+
+				ADD current_end size
+				STR acc %end+7 #end+7 makes up for offset of index
+
+				#admin - increase current size and text for breaks
+
+
+
+
+
+<end>
+
+
+
+
+<subroutine: OO.deallocate>
+									#removes reservations for memory and shifts objects down
+<end>
+
+
+
+
+<subroutine: OO.call>
+				#looks up tag in table and returns address, halts if tag not found
+
+				def tag gp0 #tag is in accumulator, but put into gp0
+				def two gp1
+				def to_test gp2
+
+
+				#init
+%OO.call		MOV tag acc
+				ADD one one 
+				MOV two acc 			#initializes value for iterating down
+				MOV ind zro 			#incase index register contains a value
+				LOD acc %end+3 			#Loads  with current size
+				MUL acc two				#will iterate down in twos
+				MOV ind acc 
+				CGT O %OO.overflow		@gd	#if address too big	
+
+				#loop
+%OO.call_loop	SUB ind two				#start of iteration
+				MOV ind acc 
+				GTO %OO.test_tag 	@gd
+%OO.call_test_return CMP ind zro 		@wf
+				CGT E %OO.call_error
+				GTO %OO.call_loop	@gd
+
+%OO.overflow HLT	
+
+%OO.call_error	HLT
+
+
+				#test routine
+%OO.test_tag	LOD to_test %end+4 #loads from array
+				CMP to_test tag @wf
+				CGT E %OO.call_return
+				GTO %OO.call_test_return @gd
+
+
+				#exit routine
+%OO.call_return ADD ind one
+				MOV ind acc
+				LOD acc %end+4
+				GTO jmp @gr	#returns from subroutine
+
+<end>
+

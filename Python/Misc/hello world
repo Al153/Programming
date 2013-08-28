@@ -1,0 +1,10 @@
+from math import *
+
+milesDriven=input("Enter miles driven:")
+gallonsUsed=input("Enter gallons used:")
+milesDriven=float(milesDriven)
+gallonsUsed=float(gallonsUsed)
+mpg=milesDriven/gallonsUsed
+print("Miles per gallon:",mpg)
+
+

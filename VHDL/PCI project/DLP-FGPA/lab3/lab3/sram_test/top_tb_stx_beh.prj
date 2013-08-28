@@ -1,0 +1,7 @@
+vhdl isim_temp "sram_sm.vhd"
+vhdl isim_temp "mid_dcm.vhd"
+vhdl isim_temp "low_dcm.vhd"
+vhdl isim_temp "heartbeat.vhd"
+vhdl isim_temp "top.vhd"
+vhdl isim_temp "cy62128dv30l_70.vhd"
+vhdl isim_temp "../lab3/sram_test/top_tb.vhd"

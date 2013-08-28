@@ -1,0 +1,165 @@
+--------------------------------------------------------------------------------
+Release 14.1 Trace  (nt64)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+
+C:\Xilinx\14.1\ISE_DS\ISE\bin\nt64\unwrapped\trce.exe -intstyle ise -v 3 -s 4
+-n 3 -xml DC7_PCI.twx DC7_PCI.ncd -o DC7_PCI.twr DC7_PCI.pcf -ucf DB7.ucf
+
+Design file:              DC7_PCI.ncd
+Physical constraint file: DC7_PCI.pcf
+Device,package,speed:     xc3s250e,tq144,-4 (PRODUCTION 1.27 2012-04-23)
+Report level:             verbose report
+
+Environment Variable      Effect 
+--------------------      ------ 
+NONE                      No environment variables were set
+--------------------------------------------------------------------------------
+
+INFO:Timing:2698 - No timing constraints found, doing default enumeration.
+INFO:Timing:3412 - To improve timing, see the Timing Closure User Guide (UG612).
+INFO:Timing:2752 - To get complete path coverage, use the unconstrained paths 
+   option. All paths that are not constrained will be reported in the 
+   unconstrained paths section(s) of the report.
+INFO:Timing:3339 - The clock-to-out numbers in this timing report are based on 
+   a 50 Ohm transmission line loading model.  For the details of this model, 
+   and for more information on accounting for different loading conditions, 
+   please see the device datasheet.
+INFO:Timing:3390 - This architecture does not support a default System Jitter 
+   value, please add SYSTEM_JITTER constraint to the UCF to modify the Clock 
+   Uncertainty calculation.
+INFO:Timing:3389 - This architecture does not support 'Discrete Jitter' and 
+   'Phase Error' calculations, these terms will be zero in the Clock 
+   Uncertainty calculation.  Please make appropriate modification to 
+   SYSTEM_JITTER to account for the unsupported Discrete Jitter and Phase 
+   Error.
+
+
+
+Data Sheet report:
+-----------------
+All values displayed in nanoseconds (ns)
+
+Setup/Hold to clock PCI_Clock
+------------+------------+------------+------------------+--------+
+            |Max Setup to|Max Hold to |                  | Clock  |
+Source      | clk (edge) | clk (edge) |Internal Clock(s) | Phase  |
+------------+------------+------------+------------------+--------+
+AD<0>       |    5.920(R)|    0.969(R)|PCI_Clock_BUFGP   |   0.000|
+AD<1>       |    5.567(R)|    0.882(R)|PCI_Clock_BUFGP   |   0.000|
+AD<2>       |    5.875(R)|    0.850(R)|PCI_Clock_BUFGP   |   0.000|
+AD<3>       |    8.452(R)|    1.209(R)|PCI_Clock_BUFGP   |   0.000|
+AD<4>       |    8.455(R)|    1.178(R)|PCI_Clock_BUFGP   |   0.000|
+AD<5>       |    9.580(R)|    0.880(R)|PCI_Clock_BUFGP   |   0.000|
+AD<6>       |    8.691(R)|    0.194(R)|PCI_Clock_BUFGP   |   0.000|
+AD<7>       |    7.212(R)|    0.209(R)|PCI_Clock_BUFGP   |   0.000|
+AD<8>       |    8.245(R)|    0.589(R)|PCI_Clock_BUFGP   |   0.000|
+AD<9>       |    7.555(R)|   -0.005(R)|PCI_Clock_BUFGP   |   0.000|
+AD<10>      |   10.028(R)|    0.991(R)|PCI_Clock_BUFGP   |   0.000|
+AD<11>      |    9.809(R)|    1.041(R)|PCI_Clock_BUFGP   |   0.000|
+AD<12>      |    7.141(R)|    0.897(R)|PCI_Clock_BUFGP   |   0.000|
+AD<13>      |    7.545(R)|    0.911(R)|PCI_Clock_BUFGP   |   0.000|
+AD<14>      |    7.963(R)|    0.295(R)|PCI_Clock_BUFGP   |   0.000|
+AD<15>      |   10.361(R)|    0.428(R)|PCI_Clock_BUFGP   |   0.000|
+AD<16>      |    7.835(R)|    0.270(R)|PCI_Clock_BUFGP   |   0.000|
+AD<17>      |    7.333(R)|    0.063(R)|PCI_Clock_BUFGP   |   0.000|
+ADEx<0>     |    9.670(R)|   -5.213(R)|PCI_Clock_BUFGP   |   0.000|
+ADEx<1>     |    9.920(R)|   -5.413(R)|PCI_Clock_BUFGP   |   0.000|
+CBE<0>      |    8.821(R)|   -0.776(R)|PCI_Clock_BUFGP   |   0.000|
+CBE<1>      |    9.397(R)|   -1.449(R)|PCI_Clock_BUFGP   |   0.000|
+CBE<2>      |    8.967(R)|   -0.848(R)|PCI_Clock_BUFGP   |   0.000|
+CBE<3>      |    9.908(R)|   -1.757(R)|PCI_Clock_BUFGP   |   0.000|
+DData       |    5.945(R)|   -1.465(R)|PCI_Clock_BUFGP   |   0.000|
+Frame       |    5.755(R)|    0.404(R)|PCI_Clock_BUFGP   |   0.000|
+IDSel       |   10.469(R)|   -1.375(R)|PCI_Clock_BUFGP   |   0.000|
+IRdy        |    7.542(R)|   -0.640(R)|PCI_Clock_BUFGP   |   0.000|
+PCI_Reset   |    5.070(R)|    0.255(R)|PCI_Clock_BUFGP   |   0.000|
+SSAck       |    0.329(R)|    0.934(R)|PCI_Clock_BUFGP   |   0.000|
+SSDIn       |    2.132(R)|   -0.515(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<0>  |   -0.003(R)|    1.196(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<1>  |   -0.054(R)|    1.236(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<2>  |   -0.222(R)|    1.371(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<3>  |   -0.023(R)|    1.212(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<4>  |   -0.242(R)|    1.386(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<5>  |   -0.055(R)|    1.236(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<6>  |    0.000(R)|    1.192(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<7>  |    0.235(R)|    1.004(R)|PCI_Clock_BUFGP   |   0.000|
+USBRxValid  |    5.460(R)|   -2.085(R)|PCI_Clock_BUFGP   |   0.000|
+USBTxReady  |    3.212(R)|   -0.576(R)|PCI_Clock_BUFGP   |   0.000|
+------------+------------+------------+------------------+--------+
+
+Clock PCI_Clock to Pad
+------------+------------+------------------+--------+
+            | clk (edge) |                  | Clock  |
+Destination |   to PAD   |Internal Clock(s) | Phase  |
+------------+------------+------------------+--------+
+AD<0>       |   11.181(R)|PCI_Clock_BUFGP   |   0.000|
+AD<1>       |   10.523(R)|PCI_Clock_BUFGP   |   0.000|
+AD<2>       |   11.475(R)|PCI_Clock_BUFGP   |   0.000|
+AD<3>       |   11.122(R)|PCI_Clock_BUFGP   |   0.000|
+AD<4>       |   11.146(R)|PCI_Clock_BUFGP   |   0.000|
+AD<5>       |   12.676(R)|PCI_Clock_BUFGP   |   0.000|
+AD<6>       |   12.263(R)|PCI_Clock_BUFGP   |   0.000|
+AD<7>       |   11.424(R)|PCI_Clock_BUFGP   |   0.000|
+AD<8>       |   11.045(R)|PCI_Clock_BUFGP   |   0.000|
+AD<9>       |   10.370(R)|PCI_Clock_BUFGP   |   0.000|
+AD<10>      |    9.995(R)|PCI_Clock_BUFGP   |   0.000|
+AD<11>      |   10.477(R)|PCI_Clock_BUFGP   |   0.000|
+AD<12>      |   11.037(R)|PCI_Clock_BUFGP   |   0.000|
+AD<13>      |   10.598(R)|PCI_Clock_BUFGP   |   0.000|
+AD<14>      |   11.545(R)|PCI_Clock_BUFGP   |   0.000|
+AD<15>      |   11.227(R)|PCI_Clock_BUFGP   |   0.000|
+AD<16>      |   12.311(R)|PCI_Clock_BUFGP   |   0.000|
+AD<17>      |   11.485(R)|PCI_Clock_BUFGP   |   0.000|
+DClock      |   12.745(R)|PCI_Clock_BUFGP   |   0.000|
+DData       |   16.212(R)|PCI_Clock_BUFGP   |   0.000|
+DevSel      |    8.438(R)|PCI_Clock_BUFGP   |   0.000|
+LED         |    8.613(R)|PCI_Clock_BUFGP   |   0.000|
+Probe       |   19.743(R)|PCI_Clock_BUFGP   |   0.000|
+SSAddr      |   13.727(R)|PCI_Clock_BUFGP   |   0.000|
+SSClock     |    9.731(R)|PCI_Clock_BUFGP   |   0.000|
+SSDOut      |   16.703(R)|PCI_Clock_BUFGP   |   0.000|
+SSStrobe    |   12.998(R)|PCI_Clock_BUFGP   |   0.000|
+TRdy        |   13.199(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<0>  |    9.902(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<1>  |    9.901(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<2>  |    9.660(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<3>  |    9.961(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<4>  |    9.654(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<5>  |   10.217(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<6>  |    9.902(R)|PCI_Clock_BUFGP   |   0.000|
+USBData<7>  |   10.469(R)|PCI_Clock_BUFGP   |   0.000|
+USBRead     |    9.648(R)|PCI_Clock_BUFGP   |   0.000|
+USBWrite    |   10.169(R)|PCI_Clock_BUFGP   |   0.000|
+------------+------------+------------------+--------+
+
+Clock to Setup on destination clock PCI_Clock
+---------------+---------+---------+---------+---------+
+               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+---------------+---------+---------+---------+---------+
+PCI_Clock      |    7.188|         |         |         |
+---------------+---------+---------+---------+---------+
+
+Pad to Pad
+---------------+---------------+---------+
+Source Pad     |Destination Pad|  Delay  |
+---------------+---------------+---------+
+IRdy           |Probe          |   14.388|
+SSAck          |Probe          |   11.237|
+SSDIn          |Probe          |   10.668|
+USBRxValid     |Probe          |   12.583|
+USBTxReady     |Probe          |   12.037|
+---------------+---------------+---------+
+
+
+Analysis completed Thu Dec 20 17:01:44 2012 
+--------------------------------------------------------------------------------
+
+Trace Settings:
+-------------------------
+Trace Settings 
+
+Peak Memory Usage: 168 MB
+
+
+

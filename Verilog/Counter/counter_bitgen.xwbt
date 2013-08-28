@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=C:\Users\Al taylor\Documents\Programming\Verilog\Counter\counter.ncd
+OUTFILE=C:\Users\Al taylor\Documents\Programming\Verilog\Counter\counter.bit
+FAMILY=Spartan3E
+PART=xc3s250e-4tq144
+WORKINGDIR=C:\Users\Al taylor\Documents\Programming\Verilog\Counter
+LICENSE=WebPack
+USER_INFO=210690256_0_0_818

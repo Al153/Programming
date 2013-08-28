@@ -1,0 +1,47 @@
+#Finds max from array of n vales beginning at address x and returns max #and addr in regsters gp6 and gp7
+
+
+				def n 	gp0
+				def x 	gp1
+				def max	gp6
+				def addr gp7
+				def to_compare gp2
+
+#bootstrap
+				LOD x %array @ldd
+				LOD n 5		@ldd
+				GTO %find_max @gd
+				OUT max 	@or
+				OUT $\n$		@od
+				OUT addr 	@or
+				OUT $\n$ 	@od
+
+
+
+#subroutine
+%find_max		PUS jmp @pur		#stores return address
+
+				ADD x,n 	@ain @aout	#starts at x+n and works down
+				SUB acc one 			#initialisation of address to x+n-1
+				MOV ind acc				#loads address to compare
+%start_of_loop 	GTO %comparison @gd		#goes to comparison sub-routine
+%return			SUB ind one				#iteration
+				MOV ind acc 			#loads address to compare to index
+				CMP ind x				
+				CGT L %end				#if address is less than x: stop
+				GTO %start_of_loop	@gd #else: end sub-routine
+
+
+%comparison		LOD to_compare 0		#loads up value to compare (0 because index register is used)
+				CMP to_compare max 		
+				CGT G %new_max 	#if new value is greater than: start the new max subroutine
+				GTO %return @gd
+
+%new_max		MOV max to_compare 	#loads new max value
+				MOV addr ind 		#loads new max address
+				GTO %return @gd     #returns to loop
+
+%end			POP jmp @por 		#reloads return address
+				ADD jmp one			#adds two so program returns to next instruction
+				ADD acc one						
+				GTO acc @gr         #exits subroutine

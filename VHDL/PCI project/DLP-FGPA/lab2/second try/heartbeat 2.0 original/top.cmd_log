@@ -1,0 +1,31 @@
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+xst -intstyle ise -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -ifn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.xst" -ofn "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.syr" 
+ngdbuild -filter "iseconfig/filter.filter" -intstyle ise -dd _ngo -nt timestamp -i -p xc3s250e-tq144-4 "top.ngc" top.ngd  
+map -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -intstyle ise -p xc3s250e-tq144-4 -cm area -ir off -pr off -c 100 -o top_map.ncd top.ngd top.pcf 
+par -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -w -intstyle ise -ol high -t 1 top_map.ncd top.ncd top.pcf 
+trce -filter {C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter} -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml top.twx top.ncd -o top.twr top.pcf 
+map -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -intstyle ise -p xc3s250e-tq144-4 -cm area -ir off -pr off -c 100 -o top_map.ncd top.ngd top.pcf 
+par -filter "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter" -w -intstyle ise -ol high -t 1 top_map.ncd top.ncd top.pcf 
+trce -filter {C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/iseconfig/filter.filter} -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml top.twx top.ncd -o top.twr top.pcf 
+xst -intstyle ise -filter "U:/Peter/heartbeat/iseconfig/filter.filter" -ifn "U:/Peter/heartbeat/top.xst" -ofn "U:/Peter/heartbeat/top.syr" 
+ngdbuild -filter "iseconfig/filter.filter" -intstyle ise -dd _ngo -nt timestamp -i -p xc3s250e-tq144-4 top.ngc top.ngd  
+xst -intstyle ise -filter "U:/Peter/heartbeat/iseconfig/filter.filter" -ifn "U:/Peter/heartbeat/top.xst" -ofn "U:/Peter/heartbeat/top.syr" 
+xst -intstyle ise -filter "U:/Peter/heartbeat/iseconfig/filter.filter" -ifn "U:/Peter/heartbeat/top.xst" -ofn "U:/Peter/heartbeat/top.syr" 
+xst -intstyle ise -filter "U:/Peter/heartbeat/iseconfig/filter.filter" -ifn "U:/Peter/heartbeat/top.xst" -ofn "U:/Peter/heartbeat/top.syr" 
+ngdbuild -filter "iseconfig/filter.filter" -intstyle ise -dd _ngo -nt timestamp -i -p xc3s250e-tq144-4 top.ngc top.ngd  
+xst -intstyle ise -filter "U:/Peter/heartbeat/iseconfig/filter.filter" -ifn "U:/Peter/heartbeat/top.xst" -ofn "U:/Peter/heartbeat/top.syr" 
+ngdbuild -filter "iseconfig/filter.filter" -intstyle ise -dd _ngo -nt timestamp -i -p xc3s250e-tq144-4 top.ngc top.ngd  

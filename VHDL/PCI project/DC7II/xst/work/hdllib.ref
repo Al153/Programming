@@ -1,0 +1,8 @@
+EN usbport NULL C:/Xilinx/Projects/DC7II/USBPort.vhd sub00/vhpl04 1356022817
+AR pci behavioral C:/Xilinx/Projects/DC7II/PCI.vhd sub00/vhpl01 1356022814
+EN dc7_pci NULL C:/Xilinx/Projects/DC7II/DC7_PCI.vhd sub00/vhpl06 1356022819
+AR dc7_pci behave C:/Xilinx/Projects/DC7II/DC7_PCI.vhd sub00/vhpl07 1356022820
+AR ssi behavioral C:/Xilinx/Projects/DC7II/SSI.vhd sub00/vhpl03 1356022816
+EN ssi NULL C:/Xilinx/Projects/DC7II/SSI.vhd sub00/vhpl02 1356022815
+EN pci NULL C:/Xilinx/Projects/DC7II/PCI.vhd sub00/vhpl00 1356022813
+AR usbport behavioral C:/Xilinx/Projects/DC7II/USBPort.vhd sub00/vhpl05 1356022818

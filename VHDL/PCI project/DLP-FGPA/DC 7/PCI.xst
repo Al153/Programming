@@ -1,0 +1,5 @@
+set -tmpdir "C:/Make/V.25/DC7/DC7_PCI/xst/projnav.tmp"
+set -xsthdpdir "C:/Make/V.25/DC7/DC7_PCI/xst"
+elaborate
+-ifn PCI.prj
+-ifmt mixed

@@ -1,0 +1,6 @@
+EN heartbeat NULL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/heartbeat.vhd" sub00/vhpl00 1355592416
+EN top NULL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.vhd" sub00/vhpl04 1355592418
+AR low_dcm behavioral "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/low_dcm.vhd" sub00/vhpl02 1355592415
+AR heartbeat behavioral "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/heartbeat.vhd" sub00/vhpl03 1355592417
+EN low_dcm NULL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/low_dcm.vhd" sub00/vhpl01 1355592414
+AR top behavioral "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.vhd" sub00/vhpl05 1355592419

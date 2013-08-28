@@ -1,0 +1,600 @@
+Release 14.1 - xst P.15xf (nt64)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+--> Parameter TMPDIR set to xst/projnav.tmp
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.19 secs
+ 
+--> Parameter xsthdpdir set to xst
+
+
+Total REAL time to Xst completion: 0.00 secs
+Total CPU time to Xst completion: 0.19 secs
+ 
+--> Reading design: top.prj
+
+TABLE OF CONTENTS
+  1) Synthesis Options Summary
+  2) HDL Compilation
+  3) Design Hierarchy Analysis
+  4) HDL Analysis
+  5) HDL Synthesis
+     5.1) HDL Synthesis Report
+  6) Advanced HDL Synthesis
+     6.1) Advanced HDL Synthesis Report
+  7) Low Level Synthesis
+  8) Partition Report
+  9) Final Report
+	9.1) Device utilization summary
+	9.2) Partition Resource Summary
+	9.3) TIMING REPORT
+
+
+=========================================================================
+*                      Synthesis Options Summary                        *
+=========================================================================
+---- Source Parameters
+Input File Name                    : "top.prj"
+Input Format                       : mixed
+Ignore Synthesis Constraint File   : NO
+
+---- Target Parameters
+Output File Name                   : "top"
+Output Format                      : NGC
+Target Device                      : xc3s250e-4-tq144
+
+---- Source Options
+Top Module Name                    : top
+Automatic FSM Extraction           : YES
+FSM Encoding Algorithm             : Auto
+Safe Implementation                : No
+FSM Style                          : LUT
+RAM Extraction                     : Yes
+RAM Style                          : Auto
+ROM Extraction                     : Yes
+Mux Style                          : Auto
+Decoder Extraction                 : YES
+Priority Encoder Extraction        : Yes
+Shift Register Extraction          : YES
+Logical Shifter Extraction         : YES
+XOR Collapsing                     : YES
+ROM Style                          : Auto
+Mux Extraction                     : Yes
+Resource Sharing                   : YES
+Asynchronous To Synchronous        : NO
+Multiplier Style                   : Auto
+Automatic Register Balancing       : No
+
+---- Target Options
+Add IO Buffers                     : YES
+Global Maximum Fanout              : 500
+Add Generic Clock Buffer(BUFG)     : 24
+Register Duplication               : YES
+Slice Packing                      : YES
+Optimize Instantiated Primitives   : NO
+Use Clock Enable                   : Yes
+Use Synchronous Set                : Yes
+Use Synchronous Reset              : Yes
+Pack IO Registers into IOBs        : Auto
+Equivalent register Removal        : YES
+
+---- General Options
+Optimization Goal                  : Speed
+Optimization Effort                : 1
+Keep Hierarchy                     : No
+Netlist Hierarchy                  : As_Optimized
+RTL Output                         : Yes
+Global Optimization                : AllClockNets
+Read Cores                         : YES
+Write Timing Constraints           : NO
+Cross Clock Analysis               : NO
+Hierarchy Separator                : /
+Bus Delimiter                      : <>
+Case Specifier                     : Maintain
+Slice Utilization Ratio            : 100
+BRAM Utilization Ratio             : 100
+Verilog 2001                       : YES
+Auto BRAM Packing                  : NO
+Slice Utilization Ratio Delta      : 5
+
+=========================================================================
+
+
+=========================================================================
+*                          HDL Compilation                              *
+=========================================================================
+Compiling vhdl file "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/low_dcm.vhd" in Library work.
+Architecture behavioral of Entity low_dcm is up to date.
+Compiling vhdl file "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/heartbeat.vhd" in Library work.
+Architecture behavioral of Entity heartbeat is up to date.
+Compiling vhdl file "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/mid_dcm.vhd" in Library work.
+Architecture behavioral of Entity mid_dcm is up to date.
+Compiling vhdl file "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/sram_sm.vhd" in Library work.
+Architecture rtl of Entity sram_sm is up to date.
+Compiling vhdl file "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/top.vhd" in Library work.
+Architecture behavioral of Entity top is up to date.
+
+=========================================================================
+*                     Design Hierarchy Analysis                         *
+=========================================================================
+Analyzing hierarchy for entity <top> in library <work> (architecture <behavioral>).
+
+Analyzing hierarchy for entity <low_dcm> in library <work> (architecture <behavioral>).
+
+Analyzing hierarchy for entity <heartbeat> in library <work> (architecture <behavioral>).
+
+Analyzing hierarchy for entity <mid_dcm> in library <work> (architecture <behavioral>).
+
+Analyzing hierarchy for entity <sram_sm> in library <work> (architecture <rtl>).
+
+
+=========================================================================
+*                            HDL Analysis                               *
+=========================================================================
+Analyzing Entity <top> in library <work> (Architecture <behavioral>).
+    Set user-defined property "CAPACITANCE =  DONT_CARE" for instance <inst_IOBUF0> in unit <top>.
+    Set user-defined property "DRIVE =  12" for instance <inst_IOBUF0> in unit <top>.
+    Set user-defined property "IBUF_DELAY_VALUE =  0" for instance <inst_IOBUF0> in unit <top>.
+    Set user-defined property "IBUF_LOW_PWR =  TRUE" for instance <inst_IOBUF0> in unit <top>.
+    Set user-defined property "IFD_DELAY_VALUE =  AUTO" for instance <inst_IOBUF0> in unit <top>.
+    Set user-defined property "IOSTANDARD =  LVCMOS33" for instance <inst_IOBUF0> in unit <top>.
+    Set user-defined property "SLEW =  FAST" for instance <inst_IOBUF0> in unit <top>.
+    Set user-defined property "CAPACITANCE =  DONT_CARE" for instance <inst_IOBUF1> in unit <top>.
+    Set user-defined property "DRIVE =  12" for instance <inst_IOBUF1> in unit <top>.
+    Set user-defined property "IBUF_DELAY_VALUE =  0" for instance <inst_IOBUF1> in unit <top>.
+    Set user-defined property "IBUF_LOW_PWR =  TRUE" for instance <inst_IOBUF1> in unit <top>.
+    Set user-defined property "IFD_DELAY_VALUE =  AUTO" for instance <inst_IOBUF1> in unit <top>.
+    Set user-defined property "IOSTANDARD =  LVCMOS33" for instance <inst_IOBUF1> in unit <top>.
+    Set user-defined property "SLEW =  FAST" for instance <inst_IOBUF1> in unit <top>.
+    Set user-defined property "CAPACITANCE =  DONT_CARE" for instance <inst_IOBUF2> in unit <top>.
+    Set user-defined property "DRIVE =  12" for instance <inst_IOBUF2> in unit <top>.
+    Set user-defined property "IBUF_DELAY_VALUE =  0" for instance <inst_IOBUF2> in unit <top>.
+    Set user-defined property "IBUF_LOW_PWR =  TRUE" for instance <inst_IOBUF2> in unit <top>.
+    Set user-defined property "IFD_DELAY_VALUE =  AUTO" for instance <inst_IOBUF2> in unit <top>.
+    Set user-defined property "IOSTANDARD =  LVCMOS33" for instance <inst_IOBUF2> in unit <top>.
+    Set user-defined property "SLEW =  FAST" for instance <inst_IOBUF2> in unit <top>.
+    Set user-defined property "CAPACITANCE =  DONT_CARE" for instance <inst_IOBUF3> in unit <top>.
+    Set user-defined property "DRIVE =  12" for instance <inst_IOBUF3> in unit <top>.
+    Set user-defined property "IBUF_DELAY_VALUE =  0" for instance <inst_IOBUF3> in unit <top>.
+    Set user-defined property "IBUF_LOW_PWR =  TRUE" for instance <inst_IOBUF3> in unit <top>.
+    Set user-defined property "IFD_DELAY_VALUE =  AUTO" for instance <inst_IOBUF3> in unit <top>.
+    Set user-defined property "IOSTANDARD =  LVCMOS33" for instance <inst_IOBUF3> in unit <top>.
+    Set user-defined property "SLEW =  FAST" for instance <inst_IOBUF3> in unit <top>.
+    Set user-defined property "CAPACITANCE =  DONT_CARE" for instance <inst_IOBUF4> in unit <top>.
+    Set user-defined property "DRIVE =  12" for instance <inst_IOBUF4> in unit <top>.
+    Set user-defined property "IBUF_DELAY_VALUE =  0" for instance <inst_IOBUF4> in unit <top>.
+    Set user-defined property "IBUF_LOW_PWR =  TRUE" for instance <inst_IOBUF4> in unit <top>.
+    Set user-defined property "IFD_DELAY_VALUE =  AUTO" for instance <inst_IOBUF4> in unit <top>.
+    Set user-defined property "IOSTANDARD =  LVCMOS33" for instance <inst_IOBUF4> in unit <top>.
+    Set user-defined property "SLEW =  FAST" for instance <inst_IOBUF4> in unit <top>.
+    Set user-defined property "CAPACITANCE =  DONT_CARE" for instance <inst_IOBUF5> in unit <top>.
+    Set user-defined property "DRIVE =  12" for instance <inst_IOBUF5> in unit <top>.
+    Set user-defined property "IBUF_DELAY_VALUE =  0" for instance <inst_IOBUF5> in unit <top>.
+    Set user-defined property "IBUF_LOW_PWR =  TRUE" for instance <inst_IOBUF5> in unit <top>.
+    Set user-defined property "IFD_DELAY_VALUE =  AUTO" for instance <inst_IOBUF5> in unit <top>.
+    Set user-defined property "IOSTANDARD =  LVCMOS33" for instance <inst_IOBUF5> in unit <top>.
+    Set user-defined property "SLEW =  FAST" for instance <inst_IOBUF5> in unit <top>.
+    Set user-defined property "CAPACITANCE =  DONT_CARE" for instance <inst_IOBUF6> in unit <top>.
+    Set user-defined property "DRIVE =  12" for instance <inst_IOBUF6> in unit <top>.
+    Set user-defined property "IBUF_DELAY_VALUE =  0" for instance <inst_IOBUF6> in unit <top>.
+    Set user-defined property "IBUF_LOW_PWR =  TRUE" for instance <inst_IOBUF6> in unit <top>.
+    Set user-defined property "IFD_DELAY_VALUE =  AUTO" for instance <inst_IOBUF6> in unit <top>.
+    Set user-defined property "IOSTANDARD =  LVCMOS33" for instance <inst_IOBUF6> in unit <top>.
+    Set user-defined property "SLEW =  FAST" for instance <inst_IOBUF6> in unit <top>.
+    Set user-defined property "CAPACITANCE =  DONT_CARE" for instance <inst_IOBUF7> in unit <top>.
+    Set user-defined property "DRIVE =  12" for instance <inst_IOBUF7> in unit <top>.
+    Set user-defined property "IBUF_DELAY_VALUE =  0" for instance <inst_IOBUF7> in unit <top>.
+    Set user-defined property "IBUF_LOW_PWR =  TRUE" for instance <inst_IOBUF7> in unit <top>.
+    Set user-defined property "IFD_DELAY_VALUE =  AUTO" for instance <inst_IOBUF7> in unit <top>.
+    Set user-defined property "IOSTANDARD =  LVCMOS33" for instance <inst_IOBUF7> in unit <top>.
+    Set user-defined property "SLEW =  FAST" for instance <inst_IOBUF7> in unit <top>.
+Entity <top> analyzed. Unit <top> generated.
+
+Analyzing Entity <low_dcm> in library <work> (Architecture <behavioral>).
+    Set user-defined property "CAPACITANCE =  DONT_CARE" for instance <CLKIN_IBUFG_INST> in unit <low_dcm>.
+    Set user-defined property "IBUF_DELAY_VALUE =  0" for instance <CLKIN_IBUFG_INST> in unit <low_dcm>.
+    Set user-defined property "IBUF_LOW_PWR =  TRUE" for instance <CLKIN_IBUFG_INST> in unit <low_dcm>.
+    Set user-defined property "IOSTANDARD =  DEFAULT" for instance <CLKIN_IBUFG_INST> in unit <low_dcm>.
+    Set user-defined property "CLKDV_DIVIDE =  16.0000000000000000" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "CLKFX_DIVIDE =  1" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "CLKFX_MULTIPLY =  4" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "CLKIN_DIVIDE_BY_2 =  FALSE" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "CLKIN_PERIOD =  166.6670000000000000" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "CLKOUT_PHASE_SHIFT =  NONE" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "CLK_FEEDBACK =  1X" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "DESKEW_ADJUST =  SYSTEM_SYNCHRONOUS" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "DFS_FREQUENCY_MODE =  LOW" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "DLL_FREQUENCY_MODE =  LOW" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "DSS_MODE =  NONE" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "DUTY_CYCLE_CORRECTION =  TRUE" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "FACTORY_JF =  C080" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "PHASE_SHIFT =  0" for instance <DCM_SP_INST> in unit <low_dcm>.
+    Set user-defined property "STARTUP_WAIT =  FALSE" for instance <DCM_SP_INST> in unit <low_dcm>.
+Entity <low_dcm> analyzed. Unit <low_dcm> generated.
+
+Analyzing Entity <heartbeat> in library <work> (Architecture <behavioral>).
+Entity <heartbeat> analyzed. Unit <heartbeat> generated.
+
+Analyzing Entity <mid_dcm> in library <work> (Architecture <behavioral>).
+    Set user-defined property "CLKDV_DIVIDE =  2.0000000000000000" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "CLKFX_DIVIDE =  6" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "CLKFX_MULTIPLY =  25" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "CLKIN_DIVIDE_BY_2 =  FALSE" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "CLKIN_PERIOD =  166.6670000000000000" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "CLKOUT_PHASE_SHIFT =  NONE" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "CLK_FEEDBACK =  1X" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "DESKEW_ADJUST =  SYSTEM_SYNCHRONOUS" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "DFS_FREQUENCY_MODE =  LOW" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "DLL_FREQUENCY_MODE =  LOW" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "DSS_MODE =  NONE" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "DUTY_CYCLE_CORRECTION =  TRUE" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "FACTORY_JF =  C080" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "PHASE_SHIFT =  0" for instance <DCM_SP_INST> in unit <mid_dcm>.
+    Set user-defined property "STARTUP_WAIT =  FALSE" for instance <DCM_SP_INST> in unit <mid_dcm>.
+Entity <mid_dcm> analyzed. Unit <mid_dcm> generated.
+
+Analyzing Entity <sram_sm> in library <work> (Architecture <rtl>).
+Entity <sram_sm> analyzed. Unit <sram_sm> generated.
+
+
+=========================================================================
+*                           HDL Synthesis                               *
+=========================================================================
+
+Performing bidirectional port resolution...
+
+Synthesizing Unit <heartbeat>.
+    Related source file is "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/heartbeat.vhd".
+    Found 18-bit up counter for signal <count>.
+    Summary:
+	inferred   1 Counter(s).
+Unit <heartbeat> synthesized.
+
+
+Synthesizing Unit <sram_sm>.
+    Related source file is "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/sram_sm.vhd".
+    Register <dir_copy> equivalent to <dir> has been removed
+    Found finite state machine <FSM_0> for signal <state>.
+    -----------------------------------------------------------------------
+    | States             | 12                                             |
+    | Transitions        | 15                                             |
+    | Inputs             | 2                                              |
+    | Outputs            | 7                                              |
+    | Clock              | sm_clk_in                 (rising_edge)        |
+    | Reset              | rst_in                    (positive)           |
+    | Reset type         | synchronous                                    |
+    | Reset State        | st1_w0_idle                                    |
+    | Power Up State     | st1_w0_idle                                    |
+    | Encoding           | automatic                                      |
+    | Implementation     | LUT                                            |
+    -----------------------------------------------------------------------
+    Found 1-bit register for signal <dir>.
+    Found 1-bit register for signal <we_n>.
+    Found 1-bit register for signal <oe_n>.
+    Found 1-bit register for signal <comp_value>.
+    Found 17-bit up counter for signal <count>.
+    Found 17-bit up counter for signal <errors_int>.
+    Found 8-bit comparator not equal for signal <errors_int$cmp_ne0000> created at line 396.
+    Found 1-bit register for signal <increment>.
+    Found 1-bit register for signal <reset_count>.
+    Found 8-bit register for signal <result>.
+    Found 1-bit register for signal <rst_in_d>.
+    Found 1-bit register for signal <rst_in_d2>.
+    Found 1-bit register for signal <start>.
+    Found 1-bit register for signal <start_p>.
+    Found 1-bit register for signal <store_value>.
+    Found 1-bit register for signal <test_failed_int>.
+    Found 8-bit register for signal <value>.
+    Summary:
+	inferred   1 Finite State Machine(s).
+	inferred   2 Counter(s).
+	inferred  28 D-type flip-flop(s).
+	inferred   1 Comparator(s).
+Unit <sram_sm> synthesized.
+
+
+Synthesizing Unit <low_dcm>.
+    Related source file is "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/low_dcm.vhd".
+Unit <low_dcm> synthesized.
+
+
+Synthesizing Unit <mid_dcm>.
+    Related source file is "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/mid_dcm.vhd".
+Unit <mid_dcm> synthesized.
+
+
+Synthesizing Unit <top>.
+    Related source file is "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/top.vhd".
+WARNING:Xst:646 - Signal <no_connect> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:646 - Signal <errors> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:646 - Signal <clock_6m> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+Unit <top> synthesized.
+
+
+=========================================================================
+HDL Synthesis Report
+
+Macro Statistics
+# Counters                                             : 3
+ 17-bit up counter                                     : 2
+ 18-bit up counter                                     : 1
+# Registers                                            : 14
+ 1-bit register                                        : 12
+ 8-bit register                                        : 2
+# Comparators                                          : 1
+ 8-bit comparator not equal                            : 1
+
+=========================================================================
+
+=========================================================================
+*                       Advanced HDL Synthesis                          *
+=========================================================================
+
+Analyzing FSM <FSM_0> for best encoding.
+Optimizing FSM <Inst_sram_sm/state/FSM> on signal <state[1:12]> with one-hot encoding.
+------------------------------
+ State        | Encoding
+------------------------------
+ st1_w0_idle  | 000000000001
+ st2_w1_addr  | 000000000010
+ st3_w2_data  | 000000000100
+ st4_w3_hold  | 000000001000
+ st5_w4_d_en  | 000000010000
+ st6_w5_d_a   | 000000100000
+ st7_r0_idle  | 000001000000
+ st8_r1_addr  | 000010000000
+ st9_r2_oe    | 000100000000
+ st10_r3_hold | 001000000000
+ st11_r4_data | 010000000000
+ st12_r5_comp | 100000000000
+------------------------------
+
+=========================================================================
+Advanced HDL Synthesis Report
+
+Macro Statistics
+# FSMs                                                 : 1
+# Counters                                             : 3
+ 17-bit up counter                                     : 2
+ 18-bit up counter                                     : 1
+# Registers                                            : 28
+ Flip-Flops                                            : 28
+# Comparators                                          : 1
+ 8-bit comparator not equal                            : 1
+
+=========================================================================
+
+=========================================================================
+*                         Low Level Synthesis                           *
+=========================================================================
+INFO:Xst:2261 - The FF/Latch <state_FSM_FFd1> in Unit <sram_sm> is equivalent to the following FF/Latch, which will be removed : <store_value> 
+
+Optimizing unit <top> ...
+
+Optimizing unit <sram_sm> ...
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_16> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_15> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_14> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_13> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_12> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_11> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_10> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_9> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_8> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_7> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_6> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_5> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_4> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_3> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_2> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_1> of sequential type is unconnected in block <top>.
+WARNING:Xst:2677 - Node <Inst_sram_sm/errors_int_0> of sequential type is unconnected in block <top>.
+
+Mapping all equations...
+Building and optimizing final netlist ...
+Found area constraint ratio of 100 (+ 5) on block top, actual ratio is 1.
+
+Final Macro Processing ...
+
+=========================================================================
+Final Register Report
+
+Macro Statistics
+# Registers                                            : 74
+ Flip-Flops                                            : 74
+
+=========================================================================
+
+=========================================================================
+*                           Partition Report                            *
+=========================================================================
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+=========================================================================
+*                            Final Report                               *
+=========================================================================
+Final Results
+RTL Top Level Output File Name     : top.ngr
+Top Level Output File Name         : top
+Output Format                      : NGC
+Optimization Goal                  : Speed
+Keep Hierarchy                     : No
+
+Design Statistics
+# IOs                              : 30
+
+Cell Usage :
+# BELS                             : 144
+#      GND                         : 1
+#      INV                         : 5
+#      LUT1                        : 34
+#      LUT2                        : 15
+#      LUT3                        : 2
+#      LUT4                        : 10
+#      LUT4_L                      : 2
+#      MUXCY                       : 38
+#      MUXF5                       : 1
+#      VCC                         : 1
+#      XORCY                       : 35
+# FlipFlops/Latches                : 74
+#      FD                          : 3
+#      FDC                         : 18
+#      FDR                         : 12
+#      FDRE                        : 34
+#      FDRS                        : 2
+#      FDS                         : 5
+# Clock Buffers                    : 4
+#      BUFG                        : 4
+# IO Buffers                       : 30
+#      IBUF                        : 1
+#      IBUFG                       : 1
+#      IOBUF                       : 8
+#      OBUF                        : 20
+# DCMs                             : 2
+#      DCM_SP                      : 2
+=========================================================================
+
+Device utilization summary:
+---------------------------
+
+Selected Device : 3s250etq144-4 
+
+ Number of Slices:                       48  out of   2448     1%  
+ Number of Slice Flip Flops:             74  out of   4896     1%  
+ Number of 4 input LUTs:                 68  out of   4896     1%  
+ Number of IOs:                          30
+ Number of bonded IOBs:                  30  out of    108    27%  
+ Number of GCLKs:                         4  out of     24    16%  
+ Number of DCMs:                          2  out of      4    50%  
+
+---------------------------
+Partition Resource Summary:
+---------------------------
+
+  No Partitions were found in this design.
+
+---------------------------
+
+
+=========================================================================
+TIMING REPORT
+
+NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
+      FOR ACCURATE TIMING INFORMATION PLEASE REFER TO THE TRACE REPORT
+      GENERATED AFTER PLACE-and-ROUTE.
+
+Clock Information:
+------------------
+-----------------------------------+-------------------------------+-------+
+Clock Signal                       | Clock buffer(FF name)         | Load  |
+-----------------------------------+-------------------------------+-------+
+clk_in                             | Inst_low_dcm/DCM_SP_INST:CLKDV| 18    |
+clk_in                             | Inst_mid_dcm/DCM_SP_INST:CLKFX| 52    |
+clk_in                             | IBUFG                         | 4     |
+-----------------------------------+-------------------------------+-------+
+
+Asynchronous Control Signals Information:
+----------------------------------------
+-----------------------------------+-----------------------------+-------+
+Control Signal                     | Buffer(FF name)             | Load  |
+-----------------------------------+-----------------------------+-------+
+reset_locked(reset_locked1:O)      | NONE(Inst_heartbeat/count_0)| 18    |
+-----------------------------------+-----------------------------+-------+
+
+Timing Summary:
+---------------
+Speed Grade: -4
+
+   Minimum period: 21.650ns (Maximum Frequency: 46.189MHz)
+   Minimum input arrival time before clock: 1.946ns
+   Maximum output required time after clock: 6.196ns
+   Maximum combinational path delay: No path found
+
+Timing Detail:
+--------------
+All values displayed in nanoseconds (ns)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'clk_in'
+  Clock period: 21.650ns (frequency: 46.189MHz)
+  Total number of paths / destination ports: 504 / 119
+-------------------------------------------------------------------------
+Delay:               5.196ns (Levels of Logic = 3)
+  Source:            Inst_sram_sm/value_7 (FF)
+  Destination:       Inst_sram_sm/test_failed_int (FF)
+  Source Clock:      clk_in rising 4.2X
+  Destination Clock: clk_in rising 4.2X
+
+  Data Path: Inst_sram_sm/value_7 to Inst_sram_sm/test_failed_int
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDRE:C->Q             1   0.591   0.595  Inst_sram_sm/value_7 (Inst_sram_sm/value_7)
+     LUT4:I0->O            1   0.704   0.499  Inst_sram_sm/errors_int_and0000146 (Inst_sram_sm/errors_int_and0000146)
+     LUT2:I1->O            1   0.704   0.424  Inst_sram_sm/errors_int_and0000147 (Inst_sram_sm/errors_int_and0000147)
+     LUT4:I3->O            1   0.704   0.420  Inst_sram_sm/errors_int_and0000175 (Inst_sram_sm/errors_int_and0000)
+     FDRE:CE                   0.555          Inst_sram_sm/test_failed_int
+    ----------------------------------------
+    Total                      5.196ns (3.258ns logic, 1.938ns route)
+                                       (62.7% logic, 37.3% route)
+
+=========================================================================
+Timing constraint: Default OFFSET IN BEFORE for Clock 'clk_in'
+  Total number of paths / destination ports: 8 / 8
+-------------------------------------------------------------------------
+Offset:              1.946ns (Levels of Logic = 1)
+  Source:            d<7> (PAD)
+  Destination:       Inst_sram_sm/result_7 (FF)
+  Destination Clock: clk_in rising 4.2X
+
+  Data Path: d<7> to Inst_sram_sm/result_7
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IOBUF:IO->O           1   1.218   0.420  inst_IOBUF7 (din<7>)
+     FDRE:D                    0.308          Inst_sram_sm/result_7
+    ----------------------------------------
+    Total                      1.946ns (1.526ns logic, 0.420ns route)
+                                       (78.4% logic, 21.6% route)
+
+=========================================================================
+Timing constraint: Default OFFSET OUT AFTER for Clock 'clk_in'
+  Total number of paths / destination ports: 45 / 28
+-------------------------------------------------------------------------
+Offset:              6.196ns (Levels of Logic = 2)
+  Source:            Inst_sram_sm/dir (FF)
+  Destination:       d<7> (PAD)
+  Source Clock:      clk_in rising 4.2X
+
+  Data Path: Inst_sram_sm/dir to d<7>
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDS:C->Q             16   0.591   1.209  Inst_sram_sm/dir (Inst_sram_sm/dir)
+     LUT2:I0->O            1   0.704   0.420  Inst_sram_sm/dout<7>1 (dout<7>)
+     IOBUF:I->IO               3.272          inst_IOBUF7 (d<7>)
+    ----------------------------------------
+    Total                      6.196ns (4.567ns logic, 1.629ns route)
+                                       (73.7% logic, 26.3% route)
+
+=========================================================================
+
+
+Total REAL time to Xst completion: 20.00 secs
+Total CPU time to Xst completion: 19.80 secs
+ 
+--> 
+
+Total memory usage is 285716 kilobytes
+
+Number of errors   :    0 (   0 filtered)
+Number of warnings :   20 (   0 filtered)
+Number of infos    :    1 (   0 filtered)
+

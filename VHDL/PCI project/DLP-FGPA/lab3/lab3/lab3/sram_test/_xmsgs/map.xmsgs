@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- IMPORTANT: This is an internal file that has been generated
+     by the Xilinx ISE software.  Any direct editing or
+     changes made to this file may result in unpredictable
+     behavior or data corruption.  It is strongly advised that
+     users do not edit the contents of this file. -->
+<messages>
+<msg type="info" file="MapLib" num="562" delta="unknown" >No environment variables are currently set.
+</msg>
+
+<msg type="info" file="MapLib" num="863" delta="unknown" >The following Virtex BUFG(s) is/are being retargeted to Virtex2 BUFGMUX(s) with input tied to I0 and Select pin tied to constant 0:
+<arg fmt="%s" index="1">BUFG symbol &quot;Inst_low_dcm/CLK0_BUFG_INST&quot; (output signal=Inst_low_dcm/CLK0_OUT),
+BUFG symbol &quot;Inst_low_dcm/CLKDV_BUFG_INST&quot; (output signal=clock_375K),
+BUFG symbol &quot;Inst_mid_dcm/CLK0_BUFG_INST&quot; (output signal=Inst_mid_dcm/CLK0_OUT),
+BUFG symbol &quot;Inst_mid_dcm/CLKFX_BUFG_INST&quot; (output signal=clock_25m)</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="1186" delta="unknown" >One or more I/O components have conflicting property values.  For each occurrence, the system will use the property value attached to the pad.  Otherwise, the system will use the first property value read.  To view each occurrence, create a detailed map report (run map using the -detail option).
+</msg>
+
+<msg type="info" file="PhysDesignRules" num="772" delta="unknown" >To achieve optimal frequency synthesis performance with the CLKFX and CLKFX180 outputs of the DCM comp <arg fmt="%s" index="1">Inst_mid_dcm/DCM_SP_INST/Inst_mid_dcm/DCM_SP_INST</arg>, consult the device Interactive Data Sheet.
+</msg>
+
+</messages>
+

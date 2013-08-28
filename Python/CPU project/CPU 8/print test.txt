@@ -1,0 +1,26 @@
+			def print_reg gp0 #register definitions (gp0 = print register)
+			def i ind		  #index register = i
+
+			LOD i 6 @ldd
+%loop		SUB i one
+			MOV i acc
+			LOD	print_reg %array
+			OUT print_reg @or
+			CMP i zro
+			CJP E %exit
+			JMP %loop	@jd
+
+%exit		HLT
+
+%array		data $d$
+			data $rl$
+			data $wo$
+			data $o $
+			data $ll$
+			data $he$
+
+
+
+
+
+

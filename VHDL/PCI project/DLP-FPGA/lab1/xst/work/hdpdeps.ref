@@ -1,0 +1,7 @@
+V3 3
+FL C:/Xilinx/Projects/DLP-FPGA/lab1/and_gate/and_gate.vhd 2012/11/02.09:45:07 P.40xd
+EN work/and_gate 1351849517 \
+      FL C:/Xilinx/Projects/DLP-FPGA/lab1/and_gate/and_gate.vhd \
+      PB ieee/std_logic_1164 1350103243
+AR work/and_gate/Behavioral 1351849518 \
+      FL C:/Xilinx/Projects/DLP-FPGA/lab1/and_gate/and_gate.vhd EN work/and_gate 1351849517

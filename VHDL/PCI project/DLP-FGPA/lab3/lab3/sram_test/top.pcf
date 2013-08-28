@@ -1,0 +1,93 @@
+//! **************************************************************************
+// Written by: Map P.15xf on Tue Dec 18 09:22:47 2012
+//! **************************************************************************
+
+SCHEMATIC START;
+COMP "d<7>" LOCATE = SITE "P23" LEVEL 1;
+COMP "heartbeat_led" LOCATE = SITE "P74" LEVEL 1;
+COMP "we_n" LOCATE = SITE "P35" LEVEL 1;
+COMP "rst_in" LOCATE = SITE "P128" LEVEL 1;
+COMP "a<10>" LOCATE = SITE "P20" LEVEL 1;
+COMP "a<0>" LOCATE = SITE "P2" LEVEL 1;
+COMP "a<1>" LOCATE = SITE "P3" LEVEL 1;
+COMP "a<11>" LOCATE = SITE "P21" LEVEL 1;
+COMP "a<2>" LOCATE = SITE "P4" LEVEL 1;
+COMP "a<12>" LOCATE = SITE "P25" LEVEL 1;
+COMP "a<3>" LOCATE = SITE "P5" LEVEL 1;
+COMP "a<13>" LOCATE = SITE "P26" LEVEL 1;
+COMP "a<4>" LOCATE = SITE "P7" LEVEL 1;
+COMP "a<14>" LOCATE = SITE "P32" LEVEL 1;
+COMP "a<5>" LOCATE = SITE "P8" LEVEL 1;
+COMP "a<15>" LOCATE = SITE "P33" LEVEL 1;
+COMP "a<6>" LOCATE = SITE "P14" LEVEL 1;
+COMP "a<16>" LOCATE = SITE "P34" LEVEL 1;
+COMP "oe_n" LOCATE = SITE "P50" LEVEL 1;
+COMP "a<7>" LOCATE = SITE "P15" LEVEL 1;
+COMP "a<8>" LOCATE = SITE "P16" LEVEL 1;
+COMP "a<9>" LOCATE = SITE "P17" LEVEL 1;
+COMP "d<0>" LOCATE = SITE "P51" LEVEL 1;
+COMP "d<1>" LOCATE = SITE "P52" LEVEL 1;
+COMP "clk_in" LOCATE = SITE "P56" LEVEL 1;
+COMP "d<2>" LOCATE = SITE "P53" LEVEL 1;
+COMP "d<3>" LOCATE = SITE "P54" LEVEL 1;
+COMP "d<4>" LOCATE = SITE "P75" LEVEL 1;
+COMP "d<5>" LOCATE = SITE "P76" LEVEL 1;
+COMP "d<6>" LOCATE = SITE "P77" LEVEL 1;
+TIMEGRP Inst_low_dcm_CLKDV_BUF = BEL "Inst_heartbeat/count_0" BEL
+        "Inst_heartbeat/count_1" BEL "Inst_heartbeat/count_2" BEL
+        "Inst_heartbeat/count_3" BEL "Inst_heartbeat/count_4" BEL
+        "Inst_heartbeat/count_5" BEL "Inst_heartbeat/count_6" BEL
+        "Inst_heartbeat/count_7" BEL "Inst_heartbeat/count_8" BEL
+        "Inst_heartbeat/count_9" BEL "Inst_heartbeat/count_10" BEL
+        "Inst_heartbeat/count_11" BEL "Inst_heartbeat/count_12" BEL
+        "Inst_heartbeat/count_13" BEL "Inst_heartbeat/count_14" BEL
+        "Inst_heartbeat/count_15" BEL "Inst_heartbeat/count_16" BEL
+        "Inst_heartbeat/count_17" BEL "Inst_low_dcm/CLKDV_BUFG_INST.GCLKMUX"
+        BEL "Inst_low_dcm/CLKDV_BUFG_INST";
+TIMEGRP Inst_mid_dcm_CLKFX_BUF = BEL "Inst_sram_sm/state_FSM_FFd7" BEL
+        "Inst_sram_sm/state_FSM_FFd1" BEL "Inst_sram_sm/state_FSM_FFd8" BEL
+        "Inst_sram_sm/state_FSM_FFd2" BEL "Inst_sram_sm/state_FSM_FFd9" BEL
+        "Inst_sram_sm/state_FSM_FFd3" BEL "Inst_sram_sm/state_FSM_FFd10" BEL
+        "Inst_sram_sm/state_FSM_FFd4" BEL "Inst_sram_sm/state_FSM_FFd11" BEL
+        "Inst_sram_sm/state_FSM_FFd12" BEL "Inst_sram_sm/state_FSM_FFd6" BEL
+        "Inst_sram_sm/count_16" BEL "Inst_sram_sm/count_15" BEL
+        "Inst_sram_sm/count_14" BEL "Inst_sram_sm/count_13" BEL
+        "Inst_sram_sm/count_12" BEL "Inst_sram_sm/count_11" BEL
+        "Inst_sram_sm/count_10" BEL "Inst_sram_sm/count_9" BEL
+        "Inst_sram_sm/count_8" BEL "Inst_sram_sm/count_7" BEL
+        "Inst_sram_sm/count_6" BEL "Inst_sram_sm/count_5" BEL
+        "Inst_sram_sm/count_4" BEL "Inst_sram_sm/count_3" BEL
+        "Inst_sram_sm/count_2" BEL "Inst_sram_sm/count_1" BEL
+        "Inst_sram_sm/count_0" BEL "Inst_sram_sm/value_7" BEL
+        "Inst_sram_sm/value_6" BEL "Inst_sram_sm/value_5" BEL
+        "Inst_sram_sm/value_4" BEL "Inst_sram_sm/value_3" BEL
+        "Inst_sram_sm/value_2" BEL "Inst_sram_sm/value_1" BEL
+        "Inst_sram_sm/value_0" BEL "Inst_sram_sm/result_7" BEL
+        "Inst_sram_sm/result_6" BEL "Inst_sram_sm/result_5" BEL
+        "Inst_sram_sm/result_4" BEL "Inst_sram_sm/result_3" BEL
+        "Inst_sram_sm/result_2" BEL "Inst_sram_sm/result_1" BEL
+        "Inst_sram_sm/result_0" BEL "Inst_sram_sm/reset_count" BEL
+        "Inst_sram_sm/comp_value" BEL "Inst_sram_sm/we_n" BEL
+        "Inst_sram_sm/oe_n" BEL "Inst_sram_sm/test_failed_int" BEL
+        "Inst_sram_sm/dir" BEL "Inst_sram_sm/state_FSM_FFd5" BEL
+        "Inst_sram_sm/increment" BEL "Inst_mid_dcm/CLKFX_BUFG_INST.GCLKMUX"
+        BEL "Inst_mid_dcm/CLKFX_BUFG_INST";
+PIN Inst_low_dcm/DCM_SP_INST_pins<3> = BEL "Inst_low_dcm/DCM_SP_INST" PINNAME
+        CLKIN;
+PIN Inst_mid_dcm/DCM_SP_INST_pins<3> = BEL "Inst_mid_dcm/DCM_SP_INST" PINNAME
+        CLKIN;
+TIMEGRP clk_in = BEL "Inst_sram_sm/start" BEL "Inst_sram_sm/start_p" BEL
+        "Inst_sram_sm/rst_in_d2" BEL "Inst_sram_sm/rst_in_d" PIN
+        "Inst_low_dcm/DCM_SP_INST_pins<3>" PIN
+        "Inst_mid_dcm/DCM_SP_INST_pins<3>";
+TS_clk_in = PERIOD TIMEGRP "clk_in" 166.67 ns HIGH 50%;
+TIMEGRP "PADS" = PADS(*);
+TS_P2P = MAXDELAY FROM TIMEGRP "PADS" TO TIMEGRP "PADS" 20 ns;
+TS_Inst_low_dcm_CLKDV_BUF = PERIOD TIMEGRP "Inst_low_dcm_CLKDV_BUF" TS_clk_in
+        * 16 HIGH 50%;
+TS_Inst_mid_dcm_CLKFX_BUF = PERIOD TIMEGRP "Inst_mid_dcm_CLKFX_BUF" TS_clk_in
+        / 4.16666667 HIGH 50%;
+OFFSET = IN 10 ns BEFORE COMP "clk_in";
+OFFSET = OUT 10 ns AFTER COMP "clk_in";
+SCHEMATIC END;
+

@@ -1,0 +1,43 @@
+#looping through code
+#registers:
+#gp0 + gp1 - scratch pad
+#gp2 + gp3 -iterators
+LOD gp2 7 	@ldd #8 numbers to sort
+    MOV gp3 gp2 	   #copy total number
+	SUB gp3 one	   
+	CMP acc zro
+	CJP E 12 	@jd
+	LOD acc 48	@ldd #setting up index
+	MOV ind acc		#prepare for swap
+	JMP 12 	@jd @str #go to swap
+	JMP -12 	@jd
+	SUB gp2 one			#iterate through main loop
+	MOV gp2 acc
+	CMP gp2 zro
+	CJP E 50	@jd	
+	JMP -26		@jd	 
+
+
+
+
+
+	#swap code: 
+	LOD gp0 0 #uses ind reg for value
+	ADD ind one #increments ind
+	MOV ind acc
+	LOD gp1 0
+	CMP gp0 gp1
+	CJP G 2
+	GTO jmp 	@gr #exits function
+	STR gp0 0
+	STR gp1 -1
+	GTO jmp		@gr
+data {
+7
+6
+5
+4
+3
+2
+1
+}

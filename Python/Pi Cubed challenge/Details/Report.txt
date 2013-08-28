@@ -1,0 +1,29 @@
+I find basic computer science and the nature of algorithms fascinating; they 
+now affect every  part of our lives: the clothes the wear, what our houses look
+like, how we communicate.
+
+I have several inspirations for this: firstly I discovered digital logic, and 
+a simulator named "Logicly". I built a few ALUs, alongside memory cells, and 
+addressable RAM blocks. Then on my work experience with Douglas instruments, I
+learned more about basic computer architecture, and using FPGAs to simulate
+more complex logic devices. At the same time I was reading The Emperor's New Mind
+by Roger Penrose, which taught me about the nature of algorithms and Turing machines.
+I successfully simulated the Turing machine described in the book, and wondered if
+I could build something bigger, more lifelike. So I built a range of 8bit computers,
+from version 1.0 - 6.0, each one adding more functionality, more memory, multicore 
+computing, even one which could implement a vigenere cipher. This all blew away after
+6.0. But later I thought, can I do better? Can I have more memory, bigger numbers, a 
+more simple and unified instruction set? and about this time I also saw the Pi cubed
+programming challenge, and decided to build 7.0, a 16 bit computer, with more functions,
+more flexibility and a new architecture, Which is where I am now. I am constantly adding 
+little bits here and there, thinking of new modules to add to its easily expandable
+instruction set. 
+It is also very interesting to think of the fundamental mathematics going on right at the 
+bottom level, and it is very different going from python: an easy, straightforward, high
+level language to an assembly language, with precise control over every addition or logic
+function, optimising code to run as quickly as possible. It is also far easier to do this
+in a system which you have created yourself and know every quirk, every possible command.
+It has also given me an understanding of a huge amount of computer science, as I have had 
+to solve problems such as "how many registers do I need?", "how big does my instruction set 
+need to be?", "which of these instructions is the most important?", "Should I make this
+backwards compatible? and if so, how?". The list  goes on and I am glad to have started this project.

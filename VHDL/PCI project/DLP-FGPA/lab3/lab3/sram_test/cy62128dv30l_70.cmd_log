@@ -1,0 +1,1 @@
+vhdtdtfi -prj sram_test -o C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/cy62128dv30l_70.vhi -module cy62128dv30l_70 -template C:/Xilinx/14.1/ISE_DS/ISE//data/vhdlinst.tft -deleteonerror -lib work cy62128dv30l_70.vhd 

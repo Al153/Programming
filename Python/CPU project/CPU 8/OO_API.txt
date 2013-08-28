@@ -1,0 +1,407 @@
+#This file, when imported and given the tag "%end", will allow for the creation of multi-word
+#objects and handles the allocation and deallocation of memory space to objects, thus managing
+#fragmentation.
+
+
+
+# %end+1  - second part of command at "%end" is not used
+# %end+2  - maximum last address - the last address the object array can be at
+# %end+3  - current last address - the current final position of object array
+# %end+4  - first entry of array (tag)
+# %end+5  - first entry of array (address)
+
+# ======================== Object array structure ===============================
+#	_________________________________________
+#	|Max last value   |  current last value |
+#	-----------------------------------------
+#	|		Tag 0     |  address 0			|
+#	-----------------------------------------	
+#	|		Tag 1     |  address 1          |
+#	-----------------------------------------
+#					  .
+#					  .
+#					  .
+
+
+
+<subroutine: initialize>
+# Acc: number of objects ==> none
+# - Takes number of objects, and address of final instruction(%end).
+# - sets maximum last address and current last address
+# - sets first address in array to first free address
+
+# =========================== Pseudocode =======================
+# maximum_last_address = %end+3 + (number of objects*2)
+# memory_start = maximum_last_address + 1
+# current_last_address = %end+5
+# =========================== assembly =========================
+def maxaddr %end+2
+def curaddr %end+3
+def first_entry %end+5
+
+OO.init				MOV ind zro
+					ADD acc acc
+					LOD gp0 %end+3 @ldd
+					ADD gp0 acc
+					STR acc maxaddr
+
+					ADD acc one
+					STR acc first_entry
+					
+					LOD acc first_entry @ldd
+					STR acc curaddr
+
+					GTO jmp @gr #subroutine linkage
+
+# ======================= Error events =========================
+%OO.overflow	HLT
+
+%OO.not_found 	HLT 
+<end>
+
+<subroutine: allocate>
+# gp0: length of memory to be allocated, gp1: tag ==> none
+
+
+# ================================ High level description =========
+# Takes memory length and a tag and creates an entry on the table
+# prepares new entry for next allocation
+#If maximum length is already reached, program halts or goes to error handling (goes to %OO.overflow)
+#If maximum length is reached in this allocation, no new entry is prepared 
+
+
+# ============================ Pseudocode ==========================
+#if current last address = maximum last address:
+#	goto %OO.overflow
+
+#load address from current_last_address
+#current last address += 1
+#write tag to current_last_address
+#current last address += 1
+
+#if current_last_address = maximum last address:
+#	return
+#address += length
+#write address to current last address
+#return
+
+# ======================== Assembly ============================ 
+
+#gp0 length of memory
+#gp1 tag
+#gp2 mla
+#gp3 address
+
+
+def length gp0
+def tag gp1
+def max gp2
+def address gp3
+def cla_reg ind
+
+def cla %end+3
+def mla %end+2
+
+
+OO.alloc				MOV ind zro
+
+				LOD max mla
+				LOD cla_reg cla
+				CMP cla_reg max @wf
+				CGT E %OO.overflow
+
+				LOD address 0 #indexing by ind register
+				ADD cla_reg one
+				MOV cla_reg acc
+				STR tag 0 #indexing by ind reg
+				ADD cla_reg one
+				MOV cla_reg acc
+
+				CMP cla_reg max @wf
+					CGT E %OO.alloc.return
+				ADD addr length
+				STR acc 0		#stores into current last address
+%OO.alloc.return MOV ind 0
+				STR cla_reg cla  
+				GTO jmp @gr
+
+
+
+<end>
+
+
+
+
+
+
+
+
+<subroutine: deallocate>
+
+#gp0: tag ==> none
+
+#removes entry from table
+#defragmentation routine to keep memory usage optimal
+
+# ======================= High level description =====================
+#search for tag
+#find length of object from tag and next tag
+#from next tag, subtract object length from tags
+#move up array entries by one
+#for memory from object to last object, copy memory down by object length
+
+# =========================== pseudocode =============================
+#found = 0
+#address = current_last_address + 1
+#while true:
+
+#	address -= 2
+#	if address == %end+2:
+#		goto %not_found
+
+#   load tag_to_comp from address
+# 	if tag = tag_to_comp:
+#		break
+
+#address +=1
+#load object_address from address 
+#tag = tag_to_comp ???
+#address +=1
+
+#if address  == current_last_address:
+#	current_last_address -= 2
+#	return
+
+#load next_tag from address
+#address += 1
+
+#load next_address from address
+#address_offset = next_address - object_address
+#address -= 1
+
+#previous_address = address - 2
+#while address <= current_last_address:
+	
+	#load tag from address
+	#write tag to previous address
+
+	#previous address += 1
+	#address += 1
+
+	#load object_address from address
+	#object address -= address_offset
+	#write object_address to previous_address
+
+	#previous address += 1
+	#address += 1
+
+#address = next_address
+#previous_address = address - address_offset
+#load max_address from current_last_address
+
+#while address <= max_address:
+# 	load data from address
+# 	write data to previous_address
+
+#	previous address += 1
+#	address += 1
+
+#current_last_address -= 2
+#return
+
+# ============================ Assembly ==============================
+def tag gp0
+def found gp7
+def cla gp1
+#					def address gp2
+def last_addr gp3
+def two gp4
+def to_compare gp5
+def object_address gp 6
+
+def next_tag gp5
+
+def address_offset gp2
+def data gp3
+def address gp4
+def previous_address gp5
+def next_address gp6
+def max_address gp7
+
+				MOV found zro
+				MOV ind zro
+				LOD cla %end+3
+				ADD cla one 			#ind becomes address for now
+				MOV ind acc
+				LOD last_addr %end+2 @ldd
+				LOD two 2 @ldd
+
+%OO.dallocloop1	SUB ind two
+				CMP acc last_addr @wf
+				CGT E %OO.not_found
+
+				MOV ind acc
+				LOD to_compare 0 #uses ind to index
+				CMP tag to_compare @wf
+					CGT E %OO.dallocend1
+				GTO %OO.dallocloop1 @gd
+
+%OO.dallocend1	ADD ind one
+				MOV ind acc
+				LOD object_address 0 #indexed by ind
+				ADD ind one
+				MOV ind acc
+				
+				CMP cla ind @wf
+					CGT E %OO.dallocexit
+
+				LOD next_tag 0 
+				ADD ind one
+				MOV ind acc
+
+				LOD next_address 0 #indexed by ind 
+				SUB next_address object_address
+				MOV address_offset acc
+				SUB ind one
+				MOV ind acc
+
+
+				SUB ind two
+				MOV previous_address acc
+				MOV address ind #initialize address
+
+#variables needed from here onwards:
+	#Address - gp4
+	#CLA -gp1
+	#Previous address -gp5
+	#Object address - Acc
+	#Address offset -gp2
+	#tag -gp0
+	#data
+	#next address - gp6
+	#max_address
+
+
+
+%OO.dallocloop2	CMP ind cla @wf
+				CGT G %OO.dallocend2
+
+					MOV ind address
+					LOD tag 0
+					MOV ind previous_address
+					STR tag 0
+
+					ADD previous_address one
+					MOV previous_address acc
+					ADD address one
+					MOV address acc
+
+					MOV ind address
+					LOD acc 0				#acc is offset address
+					SUB acc address_offset 
+					LOD ind previous_address
+					STR acc 0
+
+					ADD previous_address one
+					MOV previous_address acc
+					ADD address one
+					MOV address acc					
+
+
+				GTO %OO.dallocloop2 @gd
+
+%OO.dallocend2	MOV address next_address
+				SUB address address_offset
+				MOV ind cla
+				LOD max_address 0 
+
+%OO.dallocloop3	CMP address max_address @wf
+				CGT G %OO.dallocexit
+
+					MOV ind address
+					LOD data 0
+					MOV ind previous_address
+					STR data 0
+
+					ADD previous_address one
+					MOV previous_address acc
+					ADD address one
+					MOV address acc		
+
+				GTO OO>dallocloop3
+
+
+%OO.dallocexit 	SUB cla two
+				MOV ind zro
+				STR acc %end+2
+				GTO jmp @gr
+
+%OO.address 		data 0
+%OO.previous_address data 0
+
+<end>
+
+<subroutine: call_object>
+# gp0: tag ==> gp0:address
+
+#takes a tag input and returns the address of the start of the block
+
+#============================ High level description =================
+#search array for tag, return address
+
+#============================ Pseudo code ============================
+#address = current_last_address - 1 #to look at tags 
+
+#while true:
+#	load to_compare from address
+
+#	if to_compare == tag:
+#   	break
+
+# 	if address == end+4:
+#		goto %address not found
+
+# 	address -= 2
+
+#address += 1
+#load result from address
+#return result
+
+#=========================== Assembly ================================
+def tag gp0
+def to_compare gp1
+def result acc
+def address ind
+def end_of_search gp2
+def two gp3
+
+					MOV ind zro
+					
+					LOD two 2 @ldd
+					LOD address %end+3
+					LOD end_of_search %end+4 @ldd
+					SUB address one
+					MOV address acc
+					
+%OO.Callloop			LOD to_compare 0
+
+						CMP to_compare tag @wf
+							CGT E %OO.callbreak
+
+						CMP ind end_of_search
+							CGT E %OO.not_found
+
+						SUB address two
+						MOV acc address
+
+					GTO %OO.callloop @gd 
+
+
+%OO.callbreak		ADD address one
+					MOV address acc
+					LOD gp0 0
+					GTO jmp @gr
+
+
+<end>
+

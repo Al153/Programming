@@ -1,0 +1,5 @@
+vhdl isim_temp "USBPort.vhd"
+vhdl isim_temp "SSI.vhd"
+vhdl isim_temp "PCI.vhd"
+vhdl isim_temp "DC7_PCI.vhd"
+vhdl isim_temp "PCI_Config.vhd"

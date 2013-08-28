@@ -1,0 +1,4 @@
+vhdl work "C:\Xilinx\Projects\DC7II\USBPort.vhd"
+vhdl work "C:\Xilinx\Projects\DC7II\SSI.vhd"
+vhdl work "C:\Xilinx\Projects\DC7II\PCI.vhd"
+vhdl work "C:\Xilinx\Projects\DC7II\DC7_PCI.vhd"

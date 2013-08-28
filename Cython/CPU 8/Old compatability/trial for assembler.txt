@@ -1,0 +1,7 @@
+LOD gp2 10   @ldd
+ADD gp1 one
+MOV gp1 acc
+CMP gp1 gp2
+CJP E   2    @jd
+JMP -10      @jd
+HLT	

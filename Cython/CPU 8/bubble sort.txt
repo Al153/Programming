@@ -1,0 +1,86 @@
+			def i gp0
+			def j gp1
+			def ld_i gp2
+			def ld_i+1 gp3	#j counts down number of outerloop iterations, i inner loop
+			def array_address gp4
+			def array_length gp5
+
+
+
+			#bootstrap
+			LOD i %array @ldd 
+			LOD j 5		 @ldd			#j is number of values to sort
+			GTO %printi @str @gd
+			MOV array_length j
+			GTO %bbl_sort @gd @str
+			GTO %print_routine
+
+
+			#initialization
+%bbl_sort	PUS jmp 		@pur
+			MOV array_address i	#creates reference for start of array
+
+#looping
+%bbl_loopj	SUB j one		#iterates j
+			MOV j acc		#reinitializes j
+			ADD j i 		#generates starting value for iteration
+			SUB acc one		#i = j+arraylength -1
+			MOV i acc
+					%bbl_loopi	SUB i one
+								MOV i acc
+								GTO %printi @gd @str
+								#GTO %bbl_cmp @gd
+					%bbl_return CMP i array_address @wf
+								CGT G %bbl_loopi        #iterates again if not equal
+
+			CMP j one	@wf								#else: code carries onto here
+			CGT E %exit
+			GTO %bbl_loopj @gd
+
+
+			
+%printi 	PUS jmp @pur
+			OUT i @ov @or
+			OUT $  $ @od
+			OUT $  $ @od
+			OUT $  $ @od
+			OUT j @ov @or
+			OUT $$ @od
+			GTO %exit @gd
+
+
+			#compare subroutine
+%bbl_cmp	MOV ind acc
+			LOD ld_i+1 0
+			MOV ind i 
+			LOD ld_i 0
+			CMP ld_i+1 ld_i @wf
+			CGT L %bbl_swp
+			GTO  %bbl_return @gd
+
+
+			#swapping subroutine
+%bbl_swp 	STR ld_i+1 0 #stores to new locations
+			STR ld_i   1
+			GTO %bbl_return @gd
+
+#exit link_routine
+import exit
+
+
+#print routine
+%print_routine	MOV ind array_length
+%print_loop		SUB ind one
+				MOV ind acc
+				OUT %array @oa @ov
+				OUT $$ @od
+				CMP ind zro
+				CJP G %print_loop
+				HLT
+
+%array 	data 3
+		data 5
+		data 1
+		data 2
+		data 4
+

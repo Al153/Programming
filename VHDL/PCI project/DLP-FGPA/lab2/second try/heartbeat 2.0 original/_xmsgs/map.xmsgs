@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- IMPORTANT: This is an internal file that has been generated
+     by the Xilinx ISE software.  Any direct editing or
+     changes made to this file may result in unpredictable
+     behavior or data corruption.  It is strongly advised that
+     users do not edit the contents of this file. -->
+<messages>
+<msg type="info" file="MapLib" num="562" delta="old" >No environment variables are currently set.
+</msg>
+
+<msg type="info" file="LIT" num="244" delta="old" >All of the single ended outputs in this design are using slew rate limited output drivers. The delay on speed critical single ended outputs can be dramatically reduced by designating them as fast outputs.
+</msg>
+
+<msg type="warning" file="LIT" num="177" delta="old" >Clock buffer <arg fmt="%s" index="1">BUFGMUX symbol &quot;Inst_low_dcm/physical_group_CLKDV_OUT/CLKDV_BUFG_INST&quot; (output signal=clock_375k)</arg> does not drive clock loads. Driving only non-clock loads with a clock buffer will cause ALL of the dedicated clock routing resources for this buffer to be wasted. Some of the non-clock loads are (maximum of 5 listed): 
+<arg fmt="%s" index="2">Pin CE of Inst_heartbeat/count_two_0
+Pin CE of Inst_heartbeat/count_two_1
+Pin CE of Inst_heartbeat/count_two_2
+Pin CE of Inst_heartbeat/count_two_3
+Pin CE of Inst_heartbeat/count_two_4</arg>
+</msg>
+
+<msg type="warning" file="LIT" num="178" delta="old" >Clock buffer <arg fmt="%s" index="1">BUFGMUX symbol &quot;Inst_low_dcm/physical_group_LOCKED_OUT/LOCKED_OUT_BUFG&quot; (output signal=low_dcm_locked)</arg> does not drive clock loads. Driving only non-clock loads with a clock buffer will cause ALL of the dedicated clock routing resources for this buffer to be wasted. The non-clock loads are:
+<arg fmt="%s" index="2">Pin I0 of reset_locked1_INV_0</arg>
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="372" delta="old" >Gated clock. Clock net <arg fmt="%s" index="1">reset_locked</arg> is sourced by a combinatorial pin. This is not good design practice. Use the CE pin to control the loading of data into the flip-flop.
+</msg>
+
+</messages>
+

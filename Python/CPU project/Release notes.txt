@@ -1,0 +1,63 @@
+Release notes for Alexander Taylor's CPU project
+
+version list: (note, as of 3.1 on detection of bugs, only current experimental builds,
+the most recent full release and classic will be fixed)
+
+CPU 8: (OPERMAC)
+
+will have a header state section to program input to allow forced multitasking
+and priorities on threads.
+
+CPU 7.x: (ALGOMAC)
+
+7.3:
+-changed system of CPU running - CPU will run all steps until it ends, rather
+-than progressing through the steps as the auxilary programming tells it to.
+
+7.2:
+-Added context switching for easy multitasking and function calling
+
+7.1:
+-Added GPU and VPU
+-added .txt program input
+
+7.0:
+-New 16 bit machine, Von Neumann architecture
+
+5.1.2: 
+-commands 213 and 214 will add a preassigned string to a main string according to a hash table.
+-213 will add a string from the memory at the address of the next value
+-214 will add the string of the next value
+
+Version 5.1.1:
+-Dual core version of Version 5.
+-Commands 213 and 214 (Copy memory and wipe memory)replaced by synchronise cores and
+ and snoop registers, unless stated.
+
+Version 5.x:
+-complete objectification of code
+-fixed 'copy regs' bug(1)
+-fixed division by 0 bug
+-fixed skip bug(machine read data when deciding when to stop an else skip)
+
+Version 4.x:
+-removed twos complent support, except in sub command
+-bug(1) in version 5 fixed in version 4
+
+Version 3.x:
+- IMPROVED large access memory system using bank switching
+- 3.100: - Added basis code for user I/O
+- 3.200	 - Commented out code for I/0, still present in 4.0
+	 - fixed bug with machine not flagging ALU overflows
+
+Version 2.0:
+
+- 16 pages of 256 bytes of memory using a system to copy data from main memory
+  into workable memory
+
+
+version 1: classic:
+
+- Original and fastest release.
+- 256 bytes of memory.
+- Always kept up to date

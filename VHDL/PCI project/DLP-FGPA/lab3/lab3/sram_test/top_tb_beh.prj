@@ -1,0 +1,7 @@
+vhdl work "sram_sm.vhd"
+vhdl work "mid_dcm.vhd"
+vhdl work "low_dcm.vhd"
+vhdl work "heartbeat.vhd"
+vhdl work "top.vhd"
+vhdl work "cy62128dv30l_70.vhd"
+vhdl work "../lab3/sram_test/top_tb.vhd"

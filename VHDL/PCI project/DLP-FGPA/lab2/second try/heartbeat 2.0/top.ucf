@@ -1,0 +1,6 @@
+NET "clk_in" TNM_NET = clk_in;
+TIMESPEC TS_clk_in = PERIOD "clk_in" 167 ns HIGH 50%;
+
+NET "clk_in" LOC = "P56"| IOSTANDARD = LVCMOS33 ;
+NET "heartbeat_led" LOC = "P74" | IOSTANDARD = LVCMOS33 | SLEW = SLOW;
+NET "rst_in" LOC = "P128" | IOSTANDARD = LVCMOS33 | PULLUP ;

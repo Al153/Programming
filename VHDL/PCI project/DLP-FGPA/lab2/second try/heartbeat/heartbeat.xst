@@ -1,0 +1,5 @@
+set -tmpdir "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/xst/projnav.tmp"
+set -xsthdpdir "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/xst"
+elaborate
+-ifn heartbeat.prj
+-ifmt mixed

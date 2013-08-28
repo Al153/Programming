@@ -1,0 +1,22 @@
+			def m gp0 #defining variables m and n
+			def n gp1 
+
+			LOD m 120 	@ldd				#bootstrap routine
+			LOD n 36	@ldd
+			GTO %GCD 	@gd @str 			#calls GCD subroutine
+			OUT n 		@or @ov
+			OUT $$		@od
+			HLT
+
+
+%GCD		PUS jmp 		@pur	#start of gcd subroutine, pushes return value onto the stack
+%GCD_loop	CMP m zro
+			CJP E %GCD_exit
+			MOD n m
+			MOV n m
+			MOV m acc
+			GTO %GCD_loop	@gd
+
+
+%GCD_exit	POP acc 		@por	#exit subroutine
+			GTO acc			@gr 

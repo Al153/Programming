@@ -1,0 +1,25 @@
+V3 15
+FL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/heartbeat.vhd" 2012/12/15.17:26:00 P.15xf
+EN work/heartbeat 1355592416 \
+      FL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/heartbeat.vhd" \
+      PB ieee/std_logic_1164 1335251622 PB ieee/STD_LOGIC_UNSIGNED 1335251625 \
+      PB ieee/std_logic_arith 1335251623
+AR work/heartbeat/Behavioral 1355592417 \
+      FL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/heartbeat.vhd" \
+      EN work/heartbeat 1355592416
+FL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/low_dcm.vhd" 2012/12/15.16:27:45 P.15xf
+EN work/low_dcm 1355592414 \
+      FL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/low_dcm.vhd" \
+      PB ieee/std_logic_1164 1335251622 PB ieee/NUMERIC_STD 1335251627 LB UNISIM \
+      PH unisim/VCOMPONENTS 1335251629
+AR work/low_dcm/BEHAVIORAL 1355592415 \
+      FL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/low_dcm.vhd" \
+      EN work/low_dcm 1355592414 CP BUFG CP IBUFG CP DCM_SP
+FL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.vhd" 2012/12/15.17:26:36 P.15xf
+EN work/top 1355592418 \
+      FL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.vhd" \
+      PB ieee/std_logic_1164 1335251622 PB ieee/NUMERIC_STD 1335251627 LB UNISIM \
+      PH unisim/VCOMPONENTS 1335251629
+AR work/top/Behavioral 1355592419 \
+      FL "C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat/top.vhd" \
+      EN work/top 1355592418 CP low_dcm CP heartbeat

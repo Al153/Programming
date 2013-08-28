@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Where Can I Find...</title>
+		<link type="text/css" rel="stylesheet" href="http://localhost/YRS2013/CSSmain.css">
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<!--<script src="http://localhost/YRS2013/JSmain.js"></script>-->
+		<script src="http://maps.googleapis.com/maps/api/js?
+		key=AIzaSyDVmCT72skg8UIfLNxobO1sGHdguGivzZ8&sensor=false"></script>
+		<script>
+		function initialize() //called on load
+		{
+			//creates map
+			var mapProp = {
+				center:new google.maps.LatLng(51.508742,-0.120850),
+				zoom:5,
+				mapTypeId:google.maps.MapTypeId.ROADMAP
+			};
+			var map = new google.maps.Map(document.getElementById("googleMap")
+  				,mapProp);
+
+		}
+
+		google.maps.event.addDomListener(window, 'load', initialize);
+
+		var onePostcode = "";
+
+
+		function call_this() {
+			//called on wherecanifind button press
+
+			//get inputs
+			var species = document.forms["input"]["species"].value;
+			var postcode = document.forms["input"]["location"].value;
+
+			//checkfor postcode containing a space
+			if(postcode.indexOf(" ") === -1) {
+				alert("postcode must contain a space");
+			}
+
+			console.log(postcode);
+
+			var url_get = "";
+
+			var spaceIndex = postcode.indexOf(" ")
+			onePostcode = postcode.slice(0, spaceIndex) + postcode.slice(spaceIndex+1, postcode.length);
+
+			//php proxying program url
+			var url_postcode = "PC.php?postcode=" + onePostcode;
+
+			var lat = 0;
+			var lng = 0;
+
+			//calls php proxy for postcode json info
+			$.getJSON(
+				url_postcode, function(jsonFile) { 
+					console.log("success");
+					console.log(jsonFile);
+					console.log("Json found");
+
+					//filters results
+					lat = jsonFile["geo"]["lat"];
+					lng = jsonFile["geo"]["lng"];
+					console.log(lat+lng);
+
+					url_get = "getSights.php?postcode="+postcode+"&lat="+lat+"&lng="+lng;
+					var lllist = []
+
+					//gets animal information from python and mysql using php
+
+					$.getJSON(
+						url_get, function(latLngList) {
+								lllist = latLngList
+						} 
+					);
+
+
+					//removes old googlemap and places new placeholder
+					$("#googleMap").remove();
+					mapDiv = $("#beforeMap").after("<div id='googleMap'></div>");
+
+					//creates new googlemap with markers
+					var mapProp = {
+						center:new google.maps.LatLng(lat,lng),
+						zoom:10,
+						mapTypeId:google.maps.MapTypeId.ROADMAP
+					};
+					var map = new google.maps.Map(document.getElementById("googleMap")
+						,mapProp);
+
+					var marker = new google.maps.Marker({
+						position: new google.maps.LatLng(lat,lng),
+						icon:'purplepin.png'
+					});
+
+					marker.setMap(map);
+
+					//creates animal markers
+
+					var animal0 = new google.maps.Marker({
+						position: new google.maps.LatLng(lllist[0][0],lllist[0][1])
+					});
+					var animal1 = new google.maps.Marker({
+						position: new google.maps.LatLng(lllist[1][0],lllist[1][1])
+					});
+					var animal2 = new google.maps.Marker({
+						position: new google.maps.LatLng(lllist[2][0],lllist[2][1])
+					});
+					var animal3 = new google.maps.Marker({
+						position: new google.maps.LatLng(lllist[3][0],lllist[3][1])
+					});
+					var animal4 = new google.maps.Marker({
+						position: new google.maps.LatLng(lllist[4][0],lllist[4][1])
+					});
+
+					marker0.setMap(map)
+					marker1.setMap(map)
+					marker2.setMap(map)
+					marker3.setMap(map)
+					marker4.setMap(map)
+			
+			});
+
+			
+			return false;
+		}
+
+		//called by logform
+		function logData() {
+			//gets input values
+			var nickname = document.forms["logInput"]["nickname"].value;
+			var animal = document.forms["logInput"]["animal"].value;
+			var msg = document.forms["logInput"]["msg"].value;
+			var postcode = document.forms["logInput"]["msg"].value;
+
+			//converts postcodes to lats and longs using php
+			var url_postcode = "PC.php?postcode=" + postcode;
+
+			var lat = 0;
+			var lng = 0;
+
+			//calls php proxy
+
+			$.getJSON(
+				url_postcode, function(jsonFile) { 
+					console.log("connected");
+					console.log(jsonFile);
+					console.log("Json found");
+
+					lat = jsonFile["geo"]["lat"];
+					lng = jsonFile["geo"]["lng"];
+					console.log(lat+lng);
+			});
+
+
+			//sends form
+			var url_log = "log.php?nickname="+nickname+"&animal="+animal+"&msg="+msg+"&postcode="+postcode;
+			$.ajax(url_log);
+		}
+		</script>
+		
+		
+
+	</head>
+	<body>
+		<div id="content">
+			<div id="reportFeed">
+				<div id="logForm">
+					<!--form to log sightings-->
+					<form id="logForm" name="logInput" action="#" method="post">
+						<h2>What did you see?</h2>
+						nickname: <input type="text" name="nickname" value=""><br/>
+						species: <input type="text" name="animal" value=""><br/>
+						message: <br/><textarea name="msg"></textarea><br/>
+						postcode: <input type="text" name="postcode" value="">
+						<input type="button" value="send!" onclick="logData()">
+
+					</form>
+				</div>
+			</div>
+			<div id="mainContent">
+				<div id="topBox">
+					<div id="linkBox">
+						<div id="form">
+							<!--form to find sightings-->
+							<form id="inputForm" name="input" action="#" method="post" onsubmit="return call_this()">
+								<h2 id="whereCanIFind">Where Can I find...</h2>
+								<span id="inputLabel">Find:</span>  <input type="text" name="species" value="species"><br/>
+								<span id="inputLabel">Near:</span><input type="text" name="location" value="postcode"><br/>
+								<input type="button" value="Go!" onclick="call_this()">
+							</form>
+						</div>
+						<img id="logo" src="logo.png">
+					</div>
+				</div>
+				<!--googlemap-->
+				<div id="mapHolder"><span id="beforeMap"></span><div id="googleMap"></div></div>
+			</div>
+		</div>
+	</body>
+</html>          

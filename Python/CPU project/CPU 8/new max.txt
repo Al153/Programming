@@ -1,0 +1,52 @@
+				def max gp6
+				def addr gp7
+				def to_compare gp5
+				def i ind
+				def array gp4
+
+				#bootstrap
+				LOD i 5 	@ldd
+				LOD array %array @ldd
+				GTO %max 	@str @gd
+				OUT max @or @ov
+				OUT $$ @od
+				OUT addr @or @ov
+				OUT $$ @od
+				HLT
+
+
+%max			PUS jmp @pur				#allowing for return
+				MOV addr zro				#initializing max and address
+				MOV max zro
+				ADD array i
+				MOV i acc
+%loop			SUB i one
+				MOV i acc
+				GTO %max_comparison @gd @str
+%return			CMP i array @wf
+				CGT E %exit
+				GTO %loop @gd
+
+%max_comparison LOD to_compare 0
+				OUT to_compare @or @ov
+				OUT $$ @od
+				OUT max @or @ov
+				OUT $$ @od
+				CMP to_compare max @wf
+				CGT G %new_max
+				GTO %return @gd
+				
+
+%new_max 		MOV max to_compare
+				MOV addr i
+				GTO %return @gd
+
+%exit 			POP jmp @por 		#reloads return address	
+				GTO jmp @gr         #exits subroutine
+
+
+%array			data 3
+				data 6
+				data 1
+				data 9
+				data 4

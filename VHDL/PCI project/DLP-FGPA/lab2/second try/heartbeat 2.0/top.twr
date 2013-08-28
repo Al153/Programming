@@ -1,0 +1,763 @@
+--------------------------------------------------------------------------------
+Release 14.1 Trace  (nt64)
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+
+C:\Xilinx\14.1\ISE_DS\ISE\bin\nt64\unwrapped\trce.exe -filter
+C:/Xilinx/Projects/DLP-FGPA/lab2/second try/heartbeat 2.0/iseconfig/filter.filter
+-intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml top.twx top.ncd -o top.twr top.pcf
+-ucf top.ucf
+
+Design file:              top.ncd
+Physical constraint file: top.pcf
+Device,package,speed:     xc3s250e,tq144,-4 (PRODUCTION 1.27 2012-04-23)
+Report level:             verbose report
+
+Environment Variable      Effect 
+--------------------      ------ 
+NONE                      No environment variables were set
+--------------------------------------------------------------------------------
+
+WARNING:Timing:3224 - The clock clk_in associated with OFFSET = IN 10 ns AFTER 
+   COMP "clk_in"; does not clock any registered input components.
+WARNING:Timing:3225 - Timing constraint OFFSET = IN 10 ns AFTER COMP "clk_in"; 
+   ignored during timing analysis
+WARNING:Timing:3391 - Timing constraint OFFSET = IN 10 ns AFTER COMP "clk_in"; 
+   does not specify a data valid duration and will not be hold checked. To 
+   enable hold checking on this offset constraint please specify a data valid 
+   duration using the VALID <duration> option.
+INFO:Timing:3412 - To improve timing, see the Timing Closure User Guide (UG612).
+INFO:Timing:2752 - To get complete path coverage, use the unconstrained paths 
+   option. All paths that are not constrained will be reported in the 
+   unconstrained paths section(s) of the report.
+INFO:Timing:3339 - The clock-to-out numbers in this timing report are based on 
+   a 50 Ohm transmission line loading model.  For the details of this model, 
+   and for more information on accounting for different loading conditions, 
+   please see the device datasheet.
+INFO:Timing:3390 - This architecture does not support a default System Jitter 
+   value, please add SYSTEM_JITTER constraint to the UCF to modify the Clock 
+   Uncertainty calculation.
+INFO:Timing:3389 - This architecture does not support 'Discrete Jitter' and 
+   'Phase Error' calculations, these terms will be zero in the Clock 
+   Uncertainty calculation.  Please make appropriate modification to 
+   SYSTEM_JITTER to account for the unsupported Discrete Jitter and Phase 
+   Error.
+
+================================================================================
+Timing constraint: TS_clk_in = PERIOD TIMEGRP "clk_in" 167 ns HIGH 50%;
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 0 paths analyzed, 0 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected. (0 component switching limit errors)
+ Minimum period is  50.000ns.
+--------------------------------------------------------------------------------
+
+Component Switching Limit Checks: TS_clk_in = PERIOD TIMEGRP "clk_in" 167 ns HIGH 50%;
+--------------------------------------------------------------------------------
+Slack: 33.000ns (max period limit - period)
+  Period: 167.000ns
+  Max period limit: 200.000ns (5.000MHz) (Tdcmpc)
+  Physical resource: Inst_low_dcm/DCM_SP_INST/CLKIN
+  Logical resource: Inst_low_dcm/DCM_SP_INST/CLKIN
+  Location pin: DCM_X1Y0.CLKIN
+  Clock network: Inst_low_dcm/CLKIN_IBUFG_OUT
+--------------------------------------------------------------------------------
+Slack: 33.000ns (max period limit - period)
+  Period: 167.000ns
+  Max period limit: 200.000ns (5.000MHz) (Tdcmpco)
+  Physical resource: Inst_low_dcm/DCM_SP_INST/CLK0
+  Logical resource: Inst_low_dcm/DCM_SP_INST/CLK0
+  Location pin: DCM_X1Y0.CLK0
+  Clock network: Inst_low_dcm/CLK0_BUF
+--------------------------------------------------------------------------------
+Slack: 117.000ns (period - (min low pulse limit / (low pulse / period)))
+  Period: 167.000ns
+  Low pulse: 83.500ns
+  Low pulse limit: 25.000ns (Tdcmpw_CLKIN_1_10)
+  Physical resource: Inst_low_dcm/DCM_SP_INST/CLKIN
+  Logical resource: Inst_low_dcm/DCM_SP_INST/CLKIN
+  Location pin: DCM_X1Y0.CLKIN
+  Clock network: Inst_low_dcm/CLKIN_IBUFG_OUT
+--------------------------------------------------------------------------------
+
+================================================================================
+Timing constraint: TS_Inst_low_dcm_CLKDV_BUF = PERIOD TIMEGRP 
+"Inst_low_dcm_CLKDV_BUF" TS_clk_in         * 16 HIGH 50%;
+For more information, see Period Analysis in the Timing Closure User Guide (UG612).
+
+ 171 paths analyzed, 43 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected. (0 setup errors, 0 hold errors, 0 component switching limit errors)
+ Minimum period is   3.966ns.
+--------------------------------------------------------------------------------
+
+Paths for end point Inst_heartbeat/count_17 (SLICE_X39Y9.CIN), 16 paths
+--------------------------------------------------------------------------------
+Slack (setup path):     2668.034ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               Inst_heartbeat/count_2 (FF)
+  Destination:          Inst_heartbeat/count_17 (FF)
+  Requirement:          2672.000ns
+  Data Path Delay:      3.960ns (Levels of Logic = 8)
+  Clock Path Skew:      -0.006ns (0.002 - 0.008)
+  Source Clock:         clock_375k rising at 0.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Maximum Data Path: Inst_heartbeat/count_2 to Inst_heartbeat/count_17
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y2.XQ       Tcko                  0.591   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/count_2
+    SLICE_X39Y2.F1       net (fanout=1)        0.497   Inst_heartbeat/count<2>
+    SLICE_X39Y2.COUT     Topcyf                1.162   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/count<2>_rt
+                                                       Inst_heartbeat/Mcount_count_cy<2>
+                                                       Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.COUT     Tbyp                  0.118   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/Mcount_count_cy<4>
+                                                       Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.COUT     Tbyp                  0.118   Inst_heartbeat/count<6>
+                                                       Inst_heartbeat/Mcount_count_cy<6>
+                                                       Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.COUT     Tbyp                  0.118   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/Mcount_count_cy<8>
+                                                       Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.COUT     Tbyp                  0.118   Inst_heartbeat/count<10>
+                                                       Inst_heartbeat/Mcount_count_cy<10>
+                                                       Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.COUT     Tbyp                  0.118   Inst_heartbeat/count<12>
+                                                       Inst_heartbeat/Mcount_count_cy<12>
+                                                       Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.COUT     Tbyp                  0.118   Inst_heartbeat/count<14>
+                                                       Inst_heartbeat/Mcount_count_cy<14>
+                                                       Inst_heartbeat/Mcount_count_cy<15>
+    SLICE_X39Y9.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<15>
+    SLICE_X39Y9.CLK      Tcinck                1.002   Inst_heartbeat/count<16>
+                                                       Inst_heartbeat/Mcount_count_cy<16>
+                                                       Inst_heartbeat/Mcount_count_xor<17>
+                                                       Inst_heartbeat/count_17
+    -------------------------------------------------  ---------------------------
+    Total                                      3.960ns (3.463ns logic, 0.497ns route)
+                                                       (87.4% logic, 12.6% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     2668.047ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               Inst_heartbeat/count_0 (FF)
+  Destination:          Inst_heartbeat/count_17 (FF)
+  Requirement:          2672.000ns
+  Data Path Delay:      3.945ns (Levels of Logic = 9)
+  Clock Path Skew:      -0.008ns (0.002 - 0.010)
+  Source Clock:         clock_375k rising at 0.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Maximum Data Path: Inst_heartbeat/count_0 to Inst_heartbeat/count_17
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y1.XQ       Tcko                  0.591   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/count_0
+    SLICE_X39Y1.F4       net (fanout=1)        0.364   Inst_heartbeat/count<0>
+    SLICE_X39Y1.COUT     Topcyf                1.162   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/Mcount_count_lut<0>_INV_0
+                                                       Inst_heartbeat/Mcount_count_cy<0>
+                                                       Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.COUT     Tbyp                  0.118   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/Mcount_count_cy<2>
+                                                       Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.COUT     Tbyp                  0.118   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/Mcount_count_cy<4>
+                                                       Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.COUT     Tbyp                  0.118   Inst_heartbeat/count<6>
+                                                       Inst_heartbeat/Mcount_count_cy<6>
+                                                       Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.COUT     Tbyp                  0.118   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/Mcount_count_cy<8>
+                                                       Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.COUT     Tbyp                  0.118   Inst_heartbeat/count<10>
+                                                       Inst_heartbeat/Mcount_count_cy<10>
+                                                       Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.COUT     Tbyp                  0.118   Inst_heartbeat/count<12>
+                                                       Inst_heartbeat/Mcount_count_cy<12>
+                                                       Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.COUT     Tbyp                  0.118   Inst_heartbeat/count<14>
+                                                       Inst_heartbeat/Mcount_count_cy<14>
+                                                       Inst_heartbeat/Mcount_count_cy<15>
+    SLICE_X39Y9.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<15>
+    SLICE_X39Y9.CLK      Tcinck                1.002   Inst_heartbeat/count<16>
+                                                       Inst_heartbeat/Mcount_count_cy<16>
+                                                       Inst_heartbeat/Mcount_count_xor<17>
+                                                       Inst_heartbeat/count_17
+    -------------------------------------------------  ---------------------------
+    Total                                      3.945ns (3.581ns logic, 0.364ns route)
+                                                       (90.8% logic, 9.2% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     2668.144ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               Inst_heartbeat/count_1 (FF)
+  Destination:          Inst_heartbeat/count_17 (FF)
+  Requirement:          2672.000ns
+  Data Path Delay:      3.848ns (Levels of Logic = 9)
+  Clock Path Skew:      -0.008ns (0.002 - 0.010)
+  Source Clock:         clock_375k rising at 0.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Maximum Data Path: Inst_heartbeat/count_1 to Inst_heartbeat/count_17
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y1.YQ       Tcko                  0.587   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/count_1
+    SLICE_X39Y1.G2       net (fanout=1)        0.432   Inst_heartbeat/count<1>
+    SLICE_X39Y1.COUT     Topcyg                1.001   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/count<1>_rt
+                                                       Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.COUT     Tbyp                  0.118   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/Mcount_count_cy<2>
+                                                       Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.COUT     Tbyp                  0.118   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/Mcount_count_cy<4>
+                                                       Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.COUT     Tbyp                  0.118   Inst_heartbeat/count<6>
+                                                       Inst_heartbeat/Mcount_count_cy<6>
+                                                       Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.COUT     Tbyp                  0.118   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/Mcount_count_cy<8>
+                                                       Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.COUT     Tbyp                  0.118   Inst_heartbeat/count<10>
+                                                       Inst_heartbeat/Mcount_count_cy<10>
+                                                       Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.COUT     Tbyp                  0.118   Inst_heartbeat/count<12>
+                                                       Inst_heartbeat/Mcount_count_cy<12>
+                                                       Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.COUT     Tbyp                  0.118   Inst_heartbeat/count<14>
+                                                       Inst_heartbeat/Mcount_count_cy<14>
+                                                       Inst_heartbeat/Mcount_count_cy<15>
+    SLICE_X39Y9.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<15>
+    SLICE_X39Y9.CLK      Tcinck                1.002   Inst_heartbeat/count<16>
+                                                       Inst_heartbeat/Mcount_count_cy<16>
+                                                       Inst_heartbeat/Mcount_count_xor<17>
+                                                       Inst_heartbeat/count_17
+    -------------------------------------------------  ---------------------------
+    Total                                      3.848ns (3.416ns logic, 0.432ns route)
+                                                       (88.8% logic, 11.2% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point Inst_heartbeat/count_15 (SLICE_X39Y8.CIN), 14 paths
+--------------------------------------------------------------------------------
+Slack (setup path):     2668.152ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               Inst_heartbeat/count_2 (FF)
+  Destination:          Inst_heartbeat/count_15 (FF)
+  Requirement:          2672.000ns
+  Data Path Delay:      3.842ns (Levels of Logic = 7)
+  Clock Path Skew:      -0.006ns (0.002 - 0.008)
+  Source Clock:         clock_375k rising at 0.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Maximum Data Path: Inst_heartbeat/count_2 to Inst_heartbeat/count_15
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y2.XQ       Tcko                  0.591   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/count_2
+    SLICE_X39Y2.F1       net (fanout=1)        0.497   Inst_heartbeat/count<2>
+    SLICE_X39Y2.COUT     Topcyf                1.162   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/count<2>_rt
+                                                       Inst_heartbeat/Mcount_count_cy<2>
+                                                       Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.COUT     Tbyp                  0.118   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/Mcount_count_cy<4>
+                                                       Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.COUT     Tbyp                  0.118   Inst_heartbeat/count<6>
+                                                       Inst_heartbeat/Mcount_count_cy<6>
+                                                       Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.COUT     Tbyp                  0.118   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/Mcount_count_cy<8>
+                                                       Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.COUT     Tbyp                  0.118   Inst_heartbeat/count<10>
+                                                       Inst_heartbeat/Mcount_count_cy<10>
+                                                       Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.COUT     Tbyp                  0.118   Inst_heartbeat/count<12>
+                                                       Inst_heartbeat/Mcount_count_cy<12>
+                                                       Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.CLK      Tcinck                1.002   Inst_heartbeat/count<14>
+                                                       Inst_heartbeat/Mcount_count_cy<14>
+                                                       Inst_heartbeat/Mcount_count_xor<15>
+                                                       Inst_heartbeat/count_15
+    -------------------------------------------------  ---------------------------
+    Total                                      3.842ns (3.345ns logic, 0.497ns route)
+                                                       (87.1% logic, 12.9% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     2668.165ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               Inst_heartbeat/count_0 (FF)
+  Destination:          Inst_heartbeat/count_15 (FF)
+  Requirement:          2672.000ns
+  Data Path Delay:      3.827ns (Levels of Logic = 8)
+  Clock Path Skew:      -0.008ns (0.002 - 0.010)
+  Source Clock:         clock_375k rising at 0.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Maximum Data Path: Inst_heartbeat/count_0 to Inst_heartbeat/count_15
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y1.XQ       Tcko                  0.591   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/count_0
+    SLICE_X39Y1.F4       net (fanout=1)        0.364   Inst_heartbeat/count<0>
+    SLICE_X39Y1.COUT     Topcyf                1.162   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/Mcount_count_lut<0>_INV_0
+                                                       Inst_heartbeat/Mcount_count_cy<0>
+                                                       Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.COUT     Tbyp                  0.118   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/Mcount_count_cy<2>
+                                                       Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.COUT     Tbyp                  0.118   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/Mcount_count_cy<4>
+                                                       Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.COUT     Tbyp                  0.118   Inst_heartbeat/count<6>
+                                                       Inst_heartbeat/Mcount_count_cy<6>
+                                                       Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.COUT     Tbyp                  0.118   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/Mcount_count_cy<8>
+                                                       Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.COUT     Tbyp                  0.118   Inst_heartbeat/count<10>
+                                                       Inst_heartbeat/Mcount_count_cy<10>
+                                                       Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.COUT     Tbyp                  0.118   Inst_heartbeat/count<12>
+                                                       Inst_heartbeat/Mcount_count_cy<12>
+                                                       Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.CLK      Tcinck                1.002   Inst_heartbeat/count<14>
+                                                       Inst_heartbeat/Mcount_count_cy<14>
+                                                       Inst_heartbeat/Mcount_count_xor<15>
+                                                       Inst_heartbeat/count_15
+    -------------------------------------------------  ---------------------------
+    Total                                      3.827ns (3.463ns logic, 0.364ns route)
+                                                       (90.5% logic, 9.5% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     2668.262ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               Inst_heartbeat/count_1 (FF)
+  Destination:          Inst_heartbeat/count_15 (FF)
+  Requirement:          2672.000ns
+  Data Path Delay:      3.730ns (Levels of Logic = 8)
+  Clock Path Skew:      -0.008ns (0.002 - 0.010)
+  Source Clock:         clock_375k rising at 0.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Maximum Data Path: Inst_heartbeat/count_1 to Inst_heartbeat/count_15
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y1.YQ       Tcko                  0.587   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/count_1
+    SLICE_X39Y1.G2       net (fanout=1)        0.432   Inst_heartbeat/count<1>
+    SLICE_X39Y1.COUT     Topcyg                1.001   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/count<1>_rt
+                                                       Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.COUT     Tbyp                  0.118   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/Mcount_count_cy<2>
+                                                       Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.COUT     Tbyp                  0.118   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/Mcount_count_cy<4>
+                                                       Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.COUT     Tbyp                  0.118   Inst_heartbeat/count<6>
+                                                       Inst_heartbeat/Mcount_count_cy<6>
+                                                       Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.COUT     Tbyp                  0.118   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/Mcount_count_cy<8>
+                                                       Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.COUT     Tbyp                  0.118   Inst_heartbeat/count<10>
+                                                       Inst_heartbeat/Mcount_count_cy<10>
+                                                       Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.COUT     Tbyp                  0.118   Inst_heartbeat/count<12>
+                                                       Inst_heartbeat/Mcount_count_cy<12>
+                                                       Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<13>
+    SLICE_X39Y8.CLK      Tcinck                1.002   Inst_heartbeat/count<14>
+                                                       Inst_heartbeat/Mcount_count_cy<14>
+                                                       Inst_heartbeat/Mcount_count_xor<15>
+                                                       Inst_heartbeat/count_15
+    -------------------------------------------------  ---------------------------
+    Total                                      3.730ns (3.298ns logic, 0.432ns route)
+                                                       (88.4% logic, 11.6% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point Inst_heartbeat/count_13 (SLICE_X39Y7.CIN), 12 paths
+--------------------------------------------------------------------------------
+Slack (setup path):     2668.272ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               Inst_heartbeat/count_2 (FF)
+  Destination:          Inst_heartbeat/count_13 (FF)
+  Requirement:          2672.000ns
+  Data Path Delay:      3.724ns (Levels of Logic = 6)
+  Clock Path Skew:      -0.004ns (0.004 - 0.008)
+  Source Clock:         clock_375k rising at 0.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Maximum Data Path: Inst_heartbeat/count_2 to Inst_heartbeat/count_13
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y2.XQ       Tcko                  0.591   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/count_2
+    SLICE_X39Y2.F1       net (fanout=1)        0.497   Inst_heartbeat/count<2>
+    SLICE_X39Y2.COUT     Topcyf                1.162   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/count<2>_rt
+                                                       Inst_heartbeat/Mcount_count_cy<2>
+                                                       Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.COUT     Tbyp                  0.118   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/Mcount_count_cy<4>
+                                                       Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.COUT     Tbyp                  0.118   Inst_heartbeat/count<6>
+                                                       Inst_heartbeat/Mcount_count_cy<6>
+                                                       Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.COUT     Tbyp                  0.118   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/Mcount_count_cy<8>
+                                                       Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.COUT     Tbyp                  0.118   Inst_heartbeat/count<10>
+                                                       Inst_heartbeat/Mcount_count_cy<10>
+                                                       Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CLK      Tcinck                1.002   Inst_heartbeat/count<12>
+                                                       Inst_heartbeat/Mcount_count_cy<12>
+                                                       Inst_heartbeat/Mcount_count_xor<13>
+                                                       Inst_heartbeat/count_13
+    -------------------------------------------------  ---------------------------
+    Total                                      3.724ns (3.227ns logic, 0.497ns route)
+                                                       (86.7% logic, 13.3% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     2668.285ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               Inst_heartbeat/count_0 (FF)
+  Destination:          Inst_heartbeat/count_13 (FF)
+  Requirement:          2672.000ns
+  Data Path Delay:      3.709ns (Levels of Logic = 7)
+  Clock Path Skew:      -0.006ns (0.004 - 0.010)
+  Source Clock:         clock_375k rising at 0.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Maximum Data Path: Inst_heartbeat/count_0 to Inst_heartbeat/count_13
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y1.XQ       Tcko                  0.591   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/count_0
+    SLICE_X39Y1.F4       net (fanout=1)        0.364   Inst_heartbeat/count<0>
+    SLICE_X39Y1.COUT     Topcyf                1.162   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/Mcount_count_lut<0>_INV_0
+                                                       Inst_heartbeat/Mcount_count_cy<0>
+                                                       Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.COUT     Tbyp                  0.118   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/Mcount_count_cy<2>
+                                                       Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.COUT     Tbyp                  0.118   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/Mcount_count_cy<4>
+                                                       Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.COUT     Tbyp                  0.118   Inst_heartbeat/count<6>
+                                                       Inst_heartbeat/Mcount_count_cy<6>
+                                                       Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.COUT     Tbyp                  0.118   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/Mcount_count_cy<8>
+                                                       Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.COUT     Tbyp                  0.118   Inst_heartbeat/count<10>
+                                                       Inst_heartbeat/Mcount_count_cy<10>
+                                                       Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CLK      Tcinck                1.002   Inst_heartbeat/count<12>
+                                                       Inst_heartbeat/Mcount_count_cy<12>
+                                                       Inst_heartbeat/Mcount_count_xor<13>
+                                                       Inst_heartbeat/count_13
+    -------------------------------------------------  ---------------------------
+    Total                                      3.709ns (3.345ns logic, 0.364ns route)
+                                                       (90.2% logic, 9.8% route)
+
+--------------------------------------------------------------------------------
+Slack (setup path):     2668.382ns (requirement - (data path - clock path skew + uncertainty))
+  Source:               Inst_heartbeat/count_1 (FF)
+  Destination:          Inst_heartbeat/count_13 (FF)
+  Requirement:          2672.000ns
+  Data Path Delay:      3.612ns (Levels of Logic = 7)
+  Clock Path Skew:      -0.006ns (0.004 - 0.010)
+  Source Clock:         clock_375k rising at 0.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Maximum Data Path: Inst_heartbeat/count_1 to Inst_heartbeat/count_13
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y1.YQ       Tcko                  0.587   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/count_1
+    SLICE_X39Y1.G2       net (fanout=1)        0.432   Inst_heartbeat/count<1>
+    SLICE_X39Y1.COUT     Topcyg                1.001   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/count<1>_rt
+                                                       Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<1>
+    SLICE_X39Y2.COUT     Tbyp                  0.118   Inst_heartbeat/count<2>
+                                                       Inst_heartbeat/Mcount_count_cy<2>
+                                                       Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<3>
+    SLICE_X39Y3.COUT     Tbyp                  0.118   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/Mcount_count_cy<4>
+                                                       Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<5>
+    SLICE_X39Y4.COUT     Tbyp                  0.118   Inst_heartbeat/count<6>
+                                                       Inst_heartbeat/Mcount_count_cy<6>
+                                                       Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<7>
+    SLICE_X39Y5.COUT     Tbyp                  0.118   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/Mcount_count_cy<8>
+                                                       Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<9>
+    SLICE_X39Y6.COUT     Tbyp                  0.118   Inst_heartbeat/count<10>
+                                                       Inst_heartbeat/Mcount_count_cy<10>
+                                                       Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CIN      net (fanout=1)        0.000   Inst_heartbeat/Mcount_count_cy<11>
+    SLICE_X39Y7.CLK      Tcinck                1.002   Inst_heartbeat/count<12>
+                                                       Inst_heartbeat/Mcount_count_cy<12>
+                                                       Inst_heartbeat/Mcount_count_xor<13>
+                                                       Inst_heartbeat/count_13
+    -------------------------------------------------  ---------------------------
+    Total                                      3.612ns (3.180ns logic, 0.432ns route)
+                                                       (88.0% logic, 12.0% route)
+
+--------------------------------------------------------------------------------
+
+Hold Paths: TS_Inst_low_dcm_CLKDV_BUF = PERIOD TIMEGRP "Inst_low_dcm_CLKDV_BUF" TS_clk_in
+        * 16 HIGH 50%;
+--------------------------------------------------------------------------------
+
+Paths for end point Inst_heartbeat/count_0 (SLICE_X39Y1.F4), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      1.565ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               Inst_heartbeat/count_0 (FF)
+  Destination:          Inst_heartbeat/count_0 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      1.565ns (Levels of Logic = 1)
+  Clock Path Skew:      0.000ns
+  Source Clock:         clock_375k rising at 2672.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Minimum Data Path: Inst_heartbeat/count_0 to Inst_heartbeat/count_0
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y1.XQ       Tcko                  0.473   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/count_0
+    SLICE_X39Y1.F4       net (fanout=1)        0.291   Inst_heartbeat/count<0>
+    SLICE_X39Y1.CLK      Tckf        (-Th)    -0.801   Inst_heartbeat/count<0>
+                                                       Inst_heartbeat/Mcount_count_lut<0>_INV_0
+                                                       Inst_heartbeat/Mcount_count_xor<0>
+                                                       Inst_heartbeat/count_0
+    -------------------------------------------------  ---------------------------
+    Total                                      1.565ns (1.274ns logic, 0.291ns route)
+                                                       (81.4% logic, 18.6% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point Inst_heartbeat/count_8 (SLICE_X39Y5.F4), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      1.565ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               Inst_heartbeat/count_8 (FF)
+  Destination:          Inst_heartbeat/count_8 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      1.565ns (Levels of Logic = 1)
+  Clock Path Skew:      0.000ns
+  Source Clock:         clock_375k rising at 2672.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Minimum Data Path: Inst_heartbeat/count_8 to Inst_heartbeat/count_8
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y5.XQ       Tcko                  0.473   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/count_8
+    SLICE_X39Y5.F4       net (fanout=1)        0.291   Inst_heartbeat/count<8>
+    SLICE_X39Y5.CLK      Tckf        (-Th)    -0.801   Inst_heartbeat/count<8>
+                                                       Inst_heartbeat/count<8>_rt
+                                                       Inst_heartbeat/Mcount_count_xor<8>
+                                                       Inst_heartbeat/count_8
+    -------------------------------------------------  ---------------------------
+    Total                                      1.565ns (1.274ns logic, 0.291ns route)
+                                                       (81.4% logic, 18.6% route)
+
+--------------------------------------------------------------------------------
+
+Paths for end point Inst_heartbeat/count_4 (SLICE_X39Y3.F2), 1 path
+--------------------------------------------------------------------------------
+Slack (hold path):      1.643ns (requirement - (clock path skew + uncertainty - data path))
+  Source:               Inst_heartbeat/count_4 (FF)
+  Destination:          Inst_heartbeat/count_4 (FF)
+  Requirement:          0.000ns
+  Data Path Delay:      1.643ns (Levels of Logic = 1)
+  Clock Path Skew:      0.000ns
+  Source Clock:         clock_375k rising at 2672.000ns
+  Destination Clock:    clock_375k rising at 2672.000ns
+  Clock Uncertainty:    0.000ns
+
+  Minimum Data Path: Inst_heartbeat/count_4 to Inst_heartbeat/count_4
+    Location             Delay type         Delay(ns)  Physical Resource
+                                                       Logical Resource(s)
+    -------------------------------------------------  -------------------
+    SLICE_X39Y3.XQ       Tcko                  0.473   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/count_4
+    SLICE_X39Y3.F2       net (fanout=1)        0.369   Inst_heartbeat/count<4>
+    SLICE_X39Y3.CLK      Tckf        (-Th)    -0.801   Inst_heartbeat/count<4>
+                                                       Inst_heartbeat/count<4>_rt
+                                                       Inst_heartbeat/Mcount_count_xor<4>
+                                                       Inst_heartbeat/count_4
+    -------------------------------------------------  ---------------------------
+    Total                                      1.643ns (1.274ns logic, 0.369ns route)
+                                                       (77.5% logic, 22.5% route)
+
+--------------------------------------------------------------------------------
+
+Component Switching Limit Checks: TS_Inst_low_dcm_CLKDV_BUF = PERIOD TIMEGRP "Inst_low_dcm_CLKDV_BUF" TS_clk_in
+        * 16 HIGH 50%;
+--------------------------------------------------------------------------------
+Slack: 2668.808ns (period - (min low pulse limit / (low pulse / period)))
+  Period: 2672.000ns
+  Low pulse: 1336.000ns
+  Low pulse limit: 1.596ns (Trpw)
+  Physical resource: Inst_heartbeat/count<0>/SR
+  Logical resource: Inst_heartbeat/count_0/SR
+  Location pin: SLICE_X39Y1.SR
+  Clock network: reset_locked
+--------------------------------------------------------------------------------
+Slack: 2668.808ns (period - (min high pulse limit / (high pulse / period)))
+  Period: 2672.000ns
+  High pulse: 1336.000ns
+  High pulse limit: 1.596ns (Trpw)
+  Physical resource: Inst_heartbeat/count<0>/SR
+  Logical resource: Inst_heartbeat/count_0/SR
+  Location pin: SLICE_X39Y1.SR
+  Clock network: reset_locked
+--------------------------------------------------------------------------------
+Slack: 2668.808ns (period - (min low pulse limit / (low pulse / period)))
+  Period: 2672.000ns
+  Low pulse: 1336.000ns
+  Low pulse limit: 1.596ns (Trpw)
+  Physical resource: Inst_heartbeat/count<0>/SR
+  Logical resource: Inst_heartbeat/count_1/SR
+  Location pin: SLICE_X39Y1.SR
+  Clock network: reset_locked
+--------------------------------------------------------------------------------
+
+================================================================================
+Timing constraint: OFFSET = IN 10 ns AFTER COMP "clk_in";
+For more information, see Offset In Analysis in the Timing Closure User Guide (UG612).
+
+ 0 paths analyzed, 0 endpoints analyzed, 0 failing endpoints
+ 0 timing errors detected.
+--------------------------------------------------------------------------------
+
+
+Derived Constraint Report
+Derived Constraints for TS_clk_in
++-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+|                               |   Period    |       Actual Period       |      Timing Errors        |      Paths Analyzed       |
+|           Constraint          | Requirement |-------------+-------------|-------------+-------------|-------------+-------------|
+|                               |             |   Direct    | Derivative  |   Direct    | Derivative  |   Direct    | Derivative  |
++-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+|TS_clk_in                      |    167.000ns|     50.000ns|      0.248ns|            0|            0|            0|          171|
+| TS_Inst_low_dcm_CLKDV_BUF     |   2672.000ns|      3.966ns|          N/A|            0|            0|          171|            0|
++-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+
+All constraints were met.
+
+
+Data Sheet report:
+-----------------
+All values displayed in nanoseconds (ns)
+
+Clock to Setup on destination clock clk_in
+---------------+---------+---------+---------+---------+
+               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+---------------+---------+---------+---------+---------+
+clk_in         |    3.966|         |         |         |
+---------------+---------+---------+---------+---------+
+
+
+Timing summary:
+---------------
+
+Timing errors: 0  Score: 0  (Setup/Max: 0, Hold: 0)
+
+Constraints cover 171 paths, 0 nets, and 39 connections
+
+Design statistics:
+   Minimum period:  50.000ns{1}   (Maximum frequency:  20.000MHz)
+
+
+------------------------------------Footnotes-----------------------------------
+1)  The minimum period statistic assumes all single cycle delays.
+
+Analysis completed Mon Dec 17 11:39:55 2012 
+--------------------------------------------------------------------------------
+
+Trace Settings:
+-------------------------
+Trace Settings 
+
+Peak Memory Usage: 159 MB
+
+
+

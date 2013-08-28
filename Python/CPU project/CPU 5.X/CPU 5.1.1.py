@@ -1,0 +1,533 @@
+import time
+
+class Core_interface:
+    sync = [0,0]
+    go2 = 0
+    go1 = 0
+    def check (self):
+        self.go2 = self.sync[0] and self.sync[1]
+
+class ALUModel:
+    flags = [0,0,0,0,0,0,0,0]
+    def setFlags(self,newFlags):
+        self.flags = newFlags
+    def printFlags(self):
+        return self.flags
+    def ALUop(self,a,b,i):
+    
+        if i == 0: #ADD
+            c = a + b
+            if c > 255:
+                self.flags [0] = 1
+                c -= 256
+        elif i == 1: #SUBRACT B from A
+            c = a - b
+            if c < 0:
+                self.flags [0] = 1
+                c -= 256
+        elif i == 2: #Multiply
+            c = (a*b)
+            if c >= 256:
+                self.flags [1] = 1
+                c = c % 256        
+        elif i == 3: #int Divide a/b
+            if b == 0:
+                self.flags [2] = 1
+                c = 0
+            else: c = a//b
+        elif i == 4: # Modulo a mod b
+            if b == 0:
+                self.flags [2] = 1
+                c = 0
+            else: c = a%b    
+        else:   #changes a and b to lists of individual bits
+            sign = 0
+            a1 = a #Original values
+            b1 = b
+            a = str(bin(a)[2:].zfill(8))
+            b = str(bin(b)[2:].zfill(8))
+            A = []
+            B = []
+
+            for j in range (8):
+                if a [j] == '1':
+                   A.append(True)
+                else:A.append(False)
+                if b [j] == '1':
+                   B.append(True)
+                else: B.append(False)
+            a,b = A,B
+
+            c = [0,0,0,0,0,0,0,0]
+        
+            if i == 5: # a AND b
+                for j in range (8):
+                    c[j] = a[j] and b[j]
+                
+            elif i == 6: #a OR b
+                for j in range (8):
+                    c[j] = a[j] or b[j]
+            elif i == 7: #a XOR b
+                for j in range (8):
+                    c[j] = (a[j] and not b[j])or(b[j]and not a[j])
+            elif i == 8: # Not a
+                for j in range (8):
+                    c[j] = not(a[j])
+            elif i == 11: #ROTATE a by b ---------- wrong order due to time spent working out which functions to use
+                b1 = b1 % 8
+                for j in range (8):
+                    c[j] = a[j-b1]
+            elif i == 12: #PARITY a
+                c = [0,0,0,0,0,0,0]
+                count = 0
+                for j in range (8):
+                    if a[j] == 1:
+                        count += 1
+                c.append(counter%2)
+            elif i == 13: #Shift a by b
+                if b1<8 and b1> -8:
+                    for j in range (8):
+                        if j-b<0 or j-b>7: c[j] = False
+                        else: c[j] = a[j-b]
+                else: c = [0,0,0,0,0,0,0,0]
+            elif i == 14:#FLIP a
+                for j in range (8):
+                    c[j] = a[7-j]
+            elif i == 9: # NAND
+                for j in range (8):
+                    c[j] = not(a[j] and b[j])
+            elif i == 10: # NOR
+                for j in range (8):
+                    c[j] = not(a[j] or b[j])
+            elif i == 100: # XNOR
+                for j in range (8):
+                    c[j] = not(a[j] and not b[j])or(b[j]and not a[j])
+            elif i == 15:
+                c[0:4] = a[4:8]
+                c[4:8] = a[0:4]
+            #Converting a and b back to 0bXXXXXXX
+
+            for j in range(8):
+                if c[j]: c[j] = '1'
+                else: c[j] = '0'
+            
+            c = ''.join(c)
+            c = int(c,2)
+        return c
+
+
+class MemoryUnit:
+    page = 0    
+    def __init__(self,memoryChanges,totalPages):
+        self.totalPages = totalPages
+        self.memory = memoryChanges
+        
+    def readSingle(self,address,page):
+        return(self.memory[page][address])
+    
+    def writeSingle(self,data,address,page):
+        self.memory[page][address] = data
+        
+    def readMult(self,address1,address2,page):
+        toReturn = []
+        if address2 >= address1:
+            for i in range(address1,address2 + 1):
+                toReturn.append(self.memory[page][i])
+        else: 
+            for i in range (address1,256):
+                toReturn.append(self.memory[page][i])
+            for i in range (0,address2 +1):
+                toReturn.append(self.memory[page][i])
+        return(toReturn)
+    def writeMult(self,address1,address2,data,page):
+        if address2 >= address1:
+            for i in range(address1,address2 + 1):
+                self.memory[page][i] = data
+        else: 
+            for i in range (address1,256):
+                self.memory[page][i] = data
+            for i in range (0,address2 +1):
+                self.memory[page][i] = data
+        return(toReturn)
+    def printMemory(self):
+        print self.memory
+
+
+    
+class ProgramCounter:
+    command_count = 0
+    state = 'start'
+    clear0 = 0
+    clear1 = 0
+    regs = [0,0,0,0]
+    pCPointer = 0
+    halt = 0
+    memory_page = 0
+    
+    def __init__(self,thread,hz,name):
+        self.thread = thread
+        self.name = name
+        if hz: self.clockDelay = 1/hz
+        else: self.clockDelay = 0
+
+    def list_to_int(self,myList):
+        myList2 = []
+        for i in range (len (myList)):
+            myList2.append(str(myList[i]))
+        myList2 =''.join(myList2)
+        myList = int(myList2,2)
+        return myList
+        
+    def run(self):
+        self.command_count += 1
+        ignore = 0
+        pCPointer = self.pCPointer
+        if self.name == 'Core 1':
+            if self.clear0:
+                ALU1.flags[0] = 0
+                self.clear0 = 0
+            if self.clear1:
+                ALU1.flags[1] = 0
+                self.clear1 = 0
+        elif self.name == 'Core 2':
+            if self.clear0:
+                ALU2.flags[0] = 0
+                self.clear0 = 0
+            if self.clear1:
+                ALU2.flags[1] = 0
+                self.clear1 = 0
+        
+        if self.clockDelay:
+            time.sleep(self.clockDelay) #speed controller
+        if self.state == 'normal': #PC changer self.state machine
+            pCPointer += 1
+            pCPointer = pCPointer % 256
+        elif self.state == 'skip':
+            skipCount = 1
+            while skipCount != 0:
+                pCPointer += 1
+                pCPointer = pCPointer % 256
+                if ignore:
+                    ignore = 0
+                    pCPointer += 1
+                
+                if self.thread[pCPointer] == 147:
+                    skipCount -= 1
+                if self.thread[pCPointer] > 72 and self.thread[pCPointer] < 147:
+                    if (self.thread[pCPointer] >=113 and self.thread[pCPointer]<=122)or self.thread[pCPointer]>=139:
+                        ignore = 1
+                        skipCount += 1
+                    else:
+                        skipCount += 1
+                        #print self.thread[pCPointer]
+            pCPointer += 1
+            pCPointer = pCPointer % 256
+            self.state = 'normal'
+        elif self.state == 'jump': self.state = 'normal'
+        elif self.state == 'start': self.state = 'normal'
+            
+        if self.name == 'Core 1':
+            if ALU1.flags[0]: #flags clear sequence
+                self.clear0 = 1
+            if ALU1.flags[1]:
+                self.clear1 = 1
+        elif self.name == 'Core 1':
+            if ALU2.flags[0]: #flags clear sequence
+                self.clear0 = 1
+            if ALU2.flags[1]:
+                self.clear1 = 1
+        instr = self.thread[pCPointer]%256
+
+
+        
+        if self.state == 'sync':
+            if self.name == 'Core 1':
+                instr = 147
+            if self.name == 'Core 2':
+                instr = 147
+                Core_interface.check()
+                if Core_interface.go2:
+                    self.state = 'normal'
+                    Core1.state = 'normal'
+                    Core_interface.sync = [0,0]
+                    
+                
+                    
+
+
+                
+        if self.name == 'Core 1':                  #status
+            print 'PC', pCPointer, 'INSTR' , instr 
+            print 'regs', self.regs, 'page', self.memory_page
+        elif self.name == 'Core 2':
+            print '\t \t \t \t \t PC', pCPointer, 'INSTR' , instr 
+            print '\t \t \t \t \t regs', self.regs, 'page', self.memory_page
+
+
+
+            
+        if instr >= 0 and instr <64: #ALU commands
+            aluInstr = instr // 4   # - picks ALU command
+            reg1 = self.regs[instr % 4]  # - picks first register
+            pCPointer += 1
+            pCPointer = pCPointer % 256
+            reg2 = self.thread[pCPointer] % 4 #- picks second register
+            reg2 = self.regs[reg2]
+            if self.name == 'Core 1':
+                quotient = ALU1.ALUop(reg1,reg2,aluInstr)
+            elif self.name == 'Core 2':
+                quotient = ALU2.ALUop(reg1,reg2,aluInstr)
+            self.regs[instr % 4] = quotient % 256
+        elif instr >= 64 and instr <68: #change page
+            self.memory_page = self.regs[instr%64] % Memory.totalPages     
+        elif instr >= 68 and instr < 149: #Flow control
+            if instr >= 68 and instr <73: #Jump
+                if instr >= 68 and instr <= 71: #jump from reg
+                    toJump = instr % 4
+                    toJump = self.regs[toJump]
+                
+                else: #jump from IMD
+                    pCPointer = (pCPointer+1)%256
+                    toJump = thread[pCPointer]
+                pCPointer = toJump
+                self.state = 'jump'
+            elif instr > 72 and instr <147: #if clauses
+                if instr >= 73 and instr <= 92: #if = regs
+                    instr = instr % 73
+                    reg1 = instr // 4
+                    reg2 = instr % 4
+                    if reg1 == 4:
+                        if self.name == 'Core 1':
+                            reg1 = self.list_to_int(ALU1.flags)
+                        elif self.name == 'Core 2':
+                            reg1 = self.list_to_int(ALU2.flags)
+                    else: reg1 = self.regs[reg1]
+                    reg2 = self.regs[reg2]
+                    if reg1 != reg2:
+                        self.state = 'skip'
+                
+                elif instr >= 93 and instr <= 112: #if =/= regs
+                    instr = instr % 93
+                    reg1 = instr // 4
+                    reg2 = instr % 4
+                    if reg1 == 4:
+                        if self.name == 'Core 1':
+                            reg1 = self.list_to_int(ALU1.flags)
+                        elif self.name == 'Core 2':
+                            reg1 = self.list_to_int(ALU2.flags)
+                    else: reg1 = self.regs[reg1]
+                    reg2 = self.regs[reg2]
+                    if reg1 == reg2:
+                        self.state = 'skip'
+    
+                elif instr >= 123 and instr <= 138: # if < regs
+                    instr = instr % 123
+                    reg1 = instr // 4
+                    reg2 = instr % 4
+                    reg1 = self.regs[reg1]
+                    reg2 = self.regs[reg2]
+                    if reg1 >= reg2:
+                        self.state = 'skip'   
+    
+                elif instr >= 113 and instr <= 117: # if = reg k
+                    reg1 = instr % 113
+                    pCPointer += 1
+                    pCPointer = pCPointer % 256
+                    reg2 = self.thread[pCPointer]
+                    if reg1 == 4:
+                        if self.name == 'Core 1':
+                            reg1 = self.list_to_int(ALU1.flags)
+                        elif self.name == 'Core 2':
+                            reg1 = self.list_to_int(ALU2.flags)
+                    else: reg1 = self.regs[reg1]
+                    if reg1 != reg2:
+                        self.state = 'skip'
+    
+                elif instr >= 118 and instr <= 122: # if =/= reg k
+                    reg1 = instr % 118
+                    pCPointer += 1
+                    pCPointer = pCPointer % 256
+                    reg2 = self.thread[pCPointer]
+                    if reg1 == 4:
+                        if self.name == 'Core 1':
+                            reg1 = self.list_to_int(ALU1.flags)
+                        elif self.name == 'Core 2':
+                            reg1 = self.list_to_int(ALU2.flags)
+                    else: reg1 = self.regs[reg1]
+                    if reg1 == reg2:
+                        self.state = 'skip'
+
+                elif instr >= 139 and instr <= 142: # if < reg k
+                    reg1 = instr % 139
+                    pCPointer += 1
+                    pCPointer = pCPointer % 256
+                    reg2 = self.thread[pCPointer]
+                    reg1 = self.regs[reg1]
+                    if reg1 >= reg2:
+                        self.state = 'skip'
+    
+                elif instr >= 143 and instr <= 146: # if > reg k
+                    reg1 = instr % 143
+                    pCPointer += 1
+                    pCPointer = pCPointer % 256
+                    reg2 = self.thread[pCPointer]
+                    reg1 = self.regs[reg1]
+                    if reg1 <= reg2:
+                        self.state = 'skip'
+    
+            elif instr == 148:#halt
+                self.halt = 1
+                print 'HALT'
+                  
+        elif instr >= 149 and instr < 213: #Memory/register control
+            if instr >= 149 and instr <= 164: #load reg (reg address)
+                instr = instr %149
+                reg1 = instr // 4
+                reg2 = instr % 4
+                reg2 = self.regs[reg2]
+                self.regs[reg1] = Memory.readSingle(reg2,self.memory_page)
+            elif instr >= 165 and instr <= 168: #load reg (IMD address)
+                reg1 = instr % 165
+                pCPointer = (pCPointer +1) % 256
+                reg2 = self.thread[pCPointer]
+                self.regs[reg1] = Memory.readSingle(reg2,self.memory_page)
+            elif instr >= 169 and instr <= 172: # load reg (IMD data)
+                reg1 = instr % 169
+                pCPointer = (pCPointer + 1) % 256
+                self.regs[reg1] = self.thread[pCPointer]
+            elif instr >= 173 and instr <=188: #write from reg (reg address)
+                instr = instr % 173
+                reg1 = instr //4
+                reg1 = self.regs[reg1]
+                reg2 = instr % 4
+                reg2 = self.regs[reg2]
+                Memory.writeSingle(reg1,reg2,self.memory_page)
+            elif instr >= 189 and instr <= 192: #write from reg (IMD address)
+                reg1 = instr %189
+                reg1 = self.regs[reg1]
+                pCPointer = (pCPointer + 1) %256
+                reg2 = self.thread[pCPointer]
+                Memory.writeSingle(reg1,reg2,self.memory_page)
+            else: #copy self.regs (reg2 <= reg1)
+                instr = instr % 193
+                reg1 = instr // 4
+                reg2 = instr % 4
+                if reg1 == 4:
+                    if self.name == 'Core 1':
+                        reg1 = self.list_to_int(ALU1.flags)
+                    elif self.name == 'Core 2':
+                        reg1 = self.list_to_int(ALU2.flags)
+                else: reg1 = self.regs[reg1]
+                self.regs[reg2] = reg1
+        elif instr == 213 or instr == 214:
+            if instr == 213:  #Synchronise 
+                if self.name == 'Core 1':
+                    Core_interface.sync[0] = 1
+                elif self.name == 'Core 2':
+                    Core_interface.sync[1] = 1
+                self.state = 'sync'
+            elif instr == 214: #Snoop regs
+                if self.name == 'Core 1':
+                    self.regs = Core2.regs
+                elif self.name == 'Core 2':
+                    self.regs = Core2.regs
+        elif instr >= 215 and instr <= 230:               #wipe memory from reg1 to reg2 [inclusive]
+            instr = instr %215
+            reg1 = instr // 4
+            reg2 = instr % 4
+            reg1 = self.regs[reg1]
+            reg2 = self.regs[reg2]
+            Memory.wipeMult(reg1,reg2)
+    
+    
+                
+        elif instr >= 231 and instr < 256: #Execution control
+            if instr >= 231 and instr <= 234: #save pc to reg
+                instr = instr % 231
+                self.regs[instr] = pCPointer
+            elif instr >= 235 and instr <=238: #load exe from reg
+                instr = instr % 235
+                self.thread[pCPointer + 1] = self.regs[instr]
+            elif instr == 239: # load exe IMD (add1:addr2)
+                pCPointer = (pCPointer + 1) %256
+                reg1 = self.thread[pCPointer]
+                pCPointer = (pCPointer + 1) %256
+                reg2 = self.thread[pCPointer]
+                pointer = pCPointer +1
+                if reg2 >= reg1:
+                    for i in range(reg1,reg2 + 1):
+                        self.thread[(pointer + i)%256] = Memory.readSingle(i,self.memory_page)
+                else: 
+                    for i in range (reg1,256):
+                            self.thread[(pointer + i)%256] = Memory.readSingle(i,self.memory_page)
+                    for i in range (0,reg2 +1):
+                            self.thread[(pointer + i)%256] = Memory.readSingle(i,self.memory_page)
+            else:                       #load exe self.regs addr
+                instr = instr %240
+                reg1 = instr // 4
+                reg2 = instr % 4
+                reg1 = self.regs[reg1]
+                reg2 = self.regs[reg2]
+                pointer = pCPointer +1
+                if reg2 >= reg1:
+                    for i in range(reg1,reg2 + 1):
+                        self.thread[(pointer + i)%256] = Memory.readSingle(i,self.memory_page)
+                else: 
+                    for i in range (reg1,256):
+                        self.thread[(pointer + i)%256] = Memory.readSingle(i,self.memory_page)
+                    for i in range (0,reg2 +1):
+                        self.thread[(pointer + i)%256] = Memory.readSingle(i,self.memory_page)
+        self.pCPointer = pCPointer
+
+memoryToLoad = [
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ,
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+]
+thread1 = [213,169,0,64,169,1,213,189,0,148]
+thread2 = [213,169,1,64,213,189,0]
+newthread = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+print len(thread1),len(thread2)
+
+for i in range(len(thread1)):
+    if i == 256: break
+    newthread[i] = thread1[i]
+thread1 = newthread
+
+newthread = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+
+for i in range(len(thread2)):
+    if i == 256: break
+    newthread[i] = thread2[i]
+thread2 = newthread
+    
+Core_interface = Core_interface()
+
+Core1 = ProgramCounter(thread1,0,'Core 1')
+Core2 = ProgramCounter(thread2,0,'Core 2')
+
+ALU1 = ALUModel()
+ALU2 = ALUModel()
+
+Memory = MemoryUnit(memoryToLoad,16)
+
+
+start_time = time.time()
+while not (Core1.halt or Core2.halt):
+    Core1.run()
+    Core2.run()
+print 'Time taken', time.time() - start_time
+print 'No. of instructions:', Core1.command_count+Core2.command_count

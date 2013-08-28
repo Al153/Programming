@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml2="http://www.safe.com/gml2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.safe.com/gml2" elementFormDefault="qualified">
+<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
+<element name="FeatureCollection" type="gml2:FeatureCollectionType" substitutionGroup="gml:_FeatureCollection"/>
+<element name="nnr" type="gml2:nnrType" substitutionGroup="gml:_Feature"/>
+
+<complexType name="FeatureCollectionType">
+<complexContent>
+<extension base="gml:AbstractFeatureCollectionType">
+</extension>
+</complexContent>
+</complexType>
+
+<complexType name="nnrType">
+<complexContent>
+<extension base="gml:AbstractFeatureType">
+<sequence>
+<element name="NNR_NAME">
+<simpleType>
+<restriction base="string">
+<maxLength value="120"/>
+</restriction>
+</simpleType></element>
+<element name="NNR_AREA">
+<simpleType>
+<restriction base="decimal">
+<totalDigits value="19"/>
+<fractionDigits value="15"/>
+</restriction>
+</simpleType></element>
+<element name="EASTING">
+<simpleType>
+<restriction base="decimal">
+<totalDigits value="19"/>
+<fractionDigits value="15"/>
+</restriction>
+</simpleType></element>
+<element name="NORTHING">
+<simpleType>
+<restriction base="decimal">
+<totalDigits value="19"/>
+<fractionDigits value="15"/>
+</restriction>
+</simpleType></element>
+<element name="LATITUDE">
+<simpleType>
+<restriction base="string">
+<maxLength value="12"/>
+</restriction>
+</simpleType></element>
+<element name="LONGITUDE">
+<simpleType>
+<restriction base="string">
+<maxLength value="12"/>
+</restriction>
+</simpleType></element>
+<element name="REFERENCE">
+<simpleType>
+<restriction base="string">
+<maxLength value="8"/>
+</restriction>
+</simpleType></element>
+<element name="STATUS">
+<simpleType>
+<restriction base="string">
+<maxLength value="32"/>
+</restriction>
+</simpleType></element>
+<element name="GID">
+<simpleType>
+<restriction base="decimal">
+<totalDigits value="11"/>
+<fractionDigits value="0"/>
+</restriction>
+</simpleType></element>
+<element name="GIS_FILE">
+<simpleType>
+<restriction base="string">
+<maxLength value="20"/>
+</restriction>
+</simpleType></element>
+<element name="NUMBER">
+<simpleType>
+<restriction base="string">
+<maxLength value="8"/>
+</restriction>
+</simpleType></element>
+<element name="AREA">
+<simpleType>
+<restriction base="decimal">
+<totalDigits value="19"/>
+<fractionDigits value="15"/>
+</restriction>
+</simpleType></element>
+<element name="EASTING0">
+<simpleType>
+<restriction base="decimal">
+<totalDigits value="19"/>
+<fractionDigits value="15"/>
+</restriction>
+</simpleType></element>
+<element name="NORTHING0">
+<simpleType>
+<restriction base="decimal">
+<totalDigits value="19"/>
+<fractionDigits value="15"/>
+</restriction>
+</simpleType></element>
+<element name="GIS_DATE">
+<simpleType>
+<restriction base="string">
+<maxLength value="20"/>
+</restriction>
+</simpleType></element>
+<element name="VERSION" type="int"/>
+<choice>
+<element ref="gml:polygonProperty"/>
+<element ref="gml:multiPolygonProperty"/>
+</choice>
+</sequence>
+</extension>
+</complexContent>
+</complexType>
+</schema>

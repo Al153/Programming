@@ -1,0 +1,4 @@
+vhdl work "low_dcm.vhd"
+vhdl work "heartbeat.vhd"
+vhdl work "top.vhd"
+vhdl work "top_tb.vhd"

@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -o "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/lab3/sram_test/top_tb_isim_beh.exe" -prj "C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/lab3/sram_test/top_tb_beh.prj" "work.top_tb" 
