@@ -1,0 +1,220 @@
+# Requires OO_API loaded and initialized
+
+#Object structure:
+
+#	Max_size
+#	Stack_pointer (0 to Max_size-1)
+#	entry(0)
+#	   .
+#	   .
+#      .
+
+#operations:
+#push, increment; decrement, pop;
+
+<subroutine: init>
+		
+		
+		#gp0: size, gp1: name ==> none
+		
+		
+		# ================ High level description ==========================
+		#creates a stack object:
+		#	Calculates actual size
+		#	gets memory allocated by OO_API
+		#	initializes stack memory array
+		
+		#======================= Pseudocode ================================
+		#write size to %size
+		#write name to %name
+
+		#size = size + 2
+		#OO_API.allocate(size,name)
+
+		#read name from %name
+		#read size from %size
+
+		#pointer = OO_API.call(name)
+		#write size to pointer
+
+		#pointer = pointer + 1
+		#write 0 to pointer #sets stack pointer to 0
+
+		#return
+
+		#===================== assembly ==================================
+		def size gp0
+		def name gp1
+		def size2 gp2
+		def name2 gp0
+		def pointer ind
+
+		%Stack.init		PUS jmp @pur
+						MOV ind zro
+
+						STR size %Stack.size
+						STR name %Stack.name
+		
+						ADD size one
+						ADD acc one
+						MOV size acc
+						GTO %OO.allocate @str @gd
+		
+						MOV ind zro
+						LOD name2 %Stack.name
+						LOD size2 %Stack.size
+		
+						GTO %OO.call @str @gd #address is returned to ind
+						STR size2 0
+		
+						STR zro 1 #indexed by pointer
+		
+						POP jmp @por
+						GTO jmp @gr
+
+
+		%Stack.size data 0
+		%Stack.name data 0
+		
+		#==================== Error handling =============================
+		%Stack.overflow			HLT
+		
+		%Stack.underflow		HLT
+<end>
+
+
+<subroutine: push>
+
+
+		#gp0: name,		gp1: data ==> none
+		
+		#====================== High level description ==========================
+		#Traditional stack push
+		
+		#If stack will be too big then:
+		#	call stack overflow
+		#else then:
+		#	write data to stack pointer
+		#increment pointer
+		
+		#============================ Pseudocode ================================
+		
+		#pointer = OO.call(name)
+		#load max_size from pointer
+		#pointer = pointer + 1
+		#load current_size from pointer
+		
+		#if current size == max_size:
+		#	goto %Stack.overflow
+		
+		#pointer_copy = pointer
+		#current_size = current_size + 1 	#current pointer is one less than index 0, 
+		#pointer = pointer + current_size 	#and the new current_size will need to be one more than before, so this ordering is more efficient
+		
+		#write data to pointer
+		#write current_size to pointer_copy
+		#return
+		
+		#========================== Assembly ====================================
+		def name gp0
+		def max_size gp0
+		def current_size gp1
+		def pointer ind
+		def pointer_copy gp2
+		def data gp7
+
+		%Stack.push		PUS jmp @pur
+						MOV data gp1
+		
+						GTO %OO.call @gd @str
+						LOD max_size 0 
+						ADD pointer one
+						MOV pointer acc
+						LOD current_size 0
+		
+						CMP current_size max_size @wf
+							CGT E %Stack.overflow
+		
+						MOV pointer_copy pointer
+						ADD current_size one
+						MOV current_size acc
+						ADD pointer current_size
+						MOV pointer acc
+		
+						STR data 0
+						MOV pointer pointer_copy
+						STR current_size 0
+		
+						POP jmp @por
+						GTO jmp @gr
+<end>
+
+<subroutine: pop>
+
+		#gp0: name ==> gp0: data
+		
+		#========================= High level description ======================
+		#Generic stack pop: 
+		#	if pointer is zero, then call error
+		#	else then: decrement pointer, output data
+		
+		#============================= Pseudocode ==============================
+		#pointer = OO_API.call(name)
+		#pointer = pointer + 1
+		#load stack_pointer from pointer
+		
+		#if stack_pointer == 0:
+		#	goto Stack.underflow
+		
+		#base_address = pointer + 1 #start of stack array
+		#stack_pointer = stack_pointer - 1
+		#store stack_pointer to pointer
+
+		#stack_pointer = stack_pointer + base_address
+		#load data from stack_pointer
+		#return data
+		
+		#============================= Assembly ================================
+		def name gp0
+		def pointer_store gp1
+		def stack_pointer_store gp2
+		def base_address gp3
+		def data gp0
+
+		%Stack.pop		PUS jmp @pur
+						GTO OO.call @str @gd
+						ADD pointer one
+						MOV pointer acc
+						LOD stack_pointer 0
+				
+						CMP stack_pointer zro
+							CGT E %Stack.underflow
+						
+						ADD pointer one
+						MOV base_address acc
+						SUB stack_pointer one
+						STR acc 0 #stack pointer is now in acc
+				
+						ADD acc base_address
+						MOV pointer acc
+						LOD data 0
+				
+						POP jmp @por
+						GTO jmp @gr
+<end>
+		
+<subroutine: del>
+		# gp0: name ==> none
+		
+		#========================= High level description ======================
+		#deallocate stack
+		
+		#============================= Pseudocode ==============================
+		#OO_API.deallocate(name)
+		
+		#============================= Assembly ================================
+		%Stack.del 	PUS jmp @pur
+					GTO %OO.deallocate @gd @str
+					POP jmp @por
+					GTO jmp @gr
+<end>

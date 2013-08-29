@@ -1,0 +1,193 @@
+#Standard char array (Array of one word entities) 
+
+# Structure:
+
+-------------
+|	Size	|
+-------------
+| Entry 0   |
+-------------
+| Entry 1 	|
+-------------
+	  .
+	  .
+	  .
+
+<subroutine: init>
+
+		#gp0: size, gp1: name ==> none
+		
+		#======================== High level description =====================
+		
+		# Initializes and array of specified size:
+		#		calculate true size
+		#		get allocated memory
+		#		write initial size value to array
+		
+		#======================= Pseudocode =================================
+		
+		#push size
+		#push name
+		
+		#size = size + 1
+		#OO.allocate(size,name)
+		
+		#pop name
+		#pointer = OO.call(name)
+		
+		#pop size
+		#write size to pointer
+		
+		#return
+
+		#===================== Assembly ====================================
+
+		def size gp0
+		def name gp1
+
+		def name2 gp0
+
+		def pointer ind
+
+		%Array.init 	PUS jmp @pur
+
+						PUS size @pur
+						PUS name @pur
+
+						ADD size one
+						MOV size acc
+						GTO %OO.allocate @gd @str
+
+						POP name2 @por
+						GTO %OO.call @gd @str 		#loads pointer
+
+						POP size @por
+						STR size 0 #implicit indexing by pointer
+
+						POP jmp @por
+						GTO jmp @gr
+<end>
+
+<subroutine: insert>
+
+		#gp0: name, gp1: index, gp2: data ==> none
+		
+		#===================== High level description ====================
+		
+		#Acts like array[i] = x
+		#Finds address of array
+		#Calculates actual index
+		#writes data to index
+		
+		#========================= Pseudocode ===========================
+		
+		#push data
+		#push index
+		
+		#pointer = OO.call(name)
+		#load size from pointer
+		
+		#pop index
+		#index = index % size
+		
+		#index = index + 1 + pointer
+		#pop data
+		
+		#write data to index
+		#return
+		
+		#=========================== Assembly ==========================
+		def pointer ind
+		def name gp0	#not actually used
+		def index gp1
+		def data gp2
+		def size gp3
+
+		%Array.insert	PUS jmp @pur 
+
+						PUS data @pur
+						PUS index @pur
+				
+						GTO %OO.call @gd @str
+						LOD size 0 
+				
+						POP index @por
+						MOD index size
+						#MOV index acc #not needed
+				
+						ADD acc one
+						ADD acc pointer
+						MOV ind acc		#prepared for write 
+						POP data @por
+				
+						STR data 0 
+						POP jmp @por
+						GTP jmp @gr
+<end>
+
+<subroutine: get>
+		
+		#gp0: name, gp1: index ==> gp0: data
+		
+		#==================== High level description ===================
+		#Acts like x = array[i]
+		#Finds address of array
+		#Calculates actual index
+		#Loads data from index
+		
+		#=================== Pseudocode ================================
+		
+		#push  index
+		#pointer = OO.call(name)
+		
+		#load size from pointer
+		#pop index
+		
+		#index = index % size
+		#index = index + 1 + pointer
+		
+		#read data from index
+		#return data
+		
+		#========================== Assembly ===========================
+		def name gp0
+		def index gp1
+
+		def size gp2
+		def pointer ind
+
+		%Array.get	PUS jmp @pur
+
+					PUS index @pur
+					GTO %OO.call @gd @str
+
+					LOD size 0
+					POP index @por
+
+					MOD index size
+					ADD acc one
+					ADD acc pointer
+					MOV ind acc
+
+					LOD data 0
+					POP jmp @por
+					GTO jmp @gr
+
+<end>
+
+<subroutine: del>
+		#gp0: name ==> none
+		#=========================== High level description ===========
+		
+		#Deallocates memory of array
+		
+		#======================== Pseudocode ==========================
+		
+		OO.deallocate(name)
+		
+		#========================= Assembly ===========================
+		%Array.del 	PUS jmp @pur
+					GTO %OO.deallocate @gd @str
+					POP jmp @por
+					GTO jmp @gr
+<end>
