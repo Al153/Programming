@@ -1,5 +1,0 @@
-set -tmpdir "C:/Hardware/MCC7/DC7/DC7_PCI/xst/projnav.tmp"
-set -xsthdpdir "C:/Hardware/MCC7/DC7/DC7_PCI/xst"
-elaborate
--ifn SSI.prj
--ifmt mixed

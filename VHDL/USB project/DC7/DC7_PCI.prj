@@ -1,4 +1,0 @@
-vhdl work "USBPort.vhd"
-vhdl work "SSI.vhd"
-vhdl work "PCI.vhd"
-vhdl work "DC7_PCI.vhd"

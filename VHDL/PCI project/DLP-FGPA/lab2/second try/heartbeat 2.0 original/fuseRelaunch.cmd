@@ -1,1 +1,0 @@
--intstyle "ise" -incremental -o "U:/Peter/heartbeat/top_tb_isim_beh.exe" -prj "U:/Peter/heartbeat/top_tb_beh.prj" "work.top_tb" 

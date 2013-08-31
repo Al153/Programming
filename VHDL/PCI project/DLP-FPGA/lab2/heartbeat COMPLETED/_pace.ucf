@@ -1,4 +1,0 @@
-NET "clk_in" TNM_NET = "clk_in";
-TIMESPEC "TS_clk_in" = PERIOD "clk_in" 167 ns HIGH 50 %;
-OFFSET = IN 10 ns BEFORE "clk_in"  ;
-OFFSET = OUT 10 ns AFTER "clk_in"  ;

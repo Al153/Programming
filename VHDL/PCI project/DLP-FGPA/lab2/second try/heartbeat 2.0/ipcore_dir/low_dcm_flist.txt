@@ -1,2 +1,0 @@
-# Output products list for <low_dcm>
-low_dcm_flist.txt

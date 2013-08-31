@@ -12,6 +12,13 @@
 #operations:
 #push, increment; decrement, pop;
 
+<subroutine: all>
+	import Stack:init
+	import Stack:push
+	import Stack:pop
+	import Stack:del
+<end>
+
 <subroutine: init>
 		
 		

@@ -107,19 +107,23 @@ def find_subroutines(token_list):
     current_subroutine = []
     subroutine_found = 0
     for line in token_list:
+        #print line
         if subroutine_found:
             if line[0] == "<end>":
                 subroutine_found = 0
                 subroutines[subroutine_name] = current_subroutine
+                print subroutines[subroutine_name]
                 current_subroutine = []
             else:
-                current_soubroutine.append(line)
+                current_subroutine.append(line)
         else:
-            if line[0] == "<subroutine":
+            if line[0] == "<subroutine:":
+                print "subroutine found: ",
                 subroutine_name = line[1]
                 if subroutine_name[-1] == ">":
                     subroutine_name = subroutine_name[:-1]
                 subroutine_found = 1
+                print subroutine_name
     return subroutines
 
 
@@ -560,7 +564,7 @@ def assemble_program(program_file_object,file_name):
     #print "\n\n"
     return program
 
-def pretokenize_subroutine(program_file,file_name):
+def pretokenize_subroutine(tokens):
     tokens = find_and_replace(tokens)
     tokens = resolve_string_literals(tokens)
     return tokens
@@ -570,9 +574,11 @@ def pretokenize(program_file,file_name):
     tokens = tokenize(program_file)
     tokens = remove_comments(tokens,0)
     subroutines = find_subroutines(tokens)
+    #print subroutines
     for subroutine in subroutines:
         subroutines[subroutine] = pretokenize_subroutine(subroutines[subroutine])
-    store_tokenized_list(subroutines)
+    #print subroutines
+    store_tokenized_list(subroutines,file_name)
     return subroutines
 
     

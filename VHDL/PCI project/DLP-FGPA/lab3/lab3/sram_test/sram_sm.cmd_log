@@ -1,1 +1,0 @@
-vhdtdtfi -prj sram_test -o C:/Xilinx/Projects/DLP-FGPA/lab3/lab3/sram_test/sram_sm.vhi -module sram_sm -template C:/Xilinx/14.1/ISE_DS/ISE//data/vhdlinst.tft -deleteonerror -lib work sram_sm.vhd 

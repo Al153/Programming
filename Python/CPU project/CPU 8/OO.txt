@@ -21,7 +21,12 @@
 #					  .
 #					  .
 #					  .
-
+<subroutine: all> #header to import all of OO
+	import OO:init
+	import OO:allocate
+	import OO:deallocate
+	import OO:call
+<end>
 
 
 <subroutine: init>

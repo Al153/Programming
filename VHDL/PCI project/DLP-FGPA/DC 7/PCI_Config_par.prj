@@ -1,2 +1,0 @@
-verilog work "netgen/par/DC7_PCI_timesim.v"
-vhdl work "PCI_Config.vhd"

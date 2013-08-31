@@ -1,2 +1,0 @@
-# Output products list for <mid_dcm>
-mid_dcm_flist.txt

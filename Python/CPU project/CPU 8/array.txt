@@ -12,6 +12,13 @@
 	  .
 	  .
 	  .
+<subroutine: all>
+	import Array:init
+	import Array:insert
+	import Array:get
+	import Array:del
+<end>
+
 
 <subroutine: init>
 

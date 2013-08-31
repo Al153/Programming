@@ -1,8 +1,0 @@
-EN top_tb NULL C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat/top_tb.vhw sub00/vhpl06 1182378323
-AR top_tb testbench_arch C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat/top_tb.vhw sub00/vhpl07 1182378324
-AR heartbeat behavioral C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat/heartbeat.vhd sub00/vhpl03 1182378320
-EN heartbeat NULL C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat/heartbeat.vhd sub00/vhpl02 1182378319
-EN top NULL C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat/top.vhd sub00/vhpl04 1182378321
-AR top behavioral C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat/top.vhd sub00/vhpl05 1182378322
-EN low_dcm NULL C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat/low_dcm.vhd sub00/vhpl00 1182378317
-AR low_dcm behavioral C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat/low_dcm.vhd sub00/vhpl01 1182378318

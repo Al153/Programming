@@ -1,0 +1,52 @@
+#====================== Pseudocode =======================
+#OO.init(5)
+
+#Stack.init(10,Stack1)
+
+#Stack.init(5, Stack2)
+
+#Stack.Push(Stack2, 5)
+
+#Stack.Push(Stack2, 6)
+
+#Stack.del(Stack1)
+
+#acc = Stack.pop(stack2)
+
+#========================== Assembly =======================
+def stack1 1
+def stack2 2
+
+
+LOD gp0 5 @ldd
+GTO %OO.init @gd @str
+
+LOD gp0 10 @ldd
+LOD gp1 stack1 @ldd
+GTO %Stack.init @gd @str
+
+LOD gp0 5 @ldd
+LOF gp1 stack2 @ldd
+GTO %Stack.init @gd @str
+
+LOD gp0 stack2 @ldd
+LOD gp1 5 @ldd
+GTO %Stack.push @gd @str
+
+LOD gp0 stack2 @ldd
+LOD gp1 6 @ldd
+GTO %Stack.push @gd @str
+
+LOD gp0 stack1 @ldd
+GTO %Stack.del @gd @str
+
+LOD gp0 stack2 @ldd
+GTO %Stack.pop @gd @str
+
+MOV acc gp0
+
+import Stack:all
+import OO:all
+
+%end data 0
+

@@ -1,1 +1,0 @@
-vhdtdtfi -prj DC7II -o "C:/Users/Al taylor/Documents/Programming/VHDL/USB project/DC7/Bit_diagnostic.vhi" -module Bit_diagnostic -template C:/Xilinx/14.1/ISE_DS/ISE//data/vhdlinst.tft -deleteonerror -lib work Bit_diagnostic.vhd 

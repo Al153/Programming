@@ -1,9 +1,0 @@
-EN mid_dcm NULL //pluto/users/AlTaylor/mid_dcm.vhd sub00/vhpl04 1351876300
-EN heartbeat NULL "C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat COMPLETED/heartbeat.vhd" sub00/vhpl02 1351876298
-EN top NULL "C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat COMPLETED/top.vhd" sub00/vhpl06 1351876302
-AR low_dcm behavioral C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/low_dcm.vhd sub00/vhpl01 1351876297
-EN top_dummy NULL "C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat COMPLETED/top.vhd" sub00/vhpl07 1351859766
-AR heartbeat behavioral "C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat COMPLETED/heartbeat.vhd" sub00/vhpl03 1351876299
-AR mid_dcm behavioral //pluto/users/AlTaylor/mid_dcm.vhd sub00/vhpl05 1351876301
-EN low_dcm NULL C:/Xilinx/Projects/DLP-FPGA/lab3/sram_test/low_dcm.vhd sub00/vhpl00 1351876296
-AR top behavioral "C:/Xilinx/Projects/DLP-FPGA/lab2/heartbeat COMPLETED/top.vhd" sub00/vhpl08 1351876303

@@ -1,8 +1,0 @@
-EN usbport NULL C:/Hardware/MCC7/DC7/DC7_PCI/USBPort.vhd sub00/vhpl04 1321345104
-EN dc7_pci NULL C:/Hardware/MCC7/DC7/DC7_PCI/DC7_PCI.vhd sub00/vhpl06 1321345106
-AR dc7_pci behave C:/Hardware/MCC7/DC7/DC7_PCI/DC7_PCI.vhd sub00/vhpl07 1321345107
-EN ssi NULL C:/Hardware/MCC7/DC7/DC7_PCI/SSI.vhd sub00/vhpl02 1321345102
-EN pci NULL C:/Hardware/MCC7/DC7/DC7_PCI/PCI.vhd sub00/vhpl00 1321345100
-AR usbport behavioral C:/Hardware/MCC7/DC7/DC7_PCI/USBPort.vhd sub00/vhpl05 1321345105
-AR pci behavioral C:/Hardware/MCC7/DC7/DC7_PCI/PCI.vhd sub00/vhpl01 1321345101
-AR ssi behavioral C:/Hardware/MCC7/DC7/DC7_PCI/SSI.vhd sub00/vhpl03 1321345103

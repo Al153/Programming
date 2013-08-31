@@ -1,5 +1,0 @@
-vhdl work "C:\Xilinx\Projects\DLP-FPGA\lab3\sram_test\sram_sm.vhd"
-vhdl work "C:\Xilinx\Projects\DLP-FPGA\lab3\sram_test\mid_dcm.vhd"
-vhdl work "C:\Xilinx\Projects\DLP-FPGA\lab3\sram_test\low_dcm.vhd"
-vhdl work "C:\Xilinx\Projects\DLP-FPGA\lab3\sram_test\heartbeat.vhd"
-vhdl work "C:\Xilinx\Projects\DLP-FPGA\lab3\sram_test\top.vhd"
