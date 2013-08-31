@@ -311,6 +311,9 @@ class CPU:
 				elif output_register:
 					self.Output.output(self.Registers[instr[0]].read(False,False),output_value)
 
+			elif opcode == 28: #Wait
+				cont = raw_input("Press return to continue")
+
 		end = time.time()
 
 		print "Instructions processed: ", self.instr_count

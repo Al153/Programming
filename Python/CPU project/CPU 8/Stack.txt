@@ -132,8 +132,9 @@
 
 		%Stack.push		PUS jmp @pur
 						MOV data gp1
-		
+
 						GTO %OO.call @gd @str
+						
 						LOD max_size 0 
 						ADD pointer one
 						MOV pointer acc
@@ -149,6 +150,17 @@
 						MOV pointer acc
 		
 						STR data 0
+
+						OUT $D$ @od 
+						OUT 0 @oa @ov
+						OUT $$ @od
+
+						OUT $AD$ @od
+						OUT ind @or @ov
+						OUT $$ @od
+
+						WAIT
+
 						MOV pointer pointer_copy
 						STR current_size 0
 		
@@ -183,13 +195,14 @@
 		
 		#============================= Assembly ================================
 		def name gp0
-		def pointer_store gp1
-		def stack_pointer_store gp2
+		def pointer gp1
+		def stack_pointer gp2
 		def base_address gp3
 		def data gp0
 
 		%Stack.pop		PUS jmp @pur
-						GTO OO.call @str @gd
+
+						GTO %OO.call @str @gd
 						ADD pointer one
 						MOV pointer acc
 						LOD stack_pointer 0
@@ -205,6 +218,16 @@
 						ADD acc base_address
 						MOV pointer acc
 						LOD data 0
+
+						#		OUT $PU$ @od
+						#		OUT data @or @ov
+						#		OUT $$ @od
+
+						OUT $PA$ @od
+						OUT ind @or @ov
+						OUT $$ @od
+
+						WAIT
 				
 						POP jmp @por
 						GTO jmp @gr
@@ -222,6 +245,7 @@
 		#============================= Assembly ================================
 		%Stack.del 	PUS jmp @pur
 					GTO %OO.deallocate @gd @str
+					OUT $7$ @od
 					POP jmp @por
 					GTO jmp @gr
 <end>

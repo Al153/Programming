@@ -240,6 +240,7 @@ class Labellist: #allows for easy gotos and jumps
 
     def find_goto_location(self,label): #used when a goto command is used with a label
         label,offset = self.find_offset(label)
+        #print self.labels
         return self.labels[label]+offset
 
     def find_address(self,label): #used when a read or write command uses a label
@@ -275,12 +276,11 @@ def decode_instr_type(line):
 
 def assemble_type_h(opcode,line,line_number):
     '''assembles a Halt type instruction'''
-    opcode = 0 #to point out values
     reg1 = 0
     reg2 = 0
     address = 0
     flags = 0
-    return [(0,0),(0,0)] #halt instruction always has this code
+    return [(0,opcode<<8),(0,0)] #halt instruction always has this code
 
 def assemble_type_r(opcode,line,line_number):
     '''assembles a register type instruction'''
@@ -436,7 +436,8 @@ def op_lookup(instruction):
             "CMP":24,
             "CJP":25,
             "CGT":26,
-            "OUT":27
+            "OUT":27,
+            "WAIT":28
             }
     try:
         return table[instruction]
@@ -473,10 +474,12 @@ def op_attributes(opcode):
                     ["c",["str","N","dcf","jab"]],    #conditional jump
                     ["c",["str","N","dcf","iid"]],  #conditional goto
                     ["v",["ov","oa","od","or"]], #out
+                    ["h",["N","N","N","N"]],
 
                     ["d",["N","N","N","N"]] #data
                    ]
     return table[opcode]
+
 
 def register_lookup(register):
     table = {
@@ -535,14 +538,15 @@ def assemble_instruction(line,line_number):
     assembled_instruction = function_dict[op_attributes[0]](opcode,line,line_number)
     return assembled_instruction
 
-def preprocess(program_file_object):
+def preprocess(program_file_object,recursion_limit):
     global Label_list
     Label_list = Labellist()
     tokens =tokenize(program_file_object)
     tokens = remove_comments(tokens,1)
     tokens = find_and_replace(tokens)
     tokens = resolve_string_literals(tokens)
-    tokens = import_code(tokens)
+    for i in xrange(recursion_limit):
+        tokens = import_code(tokens)
     #for line in tokens:
         #print line
     #tokens = space_out(tokens)
@@ -550,7 +554,7 @@ def preprocess(program_file_object):
     return tokens
 
 def assemble_program(program_file_object,file_name):
-    tokens = preprocess(program_file_object)
+    tokens = preprocess(program_file_object,10) #maximum import chain is 10
     #print "\n\n"
     line_number = 0
     program = []

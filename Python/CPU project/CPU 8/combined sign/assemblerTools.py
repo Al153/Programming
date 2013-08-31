@@ -115,7 +115,7 @@ def find_subroutines(token_list):
             else:
                 current_soubroutine.append(line)
         else:
-            if line[0] == "<subroutine":
+            if line[0] == "<subroutine:":
                 subroutine_name = line[1]
                 if subroutine_name[-1] == ">":
                     subroutine_name = subroutine_name[:-1]
@@ -273,12 +273,12 @@ def decode_instr_type(line):
 
 def assemble_type_h(opcode,line,line_number):
     '''assembles a Halt type instruction'''
-    opcode = 0 #to point out values
+     #to point out values
     reg1 = 0
     reg2 = 0
     address = 0
     flags = 0
-    return [0,0] #halt instruction always has this code
+    return [opcode<<8,0] #halt instruction always has this code
 
 def assemble_type_r(opcode,line,line_number):
     '''assembles a register type instruction'''
@@ -422,7 +422,8 @@ def op_lookup(instruction):
             "CMP":24,
             "CJP":25,
             "CGT":26,
-            "OUT":27
+            "OUT":27,
+            "WAIT":28
             }
     try:
         return table[instruction]
@@ -459,6 +460,7 @@ def op_attributes(opcode):
                     ["c",["str","N","dcf","jab"]],    #conditional jump
                     ["c",["str","N","dcf","iid"]],  #conditional goto
                     ["v",["ov","oa","od","or"]], #out
+                    ["h",["N","N","N","N"]],
 
                     ["d",["N","N","N","N"]] #data
                    ]

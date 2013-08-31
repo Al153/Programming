@@ -19,31 +19,47 @@ def stack2 2
 
 
 LOD gp0 5 @ldd
+
 GTO %OO.init @gd @str
+OUT 188 @ov @od #OUT statements are for debugging
+OUT $$ @od
 
 LOD gp0 10 @ldd
 LOD gp1 stack1 @ldd
 GTO %Stack.init @gd @str
+OUT 2 @ov @od
+OUT $$ @od
 
 LOD gp0 5 @ldd
-LOF gp1 stack2 @ldd
+LOD gp1 stack2 @ldd
 GTO %Stack.init @gd @str
+OUT 3 @ov @od
+OUT $$ @od
 
 LOD gp0 stack2 @ldd
 LOD gp1 5 @ldd
 GTO %Stack.push @gd @str
+OUT 4 @ov @od
+OUT $$ @od
 
 LOD gp0 stack2 @ldd
 LOD gp1 6 @ldd
 GTO %Stack.push @gd @str
+OUT 5 @ov @od
+OUT $$ @od
 
 LOD gp0 stack1 @ldd
 GTO %Stack.del @gd @str
+OUT 6 @ov @od
+OUT $$ @od
 
 LOD gp0 stack2 @ldd
 GTO %Stack.pop @gd @str
+OUT 6 @ov @od
+OUT $$ @od
 
 MOV acc gp0
+HLT
 
 import Stack:all
 import OO:all
