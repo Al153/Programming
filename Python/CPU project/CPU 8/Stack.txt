@@ -151,9 +151,9 @@
 		
 						STR data 0
 
-						OUT $D$ @od 
-						OUT 0 @oa @ov
-						OUT $$ @od
+						#OUT $D$ @od 
+						#OUT 0 @oa @ov
+						#OUT $$ @od
 
 						OUT $AD$ @od
 						OUT ind @or @ov
@@ -195,7 +195,7 @@
 		
 		#============================= Assembly ================================
 		def name gp0
-		def pointer gp1
+		def pointer ind
 		def stack_pointer gp2
 		def base_address gp3
 		def data gp0
@@ -245,7 +245,7 @@
 		#============================= Assembly ================================
 		%Stack.del 	PUS jmp @pur
 					GTO %OO.deallocate @gd @str
-					OUT $7$ @od
+					#OUT $7$ @od
 					POP jmp @por
 					GTO jmp @gr
 <end>

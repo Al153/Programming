@@ -67,6 +67,8 @@
 
 		%OO.no_space    HLT
 
+		%OO.underflow   HLT
+
 <end>
 
 
@@ -154,7 +156,7 @@
 		# ======================= High level description =====================
 		#search for tag
 		#find length of object from tag and next tag
-		#from next tag, subtract object length from tags
+		#from next tag, subtract object length from addresses
 		#move up array entries by one
 		#for memory from object to last object, copy memory down by object length
 		
@@ -242,26 +244,26 @@
 						ADD cla one 			#ind becomes address for now
 						MOV ind acc
 
-						OUT $LA$ @od
-						OUT %end+3 @ov @oa
-						OUT $$ @od
+						#OUT $LA$ @od
+						#OUT %end+3 @ov @oa
+						#OUT $$ @od
 
 						LOD last_addr %end+2 @ldd
 						LOD two 2 @ldd
 
-						OUT $A$ @od
-						OUT last_addr @or @ov
-						OUT $$ @od
-						WAIT
+						#OUT $A$ @od
+						#OUT last_addr @or @ov
+						#OUT $$ @od
+						#WAIT
 		
 		%OO.dallocloop1		SUB ind two
 							CMP acc last_addr @wf
 								CGT E %OO.not_found
 		
-							OUT $B$ @od
-							OUT acc @or @ov
-							OUT $$ @od
-							WAIT
+							#OUT $B$ @od
+							#OUT acc @or @ov
+							#OUT $$ @od
+							#WAIT
 							MOV ind acc
 							LOD to_compare 0 #uses ind to index
 							CMP tag to_compare @wf
@@ -275,12 +277,12 @@
 						LOD object_address 0 #indexed by ind
 						ADD ind one
 						MOV ind acc
-						OUT $C$ @od
+						#OUT $C$ @od
 
 						CMP cla ind @wf
 							CGT E %OO.dallocexit
 						
-						OUT $D% @od
+						#OUT $D$ @od
 						LOD next_tag 0 
 						ADD ind one
 						MOV ind acc
@@ -312,7 +314,7 @@
 		%OO.dallocloop2	CMP ind cla @wf
 								CGT G %OO.dallocend2
 							
-							OUT $E$ @od
+							#OUT $E$ @od
 							MOV ind address
 							LOD tag 0
 							MOV ind previous_address
@@ -337,11 +339,16 @@
 		
 						GTO %OO.dallocloop2 @gd
 		
-		%OO.dallocend2	MOV address next_address
+		%OO.dallocend2	MOV ind cla
+						STR zro 0 #wipes address
+						SUB ind one
+						MOV ind acc
+						STR zro 0 #wipes tag
+						MOV address next_address
 						SUB address address_offset
 						MOV ind cla
 						LOD max_address 0 
-						OUT $F$ @od
+						#OUT $F$ @od
 
 		%OO.dallocloop3	CMP address max_address @wf
 						CGT G %OO.dallocexit
@@ -355,7 +362,7 @@
 							MOV previous_address acc
 							ADD address one
 							MOV address acc		
-							OUT $G$ @od
+							#OUT $G$ @od
 
 						GTO %OO.dallocloop3 @gd
 		
@@ -432,6 +439,11 @@
 		%OO.callbreak		ADD address one
 							MOV address acc
 							LOD ind 0
+
+							OUT $CA$ @od
+							OUT ind @or @ov
+							OUT $$ @od
+
 							GTO jmp @gr
 		
 <end>

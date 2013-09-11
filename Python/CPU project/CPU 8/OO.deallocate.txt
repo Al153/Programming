@@ -1,0 +1,65 @@
+# ======================== Object array structure ===============================
+#	_________________________________________
+#	|Max last value   |  current last value |
+#	-----------------------------------------
+#	|		Tag 0     |  address 0			|
+#	-----------------------------------------	
+#	|		Tag 1     |  address 1          |
+#	-----------------------------------------
+#					  .
+#					  .
+#					  .
+#   -----------------------------------------
+#	|		Tag n     |  address n			|
+#	-----------------------------------------
+#	|		JUNK      |	 next address		| <== CLA refers to this address
+#   -----------------------------------------
+
+# ==================== High level description ==================================
+
+		#search for tag
+		#find length of object from tag and next tag
+		#from next tag, subtract object length from tags
+		#move up array entries by one
+		#for memory from object to last object, copy memory down by object length
+
+
+# ========================== Steps =============================================
+
+# 1)  Check array length is not zero
+# 2)  Find tag in object array
+# 3)  If tag is last tag in array do:
+# 		3:1) remove tag n
+#		3:2) subtract two from CLA
+#		3:3) return
+# 4)  Find next object address in table
+# 5)  subtract current object address from next object address, this becomes the offset
+# 6)  From next object address to address in CLA do:
+#		6:1) Move data at address to address - offset
+# 7)  From address of next object address to CLA do:
+# 		7:1) Move tag at address -1 to address -3
+#		7:2) subtract offset from object address at address and move to address - 2
+# 8) subtract 2 from CLA 
+# 9) return
+
+# ====================== Pseudocode ============================================
+
+#	Load CLA from %end+3
+#	if CLA == %end+4:
+#			goto %OO.underflow
+# 	address = CLA + 1 
+# 	while true:
+#		address -= 2
+#		load comparison_tag from address
+#		if comparison_tag == tag:
+#			break
+#		if address == %end+4:
+#			goto %OO.not_found
+# 	if address == CLA - 3: #tag is last in array
+#		write 0 to address
+#		CLA -= 2	
+#	load COA from (address + 1) #Current Object Address
+#	load NOA from (address + 3) #Next Object Address
+#	offset = NOA - COA
+#	address = NOA
+#	while address 

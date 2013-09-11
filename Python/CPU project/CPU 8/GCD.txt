@@ -1,0 +1,34 @@
+#while a != 0:
+#	c = a
+#	a = b%a
+#	b = c
+#return b
+
+# =============== Definitions ================
+def a gp0
+def b gp1
+def c gp2
+
+#============ Call script ==============
+
+			LOD a 720 @ldd
+			LOD b 400 @ldd
+			GTO %GCD @gd @str
+
+			OUT a @or @ov
+			OUT $$ @od 
+
+			HLT
+
+#============ Subroutine ==============
+
+%GCD		CMP a zro @wf
+			CGT E %return
+				MOV c a
+				MOD b a
+				MOV a acc
+				MOV b c
+			GTO %GCD @gd 
+
+%return		MOV a b
+			GTO jmp @gr

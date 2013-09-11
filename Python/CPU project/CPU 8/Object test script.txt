@@ -1,18 +1,29 @@
 #====================== Pseudocode =======================
 #OO.init(5)
+#print 1
 
 #Stack.init(10,Stack1)
+#print addr(Stack1)
+#print 2 
 
 #Stack.init(5, Stack2)
+#print addr(Stack2)
+#print 3
 
 #Stack.Push(Stack2, 5)
+#print addr(Stack2)
+#print 4
 
 #Stack.Push(Stack2, 6)
+#print addr(Stack2)
+#print 5
 
 #Stack.del(Stack1)
+#print addr(Stack1)
+#print 6
 
 #acc = Stack.pop(stack2)
-
+#print addr(stack2)
 #========================== Assembly =======================
 def stack1 1
 def stack2 2
@@ -21,7 +32,7 @@ def stack2 2
 LOD gp0 5 @ldd
 
 GTO %OO.init @gd @str
-OUT 188 @ov @od #OUT statements are for debugging
+OUT 1 @ov @od #OUT statements are for debugging
 OUT $$ @od
 
 LOD gp0 10 @ldd
