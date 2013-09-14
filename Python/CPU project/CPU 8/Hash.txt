@@ -1,0 +1,122 @@
+#Hash function:
+#=================== High level description: ==================================
+#pop a number of values to hash
+#for number to hash:
+#	Apply Xorshift function and combine with previous total
+#push total to stack
+
+
+#================= Pseudocode =============================
+#def xorshift(total,value):
+
+#	t1 = (total>>3)
+#	t1 = total^t1
+#	t2 = rot_left(t1,5)
+#	t2 = total^t2
+
+#	v1 = value<<4
+#	v1 = value^v1
+#	v2 = rot_right(v1,6)
+#	v2 = value^v2
+
+#	i = 0
+#	while i < 16:
+#		i += 1
+#		
+#		v2 = v2^t1^v1
+#		v1 = t1 + t2
+#		t1 = v1>>2
+#		t1 = t1^v1
+#		t2 = rot_right(v2,7)+(v1^v2)
+#
+#	return v2 as total
+
+#def hash(values,no_of_values):
+#	total = 0 #total stays on stack
+#	while no_of_values > 0:
+#		no_of_values -= 1
+#		total = xorshift(total, next_value)
+#	return total
+
+#==================== Assembly ========================
+
+<subroutine: Hash>
+def t1 gp0
+def t2 gp1
+def v1 gp2
+def v2 gp3
+def total gp4
+def value gp5
+def i gp6
+def no_of_values gp7
+
+%Hash.hash 		POP no_of_values @por
+				PUS 0 @pud
+%Hash.loop1		CMP no_of_values zro @wf
+				CGT E %Hash.return
+					SUB no_of_values one 
+					MOV no_of_values acc
+
+					GTO %Hash.xorshift
+
+%Hash.xorshift  POP total @por
+				POP value @por
+
+				#setup
+				
+				LOD acc 3 @ldd
+				SHR total acc
+				XOR acc total
+				MOV t1 acc 
+
+				LOD acc 5 @ldd
+				ROL t1 acc 
+				XOR acc total
+				MOV t2 acc
+
+				LOD acc 4 @ldd
+				SHL value acc
+				XOR acc value
+				MOV v1 acc
+
+				LOD acc 6
+				ROR v1 acc
+				XOR acc value
+				MOV v2 acc
+
+				MOV i zro
+				LOD value 16 @ldd
+%Hash.loop		CMP i value @wf
+				CGT E %Hash.xrshftreturn #return
+
+					ADD i one 
+					MOV i acc
+
+					XOR v2 t1
+					XOR acc v1
+					MOV v2 acc
+
+					ADD t1 t2
+					MOV v1 acc
+
+					SHR v1 one
+					SHR acc one
+					XOR acc v1
+					MOV t1 acc					
+
+					LOD acc 7 @ldd
+					ROR v2 acc
+					MOV t2 acc
+					XOR v1 v2
+					ADD acc t2
+					MOV t2 acc
+
+					GTO %Hash.loop @gd
+
+
+%Hash.xrshftreturn  PUS v2 @pur return total to stack
+					GTO %Hash.loop1 @gd
+
+%Hash.return	GTO jmp @gr
+
+<end>
