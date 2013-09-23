@@ -1,0 +1,373 @@
+#An importable brainfuck interpreter
+#excludes the data in (",")
+
+#=============== Commands ===================
+#  >	0x3E	76	move data pointer right
+#  <	0x3C	74	move data pointer left
+#  +	0x2B	43	add one to byte at data pointer
+#  -	0x2D	45	subtract one from byte at data pointer
+#  [	0x5B	91	if byte at data pointer == 0: goto corresponding ]
+#  ]	0x5D	93	if byte at data pointer != 0: goto previous corresponding [
+#  .	0x2E	46  output data value of byte to screen as ascii
+
+# Machine operation for commands
+# > : store current data to pointer, add one to pointer(mod 4000), load current data from pointer
+# < : store current data to pointer, sub one from pointer (mod 4000), load current data from pointer
+# + : add one to current data(mod 256)
+# - : sub one from current data(mod 256)
+# [ : if current data == 0: start forward motion loop
+# ] : if current data != 0: start backward motion loop
+# . : output ascii char of current data
+
+#=============== Pseudocode ====================
+#reg current_data
+#reg data_pointer
+#reg instr_pointer = -1
+#reg current_instruction
+
+#array[10000] data
+#array[10000] instructions
+
+#reg loop_level
+
+#reg const 256
+#reg const 10000
+
+#def run():
+#	while 1:
+#		step()
+
+#def step():
+#	fetch()
+#	exec():
+
+
+#def fetch():
+#	instruction_pointer = (instruction_pointer + 1)%4000
+#	load current_instruction = instructions[instruction_pointer]
+
+#def exec():
+#	if current_instruction == 76:
+#		exec>()
+#	elif current_instruction == 74:
+#		exec<()
+#	elif current_instruction == 43:
+#		execplus()
+#	elif current_instruction == 45:
+#		execminus()
+#	elif current_instruction == 91:
+#		exec[()
+#	elif current_instruction == 93:
+#		exec]()
+#	elif current_instruction == 46:
+#		exec.()
+
+
+#def exec>():
+#	store current_data data[data_pointer]
+#	data_pointer = (data_pointer + 1)%4000
+#	load current_data data[data_pointer]
+
+
+#def exec<():
+#	store current_data data[data_pointer]
+#	data_pointer = (data_pointer - 1)%4000
+#	load current_data data[data_pointer]
+
+
+#def execplus():
+#	current_data = (current_data + 1)%256
+
+
+#def execminus():
+#	current_data = (current_data - 1)%256
+
+
+#def exec[():
+#	if current_data == 0:
+#		forward_loop()
+#	else:
+		pass
+
+#def exec]():
+#	if current_data != 0:
+#		backward_loop()
+#	else:
+#		pass
+
+#def exec.():
+#	output(current_data,ascii)
+
+
+#def forward_loop():
+#	loop_level = 0
+#	while True:
+#		load current_instruction from instructions[instruction_pointer]
+#		if current_instruction == 91:
+#			loop_level += 1
+#		elif current_instruction == 93:
+#			loop_level -= 1
+#		if loop_level == 0:
+#			break
+#		instruction_pointer = (instruction_pointer + 1)%4000
+
+
+#def backward_loop():
+#	loop_level = 0
+#	while True:
+#		load current_instruction from instructions[instruction_pointer]
+#		if current_instruction == 91:
+#			loop_level += 1
+#		elif current_instruction == 93:
+#			loop_level -= 1
+#		if loop_level == 0:
+#			break
+#		instruction_pointer = (instruction_pointer - 1)%4000
+#============================================= Assembly ===================================
+
+<subroutine: all>
+	import brainf_ck:run
+	import brainf_ck:fetch
+	import brainf_ck:exec
+	import brainf_ck:exec>
+	import brainf_ck:exec<
+	import brainf_ck:exec[
+	import brainf_ck:exec]
+	import brainf_ck:exec+
+	import brainf_ck:exec-
+	import brainf_ck:exec.
+	import brainf_ck:forloop
+	import brainf_ck:backloop
+<end>
+<subroutine: run>
+	def instr_pointer gp0
+
+	%bf.run()	LOD instr_pointer -1 @ldd
+				LOD gp7 10000 @ldd	#data/instruction modulus
+				LOD gp6 256 @ldd	#byte modulus
+				LOD ext 91	@ldd
+				LOD gp5	93	@ldd
+				GTO %bf.fetch() @gd @str
+<end>
+
+<subroutine: fetch>
+	def instr_pointer gp0
+	def current_instruction gp1
+
+	def %data %instructions+10000
+
+	def 10000 gp7
+	def 256 gp6
+
+
+	%bf.fetch()	ADD instruction_pointer one
+				MOD acc 10000
+				MOV instruction_pointer acc
+
+				MOV ind instruction_pointer
+				LOD current_instruction %instructions
+
+				GTO %bf.exec()
+<end>
+
+<subroutine: exec>
+	def instr_pointer gp0
+	def current_instruction gp1
+
+	def %data %instructions+10000
+
+	def 10000 gp7
+	def 256 gp6
+
+	%bf.exec()	
+				LOD acc 43
+				CMP current_instruction acc @wf
+					CGT E %bf.execplus()
+
+				LOD acc 45
+				CMP current_instruction acc @wf
+					CGT E %bf.execminus()
+
+				LOD acc 62
+				CMP current_instruction acc @wf
+					CGT E %bf.exec>()
+
+				LOD acc 60
+				CMP current_instruction acc @wf
+					CGT E %bf.exec<()
+
+				LOD acc 91
+				CMP current_instruction acc @wf
+					CGT E %bf.exec[()
+
+				LOD acc 93
+				CMP current_instruction acc @wf
+					CGT E %bf.exec]()
+
+				LOD acc 46
+				CMP current_instruction acc @wf
+					CGT E %bf.exec.()
+
+				HLT #else halt
+
+<end>
+
+<subroutine: exec+>
+	def current_data gp2
+	def 256 gp6
+
+	%bf.execplus()	ADD current_data one
+					MOD acc 256
+					MOV current_data acc
+
+					GTO %bf.fetch() @gd
+<end>
+
+<subroutine: exec->
+	def current_data gp2
+	def 256 gp6
+
+	%bf.execminus()	SUB current_data one
+					MOD acc 256
+					MOV current_data acc
+
+					GTO %bf.fetch() @gd
+<end>
+
+<subroutine: exec>>
+	def current_data gp2
+	def %data %instructions+10000
+	def data_pointer gp3
+	def 10000 gp7
+
+	%bf.exec>()		MOV ind data_pointer
+					STR current_data %data
+					ADD data_pointer one
+					MOD data_pointer 10000
+					MOV ind acc
+					MOV data_pointer acc
+					LOD current_data %data
+
+					GTO %bf.fetch() @gd
+<end>
+
+<subroutine: exec<>
+	def current_data gp2
+	def %data %instructions+10000
+	def data_pointer gp3
+	def 10000 gp7
+
+	%bf.exec<()		MOV ind data_pointer
+					STR current_data %data
+					SUB data_pointer one
+					MOD data_pointer 10000
+					MOV ind acc
+					MOV data_pointer acc
+					LOD current_data %data
+
+					GTO %bf.fetch() @gd
+<end>
+
+<subroutine: exec[>
+
+	def current_data gp2
+	def instr_pointer gp0
+	def current_instruction gp1
+	def loop_level gp4
+	def [ ext
+	def ] gp5
+	def 10000 gp7
+
+	%bf.exec[()	CMP current_data zro @wf
+					CGT E %bf.forloop
+				GTO %bf.fetch() @gd
+
+	%bf.forloop	ADD instr_pointer one
+				MOD acc 10000
+				MOV ind acc
+				MOV loop_level one @ldd
+
+	%bf.forlooploop	LOD current_instruction %instructions
+
+					CMP [ current_instruction @wf
+						CGT E %bf.forloopadd1
+					CMP ] current_instruction @wf
+						CGT E %bf.forloopsub1
+
+
+	%bf.forloopret	CMP loop_level zro @wf
+						CGT E %bf.fetch()
+
+					ADD ind one
+					MOV ind acc
+
+					GTO %bf.forlooploop @gd
+
+
+	%bf.forloopadd1	ADD loop_level one
+					MOD acc 10000
+					MOV loop_level acc
+					GTO %bf.forloopret @gd
+
+	%bf.forloopsub1 SUB loop_level one
+					MOD acc 10000
+					MOV loop_level acc
+					GTO %bf.forloopret @gd
+<end>
+
+<subroutine: exec]>
+
+	def current_data gp2
+	def instr_pointer gp0
+	def current_instruction gp1
+	def loop_level gp4
+	def [ ext
+	def ] gp5
+	def 10000 gp7
+
+	%bf.exec]()	CMP current_data zro @wf
+					CGT E %bf.fetch()
+				#carries on over else
+
+	%bf.backloop	SUB instr_pointer one
+					MOD acc 10000
+					MOV ind acc
+					MOV loop_level one @ldd
+
+	%bf.backlooploop		LOD current_instruction %instructions
+
+						CMP ] current_instruction @wf
+							CGT E %bf.backloopadd1
+						CMP [ current_instruction @wf
+							CGT E %bf.backloopsub1
+
+
+	%bf.backloopret		CMP loop_level zro @wf
+							CGT E %bf.fetch()
+
+						ADD ind one
+						MOV ind acc
+
+						GTO %bf.backlooploop @gd
+
+
+	%bf.backloopadd1	ADD loop_level one
+						MOD acc 10000
+						MOV loop_level acc
+						GTO %bf.backloopret @gd
+
+	%bf.backloopsub1 	SUB loop_level one
+						MOD acc 10000
+						MOV loop_level acc
+						GTO %bf.backloopret @gd
+
+<end>
+
+
+<subroutine: exec.>
+	def current_data gp2
+
+	%bf.exec.()	OUT current_data @or
+				GTO %bf.fetch() @gd
+<end>
+
