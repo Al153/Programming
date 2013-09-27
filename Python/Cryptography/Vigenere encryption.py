@@ -52,7 +52,7 @@ class Cipher:
 
 LookUp = Tools()
 start = time.time() #benchmarking
-Vignere = Cipher("Hello")
+Vignere = Cipher("maths")
 plaintext =  '''
 
 hereuponlegrandarosewithagraveandstatelyairandbroughtmethebeetlefromaglasscasei
