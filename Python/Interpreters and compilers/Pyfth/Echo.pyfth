@@ -1,0 +1,19 @@
+main
+	str prompt "Hello, type things to get them echoed"
+	prompt echo
+	1 while
+		inChars string
+		string echo
+	1 loop
+;
+
+echo #prints a string
+	dup
+	len 0 for i
+		dup i swap index
+		print_char
+	loop
+	CR
+;
+
+CR 10 print_char ; #carriage return

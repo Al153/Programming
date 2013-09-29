@@ -1,0 +1,17 @@
+main
+	120 36 gcd
+	drop
+	print
+;
+
+gcd 
+	local A
+	local B
+	A if
+		A B A %
+		gcd
+	else
+		B A
+		return
+	endif
+;

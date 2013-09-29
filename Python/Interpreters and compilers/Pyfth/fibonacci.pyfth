@@ -1,0 +1,13 @@
+main
+	50 fib print
+;
+
+fib
+	1 swap 0 swap
+	0 for i
+		local temp
+		temp +
+		temp swap
+	loop
+	swap drop
+;

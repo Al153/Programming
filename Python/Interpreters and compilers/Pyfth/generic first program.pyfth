@@ -1,0 +1,28 @@
+main
+	str prompt1 "Hi, what's your name?\n"
+	str prompt2 ". How old are you?\n"
+	str str1 "Hi, "
+	str str2 "\nOOH.. it looks a bit dodgy in here for someone your age"
+	str str3 "\nHa!, I lied"
+
+	prompt1 echo
+	inChars name
+	str1 echo name echo prompt2 echo
+	in 18 <
+	if
+		str2 echo
+	else
+		str3 echo
+	endif
+
+;
+
+echo #prints a string
+	dup
+	len 0 for i
+		dup i swap index
+		print_char
+	loop
+;
+
+CR 10 print_char ; #carriage return
