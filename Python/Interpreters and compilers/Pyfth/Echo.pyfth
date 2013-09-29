@@ -4,6 +4,7 @@ main
 	1 while
 		inChars string
 		string echo
+		CR
 	1 loop
 ;
 
@@ -13,7 +14,6 @@ echo #prints a string
 		dup i swap index
 		print_char
 	loop
-	CR
 ;
 
 CR 10 print_char ; #carriage return

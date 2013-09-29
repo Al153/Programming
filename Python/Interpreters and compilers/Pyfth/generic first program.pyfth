@@ -1,3 +1,5 @@
+import Echo
+
 main
 	str prompt1 "Hi, what's your name?\n"
 	str prompt2 ". How old are you?\n"
@@ -16,13 +18,3 @@ main
 	endif
 
 ;
-
-echo #prints a string
-	dup
-	len 0 for i
-		dup i swap index
-		print_char
-	loop
-;
-
-CR 10 print_char ; #carriage return

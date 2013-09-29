@@ -1,5 +1,6 @@
 #Implementation of a forth like language in python
 import sys
+import Tokenizer
 
 
 
@@ -95,27 +96,42 @@ Error: There is a missing word at end of '""",self.position[1]
 	# ============== Setup =====================
 	def input_tokens(self, tokens):
 		self.tokens = tokens
-		self.instruction_pointer = -1
 
-	def gather(self):
+	def gather(self,tokens):
 		"""
 		Gathers words within program for execution
 		"""
+		defined_words = {}
 		current_word = []
 		found_word = 0
-		for token in self.tokens:
-			if found_word:
+		import_called = 0
+		for token in tokens:
+			if import_called:
+				import_called = 0
+				token = "..\\" + token+".pyfth"
+				#print token
+				imported_program = open(token)
+				defined_words.update(self.gather(Tokenizer.tokenize(imported_program)))
+				#print defined_words
+				imported_program.close()
+			elif found_word:
 				if token == ";":
 					found_word = 0
 					current_word.append("return")
-					self.defined_words[current_word_name] = current_word
+					defined_words[current_word_name] = current_word
 					current_word = []
+
 				else:
 					current_word.append(token)
+			elif token == "import":
+				import_called = 1
+
+
 			else:
 				#print "found word: ",token
 				found_word = 1
 				current_word_name = token
+		return defined_words
 		#print self.defined_words
 
 
@@ -221,7 +237,7 @@ Error: There is a missing word at end of '""",self.position[1]
 	# ============ Execution ===============
 
 	def run(self):
-		self.gather()
+		self.defined_words = self.gather(self.tokens)
 		self.done = 0
 		while not self.done:
 			self.execute()
