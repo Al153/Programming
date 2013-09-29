@@ -1,0 +1,55 @@
+# =============== standard commands ============
+
+
+
+
+
+echo #prints a string
+	dup
+	len 0 for i
+		dup i swap index
+		print_char
+	loop
+;
+
+CR 10 print_char ; #carriage return
+
+# ================ Array commands ================
+array.dump 			#dumps the contents of an array to the stack
+	dup
+	len 0 for i
+		dup i swap
+		index swap
+	loop
+	len
+;
+
+array.fill
+	dup
+	len 0 for i
+		dup i swap
+		insert
+	loop
+	drop
+;
+
+array.slice
+	#start, end, reference ==> [array[start]....array[end]]
+	local array
+	for i
+		i array index
+	loop
+;
+
+# ================= Maths ========================
+sqrt #x,accuracy ==> sqrt(x)
+	2 local guess 
+	0 for i
+		dup
+		guess /
+		guess add
+		2 /
+		local guess
+	loop
+	drop guess
+;

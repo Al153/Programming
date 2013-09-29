@@ -1,4 +1,4 @@
-import Echo
+import stdlib
 
 main
 	str prompt1 "Hi, what's your name?\n"
