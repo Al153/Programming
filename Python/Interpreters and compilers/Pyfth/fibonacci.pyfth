@@ -1,4 +1,21 @@
+import stdlib
+
 main
+	str prompt "Hi, type a number"
+	str return1 "Fib("
+	str return2	") is "
+	str return3 "."
+
+	prompt echo
+	in dup fib swap
+	return1 echo
+	print
+	return2 echo
+	print
+	return3 echo
+;
+
+main2
 	50 fib print
 ;
 

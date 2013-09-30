@@ -10,6 +10,7 @@ echo #prints a string
 		dup i swap index
 		print_char
 	loop
+	drop
 ;
 
 CR 10 print_char ; #carriage return
@@ -24,10 +25,10 @@ array.dump 			#dumps the contents of an array to the stack
 	len
 ;
 
-array.fill
-	dup
-	len 0 for i
-		dup i swap
+array.fill #fills an array from the stack
+	local reference
+	reference len 0 for i 
+		 i reference
 		insert
 	loop
 	drop
@@ -39,6 +40,36 @@ array.slice
 	for i
 		i array index
 	loop
+;
+
+array.compare #compares two arrays and returns a bit
+	#referenceB referenceA ==> 1 if equal else 0
+	local A
+	local B
+	A len B len 
+	= if 
+		A len 0 for i
+			i A index i B index =
+			if 
+			else
+				0 return
+			endif
+		loop
+		1 return
+	else
+		0 return
+	endif
+;
+
+array.append #adds a value to an array
+	#value reference ==> none
+	local reference
+	local value
+	reference array.dump #puts array values on stack
+	value
+	reference len 1 + reference ref_array #creates a new array
+	reference array.fill
+	reference array.dump reference array.fill
 ;
 
 # ================= Maths ========================

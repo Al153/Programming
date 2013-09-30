@@ -54,6 +54,7 @@ class Pyfth:
 							  "global":self.global_var,			#/
 							  "local_array":self.local_array,	#/
 							  "global_array":self.global_array, #/
+							  "ref_array": self.ref_array,      #/
 							  "index":self.index,				#/
 							  "insert":self.insert,				#/
 							  "len":self.len,
@@ -87,11 +88,15 @@ Error: There is a missing word at end of '""",self.position[1]
 		quit()
 
 	def stack_empty(self):
-		print """\nERROR: Stack is empty."""
+		print "\nERROR: Stack is empty."
 		quit()
 
 	def invalid_index(self):
 		print '''ERROR: invalid index'''
+		quit()
+
+	def invalid_reference(self,reference):
+		print "ERROR: invalid reference: ", reference
 		quit()
 	# ============== Setup =====================
 	def input_tokens(self, tokens):
@@ -265,6 +270,7 @@ Error: There is a missing word at end of '""",self.position[1]
 			try:
 				#print self.position
 				self.inbuilt_words[word]()
+				#print word
 				self.position[0]+=1
 			except KeyError:
 				if self.position[1]+"."+word in self.defined_words:
@@ -632,6 +638,14 @@ Error: There is a missing word at end of '""",self.position[1]
 		except:
 			self.stack_empty()
 
+	def ref_array(self):
+		try:
+			reference = self.Data_Stack.pop()
+			size = self.Data_Stack.pop()
+		except:
+			self.stack_empty()
+		self.arrays[reference] = [0]*size
+
 	def insert(self):
 		try:
 			reference = self.Data_Stack.pop()
@@ -641,9 +655,13 @@ Error: There is a missing word at end of '""",self.position[1]
 			self.stack_empty()
 		finally:
 			try:
+				#print "inserting to", reference
 				self.arrays[reference][position] = data
 			except IndexError:
 				self.invalid_index()
+			except KeyError:
+				self.invalid_reference(reference)
+
 
 	def index(self):
 		try:
@@ -662,7 +680,10 @@ Error: There is a missing word at end of '""",self.position[1]
 			reference = self.Data_Stack.pop()
 		except:
 			self.stack_empty()
-		self.Data_Stack.append(len(self.arrays[reference]))
+		try:
+			self.Data_Stack.append(len(self.arrays[reference]))
+		except KeyError:
+			self.invalid_reference(reference)
 
 	def str(self):
 		self.position[0] += 1
@@ -736,8 +757,9 @@ Error: There is a missing word at end of '""",self.position[1]
 			value = self.Data_Stack.pop()
 		except:
 			self.stack_empty()
-		finally:
-			print value
+		
+		print value,
+		sys.stdout.write('')
 
 	def print_stack(self):
 		print self.Data_Stack

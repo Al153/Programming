@@ -74,7 +74,7 @@ class Length_finder:
             base_trigram = self.ciphertext[i:i+3]
             for j in range(i+3,len(self.ciphertext)-2):
                 test_trigram = self.ciphertext[j:j+3]
-                if test_trigram[0] == base_trigram[0] and test_trigram[1] == base_trigram[1] and test_trigram[2] == base_trigram[2]: #if trigrams match
+                if test_trigram== base_trigram: #if trigrams match
                   differences.append(j-i) #Count the distance
                   
         print "found differences"          
