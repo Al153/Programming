@@ -8,9 +8,11 @@ main
 
 	#1 1 array1 insert
 
- 	#array1 array2 array.compare
- 	#if equal echo else unequal echo endif
+ 	array1 array2 array.compare
+ 	if equal echo else unequal echo endif
 
  	63 equal array.append
- 	equal echo print
+ 	equal echo
+
+ 	equal echo_data
 ;

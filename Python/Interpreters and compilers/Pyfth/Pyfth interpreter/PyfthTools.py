@@ -91,8 +91,8 @@ Error: There is a missing word at end of '""",self.position[1]
 		print "\nERROR: Stack is empty."
 		quit()
 
-	def invalid_index(self):
-		print '''ERROR: invalid index'''
+	def invalid_index(self, array,index):
+		print '''ERROR: invalid index for array''', array, "index = ",index
 		quit()
 
 	def invalid_reference(self,reference):
@@ -204,7 +204,7 @@ Error: There is a missing word at end of '""",self.position[1]
 			self.defined_words[variable] = [str(start),"return"]
 			self.loop_stack.append(["for",[self.position[0],self.position[1]],variable,end,"+"])#forloop format on stack
 		else:
-			self.defined_words[variable]= [str(star),"return"]
+			self.defined_words[variable]= [str(start),"return"]
 			self.loop_stack.append(["for",[self.position[0],self.position[1]],variable,end,"-"])
 
 	def whileloop(self):
@@ -658,7 +658,7 @@ Error: There is a missing word at end of '""",self.position[1]
 				#print "inserting to", reference
 				self.arrays[reference][position] = data
 			except IndexError:
-				self.invalid_index()
+				self.invalid_index(self.arrays[reference],position)
 			except KeyError:
 				self.invalid_reference(reference)
 
@@ -673,7 +673,9 @@ Error: There is a missing word at end of '""",self.position[1]
 			try:
 				self.Data_Stack.append(self.arrays[reference][position])
 			except IndexError:
-				self.invalid_index()
+				self.invalid_index(self.arrays[reference],position)
+			except KeyError:
+				self.invalid_reference(reference)
 
 	def len(self):
 		try:

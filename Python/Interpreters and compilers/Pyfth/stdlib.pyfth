@@ -13,12 +13,26 @@ echo #prints a string
 	drop
 ;
 
+echo_data #prints the contents of a list
+	dup
+	32 print_char
+	len 0 for i
+		dup i swap index
+		print
+		32 print_char
+	loop
+	drop	
+;
+
 CR 10 print_char ; #carriage return
+comma_and_space
+	44 32 print_char print_char
+;
 
 # ================ Array commands ================
 array.dump 			#dumps the contents of an array to the stack
 	dup
-	len 0 for i
+	len 1 - -1 swap for i
 		dup i swap
 		index swap
 	loop
@@ -28,10 +42,9 @@ array.dump 			#dumps the contents of an array to the stack
 array.fill #fills an array from the stack
 	local reference
 	reference len 0 for i 
-		 i reference
+		i reference
 		insert
 	loop
-	drop
 ;
 
 array.slice
@@ -64,12 +77,11 @@ array.compare #compares two arrays and returns a bit
 array.append #adds a value to an array
 	#value reference ==> none
 	local reference
-	local value
-	reference array.dump #puts array values on stack
-	value
-	reference len 1 + reference ref_array #creates a new array
+	reference array.dump drop 							#puts array values on stack
+	reference len 1 +  reference ref_array 				#creates a new array
+
 	reference array.fill
-	reference array.dump reference array.fill
+
 ;
 
 # ================= Maths ========================
