@@ -1,18 +1,21 @@
 import stdlib
 
 main 
-	str equal "Arrays are equal"
-	str unequal "Arrays are not equal"
-	3 global_array array1
-	3 global_array array2
+#	str equal "Arrays are equal"
+#	str unequal "Arrays are not equal"
+#	3 global_array array1
+#	3 global_array array2
+#
+#	#1 1 array1 insert
+#
+# 	array1 array2 array.compare
+# 	if equal echo else unequal echo endif
+#
+# 	63 equal array.append
+# 	equal echo
+#
+# 	equal echo_data
 
-	#1 1 array1 insert
 
- 	array1 array2 array.compare
- 	if equal echo else unequal echo endif
-
- 	63 equal array.append
- 	equal echo
-
- 	equal echo_data
+ 	25 10 sqrt print
 ;

@@ -55,6 +55,14 @@ array.slice
 	loop
 ;
 
+array.insert_slice
+	#[data] start, end, reference
+	local array
+	for i
+		i array inser
+	loop
+;
+
 array.compare #compares two arrays and returns a bit
 	#referenceB referenceA ==> 1 if equal else 0
 	local A
@@ -90,7 +98,7 @@ sqrt #x,accuracy ==> sqrt(x)
 	0 for i
 		dup
 		guess /
-		guess add
+		guess +
 		2 /
 		local guess
 	loop

@@ -259,12 +259,15 @@ Error: There is a missing word at end of '""",self.position[1]
 			self.no_end_of_function()
 
 		#print word
+
+		#working out whether word is a word or value
 		try:
-			data = (float(word))
-			if data == int(word):
-				self.Data_Stack.append(int(word))
-			else:
-				self.Data_Stack.append(data)
+			data = float(word)
+			try:
+				data = int(word)
+			except:
+				pass
+			self.Data_Stack.append(data)
 			self.position[0]+=1
 		except ValueError:
 			try:
