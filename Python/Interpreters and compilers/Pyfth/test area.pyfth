@@ -16,6 +16,7 @@ main
 #
 # 	equal echo_data
 
-
- 	25 10 sqrt print
+	time local start
+ 	25 10 sqrt
+ 	time start - print
 ;

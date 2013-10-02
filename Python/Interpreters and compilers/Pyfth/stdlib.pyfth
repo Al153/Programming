@@ -92,6 +92,26 @@ array.append #adds a value to an array
 
 ;
 
+array.pop #pops from high end of array
+	#reference ==> value
+	local reference
+	reference array.dump drop 									#values go onto stack
+	reference len 1 - ref_array 								#create new array which is one value shorter
+	reference len 0 for i 										#essentially the array.fill command, but ignores last value -it is left on top of stack
+		i reference insert
+	loop
+;
+
+array.sum
+	#reference ==> value
+	local reference
+	0 								#sum
+	reference len 0 for i
+		i reference index +
+	loop
+;
+
+
 # ================= Maths ========================
 sqrt #x,accuracy ==> sqrt(x)
 	2 local guess 

@@ -1,6 +1,7 @@
 #Implementation of a forth like language in python
 import sys
 import Tokenizer
+import time
 
 
 
@@ -67,7 +68,8 @@ class Pyfth:
 
 							  "in":self.inData,					#/
 							  "inChars":self.inChars,			#/
-							  "wait":self.wait,					#/
+							  "wait":self.wait,	
+							  "time":self.time,				#/
 							  "print": self.Print,				#/
 							  "print_char": self.print_char,	#/
 							  "print_stack":self.print_stack 	#/
@@ -756,6 +758,9 @@ Error: There is a missing word at end of '""",self.position[1]
 
 	def wait(self):
 		value = str(raw_input("Press enter to continue:"))
+
+	def time(self):
+		self.Data_Stack.append(time.time())
 
 	def Print(self):
 		try:
