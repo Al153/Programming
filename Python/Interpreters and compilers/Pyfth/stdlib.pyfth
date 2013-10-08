@@ -104,3 +104,15 @@ sqrt #x,accuracy ==> sqrt(x)
 	loop
 	drop guess
 ;
+
+mean
+#reference ==> mean
+	
+	local reference
+	0
+	reference len 0 for i
+		i reference index +
+	loop
+	referene len /
+
+;

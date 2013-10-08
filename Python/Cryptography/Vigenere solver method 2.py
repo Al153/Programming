@@ -1,4 +1,5 @@
 from decimal import Decimal
+import CaesarShiftStatisticalTest
 
 def parallelSort(labels,data):
     for j in range (len(data)-1):
@@ -87,7 +88,7 @@ class Length_finder:
             for j in range(i+1,len(differences)):
                 a = LookUp.gcd(differences[i],differences[j])
                 if a>2: result.append(a)#ignore GCDs of 1 or 2, this tolerence can be increased
-        print "GCDs calculated"
+        print "GCDs calculated",len(result)
         result.sort() #sorts differences list
         counter =0
         highscore,highscore_holder = [0,0,0],[0,0,0]
@@ -99,12 +100,11 @@ class Length_finder:
                 if i == x: counter+=1
                 else:
                     if counter >= highscore[0]: 
-                        highscore[2] = highscore[1]
-                        highscore[1] = highscore[0]
+                        highscore[1:] = highscore[:2]
                         highscore[0] = counter
-                        highscore_holder[2] = highscore_holder[1]
-                        highscore_holder[1] = highscore_holder[0]
-                        highscore_holder[0]=x
+
+                        highscore_holder[1:] = highscore_holder[:2]
+                        highscore_holder[0] = x
                     elif counter >= highscore[1]:
                         highscore[2] = highscore[1]
                         highscore[1] = counter
@@ -135,7 +135,7 @@ class Tools: #Arrays for lookups
                 return -1            
     
     def int_to_char(self,integer): #Integer => character
-        return self.uppercase[integer]
+        return self.lowercase[integer]
     
     def preprocess(self,string): #Removes spaces, punctuation etc
         result = []
@@ -172,15 +172,19 @@ class Splitter:
     def find_indv_keys(self):
         keys  = []
         for text in self.sections:
-            Diffusion.change_text(text)
-            highscore = 0
-            for i in xrange(26):
-                #print i
-                if Diffusion.values[i] >= highscore:
-                    possible_e = i
-                    highscore = Diffusion.values[i]
-            keys.append((possible_e - 4)%26)
-            print LookUp.int_to_char(possible_e)
+            keys.append(CaesarShiftStatisticalTest.find_key(text))
+            
+
+
+#            Diffusion.change_text(text)
+#            highscore = 0
+#            for i in xrange(26):
+#                #print i
+#                if Diffusion.values[i] >= highscore:
+#                    possible_e = i
+#                    highscore = Diffusion.values[i]
+#            keys.append((possible_e - 4)%26)
+#            print LookUp.int_to_char(possible_e)
         return keys
 
 class Vigenere_cipher:
@@ -214,12 +218,24 @@ LookUp = Tools()
 ciphertext = ''' 
 
 
-TEKLMBOGSWSRTUVMRHZWIIMOSSRTCWMNWZLMTXSQMIKHFPBKVMSHMTWFHXIWQTELXDOFHYXALZUMSXPF
-IHBJZUTPHKQNVSGEEWPLIALHTQANAARUEZUMRTISQULHFPAMAZMTMPEQUGRFAWGAGZAMBJMLBZLEOYJG
-GRLLSSRXHLBRBGWUNTZUUEGAARIVWGUNMVXHIXDLTEKLOQRXAOARHBFPBEHUWSIVLENXHJANXLPFRXTA
-FYHMLTEUHUWAGKSXOGNGZEGLSDTALGFHXYLTELJSXELDWDEXEUQEWPFSLROSDDTUVSLHZKKWBAZMLEAZ
-QAIWWMRTUUQOYIMDNBZZQDZVDPTALOQIZOLAFMOWUNLLUFWTZNQRRYWYAKRSNLXHFPTTRAZGTSDFHBUY
-EIGAGOOGZAPEKHLUOGPUAUEKZMRWSQNLTTWVUIPLQRYVJTILVHUNBVFDELWWOTBUYU
+TEYVNATKHBUSUBJTXTMBFXARNJMZKULXIWYWKARBHRUBUTWFCEJEEHUPKDSNEIEHQPQABFEVMHVZRRCE
+QVQSQZQUBGSITWFESDMBQSGFALXUCAQMHSFNSDSLPEDGNRSMUEPEFOZPVUQNYMZKUZWQGLXFAZVNWTOQ
+ZAISFEEZRFTKZSQELQSZLROWCLXUCAAVAQYLQMHVZRFVVDQAARYXAIFOIOFRPGMARLWMUEPEFPRLGABY
+TKTHBQLADRESYWYWMABFZJZSTCSEZNGIEKUZLMROPIZGRLVQRVYXTSSWEYSFZJIWGSIDWARMZXHDXUQR
+TXOOZPEEOWZCAIFOEKPEPEWHBPRPHUPPABTYMSVGZJOOCEMHWGJEYSETGMVNDKUJRYXTSAPKDCCPSBZR
+LFMRPSICIRHLUQUSEEQBXINOPVQMFXPHUBFFJRWPTIZHSFRPGOFXKSNCWXOGPVISZFWFTNNIFVREVMUV
+NJMQGELMHGSIZSTCSUGFEMXZAZXRFRPSZSUFRPFROCQOEDPMHRCXTSYTJQCSELQBRRVAWFDXUZYDEPZL
+NVUDCWIPPLELQANYEOZRDSRGRRVQUNEMABNYHFVRNLMWADSRRVDGDWZTRMHVZRABRSYZREPHKSNCWXOG
+PVFVRYISFBWMHSFZRMZBYIXMVDPMBQZJBCIPVFMVYXTSZTHEHBQEHOFESOSNYSRANEIDWNWTDCFAIDWG
+JSZSUFRPFROCQOEDPMHRCXTSAPKDCVDWFWYWPMBTFMEVVYKUBGSIOCEYIDGBQEYSETGMBFZGUSGJEZRS
+TRPGUTQESYQEZSKTPQWASMECJYPMBQLRPGBHIHSPZQQVRCIFCQLCFCQCEYOGTDQOALTBOYWMZUPZRPWG
+TSZWALWQBFPAQJRNSYSGZSGFALXUCADGMDVEEXHBNEEVNNLQEHPATSAELQOENLUHRNXECSZYDFRAYNZV
+NADCGPXTSZLKZWSTGQBGHSDRFZJFVRNSZGGTXGHVZRMBQELQRRNPMFNEMABBQMZRRAIZRRYGQHUPCISE
+PWUUATRSOCCSYWFDSDMAZXQHBHLUQUPZQFLLQQFVNEZKNDXATNWPTSVCXTWFYSFSJLWMDEZQUGRELMHN
+WPYSAHSGZQMISINCEZHRPHFVRTRMZVPRMPYPVUUUEWATYTJQZVMIDHLLRPHUPTGFFFMFCSSEBDVYIEGV
+EMECOGMAIFESPOLELMHNXIDWPLLMGQPJMIYEIPCAELUGCCSYWFDSDMAZXQWADSROELWTSENMFWMPRECS
+NSXCHCEDSPZROSEYIPWADXQOQZJTCAZYDWARXTWFDEOFROSNZVREFWBYEYSETGMVNDKUJRYXTSAPKDCC
+
 
 ''' #Ciphertext is placed here
 ciphertext = LookUp.preprocess(ciphertext)

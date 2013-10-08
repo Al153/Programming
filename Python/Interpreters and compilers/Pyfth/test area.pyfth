@@ -17,5 +17,5 @@ main
 # 	equal echo_data
 
 
- 	25 10 sqrt print
+ 	10 10 sqrt print
 ;
