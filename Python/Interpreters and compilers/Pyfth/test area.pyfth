@@ -16,7 +16,10 @@ main
 #
 # 	equal echo_data
 
-	time local start
- 	25 10 sqrt
- 	time start - print
+#	time local start
+#	25 10 sqrt
+# 	time start - print
+	1 2 3 4 5 print_stack + + + + print
+
+
 ;

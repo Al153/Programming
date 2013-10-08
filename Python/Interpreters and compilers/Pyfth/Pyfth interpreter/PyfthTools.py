@@ -756,6 +756,7 @@ Error: There is a missing word at end of '""",self.position[1]
 
 
 
+
 	def wait(self):
 		value = str(raw_input("Press enter to continue:"))
 
@@ -788,3 +789,4 @@ Error: There is a missing word at end of '""",self.position[1]
 			self.position = self.return_stack.pop()
 		except IndexError: #end of program
 			self.done = 1
+
