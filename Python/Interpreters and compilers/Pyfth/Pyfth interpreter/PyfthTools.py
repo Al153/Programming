@@ -2,6 +2,7 @@
 import sys
 import Tokenizer
 import time
+import random
 
 
 
@@ -72,7 +73,10 @@ class Pyfth:
 							  "time":self.time,				#/
 							  "print": self.Print,				#/
 							  "print_char": self.print_char,	#/
-							  "print_stack":self.print_stack 	#/
+							  "print_stack":self.print_stack, 	#/
+
+							  "random":self.random,
+							  "random_range":self.random
 							}
 
 
@@ -789,4 +793,19 @@ Error: There is a missing word at end of '""",self.position[1]
 			self.position = self.return_stack.pop()
 		except IndexError: #end of program
 			self.done = 1
+
+
+
+	def random(self):
+		self.Data_Stack.append(random.random())
+
+	def random_range(self):
+		try:
+			start = self.Data_Stack.pop()
+			end = self.Data_Stack.pop()
+		except:
+			self.stack_empty()
+		finally:
+			random.randrange(start,end)
+
 
