@@ -1,0 +1,49 @@
+#def mexp(base, exponent, modulus):
+#	result = 1
+#	while exponent > 0:
+#		bit = exponent%2
+#		exponent /= 2
+#		if bit:
+#			result = (result*base)%modulus
+#		base = (base**2)%modulus
+#	return result
+
+Modular_exponentiation
+	#base, exponent, modulus ==> result
+	local modulus
+	1 local result
+	dup while 										#base,exponent on stack now
+		dup 2 % local bit
+		2 //  										#exponent = exponent//2
+		bit if
+			swap 									#exponent,base 
+			dup result * modulus % local result 	#result = (result*base)%modulus
+		endif
+		dup * modulus %                         	#base = (base**2)%modulus
+		swap exponent dup                       	#stack = base, exponent,exponent
+	loop
+	drop
+;
+
+Extended_euclidean_algorithm
+	#a, b == > g,x,y,a,b
+
+	local b local a
+
+	a 0 =
+	if
+		b 0 1 a b return
+	endif
+	b a % a Extended_euclidean_algorithm local b local a local y local x local g  #g,x,y,a,b = Extended_euclidean_algorithm(b%a,a)
+	
+	g x b a // - y * y a b #return g, x-(b//a)*y, y, a, b
+;
+
+find_modular_inverse
+	#e,modulus ==> modular inverse
+
+	local modulus
+	modulus Extended_eclidean_algorithm
+	drop drop drop swap drop #gets rid of a,b,y,g
+	modulus % 
+;

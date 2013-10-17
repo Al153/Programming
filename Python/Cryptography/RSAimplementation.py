@@ -53,18 +53,15 @@ def generateKeys(p,q): #generate keys in form modulus, public, private
     d = modinv(e,phi)
     return(n,e,d)
 
-def mexp(a, n, m):
-	bits = []
-	while n:
-		bits.append(n%2)
-		n /= 2
-	solution = 1
-	bits.reverse()
-	for x in bits:
-		solution = (solution*solution)%m
-		if x:
-			solution = (solution*a)%m
-	return solution
+def mexp(base, exponent, modulus):
+  result = 1
+  while exponent > 0:
+    bit = exponent%2
+    exponent /= 2
+    if bit:
+      result = (result*base)%modulus
+    base = (base**2)%modulus
+  return result
 	
 	
 def mexp_list(a,n,m):
