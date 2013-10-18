@@ -19,7 +19,8 @@ main
 #	time local start
 #	25 10 sqrt
 # 	time start - print
-	1 2 3 4 5 print_stack + + + + print
+#	1 2 3 4 5 print_stack + + + + print
 
+	2 0.00001 pow print 
 
 ;

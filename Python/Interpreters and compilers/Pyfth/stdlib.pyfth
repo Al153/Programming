@@ -124,3 +124,43 @@ sqrt #x,accuracy ==> sqrt(x)
 	loop
 	drop guess
 ;
+
+pow
+	#b exponent ==> b**exponent where exponent is real
+	local exponent local b
+
+	0
+	exponent dup int = 1 xor
+	while 
+		exponent 2 * local exponent
+		1 + dup 100 <
+		exponent dup int = 1 xor and
+	loop
+
+	b swap 0 for i
+		dup print
+		10 sqrt
+	loop
+
+	local b
+
+	exponent int local exponent 
+
+	exponent print	CR
+
+	1 exponent while
+		65 print_char
+		exponent 2 % if
+			b *
+		endif
+		66 print_char
+		exponent 2 // local exponent
+		67 print_char
+		b b * local b
+		68 print_char CR
+		exponent 
+
+		exponent print CR
+
+	loop
+;

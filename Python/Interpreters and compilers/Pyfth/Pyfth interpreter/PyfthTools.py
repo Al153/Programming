@@ -41,6 +41,12 @@ class Pyfth:
 							  "NOT": self.NOT,					#/
 							  "XOR": self.XOR,					#/
 
+
+							  "and":self.AND,					#/
+							  "or": self.OR,					#/
+							  "not": self.NOT,					#/
+							  "xor": self.XOR,					#/
+
 							  "=":self.compareEqual,			#/
 							  "<":self.compareLessthan,			#/
 							  ">":self.compareGreaterthan,		#/
