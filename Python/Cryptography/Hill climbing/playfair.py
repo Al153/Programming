@@ -2,8 +2,8 @@ import cipher_tools
 
 class Properties:
 	def __init__(self):
-		self.keylength = 25
-		self.key_alphabet = "abcdefghiklmnopqrstuvwxyz"
+		self.key_length = 25
+		self.key_alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
 
 Properties = Properties()
 
@@ -18,12 +18,13 @@ def create_grid(custom_alphabet): #creates a grid from a custom alphabet  #alpha
 	return grid
 
 def find_in_grid(character,key_grid): #returns coordinates of character in grid
-	if character == "j": character = "i" #i and j are the same
+	if character == "J": character = "I" #i and j are the same
 	for i in xrange(5):
 		if character in key_grid[i]:
 			for j in xrange(5):
 				if key_grid[i][j] == character:
 					return [i,j]
+	print character
 
 def return_from_grid(coordinates,key_grid): #returns character from grid at given coordinates
 	return key_grid[coordinates[0]][coordinates[1]]
@@ -41,13 +42,13 @@ def create_bigrams(text):
 			char1 = char_stack.pop()
 			char2 = char_stack.pop()
 		except:
-			if char1 != "x": #stops "xx" clogging up final bigrams
-				char2 = "x"
+			if char1 != "X": #stops "xx" clogging up final bigrams
+				char2 = "X"
 			else:
 				break
 		if char1 == char2:
 			char_stack.append(char2)
-			char2 = "x"
+			char2 = "X"
 		bigrams.append(char1+char2)
 	#print bigrams
 	return bigrams
@@ -85,7 +86,8 @@ def put_bigrams_together(bigrams): #rejoins bigrams to form text
 	return text
 
 def encrypt(plaintext,key): #runs through algorithm
-	key_grid = create_grid(key)
+	#print "encrypting"
+	key_grid = create_grid(cipher_tools.preprocess(key))
 	plaintext = cipher_tools.preprocess(plaintext)
 	bigrams = create_bigrams(plaintext)
 	encrypted_bigrams = []
