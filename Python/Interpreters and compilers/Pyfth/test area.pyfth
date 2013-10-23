@@ -24,6 +24,9 @@ main
 =======
 	1 2 3 4 5 print_stack + + + + print
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> cc76af02530fa5b6783b05295ac84efb530f9d63
+=======
 >>>>>>> cc76af02530fa5b6783b05295ac84efb530f9d63
 
 	2 0.00001 pow print 
