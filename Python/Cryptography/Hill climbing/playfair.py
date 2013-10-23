@@ -2,8 +2,8 @@ import cipher_tools
 
 class Properties:
 	def __init__(self):
-		self.keylength = 25
-		self.key_alphabet = "abcdefghiklmnopqrstuvwxyz"
+		self.key_length = 25
+		self.key_alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
 
 Properties = Properties()
 
@@ -18,12 +18,13 @@ def create_grid(custom_alphabet): #creates a grid from a custom alphabet  #alpha
 	return grid
 
 def find_in_grid(character,key_grid): #returns coordinates of character in grid
-	if character == "j": character = "i" #i and j are the same
+	if character == "J": character = "I" #i and j are the same
 	for i in xrange(5):
 		if character in key_grid[i]:
 			for j in xrange(5):
 				if key_grid[i][j] == character:
 					return [i,j]
+	print character
 
 def return_from_grid(coordinates,key_grid): #returns character from grid at given coordinates
 	return key_grid[coordinates[0]][coordinates[1]]
@@ -41,13 +42,13 @@ def create_bigrams(text):
 			char1 = char_stack.pop()
 			char2 = char_stack.pop()
 		except:
-			if char1 != "x": #stops "xx" clogging up final bigrams
-				char2 = "x"
+			if char1 != "X": #stops "xx" clogging up final bigrams
+				char2 = "X"
 			else:
 				break
 		if char1 == char2:
 			char_stack.append(char2)
-			char2 = "x"
+			char2 = "X"
 		bigrams.append(char1+char2)
 	#print bigrams
 	return bigrams
@@ -85,7 +86,8 @@ def put_bigrams_together(bigrams): #rejoins bigrams to form text
 	return text
 
 def encrypt(plaintext,key): #runs through algorithm
-	key_grid = create_grid(key)
+	#print "encrypting"
+	key_grid = create_grid(cipher_tools.preprocess(key))
 	plaintext = cipher_tools.preprocess(plaintext)
 	bigrams = create_bigrams(plaintext)
 	encrypted_bigrams = []
@@ -115,30 +117,6 @@ def decrypt(plaintext,key):
 	return ciphertext
 
 
-<<<<<<< HEAD
-plaintext = """Obtaining the key is relatively straightforward if both plaintext and ciphertext are known, however we want to find the key without knowing the plaintext. Guessing some of the words using knowledge of where the message came from, when it came from, etc. can be a huge help in reconstructing the key square. It should be recognized that guessing some of the plaintext and using that to reconstruct the keysquare is by far the easiest way to crack this cipher.
-
-Cryptanalysis of the playfair cipher is much more difficult than normal simple substitution ciphers, because digraphs (pairs of letters) are being substituted instead of monographs (single letters). If we use frequency analysis of english digraphs, we can use this information in the same way as we used the monograph frequencies, however, there are ~600 digraphs and only 26 monographs. We need far more ciphertext for the digraphic system to make reliable key choices compared to the monographic system.
-
-When cryptanalysing by hand, the following trick can be used. A Playfair digraph and its reverse (e.g. AB and BA) will decrypt to the same letter pattern in the plaintext (e.g. RE and ER). In English, there are many words which contain these reversed digraphs such as REceivER and DEpartED. Identifying nearby reversed digraphs in the ciphertext and matching the pattern to a list of known plaintext words containing the pattern is an easy way to generate possible plaintext strings with which to begin constructing the key. A good tutorial on reconstructing the key for a Playfair cipher can be found in chapter 7, "Solution to Polygraphic Substitution Systems," of Field Manual 34-40-2, produced by the United States Army.
-
-When trying to decide which algorithm was used to encrypt some ciphertext, it is useful to know that Playfair will never contain a double-letter digraph, e.g. EE. If there are no double letter digraphs in the ciphertext and the length of the message is long enough to make this statistically significant, it is very likely that the method of encryption is Playfair. Other things that will be true about the ciphertext message:
-
-The cipher message contains an even number of letters.
-A frequency count will show no more than 25 letters (with no letter J).
-If long repeats occur, they will be separated by an even number of characters. Repeated sequences will usually be an even number of characters.
-When Solving by computer, an easy way of finding a key is to start with a random square of letters. Minor changes are then introduced (i.e. swapping letters in the key) to see if the candidate plaintext is more like standard plaintext than before the change (e.g. using markov models, or trigram frequency counts). If the new square is deemed to be an improvement (plaintext has higher likelyhood), then it is adopted and then further mutated to find an even better candidate. Eventually, the plaintext or something very close to it is found by chosing the key that provides a plaintext with the highest likelyhood."
-"""
-
-key = "abcdefghiklmnopqrstuvwxyz"
-
-ciphertext = encrypt(plaintext,key)
-print ciphertext
-plaintext = decrypt(ciphertext,key)
-print plaintext
-
-
-=======
 #plaintext = """Obtaining the key is relatively straightforward if both plaintext and ciphertext are known, however we want to find the key without knowing the plaintext. Guessing some of the words using knowledge of where the message came from, when it came from, etc. can be a huge help in reconstructing the key square. It should be recognized that guessing some of the plaintext and using that to reconstruct the keysquare is by far the easiest way to crack this cipher.
 #
 #Cryptanalysis of the playfair cipher is much more difficult than normal simple substitution ciphers, because digraphs (pairs of letters) are being substituted instead of monographs (single letters). If we use frequency analysis of english digraphs, we can use this information in the same way as we used the monograph frequencies, however, there are ~600 digraphs and only 26 monographs. We need far more ciphertext for the digraphic system to make reliable key choices compared to the monographic system.
@@ -159,4 +137,3 @@ print plaintext
 #print ciphertext
 #plaintext = decrypt(ciphertext,key)
 #print plaintext
->>>>>>> cc76af02530fa5b6783b05295ac84efb530f9d63

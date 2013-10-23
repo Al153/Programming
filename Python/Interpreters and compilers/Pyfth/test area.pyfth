@@ -19,8 +19,21 @@ main
 #	time local start
 #	25 10 sqrt
 # 	time start - print
+<<<<<<< HEAD
 #	1 2 3 4 5 print_stack + + + + print
+=======
+	1 2 3 4 5 print_stack + + + + print
+<<<<<<< HEAD
+>>>>>>> cc76af02530fa5b6783b05295ac84efb530f9d63
 
 	2 0.00001 pow print 
 
+<<<<<<< HEAD
+ 	10 10 sqrt print
+=======
+>>>>>>> 9b4d57130bca94576a2ed69960dddf9fa0d5c6fa
+=======
+
+
+>>>>>>> 9b4d57130bca94576a2ed69960dddf9fa0d5c6fa
 ;

@@ -125,6 +125,7 @@ sqrt #x,accuracy ==> sqrt(x)
 	drop guess
 ;
 
+<<<<<<< HEAD
 pow
 	#b exponent ==> b**exponent where exponent is real
 	local exponent local b
@@ -164,3 +165,16 @@ pow
 
 	loop
 ;
+=======
+mean
+#reference ==> mean
+	
+	local reference
+	0
+	reference len 0 for i
+		i reference index +
+	loop
+	referene len /
+
+;
+>>>>>>> cc76af02530fa5b6783b05295ac84efb530f9d63
