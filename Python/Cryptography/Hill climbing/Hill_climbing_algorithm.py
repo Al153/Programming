@@ -72,7 +72,7 @@ def hill_climb(ciphertext):
 	#local_maxima = []
 	score = analysis.analyse(cipher.decrypt(ciphertext,key_alphabet))
 
-	while score< -2.5: #while score not high enough to constitute a plaintext
+	while score< -2.4: #while score not high enough to constitute a plaintext
 		shuffled_key = list(key_alphabet)
 		random.shuffle(shuffled_key)#creates a random key at the start of each round
 		current_key = ''.join(shuffled_key)
@@ -130,21 +130,15 @@ def partial_hill_climb(ciphertext,key):
 	return current_key,cipher.decrypt(ciphertext,current_key)	
 
 
+plaintext = '''
+Noon rings out. A wasp, making an ominous sound, a sound akin to a klaxon or a tocsin, flits about. Augustus, who has had a bad night, sits up blinking and purblind. Oh what was that word (is his thought) that ran through my brain all night, that idiotic word that, hard as I'd try to pun it down, was always just an inch or two out of my grasp - fowl or foul or Vow or Voyal? - a word which, by association, brought into play an incongruous mass and magma of nouns, idioms, slogans and sayings, a confusing, amorphous outpouring which I sought in vain to control or turn off but which wound around my mind a whirlwind of a cord, a whiplash of a cord, a cord that would split again and again, would knit again and again, of words without communication or any possibility of combination, words without pronunciation, signification or transcription but out of which, notwithstanding, was brought forth a flux, a continuous, compact and lucid flow: an intuition, a vacillating frisson of illumination as if caught in a flash of lightning or in a mist abruptly rising to unshroud an obvious sign - but a sign, alas, that would last an instant only to vanish for good.
+'''
 
-ciphertext = cipher.encrypt('''From the moment that the French defenses at Sedan and on the Meuse were broken at the end of the second week of May, only a rapid retreat to Amiens and the south could have saved the British and French Armies who had entered Belgium at the appeal of the Belgian King; but this strategic fact was not immediately realized. The French High Command hoped they would be able to close the gap, and the Armies of the north were under their orders. Moreover, a retirement of this kind would have involved almost certainly the destruction of the fine Belgian Army of over 20 divisions and the abandonment of the whole of Belgium. Therefore, when the force and scope of the German penetration were realized and when a new French Generalissimo, General Weygand, assumed command in place of General Gamelin, an effort was made by the French and British Armies in Belgium to keep on holding the right hand of the Belgians and to give their own right hand to a newly created French Army which was to have advanced across the Somme in great strength to grasp it. 
-
-However, the German eruption swept like a sharp scythe around the right and rear of the Armies of the north. Eight or nine armored divisions, each of about four hundred armored vehicles of different kinds, but carefully assorted to be complementary and divisible into small self-contained units, cut off all communications between us and the main French Armies. It severed our own communications for food and ammunition, which ran first to Amiens and afterwards through Abbeville, and it shore its way up the coast to Boulogne and Calais, and almost to Dunkirk. Behind this armored and mechanized onslaught came a number of German divisions in lorries, and behind them again there plodded comparatively slowly the dull brute mass of the ordinary German Army and German people, always so ready to be led to the trampling down in other lands of liberties and comforts which they have never known in their own. 
-
-
-''',"theroncwasbyldmfgijkpquvxz"
+ciphertext = cipher.encrypt(plaintext,"theroncwasbyldmfgijkpquvxz"
 )
 
-#ciphertext = '''YWBRBSGG WG HC PS TCIBR SJSFMKVSFS, SJSB WB HVWG GHWBYWBU DZOQS. HVS UIOFRG HOYS OKOM OBMHVWBU HVSM QOB HVOH AWUVH PFWBU IG GCAS XCM, PIH HVSM QOB'H HOYS SJSFMHVWBU. GCAS CT HVS UWFZG GWBU, CHVSFG HSZZ GHCFWSG HC YSSD HVS TSOF OH HVS SRUS CT CIF VSOFHG - WH BSJSF QCADZSHSZM ZSOJSG IG - OBR AM DWQHIFSG OFS OZZ W VOJS HC CTTSF WB FSHIFB. DODSF WG DFSQWCIG OBR ACGH CT AM DOWBHWBUG OBR GYSHQVSG OFS VWRRSB CB HVS FCIUV KCCRSB GZOHG CT CIF PIBYG IBRSF HVS HVWB AOHHFSGGSG. RSHOWZ WG WADCGGWPZS, PIH KCIZR PS VOFR SJSB CB TWBS QOBJOG UWJSB HVS DWUASBHG W QOB AOYS TFCA HVS PFWQY RIGH, GCWZ OBR GQFIPPM KSSRG WB HVS QOAD. W OA HVOBYTIZ SJSFMROM TCF AM UFOBRTOHVSF'G WBGWGHSBQS HVOH OB OFHWGH GVCIZR PS OPZS HC AOYS HVSWF CKB QCZCIFG. KVSB W RC TWBR DODSF, W KFWHS. HVWG UFSOGM GQFOD KOG HVS KFODDWBU CB O UIOFR'G GOBRKWQV OBR HVS UFSOGS KCIZR AOYS WH WADCGGWPZS HC DOWBH CB SJSB WT W KOBHSR HC, PIH QVOFQCOZ TOZZSB TFCA O UIOFR'G PFONWSF GSSAG HC KCFY TWBS. 
-
-#HVS CHVSFG WB AM RCFAWHCFM HSZZ AS HC FSQCFR OG AIQV OG W QOB. BCBS CT IG YBCK WT KS KWZZ ZWJS HC HSZZ HVS KCFZR CT HVS HSFFWPZS HVWBUG HVOH VODDSB VSFS, GC W RFOK OBR, KVSB W QOB, W KFWHS, OZKOMG KWHV CBS SOF ZWGHSBWBU TCF HVS QFIBQV CT O PCCH CB HVS UFOJSZ CIHGWRS. HVS GHCBSG OFS GVOFD OBR HVS GCZRWSFG RCB'H UWJS IG TCCHKSOF. WH WG OBCHVSF KOM HC VIAWZWOHS IG OBR KSOF IG RCKB, PIH HVSM RC BCH FSOZWGS HVOH HVWG ASOBG HVOH KS QOB OZKOMG HSZZ KVSB HVSM OFS QCAWBU. YWBRBSGG WG HC PS TCIBR SJSFMKVSFS VSFS, SJSB WB HVSWF GHIDWR QFISZHM. 
-
-#'''
-
+print analysis.analyse(cipher_tools.preprocess(plaintext))
+#ciphertext = '''NKRSA ZYIUA YOTYG XKOYA VVUYK QOTJO TZNKO XUCTC GEHAZ ZNKXK OYROZ ZRKCG XSZNO TZNKQ OTJTK YYOXK IKOBK GTTGZ XOKYZ USGQK SKIUS LUXZG HRKHA ZYNKO YGLXG OJZNK YYULL OIKXC NUHXO TMYAY ZNKVG OTZOT MYOYI XAKRG TJIUC GXJRE GTJNK HKGZY GTTGO LSECU XQOYT UZMUU JKTUA MNNKO YYIGX KJZNG ZOLNK HKGZY SKNKS OMNZJ GSGMK SENGT JYGTJ ZUUYI GXKJZ UHKGZ NKXNA YHGTJ JGTOK RGHKG XULGS GTCNU ZUCKX YUBKX NOSOZ JUKYT ZSGZZ KXZNK XKGRV UCKXR OKYCO ZNZNK HARRE NKIUA RJNGB KAYGR RYNUZ GTJCK GRRQT UCOZJ GTOKR YIGXK YSKZU UHAZU TREHK IGAYK NKXKS OTJYS KULNK RSAZG TJZNG ZXKSO TJYSK ULZNK IGSVN KTKBK XYVKG QYTKB KXRUU QYSKO TZNKK EKGTJ TKBKX CGTZY GTEZN OTMLX USSKO ZNOTQ NKNGZ KYSKL UXHXO TMOTM ZNKYY ZUNOY NUAYK HAZLU XGTTG YYGQK NKHXO TMYSK CNGZO TKKJC NGZOS UYZTK KJOYG CGEUA ZULNK XKCNK TOGSM UTKGT TGYHK GZOTM YCORR YZUVG TJSGE HKJGT OKRCO RRYZU VNGZO TMSKH AZOGS CGZIN KJGRR JGEGT JZNKN UAYKO YRUIQ KJGZT OMNZZ NGZCO RRTUZ YZUVS KLXUS ZXEOT M'''
 
 print hill_climb(ciphertext)
 
