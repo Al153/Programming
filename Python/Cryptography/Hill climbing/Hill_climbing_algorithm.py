@@ -4,6 +4,7 @@ import cipher_text_analyser as analysis
 
 import random
 import cipher_tools
+import time
 
 
 key_length = cipher.Properties.key_length  #cipher file needs a properties class instance with a value of keylength (25 or 26)
@@ -133,15 +134,15 @@ def partial_hill_climb(ciphertext,key):
 plaintext = '''
 Noon rings out. A wasp, making an ominous sound, a sound akin to a klaxon or a tocsin, flits about. Augustus, who has had a bad night, sits up blinking and purblind. Oh what was that word (is his thought) that ran through my brain all night, that idiotic word that, hard as I'd try to pun it down, was always just an inch or two out of my grasp - fowl or foul or Vow or Voyal? - a word which, by association, brought into play an incongruous mass and magma of nouns, idioms, slogans and sayings, a confusing, amorphous outpouring which I sought in vain to control or turn off but which wound around my mind a whirlwind of a cord, a whiplash of a cord, a cord that would split again and again, would knit again and again, of words without communication or any possibility of combination, words without pronunciation, signification or transcription but out of which, notwithstanding, was brought forth a flux, a continuous, compact and lucid flow: an intuition, a vacillating frisson of illumination as if caught in a flash of lightning or in a mist abruptly rising to unshroud an obvious sign - but a sign, alas, that would last an instant only to vanish for good.
 '''
-
-ciphertext = cipher.encrypt(plaintext,"theroncwasbyldmfgijkpquvxz"
-)
-
-print analysis.analyse(cipher_tools.preprocess(plaintext))
+#ciphertext = cipher.encrypt(plaintext,"theroncwasbyldmfgijkpquvxz")
+ciphertext = '''
+SYIEZ LKKZR IVPYI MPQVZ FSLML CKILV WMPFU BIVSZ PYHLZ EPMLE VULER LMOQP PYIHK FGIMM FKYIC HIVDI ITHCL ZEPFV LEZIC PYLPP YIGFK NIKZI MSFQC VOIJQ ZUBCW VIPIU PIVZG SIQMI VPYID MYISL MHLZE PIVFE LHFHC LKOFL KVKLP YIKPY LELMP KIPUY IVULE RLMLE VPYIH ZNDIE PMQMI VOWPY IDLMP IKSIK IRIKW VZGGI KIEPG KFDPY IFEIM SIQMI PFVLW EFSPY IWOKZ ENDIP YIHZN DIEPM ZLMBG FKMFG PUYLC BWOCF FVKIV MLENQ ZEILE VDQMP LKVWI CCFSF UYKIM GKFDP YIMFZ CMFGZ PLCWZ DZTPY IDSZP YCZEM IIVFZ COFZC IVLEV LNIVZ ELBIP PCIHK FHIKC WHKIH LKIVP YIMIH LZEPM LKIZE VZMPZ ENQZM YLOCI GKFDP YIFEI MQMIV FEPYI FKZNZ ELCLE VPYIU FHWZM DFKIC ZBICW PFOIO IPKLW IVOWL ULKIC IMMOK QMYMP KFBIF KLDZM HCLUI VYZNY CZNYP PYIHK FGIMM FKMII MJQZU BCWSY IEDWP ZKIVI WIMYL RIDZM MIVLP FEILE VZYLR IDLVI IEFQN YVICZ OIKLP IDZMP LBIMP FUFER ZEUIP YIDPF DFRID WMPQV ZFPFP YILPP ZUSYI KIPYI CZNYP ZMOIP PIKGK FDPYI KIZYL RILRZ ISFGP YIUZP WLEVL KIDZE VIKFG GKIIV FDPYI WMPZC CZEMZ MPPYL PZMCI IHYIK IZEPY IUICC LKOQP PYLPN ZRIMD ILEFP YIKGK IIVFD PYIGC ZUBIK ZENUL EVCIM ULMPV IIHMY LVFSM SYZUY YZVID WFPYI KSFKB ZGZUL EEFPO IGKII HIKYL HMMYI ULE
+'''
+#print analysis.analyse(cipher_tools.preprocess(plaintext))
 #ciphertext = '''NKRSA ZYIUA YOTYG XKOYA VVUYK QOTJO TZNKO XUCTC GEHAZ ZNKXK OYROZ ZRKCG XSZNO TZNKQ OTJTK YYOXK IKOBK GTTGZ XOKYZ USGQK SKIUS LUXZG HRKHA ZYNKO YGLXG OJZNK YYULL OIKXC NUHXO TMYAY ZNKVG OTZOT MYOYI XAKRG TJIUC GXJRE GTJNK HKGZY GTTGO LSECU XQOYT UZMUU JKTUA MNNKO YYIGX KJZNG ZOLNK HKGZY SKNKS OMNZJ GSGMK SENGT JYGTJ ZUUYI GXKJZ UHKGZ NKXNA YHGTJ JGTOK RGHKG XULGS GTCNU ZUCKX YUBKX NOSOZ JUKYT ZSGZZ KXZNK XKGRV UCKXR OKYCO ZNZNK HARRE NKIUA RJNGB KAYGR RYNUZ GTJCK GRRQT UCOZJ GTOKR YIGXK YSKZU UHAZU TREHK IGAYK NKXKS OTJYS KULNK RSAZG TJZNG ZXKSO TJYSK ULZNK IGSVN KTKBK XYVKG QYTKB KXRUU QYSKO TZNKK EKGTJ TKBKX CGTZY GTEZN OTMLX USSKO ZNOTQ NKNGZ KYSKL UXHXO TMOTM ZNKYY ZUNOY NUAYK HAZLU XGTTG YYGQK NKHXO TMYSK CNGZO TKKJC NGZOS UYZTK KJOYG CGEUA ZULNK XKCNK TOGSM UTKGT TGYHK GZOTM YCORR YZUVG TJSGE HKJGT OKRCO RRYZU VNGZO TMSKH AZOGS CGZIN KJGRR JGEGT JZNKN UAYKO YRUIQ KJGZT OMNZZ NGZCO RRTUZ YZUVS KLXUS ZXEOT M'''
-
+start = time.time()
 print hill_climb(ciphertext)
-
+print "Time taken: ", time.time()-start,"seconds"
 
 
 
