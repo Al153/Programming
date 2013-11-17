@@ -1,13 +1,3 @@
-
-
-class Properties():
-	def __init__(self):
-		self.key_length = 27
-		self.key_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ/"  #"/" is the 27th character
-		self.block_length = 5
-
-Properties = Properties()
-
 def preprocess(text):
 	#modified preprocess function
 	lookup = {
@@ -72,6 +62,17 @@ def preprocess(text):
 		except:
 			pass
 	return output_text
+
+class Properties():
+	def __init__(self,):
+		self.key_length = 27
+		self.key_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ/"  #"/" is the 27th character
+		self.block_length = 5
+		self.preprocess = preprocess
+
+Properties = Properties()
+
+
 
 
 def create_key_matrix(key):

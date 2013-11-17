@@ -7,7 +7,7 @@ import cipher_tools
 import time
 
 
-key_length = cipher.Properties.key_length  #cipher file needs a properties class instance with a value of keylength (25 or 26)
+key_length = cipher.Properties.key_length  #cipher file needs a Properties class instance with a value of keylength (25 or 26)
 key_alphabet = cipher.Properties.key_alphabet #the alphabet for a particular cipher, eg one without j or q for the playfair
 
 
@@ -67,8 +67,8 @@ def flip(key,current_key_score, keylength,ciphertext):
 
 
 def hill_climb(ciphertext):
-	ciphertext = cipher_tools.preprocess(ciphertext)
-	key_length = cipher.Properties.key_length  #cipher file needs a properties class instance with a value of keylength (25 or 26)
+	ciphertext = cipher.Properties.preprocess(ciphertext)
+	key_length = cipher.Properties.key_length  #cipher file needs a Properties class instance with a value of keylength (25 or 26)
 	key_alphabet = cipher.Properties.key_alphabet #the alphabet for a particular cipher, eg one without j or q for the playfair
 	#local_maxima = []
 	score = analysis.analyse(cipher.decrypt(ciphertext,key_alphabet))
@@ -103,8 +103,8 @@ def hill_climb(ciphertext):
 
 def partial_hill_climb(ciphertext,key):
 	#runs a partial hill climb to to attempt to improve an imperfect key
-	ciphertext = cipher_tools.preprocess(ciphertext)
-	key_length = cipher.Properties.key_length  #cipher file needs a properties class instance with a value of keylength (25 or 26)
+	ciphertext = cipher.Properties.preprocess(ciphertext)
+	key_length = cipher.Properties.key_length  #cipher file needs a Properties class instance with a value of keylength (25 or 26)
 	key_alphabet = cipher.Properties.key_alphabet #the alphabet for a particular cipher, eg one without j or q for the playfair
 
 	shuffled_key = list(key_alphabet)
@@ -137,7 +137,7 @@ HERETHELIGHTISBETTERFROMTHEREIHAVEAVIEWOFTHECITYANDAREMINDEROFFREEDOMTHEYSTILLIN
 SISTTHATISLEEPHEREINTHECELLARBUTTHATGIVESMEANOTHERFREEDOMTHEFLICKERINGCANDLESCAS
 TDEEPSHADOWSWHICHHIDEMYOTHERWORKIFICANNOTBEFREEPERHAPSSHECAN
 '''
-ciphertext = cipher.encrypt(plaintext,"theroncwasbyldmfgijkpquvxz")
+ciphertext = cipher.encrypt(plaintext,"theroncwasbyldmfgijkpquvxz/")
 #ciphertext = '''
 #SYIEZ LKKZR IVPYI MPQVZ FSLML CKILV WMPFU BIVSZ PYHLZ EPMLE VULER LMOQP PYIHK FGIMM FKYIC HIVDI ITHCL ZEPFV LEZIC PYLPP YIGFK NIKZI MSFQC VOIJQ ZUBCW VIPIU PIVZG SIQMI VPYID MYISL MHLZE PIVFE LHFHC LKOFL KVKLP YIKPY LELMP KIPUY IVULE RLMLE VPYIH ZNDIE PMQMI VOWPY IDLMP IKSIK IRIKW VZGGI KIEPG KFDPY IFEIM SIQMI PFVLW EFSPY IWOKZ ENDIP YIHZN DIEPM ZLMBG FKMFG PUYLC BWOCF FVKIV MLENQ ZEILE VDQMP LKVWI CCFSF UYKIM GKFDP YIMFZ CMFGZ PLCWZ DZTPY IDSZP YCZEM IIVFZ COFZC IVLEV LNIVZ ELBIP PCIHK FHIKC WHKIH LKIVP YIMIH LZEPM LKIZE VZMPZ ENQZM YLOCI GKFDP YIFEI MQMIV FEPYI FKZNZ ELCLE VPYIU FHWZM DFKIC ZBICW PFOIO IPKLW IVOWL ULKIC IMMOK QMYMP KFBIF KLDZM HCLUI VYZNY CZNYP PYIHK FGIMM FKMII MJQZU BCWSY IEDWP ZKIVI WIMYL RIDZM MIVLP FEILE VZYLR IDLVI IEFQN YVICZ OIKLP IDZMP LBIMP FUFER ZEUIP YIDPF DFRID WMPQV ZFPFP YILPP ZUSYI KIPYI CZNYP ZMOIP PIKGK FDPYI KIZYL RILRZ ISFGP YIUZP WLEVL KIDZE VIKFG GKIIV FDPYI WMPZC CZEMZ MPPYL PZMCI IHYIK IZEPY IUICC LKOQP PYLPN ZRIMD ILEFP YIKGK IIVFD PYIGC ZUBIK ZENUL EVCIM ULMPV IIHMY LVFSM SYZUY YZVID WFPYI KSFKB ZGZUL EEFPO IGKII HIKYL HMMYI ULE
 #'''

@@ -4,6 +4,7 @@ class Properties:
 	def __init__(self):
 		self.key_length = 25
 		self.key_alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
+		self.preprocess = cipher_tools.preprocess
 
 Properties = Properties()
 
