@@ -1,5 +1,4 @@
 import os
-import connect_n
 #A really really really general connect 4 style game.
 #customisable:
 #			No. of players
@@ -10,7 +9,7 @@ import connect_n
 class Game:
 	def __init__(self,player_lookup,size,length_to_win):
 		self.player_lookup = player_lookup   #in form {0:"x"}
-		self. clear = lambda:os.system("cls")
+		self.clear = lambda:os.system("cls")
 		self.size = size
 		self.Engine = Engine(size[0],size[1],length_to_win)
 
@@ -70,7 +69,7 @@ class Engine:
 		else: #if coordinates valid:
 			print "coordinates valid"
 			print self.grid[position]
-			self.grid[position]].append(player)   #"Player" is the number for a player's piece
+			self.grid[position].append(player)   #"Player" is the number for a player's piece
 			self.win_test(player,position,len(self.grid[position])-1)   #sees if this player has won
 			return True
 

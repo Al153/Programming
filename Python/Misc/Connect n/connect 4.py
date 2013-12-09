@@ -8,6 +8,7 @@ class Grid:
 
 	def place(self,position,player):
 		"places a piece in the grid. returns True if successful, False if unsuccessful"
+		print "placing"
 		if position>=self.width or position<0:  #if invalid column
 			return False
 		elif len(self.grid[position]) == self.height - 1:   #if column is already full

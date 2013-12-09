@@ -53,7 +53,7 @@ while not halt:
         c = [0,0,0,0]
         if IMD2<4 and IMD2> -4:
                 for j in range (4):
-                    if j - IMD 2 <0 or j - IMD2>7: c[j] = False
+                    if j - IMD2 <0 or j - IMD2>7: c[j] = False
                     else: c[j] = int(IMD1[j - IMD2])
         else: c = [0,0,0,0]
         for j in range(4):
