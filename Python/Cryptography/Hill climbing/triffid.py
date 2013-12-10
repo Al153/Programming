@@ -69,6 +69,7 @@ class Properties():
 		self.key_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ/"  #"/" is the 27th character
 		self.block_length = 5
 		self.preprocess = preprocess
+		
 
 Properties = Properties()
 
