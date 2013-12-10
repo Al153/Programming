@@ -5,6 +5,7 @@ class Properties():
 		self.key_length = 26
 		self.key_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		self.preprocess = cipher_tools.preprocess
+		self.extra_rounds = []
 
 Properties = Properties()
 

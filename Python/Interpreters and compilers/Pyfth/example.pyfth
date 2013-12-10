@@ -1,0 +1,24 @@
+import stdlib
+
+
+Hello 									#creates a word called "Hello"
+	str hello "Hello World!\n"   		#creates a string array called hello with the content "Hello World!\n"
+	hello echo  						#prints the string, echo is a word in stdlib which prints a string
+	CR                                  #inserts a carriage return
+;   									#ends the word hello
+
+for_loop
+	0 local start 						#creates a local constant of start with value of 1. A constant is just a word which pushes its value onto the stack when called
+	5 local end   						#creates a local constant of end
+
+	end start for iterator   			#Iterator is a constant whose value is increased with each iteration.
+										#Its name can be changed by replacing iterator with another name          
+		iterator print         			#prints iterator
+	loop                        		#loops round the for loop
+;
+
+main
+	Hello                  #runs the Hello word
+	hello print            #prints the hash handle of the string hello
+	for_loop               #runs the for_loop word
+;

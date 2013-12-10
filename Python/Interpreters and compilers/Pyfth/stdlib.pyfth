@@ -125,8 +125,8 @@ sqrt #x,accuracy ==> sqrt(x)
 	drop guess
 ;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+#Pow is very slow for certain inputs at the moment (may be a bug in pyfth or in pow)
+
 pow
 	#b exponent ==> b**exponent where exponent is real
 	local exponent local b
@@ -166,9 +166,8 @@ pow
 
 	loop
 ;
-=======
-=======
->>>>>>> cc76af02530fa5b6783b05295ac84efb530f9d63
+
+
 mean
 #reference ==> mean
 	
@@ -180,7 +179,3 @@ mean
 	referene len /
 
 ;
-<<<<<<< HEAD
->>>>>>> cc76af02530fa5b6783b05295ac84efb530f9d63
-=======
->>>>>>> cc76af02530fa5b6783b05295ac84efb530f9d63

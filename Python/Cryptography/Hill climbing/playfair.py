@@ -1,10 +1,52 @@
 import cipher_tools
+def swap_rows(key,current_key_score,keylength,ciphertext,analysis):
+	analyse = analysis.analyse #stores analyse function as local for faster access
+	key_to_return = key
+	score = current_key_score
+	rows = find_rows(key)
+	for i in xrange(5):
+		for j in xrange(i+1,5):
+			trial_rows = list(rows) 
+			trial_rows[i],trial_rows[j] = trial_rows[j],trial_rows[i]
+			trial_key = ''
+			for row in trial_rows:
+				trial_key += row
+			sample_plaintext = decrypt(ciphertext,trial_key)
+			this_score = analysis.analyse(sample_plaintext)
+			if this_score >= score:
+				score = this_score
+				key_to_return = trial_key	
+	return key_to_return,score
+	
+def swap_columns(key,current_key_score,keylength,ciphertext,analysis):
+	analyse = analysis.analyse #stores analyse function as local for faster access
+	key_to_return = key
+	score = current_key_score
+	columns = find_columns(key)
+	for i in xrange(5):
+		for j in xrange(i+1,5):
+			trial_columns = list(columns) 
+			try:
+				trial_columns[i],trial_columns[j] = trial_columns[j],trial_columns[i]
+			except: 
+				print i, j
+				quit()
+			trial_key = ''
+			for k in xrange(25):
+				trial_key += columns[k%5][k//5]
+			sample_plaintext = decrypt(ciphertext,trial_key)
+			this_score = analysis.analyse(sample_plaintext)
+			if this_score >= score:
+				score = this_score
+				key_to_return = trial_key	
+	return key_to_return,score
 
 class Properties:
 	def __init__(self):
 		self.key_length = 25
 		self.key_alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
 		self.preprocess = cipher_tools.preprocess
+		self.extra_rounds = [swap_rows,swap_columns]
 
 Properties = Properties()
 
@@ -14,9 +56,25 @@ def create_grid(custom_alphabet): #creates a grid from a custom alphabet  #alpha
 		list(custom_alphabet[5:10]),
 		list(custom_alphabet[10:15]),
 		list(custom_alphabet[15:20]),
-		list(custom_alphabet[20:])
+		list(custom_alphabet[20:25])
 	]
 	return grid
+def find_columns(alphabet):
+	grid = ['']*5
+	for i in xrange(25):
+		grid[i%5] += alphabet[i]
+	return grid
+def find_rows(alphabet):
+	grid = [
+		alphabet[0:5],
+		alphabet[5:10],
+		alphabet[10:15],
+		alphabet[15:20],
+		alphabet[20:25]
+	]
+	return grid
+
+
 
 def find_in_grid(character,key_grid): #returns coordinates of character in grid
 	if character == "J": character = "I" #i and j are the same
