@@ -68,13 +68,8 @@ class Properties():
 		self.key_length = 27
 		self.key_alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ/"  #"/" is the 27th character
 		self.preprocess = preprocess
-<<<<<<< HEAD
-		
-=======
 		self.extra_rounds = []
 		self.block_length = 5
-
->>>>>>> 54485397d3ef15cf5c82825fe9220a2136b5a9a3
 
 Properties = Properties()
 
