@@ -1,4 +1,4 @@
-class bus:
+class Bus:
 	'''A generalised bus'''
 	def __init__(self,byte_width):
 		self.value = [0] *byte_width

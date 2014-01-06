@@ -26,7 +26,7 @@ Command crib sheet:
     ALU[reg bit 7 hi]*  opcode  reg1    field** conditional  A/D     A/D     A/D    A/D
 
     *ALU commands are either Reg or L/S based whether they are or not depends on bit 7 of the reg1 byte
-    *Also packaged are the options [swap (bit 6) - returns result of calculation to the non default location (reg2 or A/D)]
+    *Also packaged in the reg1 byte are the options [swap (bit 6) - returns result of calculation to the non default location (reg2 or A/D)]
     							   [unsigned (bit 5)] - carries out the operation on the unsigned data]
 
     **In L/S style commands, bits [5:] specify an index register to modify the address, in ALU ops acting as L/S commands, bit[4] specifies whether 
@@ -83,4 +83,24 @@ Command crib sheet:
  	2d
  	2e
  	2f
+
+import Memory
+import Bus
+import Register
+import ALU
+
+class CPU:
+	def __init__(self,program):
+		self.bMC = Bus.Bus(1)
+		self.bMAD = Bus.Bus(4)
+
+		self.bAC = Bus.Bus(1)
+		self.bAD = Bus.Bus(4)
+
+		self.bRC = Bus.Bus(2)
+		self.bRD = Bus.Bus(4)
+
+		self.Memory = Memory.Memory(program,self.bMC,self.bMAD)
+		self.Registers = Register.Register_bank(self.bRC,self,bRD)
+		self.ALU = ALU.ALU(self.bAC,self.bAD)
 

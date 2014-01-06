@@ -4,6 +4,7 @@ class Register:
 		self.byte_number = bytes
 		self.control_bus = control_bus
 		self.data_bus = data_bus
+		
 	def clock(self):
 		field = self.control_bus.read()[0][:4]
 		if self.control_bus.read()[0][7]: #if a write op
@@ -39,7 +40,7 @@ class Register:
 
 class Register_bank:
 	'''An object containing all of the programmer-visible registers'''
-	def __init__(self,register_data_bus,register_control_bus):
+	def __init__(self,register_control_bus,register_data_bus):
 		self.data_bus,self.control_bus = register_data_bus,register_control_bus
 		#______________________________________________general purpose registers___[0x00-0x0F]__________________
 		self.registers = [register(self.control_bus,self.data_bus,4),register(self.control_bus,self.data_bus,4),
