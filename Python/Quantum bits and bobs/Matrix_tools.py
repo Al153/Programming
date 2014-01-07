@@ -61,32 +61,6 @@ def kronecker_product(transformation_matrix,identity_matrix):
 
 
 
-hadamard_gate = [
-				[1/math.sqrt(2), 1/math.sqrt(2)],
-				[1/math.sqrt(2),-1/math.sqrt(2)]
-				]
-
-
-pauli_x_gate =  [
-				[0,1],
-				[1,0]
-				]
-
-pauli_y_gate = [
-				[0,-complex(0,1)],
-				[complex(0,1),0]
-				]
-
-pauli_z_gate = [
-				[1,0],
-				[0,-1]
-				]
-
-identity_gate = [
-				[1,0],
-				[0,1]				
-				]
-
 
 
 #for i in xrange(10):

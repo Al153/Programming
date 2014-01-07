@@ -1,25 +1,6 @@
 import random
-import Quantum_logic_unit
+import Matrix_tools
 import math
-
-#class Qubit:
-#	def __init__(self,start_state):
-#		self.superposition = start_state
-#
-#	def update(self,new_state):
-#		self.superposition = new_state
-#
-#	def sneaky_measure(self):
-#		return self.superposition
-#
-#
-#	def measure(self):
-#		probability = abs(self.superposition[0])**2 #probability that it reverts to zero
-#		if random.random()> probability:
-#			self.superposition = (complex(0.0,0.0),complex(1.0,0.0)) #set superposition to 1
-#		else:
-#			self.superposition = (complex(1.0,0.0),complex(0.0,0.0)) #set superposition to 0
-#		return self.superposition
 
 class Qubit_system:
 	def __init__(self, number_of_qubits, start_state): #takes start state as a dict to save on space and time
@@ -56,15 +37,30 @@ class Qubit_system:
 
 		#build up correct logic grid
 		for i in xrange(start_qubit):
-			full_trans_matrix = Quantum_logic_unit.kronecker_product(full_trans_matrix,identity_matrix)
-		full_trans_matrix = Quantum_logic_unit.kronecker_product(full_trans_matrix,transformation_grid)
+			full_trans_matrix = Matrix_tools.kronecker_product(full_trans_matrix,identity_matrix)
+		full_trans_matrix = Matrix_tools.kronecker_product(full_trans_matrix,transformation_grid)
 		for i in xrange(start_qubit+transformation_size,self.number_of_qubits):
-			full_trans_matrix =Quantum_logic_unit.kronecker_product(full_trans_matrix,identity_matrix)
+			full_trans_matrix =Matrix_tools.kronecker_product(full_trans_matrix,identity_matrix)
 
-		self.superposition = Quantum_logic_unit.quantum_logic_operation(self.superposition,full_trans_matrix)
+		self.superposition = Matrix_tools.quantum_logic_operation(self.superposition,full_trans_matrix)
 
 
 #============================================= Scripting around Qubits ================
+def hadamard_logic(register): #applies a hadamard transform to every bit in a register
+	hadamard_gate = [
+				[1/math.sqrt(2), 1/math.sqrt(2)],
+				[1/math.sqrt(2),-1/math.sqrt(2)]
+				]
+	for i in xrange(register.number_of_qubits):
+		register.multi_qubit_op(hadamard_gate,i)
+
+def half_adder(register,start_qubit):
+	#requires states in order |a> Ab> |0>
+	register.multi_qubit_op(toffoli_gate,start_qubit)
+	register.multi_qubit_op(cnot_gate,start_qubit)
+
+
+
 
 hadamard_gate = [
 				[1/math.sqrt(2), 1/math.sqrt(2)],
@@ -99,8 +95,21 @@ cnot_gate     = [
 				[0,0,1,0]
 				]
 
-register = Qubit_system(3,{6:1})
-register.multi_qubit_op(cnot_gate,0)
+toffoli_gate = [
+				[1,0,0,0,0,0,0,0],
+				[0,1,0,0,0,0,0,0],
+				[0,0,1,0,0,0,0,0],
+				[0,0,0,1,0,0,0,0],
+				[0,0,0,0,1,0,0,0],
+				[0,0,0,0,0,1,0,0],
+				[0,0,0,0,0,0,0,1],
+				[0,0,0,0,0,0,1,0]
+				]
+
+
+
+register = Qubit_system(3,{4:1})
+half_adder(register,0)
 print "register superposition = ",register.superposition
 print "measured register = ",register.measure()
 
