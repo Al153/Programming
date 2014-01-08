@@ -1,4 +1,3 @@
-
 import math
 
 def quantum_logic_operation(state_vector,quantum_gate_matrix): #gate matrix is in form [[row1],[row2]...]

@@ -105,11 +105,59 @@ toffoli_gate = [
 				[0,0,0,0,0,0,0,1],
 				[0,0,0,0,0,0,1,0]
 				]
+bi_swap_gate =  [
+				[]
+				]
+tri_swap_gate = [
+				[1,0,0,0,   0,0,0,0],
+				[0,0,0,0,   1,0,0,0],
+				[0,0,1,0,   0,0,0,0],
+				[0,0,0,0,   0,0,1,0],
+
+				[0,1,0,0,   0,0,0,0],
+				[0,0,0,0,   0,1,0,0],
+				[0,0,0,1,   0,0,0,0],
+				[0,0,0,0,   0,0,0,1]
+				]
+two_qubit_quantum_fourier_transform = Matrix_tools.scalar_product(0.5,[
+																		[1,1,1,1],
+																		[1,complex(0,1),-1,-complex(0,1)],
+																		[1,-1,1,-1],
+																		[1,-complex(0,1),-1,complex(0,1)]
+																	])
+def controlled_R_k(register,start_bit,k):
+	gate = [
+			[1,0,0,0],
+			[0,1,0,0],
+			[0,0,1,0],
+			[0,0,0,math.e**((2*math.pi*complex(0.0,1.0))/2**k)]
+	]
+	register.multi_qubit_op(gate,start_bit)
 
 
 
-register = Qubit_system(3,{4:1})
-half_adder(register,0)
+def deutsch_josza_algorithm(n,gate_function):
+	#inititialize register with correct state
+	register = Qubit_system(n,{1:1})
+	hadamard_logic(register)
+	register.multi_qubit_op(gate_function,0)
+	hadamard_logic(register)
+
+	print "Register superposition = ", register.superposition
+	print "result = ", register.measure()
+
+
+
+
+
+
+#deutsch_josza_algorithm(2,cnot_gate)
+
+register = Qubit_system(2,{0:1})
+register.multi_qubit_op(hadamard_gate,0)
+#hadamard_logic(register)
+register.multi_qubit_op(two_qubit_quantum_fourier_transform,0)
+
 print "register superposition = ",register.superposition
 print "measured register = ",register.measure()
 
