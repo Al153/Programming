@@ -122,11 +122,12 @@ def deutsch_josza_algorithm(n,gate_function):
 
 deutsch_josza_algorithm(2,cnot_gate)
 
-register = Quantum_computer.Qubit_system(3,{0:1})
-register.multi_qubit_op(hadamard_gate,0)
-register.multi_qubit_op(hadamard_gate,1)
-half_adder(register,0)
-#egister.multi_qubit_op(two_qubit_quantum_fourier_transform,0)
+register = Quantum_computer.Qubit_system(2,{0:1})
+#register.multi_qubit_op(hadamard_gate,0)
+#register.multi_qubit_op(hadamard_gate,1)
+#half_adder(register,0)
+
+register.multi_qubit_op(two_qubit_quantum_fourier_transform,0)
 
 print "register superposition = ",register.superposition
 print "measured register = ",register.measure()
