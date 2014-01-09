@@ -3,7 +3,7 @@ import math
 
 def quantum_logic_operation(state_vector,quantum_gate_matrix): #gate matrix is in form [[row1],[row2]...]
 	if len(state_vector) != len(quantum_gate_matrix):
-		pass
+		print "ERROR", state_vector, quantum_gate_matrix
 	else:
 		result_vector = list(state_vector) #initialises a vector of the same length
 		for i in xrange(len(result_vector)):
