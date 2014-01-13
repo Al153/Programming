@@ -200,13 +200,13 @@ def not_every_bit(register):
 #deutsch_josza_algorithm(2,cnot_gate)
 
 register = Quantum_computer.Qubit_system(2,{0:1})
-<<<<<<< HEAD
+
 #register.multi_qubit_op(hadamard_gate,0)
 #register.multi_qubit_op(hadamard_gate,1)
 #half_adder(register,0)
 slow_QTF_2(register)
 register.multi_qubit_op(two_qubit_quantum_fourier_transform,0)
-=======
+
 #register.multi_qubit_op(full_adder,0)
 #register.multi_qubit_op(two_qubit_quantum_fourier_transform,0)
 
@@ -217,7 +217,7 @@ register.multi_qubit_op(cnot_gate,0)
 #register.multi_qubit_op(hadamard_gate,1)
 #half_adder(register,0)
 #slow_QTF(register)
->>>>>>> 254c335e259369d03389698cc30436ad4cbd223e
+
 #register.multi_qubit_op(two_qubit_quantum_fourier_transform,0)
 
 print "register superposition = ",register.superposition
