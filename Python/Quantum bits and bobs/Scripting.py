@@ -1,29 +1,27 @@
 import math
 import Quantum_computer
 
-def hadamard_logic(register): #applies a hadamard transform to every bit in a register
-	hadamard_gate = [
-				[1/math.sqrt(2), 1/math.sqrt(2)],
-				[1/math.sqrt(2),-1/math.sqrt(2)]
-				]
-	for i in xrange(register.number_of_qubits):
-		register.multi_qubit_op(hadamard_gate,i)
+full_adder = [
+			[1,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+			[0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0],
+			[0,0,0,0, 1,0,0,0, 0,0,0,0, 0,0,0,0],
+			[0,0,0,0, 0,0,0,0, 0,1,0,0, 0,0,0,0],
+			
+			[0,0,0,0, 0,0,0,0, 0,0,1,0, 0,0,0,0],
+			[0,0,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+			[0,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0],
+			[0,0,0,0, 0,1,0,0, 0,0,0,0, 0,0,0,0],
+			
+			[0,0,1,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+			[0,1,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+			[0,0,0,0, 0,0,0,0, 0,0,0,1, 0,0,0,0],
+			[0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0],
 
-def n_hadamard_logic(register,n):  #performs hadamard gate operations on n of qubits in a register
-	hadamard_gate = [
-				[1/math.sqrt(2), 1/math.sqrt(2)],
-				[1/math.sqrt(2),-1/math.sqrt(2)]
-				]
-	for i in xrange(n):
-		register.multi_qubit_op(hadamard_gate,i)
-
-def half_adder(register,start_qubit):
-	#requires states in order |a> b> |0> ==> |a> |(a+b)mod2> |(a+b)//2>
-	register.multi_qubit_op(toffoli_gate,start_qubit)
-	register.multi_qubit_op(cnot_gate,start_qubit)
-
-
-
+			[0,0,0,0, 0,0,0,0, 0,0,0,0, 0,1,0,0],
+			[0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,1,0],
+			[0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,1],
+			[0,0,0,0, 0,0,0,1, 0,0,0,0, 0,0,0,0]
+]
 
 hadamard_gate = [
 				[1/math.sqrt(2), 1/math.sqrt(2)],
@@ -58,7 +56,7 @@ cnot_gate     = [ #implements an XOR gate
 				[0,0,1,0]
 				]
 
-toffoli_gate = [ #implemens an AND gate when Q3 is |0>
+toffoli_gate = [ #implements an AND gate when Q3 is |0>
 				[1,0,0,0,0,0,0,0],
 				[0,1,0,0,0,0,0,0],
 				[0,0,1,0,0,0,0,0],
@@ -75,22 +73,73 @@ bi_swap_gate =  [
 				[0,0,0,1]
 				]
 tri_swap_gate = [ # is Q1 Q2 Q3 ==> Q3 Q2 Q1
-				[1,0,0,0,   0,0,0,0],
-				[0,0,0,0,   1,0,0,0],
-				[0,0,1,0,   0,0,0,0],
-				[0,0,0,0,   0,0,1,0],
-
-				[0,1,0,0,   0,0,0,0],
-				[0,0,0,0,   0,1,0,0],
-				[0,0,0,1,   0,0,0,0],
-				[0,0,0,0,   0,0,0,1]
+				[1,0,0,0,0,0,0,0],
+				[0,0,0,0,1,0,0,0],
+				[0,0,1,0,0,0,0,0],
+				[0,0,0,0,0,0,1,0],
+				[0,1,0,0,0,0,0,0],
+				[0,0,0,0,0,1,0,0],
+				[0,0,0,1,0,0,0,0],
+				[0,0,0,0,0,0,0,1]
 				]
+
+half_adder_gate=[#implements a half adder in one gate 
+				[1,0,0,0,0,0,0,0],
+				[0,1,0,0,0,0,0,0],
+				[0,0,1,0,0,0,0,0],
+				[0,0,0,1,0,0,0,0],
+				[0,0,0,0,0,0,1,0],
+				[0,0,0,0,0,0,0,1],
+				[0,0,0,0,0,1,0,0],
+				[0,0,0,0,1,0,0,0]
+				]
+
+or_gate = 		[
+				[0, 0, 0, 0, 0, 0, 1, 0],
+				[0, 0, 0, 0, 0, 0, 0, 1],
+				[0, 0, 0, 0, 0, 1, 0, 0],
+				[0, 0, 0, 0, 1, 0, 0, 0],
+				[0, 0, 0, 1, 0, 0, 0, 0],
+				[0, 0, 1, 0, 0, 0, 0, 0],
+				[0, 1, 0, 0, 0, 0, 0, 0],
+				[1, 0, 0, 0, 0, 0, 0, 0]
+				]
+not_gate = [[0,1],[1,0]]
+
+def reverse(register):
+	#reverses the order of qubits in a system
+	for i in xrange(register.number_of_qubits-1,-1,-1):
+		for j in xrange(i):
+			register.multi_qubit_op(bi_swap_gate,j)
+
+
 two_qubit_quantum_fourier_transform =Quantum_computer.scalar_product(0.5,[
 																		[1,1,1,1],
 																		[1,complex(0,1),-1,-complex(0,1)],
 																		[1,-1,1,-1],
 																		[1,-complex(0,1),-1,complex(0,1)]
 																	])
+
+def hadamard_logic(register): #applies a hadamard transform to every bit in a register
+	hadamard_gate = [
+				[1/math.sqrt(2), 1/math.sqrt(2)],
+				[1/math.sqrt(2),-1/math.sqrt(2)]
+				]
+	for i in xrange(register.number_of_qubits):
+		register.multi_qubit_op(hadamard_gate,i)
+
+def n_hadamard_logic(register,n):  #performs hadamard gate operations on n of qubits in a register
+	hadamard_gate = [
+				[1/math.sqrt(2), 1/math.sqrt(2)],
+				[1/math.sqrt(2),-1/math.sqrt(2)]
+				]
+	for i in xrange(n):
+		register.multi_qubit_op(hadamard_gate,i)
+
+def half_adder(register,start_qubit):
+	#requires states in order |a> b> |0> ==> |a> |(a+b)mod2> |(a+b)//2>
+	register.multi_qubit_op(toffoli_gate,start_qubit)
+	register.multi_qubit_op(cnot_gate,start_qubit)
 def controlled_R_k(register,start_bit,k):
 	#was for implementing a quantum fourier transform
 	gate = [
@@ -118,30 +167,11 @@ def deutsch_josza_algorithm(n,gate_function):
 	else:
 		print "function is constant"
 
+
+
 def slow_QTF(register):
-	###################### Does not work ########################
-	#performs a slow version of the QTF
-	#constructs a qtf in steps (QTF[0:0]=>QTF[0:1]=>...=>QTF[0:n])
-	for i in xrange(register.number_of_qubits):
-		print i
-		for j in xrange(i,1,-1):
-			register.multi_qubit_op(bi_swap_gate,j) #this puts the new qubit at position 1
-
-		for j in xrange(1,i):
-			k = i-j #the variable for the controlled R_k gate
-			controlled_R_k(register,j,k) #applies R_k trans
-			register.multi_qubit_op(bi_swap_gate,j+1) #moves the new qubit back
-		if i>0:
-			print "i = ", i
-			controlled_R_k(register,i-1,1)
-		#print register.superposition
-		register.multi_qubit_op(hadamard_gate,i) #applies a hadamard transform to the new qubit
-
-
-
-
-def slow_QTF_2(register):
-	############### Does work as far as I can tell
+	############### Does work, but requires qubits to be reversed beforehand
+	reverse(register)
 	n = register.number_of_qubits
 	for i in xrange(n):
 		new_qubit = n-1-i
@@ -156,21 +186,39 @@ def slow_QTF_2(register):
 		register.multi_qubit_op(hadamard_gate,new_qubit)
 
 
+def not_every_bit(register):
+	maximum = 2**register.number_of_qubits
+	line_template = [0]*maximum
+	gate_matrix = []
+	for i in xrange(maximum):
+		new_line = list(line_template)
+		new_line[maximum-1-i] = 1
+		gate_matrix.applend(new_line)
+	register.multi_qubit_op(gate_matrix,0)
 
 
 #deutsch_josza_algorithm(2,cnot_gate)
 
 register = Quantum_computer.Qubit_system(2,{0:1})
+<<<<<<< HEAD
 #register.multi_qubit_op(hadamard_gate,0)
 #register.multi_qubit_op(hadamard_gate,1)
 #half_adder(register,0)
 slow_QTF_2(register)
 register.multi_qubit_op(two_qubit_quantum_fourier_transform,0)
+=======
+#register.multi_qubit_op(full_adder,0)
 #register.multi_qubit_op(two_qubit_quantum_fourier_transform,0)
 
+register.multi_qubit_op(hadamard_gate,0)
+print "register superposition = ",register.superposition
+register.multi_qubit_op(cnot_gate,0)
+
+#register.multi_qubit_op(hadamard_gate,1)
+#half_adder(register,0)
 #slow_QTF(register)
+>>>>>>> 254c335e259369d03389698cc30436ad4cbd223e
+#register.multi_qubit_op(two_qubit_quantum_fourier_transform,0)
+
 print "register superposition = ",register.superposition
 print "measured register = ",register.measure()
-
-
-		

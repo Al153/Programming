@@ -60,6 +60,28 @@ def kronecker_product(transformation_matrix,identity_matrix):
 
 
 
+def matrix_product(a,b):
+	#a = m*n and b = n*q ab = n*q
+	m = len(a)
+	n = len(a[0])
+	n2 = len(b)
+	q = len(b[0])
+	if n != n2:
+		print "ERROR: matrices do not share side lengths"
+		quit()
+	ab = []
+	ab_row = [0]*q 
+	for i in xrange(m):
+		ab.append(ab_row)  #initialise a matrix of correct size
+
+	for i in xrange(m):
+		for j in xrange(q):
+			product_sum = 0
+			for k in xrange(n):
+				product_sum += a[i][k]*b[k][j]
+			ab[i][j] = product_sum 
+	return ab
+
 
 
 #for i in xrange(10):
