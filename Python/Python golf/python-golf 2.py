@@ -1,0 +1,5 @@
+def preprocess(string,result,alphabet):
+    for i in range(len(string)):result += [(alphabet.index(string[i])%26)] if string[i] in alphabet else []
+    return result
+mode,alphabet,plaintext,key,ciphertext ="encrypt",('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'), preprocess( open("file.txt").read() ,[],('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z')),preprocess("lemon",[],('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z')),''
+for i in range(len(plaintext)): print (alphabet[(plaintext[i] + key[i%len(key)])%26] if mode == "encrypt" else alphabet[(plaintext[i] - key[i%len(key)])%26]),
