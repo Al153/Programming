@@ -8,6 +8,8 @@ def pi(accuracy):
 	for i in xrange(accuracy):
 		pi += pi_hexit(i,accuracy)/16**(i)
 	return pi
+
 start = time.time()
-print pi(5000)
+print pi(10000)
 print "took ",time.time()-start, "seconds"
+
