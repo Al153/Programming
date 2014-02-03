@@ -120,6 +120,7 @@ two_qubit_quantum_fourier_transform =Quantum_computer.scalar_product(0.5,[
 																		[1,-complex(0,1),-1,complex(0,1)]
 																	])
 
+
 def hadamard_logic(register): #applies a hadamard transform to every bit in a register
 	hadamard_gate = [
 				[1/math.sqrt(2), 1/math.sqrt(2)],
@@ -195,6 +196,12 @@ def not_every_bit(register):
 		new_line[maximum-1-i] = 1
 		gate_matrix.applend(new_line)
 	register.multi_qubit_op(gate_matrix,0)
+
+
+def create_controlled_rotate_gate(total_bits,control_bit,gate): #specific rotation gate forming 
+	two_bit_identity = Quantum_computer.kronecker_product(identity_gate,identity_gate)
+	
+
 
 
 #deutsch_josza_algorithm(2,cnot_gate)
