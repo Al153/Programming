@@ -2,7 +2,6 @@ import math
 
 #========================= Meta-functional classes =============================
 
-
 #=============== special ============
 class product_function:
     def __init__(self,f,g):
@@ -87,32 +86,6 @@ class cos_function:
 
 #===================================== Wrapper/constuctor functions =======================
 
-def product(f,g):
-    global function_list
-    global lookup_list
-    try:
-        function_list.append(product_function(f,g))
-    except NameError:
-        function_list = [] #creates hidden lists
-        lookup_list = []
-        function_list.append(product_function(f,g))
-    pointer = len(function_list)-1
-    lookup_list.append(function_list[pointer].function)
-    return function_list[pointer].function
-
-def quotient(f,g):
-    global function_list
-    global lookup_list
-    try:
-        function_list.append(quotient_function(f,g))
-    except NameError:
-        function_list = [] #creates hidden lists
-        lookup_list = []
-        function_list.append(quotient_function(f,g))
-    pointer = len(function_list)-1
-    lookup_list.append(function_list[pointer].function)
-    return function_list[pointer].function
-
 def sum(f,g):
     global function_list
     global lookup_list
@@ -135,6 +108,32 @@ def subtract(f,g):
         function_list = [] #creates hidden lists
         lookup_list = []
         function_list.append(subtract_function(f,g))
+    pointer = len(function_list)-1
+    lookup_list.append(function_list[pointer].function)
+    return function_list[pointer].function
+
+def product(f,g):
+    global function_list
+    global lookup_list
+    try:
+        function_list.append(product_function(f,g))
+    except NameError:
+        function_list = [] #creates hidden lists
+        lookup_list = []
+        function_list.append(product_function(f,g))
+    pointer = len(function_list)-1
+    lookup_list.append(function_list[pointer].function)
+    return function_list[pointer].function
+
+def quotient(f,g):
+    global function_list
+    global lookup_list
+    try:
+        function_list.append(quotient_function(f,g))
+    except NameError:
+        function_list = [] #creates hidden lists
+        lookup_list = []
+        function_list.append(quotient_function(f,g))
     pointer = len(function_list)-1
     lookup_list.append(function_list[pointer].function)
     return function_list[pointer].function
@@ -220,19 +219,14 @@ def cos():
 
 #========================= Transformation functions ===================
 
+def parse(string):
+    
+
 def differentiate(f): #differentiate f
     pointer = lookup_list.index(f) #finds the parent object of the function
     to_differentiate = function_list[pointer]  #creates a direct pointer to function
 
-    if to_differentiate.type == "product_function":
-
-        return sum( #performs product_function rule
-            product(differentiate(to_differentiate.f),to_differentiate.g),
-            product(to_differentiate.f,differentiate(to_differentiate.g))
-            )
-
-
-    elif to_differentiate.type == "sum_function":
+    if to_differentiate.type == "sum_function":
         return sum(
             differentiate(to_differentiate.f),
             differentiate(to_differentiate.g)
@@ -244,10 +238,11 @@ def differentiate(f): #differentiate f
             differentiate(to_differentiate.g)
             )
 
-    elif to_differentiate.type == "chain_function":
-        return product( #h(x) = f(g(x)), h'(x) =  f'(g(x)) * g'(x) 
-            chain(differentiate(to_differentiate.f),to_differentiate.g),
-            differentiate(to_differentiate.g)
+    elif to_differentiate.type == "product_function":
+
+        return sum( #performs product_function rule
+            product(differentiate(to_differentiate.f),to_differentiate.g),
+            product(to_differentiate.f,differentiate(to_differentiate.g))
             )
 
     elif to_differentiate.type == "quotient_function":
@@ -258,6 +253,14 @@ def differentiate(f): #differentiate f
                 ),
             product(to_differentiate.g,to_differentiate.g)
             )
+
+    elif to_differentiate.type == "chain_function":
+        return product( #h(x) = f(g(x)), h'(x) =  f'(g(x)) * g'(x) 
+            chain(differentiate(to_differentiate.f),to_differentiate.g),
+            differentiate(to_differentiate.g)
+            )
+
+
 
     elif to_differentiate.type == "polynomial_function": #function is a polynomial_function
         dict_to_transform = to_differentiate.trans_dict
@@ -278,20 +281,84 @@ def differentiate(f): #differentiate f
         return polynomial({-1:new_coefficient})
 
     elif to_differentiate.type == "sin_function":
+       
         return cos()
 
     elif to_differentiate.type =="cos_function":
+        
         return product(polynomial({0:-1}),sin())
 
+def deparse(function):
+    """Convert a function to an equation string"""
+    pointer = lookup_list.index(function) #finds the parent object of the function
+    to_deparse = function_list[pointer]  #creates a direct pointer to function
 
-def parse(equation):
+    if to_deparse.type == "sum_function":
+        return "("+deparse(to_deparse.f)+" + "+deparse(to_deparse.g) + ")"
+
+    if to_deparse.type == "subtract_function":
+        return "("+deparse(to_deparse.f)+" - "+deparse(to_deparse.g) + ")"
+
+    if to_deparse.type == "product_function":
+        return "("+deparse(to_deparse.f)+" * "+deparse(to_deparse.g) + ")"
+
+    if to_deparse.type == "quotient_function":
+        return "("+deparse(to_deparse.f)+" * "+deparse(to_deparse.g) + ")"
+
+    if to_deparse.type == "chain_function":
+        f = to_deparse.f
+        g = to_deparse.g
+        deparsed_g = deparse(g)
+        return deparse(f).replace("x",deparsed_g) 
 
 
+    if to_deparse.type == "polynomial_function":
+        output_string = ''
 
-f = sin()
+        for power in to_deparse.trans_dict:
+            if to_deparse.trans_dict[power] == 0:
+                pass
+            else:
+                if to_deparse.trans_dict[power] == 1:
+                    coefficient = ''
+                elif to_deparse.trans_dict[power] == -1:
+                    coefficient = '-'
+                else: 
+                    coefficient = str(to_deparse.trans_dict[power])
+
+                if power == 0:
+                    output_string += coefficient
+                elif power == 1:
+                    output_string += coefficient+"x"
+                else:
+                    output_string += coefficient+"x^"+str(power)
+            
+        return output_string
+    if to_deparse.type == "exponential_function":
+        a,b,c = to_deparse.base_coefficient,to_deparse.base,to.xcoefficient
+        if b == math.e:
+            return str(a)+"*"+"e^"+str(c)
+        else:
+            return str(a)+ "*" + str(b) + "^" + str(c)
+    if to_deparse.type == "log_function":
+        coefficient,N = to_deparse.coefficient,to_deparse.base
+        if N == math.e:
+            return str(coefficient)+"ln(x)"
+        else:
+            return str(coefficient)+"log"+ str(N)+"(x)"
+    if to_deparse.type == "sin_function":
+        return "sin(x)"
+    if to_deparse.type == "cos_function":
+        return "cos(x)"
+
+
+f = chain(sin(),polynomial({2:1}))
 g = differentiate(f)
-h = cos()
 
-for x in xrange(1,10):
-    print f(x), g(x),h(x)
 
+print "f(x) =", deparse(f)
+print "\nf'(x) = ", deparse(g)
+
+print  "\n\n"
+for x in xrange(10):
+    print "x = ", x, "   f(x) = ", f(x), "   g(x) = ",g(x)
