@@ -220,6 +220,50 @@ def cos():
 #========================= Transformation functions ===================
 
 def parse(string):
+
+    elements = find_elements(string[1:-1])
+    if len(elements) == 3: #composite (sum, product etc)
+        if elements[1] == "+":
+            return sum(parse(elements[0]),parse(elements[2]))
+        elif elements[1] == "-":
+            return subtract(parse(elements[0]),parse(elements[2]))
+        elif elements[1] == "*":
+            return product(parse(elements[0]),parse(elements[2]))
+        elif elements[1] == "/":
+            return quotient(parse(elements[0]),parse(elements[2]))
+
+
+    else: #base function
+        pass
+
+
+def find_elements(string):
+    if string[0] == "(": #if string is composite:
+        bracket_count = 0
+        element = ''
+        elements = []
+        for char in string:
+            if char == "(": #opening of new element
+                bracket_count += 1
+                element += char
+
+            elif char == ")": #closing of element
+                bracket_count -= 1
+                element += char
+
+            elif char == " " and bracket_count == 0: #if space between elements
+                elements.append(element)
+                element = ''
+
+            else:
+                element += char
+
+        elements.append(element) #catch last element
+
+        return elements
+
+    else: #if string is just one element
+        return [string]
     
 
 def differentiate(f): #differentiate f
@@ -362,3 +406,6 @@ print "\nf'(x) = ", deparse(g)
 print  "\n\n"
 for x in xrange(10):
     print "x = ", x, "   f(x) = ", f(x), "   g(x) = ",g(x)
+
+
+
