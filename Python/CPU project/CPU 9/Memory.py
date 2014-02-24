@@ -9,7 +9,7 @@ class Memory:
 
 	def clock(self):
 		if self.state == "ready":
-
+			
 
 		elif self.state = "read":
 

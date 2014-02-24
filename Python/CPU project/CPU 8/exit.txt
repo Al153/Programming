@@ -1,4 +1,4 @@
-subroutine exit
+<subroutine: exit>
 %exit 			POP jmp @por 		#reloads return address	
 				GTO jmp @gr         #exits subroutine
-end exit
+<end exit>
