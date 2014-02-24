@@ -6,8 +6,8 @@ class Register:
 		self.data_bus = data_bus
 		
 	def clock(self):
-		field = self.control_bus.read()[0][:4]
-		if self.control_bus.read()[0][7]: #if a write op
+		field = self.control_bus.read()[0]>>4
+		if self.control_bus.read()[0]&1: #if a write op
 			self.write(self.data_bus.read(),field)
 		else: #if a read op
 			self.data_bus.write(self.read(field))
@@ -71,7 +71,7 @@ class Register_bank:
 	
 	def clock(self):
 		control = self.control_bus.read() #reads control bus
-		register_address =control[1][0:5] #5 bit address
+		register_address =control [1]>>3 #5 bit address
 		self.registers[register_address].clock() #clocks the register with the corresponding address
 
 

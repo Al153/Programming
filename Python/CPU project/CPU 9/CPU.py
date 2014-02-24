@@ -57,11 +57,11 @@ Command crib sheet:
  	13		CMP			ALU               Compares two values and edits the flag register 
  	14		MOV		    Reg               Moves value from one register to another
  	15		LODA        L/S               Load address (loads data from address in A/D bytes)
- 	16		LODD		L/S               Load data (loads data from A/D bytes)
- 	17		STR         L/S               Store(Stores a register value into memory)
- 	18		POP			L/S               POP  (Pops from stack into a register)
- 	19		PSH			REG               Push (pushes a register value into stack) 
- 	1a		GGTO        L/S               Global GoTo (puts data into both pP and rP)   
+ 	16      STR         L/S               Store(Stores a register value into memory)
+ 	17      POP			L/S               POP  (Pops from stack into a register)		
+ 	18      PSH			REG               Push (pushes a register value into stack) 		
+ 	19      GGTO        L/S               Global GoTo (puts data into both pP and rP)   		
+ 	1a		
  	1b
  	1c
  	1d
@@ -103,4 +103,6 @@ class CPU:
 		self.Memory = Memory.Memory(program,self.bMC,self.bMAD)
 		self.Registers = Register.Register_bank(self.bRC,self,bRD)
 		self.ALU = ALU.ALU(self.bAC,self.bAD)
+
+	
 

@@ -20,9 +20,9 @@ def e(accuracy):
 		estimate += numerator/denominator
 	return estimate
 
-start = time.time()
-
-
-result = pi(10000)
-print "took ",time.time()-start, "seconds"
-print "\n\n\n\n", result
+#start = time.time()
+#
+#
+#result = pi(10000)
+#print "took ",time.time()-start, "seconds"
+#print "\n\n\n\n", result
