@@ -407,59 +407,19 @@ def deparse(function):
         return "cos(x)"
 
 
-f = chain(exponential(1,math.e,1),sin())
-
+f = chain(log(1,math.e),sin())
 g = differentiate(f)
-h = differentiate(g)
+#h = differentiate(g)
 
 
 print "f(x) =", deparse(f)
 print "\nf'(x) = ", deparse(g)
-print "\nf''(x) = ", deparse(h)
+#print "\nf''(x) = ", deparse(h)
 
 print  "\n\n"
 X = []
 fx = []
 gx = []
-for x in xrange(1000):
-    X.append(x/100.0)
-
-    fx.append(f(x/100.0))
-#   gx.append(g(x/100.0))
-    gx.append(h(x/100.0))
-    #print "x = ", x/100.0, "   f(x) = ", f(x/100.0), "   g(x) = ",g(x/100.0)
-
-
-
-import matplotlib.pyplot as plt
-import DiscreteFourierTransform
-
-dx = DiscreteFourierTransform.transform(fx)
-dxreal = []
-dximag = []
-for y in dx:
-    dxreal.append((y/100).real)
-    dximag.append((y/100).imag)
-
-plt.legend(["y = f''(x)  " +  deparse(f), "y = real(DFT(f(x)))","y = imag(DFT(f(x)))"], loc = 'upper left')
-
-
-
-fig = plt.figure()
-fig.suptitle('f,f'', & dft(f)', fontsize=14, fontweight='bold')
-
-ax = fig.add_subplot(111)
-#fig.subplots_adjust(top=0.85)
-ax.set_title('f(x) = e^sin(x)')
-
-ax.set_xlabel('x')
-ax.set_ylabel('y')
-
-ax.plot(X,fx)
-ax.plot(X,gx)
-ax.plot(X,dxreal)
-ax.plot(X,dximag)
-ax.legend(["y = f(x)", "y = f''(x)  ", "y = real(DFT(f(x)))","y = imag(DFT(f(x)))"], loc = 'upper left')
-
-
-plt.show()
+for x in xrange(1,100):
+    print "x = ", x, "f(x) = ", f(x), "g(x) = ", g(x)
+    

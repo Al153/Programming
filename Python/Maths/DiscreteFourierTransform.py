@@ -50,6 +50,8 @@ def binomial(n,p,q):
         output.append(nCr(n,r)*(p**r)*(q**(n-r)))
     return x,output
 
+
+
 #x = [
 #    0.17678,
 #    0.70711,
