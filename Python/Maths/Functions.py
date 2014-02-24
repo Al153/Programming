@@ -219,51 +219,62 @@ def cos():
 
 #========================= Transformation functions ===================
 
-def parse(string):
-
-    elements = find_elements(string[1:-1])
-    if len(elements) == 3: #composite (sum, product etc)
-        if elements[1] == "+":
-            return sum(parse(elements[0]),parse(elements[2]))
-        elif elements[1] == "-":
-            return subtract(parse(elements[0]),parse(elements[2]))
-        elif elements[1] == "*":
-            return product(parse(elements[0]),parse(elements[2]))
-        elif elements[1] == "/":
-            return quotient(parse(elements[0]),parse(elements[2]))
-
-
-    else: #base function
-        pass
-
-
-def find_elements(string):
-    if string[0] == "(": #if string is composite:
-        bracket_count = 0
-        element = ''
-        elements = []
-        for char in string:
-            if char == "(": #opening of new element
-                bracket_count += 1
-                element += char
-
-            elif char == ")": #closing of element
-                bracket_count -= 1
-                element += char
-
-            elif char == " " and bracket_count == 0: #if space between elements
-                elements.append(element)
-                element = ''
-
-            else:
-                element += char
-
-        elements.append(element) #catch last element
-
-        return elements
-
-    else: #if string is just one element
-        return [string]
+#def parse(string):
+#
+#    elements = find_elements(string)
+#    print elements
+#    if len(elements) == 3: #composite (sum, product etc)
+#        if elements[1] == "+":
+#            return sum(parse(elements[0]),parse(elements[2]))
+#        elif elements[1] == "-":
+#            return subtract(parse(elements[0]),parse(elements[2]))
+#        elif elements[1] == "*":
+#            return product(parse(elements[0]),parse(elements[2]))
+#        elif elements[1] == "/":
+#            return quotient(parse(elements[0]),parse(elements[2]))
+#
+#
+#    else: #base function
+#        if " " in elements[0]: #chain function
+#
+#            pass
+#        else:
+#            if elements[0] == "sin(x)":
+#                return sin()
+#            elif elements[0] == "cos(x)":
+#                return cos()
+#            elif elements[0][:4] == "log":
+#                coefficient = 1
+#
+#
+#
+#def find_elements(string):
+#    if string[0] == "(": #if string is composite:
+#        bracket_count = 0
+#        element = ''
+#        elements = []
+#        for char in string:
+#            if char == "(": #opening of new element
+#                bracket_count += 1
+#                element += char
+#
+#            elif char == ")": #closing of element
+#                bracket_count -= 1
+#                element += char
+#
+#            elif char == " " and bracket_count == 0: #if space between elements
+#                elements.append(element)
+#                element = ''
+#
+#            else:
+#                element += char
+#
+#        elements.append(element) #catch last element
+#
+#        return elements
+#
+#    else: #if string is just one element
+#        return [string]
     
 
 def differentiate(f): #differentiate f
@@ -379,9 +390,9 @@ def deparse(function):
             
         return output_string
     if to_deparse.type == "exponential_function":
-        a,b,c = to_deparse.base_coefficient,to_deparse.base,to.xcoefficient
+        a,b,c = to_deparse.base_coefficient,to_deparse.base,to_deparse.xcoefficient
         if b == math.e:
-            return str(a)+"*"+"e^"+str(c)
+            return str(a)+"*"+"e^"+str(c)+"x"
         else:
             return str(a)+ "*" + str(b) + "^" + str(c)
     if to_deparse.type == "log_function":
@@ -396,16 +407,59 @@ def deparse(function):
         return "cos(x)"
 
 
-f = chain(sin(),polynomial({2:1}))
+f = chain(exponential(1,math.e,1),sin())
+
 g = differentiate(f)
+h = differentiate(g)
 
 
 print "f(x) =", deparse(f)
 print "\nf'(x) = ", deparse(g)
+print "\nf''(x) = ", deparse(h)
 
 print  "\n\n"
-for x in xrange(10):
-    print "x = ", x, "   f(x) = ", f(x), "   g(x) = ",g(x)
+X = []
+fx = []
+gx = []
+for x in xrange(1000):
+    X.append(x/100.0)
+
+    fx.append(f(x/100.0))
+#   gx.append(g(x/100.0))
+    gx.append(h(x/100.0))
+    #print "x = ", x/100.0, "   f(x) = ", f(x/100.0), "   g(x) = ",g(x/100.0)
 
 
 
+import matplotlib.pyplot as plt
+import DiscreteFourierTransform
+
+dx = DiscreteFourierTransform.transform(fx)
+dxreal = []
+dximag = []
+for y in dx:
+    dxreal.append((y/100).real)
+    dximag.append((y/100).imag)
+
+plt.legend(["y = f''(x)  " +  deparse(f), "y = real(DFT(f(x)))","y = imag(DFT(f(x)))"], loc = 'upper left')
+
+
+
+fig = plt.figure()
+fig.suptitle('f,f'', & dft(f)', fontsize=14, fontweight='bold')
+
+ax = fig.add_subplot(111)
+#fig.subplots_adjust(top=0.85)
+ax.set_title('f(x) = e^sin(x)')
+
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+
+ax.plot(X,fx)
+ax.plot(X,gx)
+ax.plot(X,dxreal)
+ax.plot(X,dximag)
+ax.legend(["y = f(x)", "y = f''(x)  ", "y = real(DFT(f(x)))","y = imag(DFT(f(x)))"], loc = 'upper left')
+
+
+plt.show()
