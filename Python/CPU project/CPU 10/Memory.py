@@ -7,9 +7,9 @@ class Memory:
 	def set(self):
 		address = 0
 		for byte in self.Address_bus.data:
-			address += byte
 			address<<=8 #shift up a byte
-
+			address += byte
+			
 		for i in xrange(4):
 			self.memory_dict[(address+i)%4294967296] = self.Data_bus.data[i]
 
