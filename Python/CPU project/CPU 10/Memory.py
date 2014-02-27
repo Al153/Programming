@@ -11,12 +11,13 @@ class Memory:
 			address += byte
 			
 		for i in xrange(4):
-			self.memory_dict[(address+i)%4294967296] = self.Data_bus.data[i]
+			self.memory_dict[(address+i)&4294967295] = self.Data_bus.data[i]
 
 	def enable(self):
 		address = 0
 		for byte in self.Address_bus.data:
-			address += byte
 			address<<=8 #shift up a byte
+			address += byte
+
 		for i in xrange(4):
-			self.Data_bus.data[i] = self.memory_dict.get((address+i)%4294967296,0) 
+			self.Data_bus.data[i] = self.memory_dict.get((address+i)&4294967295,0) 

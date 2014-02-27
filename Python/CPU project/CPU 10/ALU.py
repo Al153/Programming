@@ -23,7 +23,7 @@ class ALU:
 		self.XNOR,
 		self.SHL,
 		self.SHR,
-		self.ADDd,
+		self.ADDc,
 		self.SUBb
 		]
 
@@ -44,7 +44,7 @@ class ALU:
 
 	def enable_reg_1(self):
 		for i in xrange(4):
-			self.output_bus.data[i] = self.reg1&255
+			self.output_bus.data[3-i] = self.reg1&255
 			self.reg1 >>= 8
 
 	def enable_reg_2(self):

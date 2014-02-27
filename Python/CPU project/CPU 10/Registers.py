@@ -9,25 +9,25 @@ class Register_bank:
 			Register(main_bus,main_bus,4), 		#acc
 			Register(main_bus,main_bus,4),		#Jump reg
 
-			Register(main_bus,main_bus),		#program counter
+			Register(main_bus,main_bus,4),		#program counter
 			flags, #flags set
 			flag_register_reset(main_bus,main_bus,flags), #flags reset
-			Register(main_bus,main_bus),		#stack pointer
-			Register(main_bus,main_bus),		#stack base
+			Register(main_bus,main_bus,4),		#stack pointer
+			Register(main_bus,main_bus,4),		#stack base
 
-			Register(main_bus,main_bus),		#gp registers
-			Register(main_bus,main_bus),
-			Register(main_bus,main_bus),
-			Register(main_bus,main_bus),
-			Register(main_bus,main_bus),
-			Register(main_bus,main_bus),
-			Register(main_bus,main_bus)
+			Register(main_bus,main_bus,4),		#gp registers
+			Register(main_bus,main_bus,4),
+			Register(main_bus,main_bus,4),
+			Register(main_bus,main_bus,4),
+			Register(main_bus,main_bus,4),
+			Register(main_bus,main_bus,4),
+			Register(main_bus,main_bus,4)
 		]
 
 	def set(self):
-		self.registers[self.Address_bus[0]&15].set()
+		self.registers[self.Address_bus.data[0]&15].set()
 	def enable(self):
-		self.registers[self.Address_bus[0]&15].enable()
+		self.registers[self.Address_bus.data[0]&15].enable()
 
 class Register:
 	def __init__(self,input_bus,output_bus,size):
