@@ -59,6 +59,7 @@ class flag_register_reset:
 		self.base_register = base_register
 		self.input_bus = input_bus
 		self.output_bus = output_bus
+		self.data = self.base_register.data
 
 	def set(self):
 		for i in xrange(4):

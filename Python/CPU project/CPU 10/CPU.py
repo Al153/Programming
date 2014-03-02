@@ -28,9 +28,9 @@
 #  	 0x5 		Flags set 	- data written here will be ORed with the data in the flags register
 #  	 0x6			Flags reset - data written here will be ANDed with the data in the flags register
 #  	 0x7			Stack pointer - reserved for stack use (but stack is not built into hardware)
-#  	 0x8 		Stack base - reserved for the bottom part of the stack.
+# 
 #
-#	 0x9 ==> 0xf GP registers (0...6)
+#	 0x8 ==> 0xf GP registers (0...7)
 #
 #
 #		
@@ -58,6 +58,8 @@
 #04		 STR		L/S
 #05      CMP		REG
 #06 	 CMP 		L/S
+#07 	 OUT 		REG
+#08 	 OUT 		L/S
 #
 #.
 #.
@@ -116,10 +118,13 @@
 #
 	#Stack Overflow
 	#Stack underflow 	LSB
+
+	
 import ALU
 import Bus
 import Memory
 import Registers
+import Output
 
 def append_bytes(byte_list):
 	"""converts a list of bytes (such as on a bus) to a binary value"""
@@ -144,17 +149,21 @@ class CPU:
 		self.Memory_address_bus = Bus.Bus(4) 
 		self.ALU_op_bus = Bus.Bus(1)
 		self.Register_address_bus = Bus.Bus(1)
+		self.Output_address_bus = Bus.bus
 
 		self.Registers = Registers.Register_bank(self.Main_bus,self.Register_address_bus)
 		self.Memory_address_register = Registers.Register(self.Main_bus,self.Memory_address_bus,4)
 		self.Memory = Memory.Memory(self.Memory_address_bus, self.Main_bus,memory_dict)
 		self.ALU = ALU.ALU(self.Main_bus,self.Main_bus,self.ALU_op_bus)
+		self.Output = Output.Output(self.Main_bus,self.Output_address_bus)
 
 		self.halt = 0 
+		self.instruction_count = 0
 
 	def run(self):
 		while not self.halt:
 			self.step()
+			self.instruction_count += 1
 
 	def step(self):
 		self.fetch()
@@ -209,16 +218,19 @@ class CPU:
 
 				self.Register_address_bus.data = [6]
 				self.Registers.enable()
+				if not (1<<(32-(conditional&31)))&append_bytes(self.Main_bus.data):
+					if conditional&31 == 5 or conditional&31 == 6 or conditional&31 == 7:
+						self.Main_bus.data = [255,255,255,31] #reset all three of the  ><= flags
+					return
 				if conditional&31 == 5 or conditional&31 == 6 or conditional&31 == 7:
 					self.Main_bus.data = [255,255,255,31] #reset all three of the  ><= flags
 				else:
-					self.Main_bus.data = bytify((1<<(32-(condtional&31)))^4294967295)
+					self.Main_bus.data = bytify((1<<(32-(conditional&31)))^4294967295)
 				self.Registers.set()
-				if not (1<<(32-(condtional&31)))&append_bytes(self.Main_bus.data):
-					return
+
 
 			else:
-				self.Register_address_bus.data = list[conditional]
+				self.Register_address_bus.data = [conditional]
 				self.Registers.enable()
 				if not append_bytes(self.Main_bus.data):
 					return
@@ -276,11 +288,11 @@ class CPU:
 		elif opcode == 5: 				#Compare (regs)
 			self.Register_address_bus.data = [reg1_addr]
 			self.Registers.enable()
-			reg1_value = append_bytes(self.Main_bus.value)
+			reg1_value = append_bytes(self.Main_bus.data)
 
 			self.Register_address_bus.data = [reg2_addr]
 			self.Registers.enable()			
-			reg2_value = append_bytes(self.Main_bus.value)
+			reg2_value = append_bytes(self.Main_bus.data)
 
 			if reg1_value > reg2_value:
 				self.Main_bus.data = [0,0,0,64]
@@ -295,7 +307,7 @@ class CPU:
 		elif opcode == 6:				#Compare(reg + data)
 			self.Register_address_bus.data = [reg1_addr]
 			self.Registers.enable()
-			reg1_value = append_bytes(self.Main_bus.value)
+			reg1_value = append_bytes(self.Main_bus.data)
 
 			self.Main_bus.Data = list(self.addr)
 
@@ -310,7 +322,7 @@ class CPU:
 			self.Memory_address_register.set()
 			self.Memory_address_register.enable()
 			self.Memory.enable()
-			reg2_value = append_bytes(self.Main_bus.value)
+			reg2_value = append_bytes(self.Main_bus.data)
 
 			if reg1_value > reg2_value:
 				self.Main_bus.data = [0,0,0,64]
@@ -320,7 +332,29 @@ class CPU:
 				self.Main_bus.data = [0,0,0,32]
 
 			self.Register_address_bus.data = [5]
-			self.Registers.set()			
+			self.Registers.set()		
+
+		elif opcode == 7:			#out reg
+			self.Output_address_bus.data = [0]
+			self.Register_address_bus.data = [reg1_addr]
+			self.Registers.enable()
+			self.Output.set()
+
+		elif Opcode == 8:
+			self.Output_address_bus.data = [0]
+			self.Main_bus.data = list(self.addr)
+			self.ALU.set_reg_1()
+			self.Register_address_bus.data = [reg2_addr]
+			self.Registers.enable()
+			self.ALU.set_reg_2()
+			self.ALU_op_bus.data = [0]
+			self.ALU.op()
+			self.ALU.enable_reg_1()
+			
+			self.Memory_address_register.set()
+			self.Memory_address_register.enable()
+			self.Memory.enable()
+			self.Output.set()
 
 
 
@@ -333,7 +367,8 @@ class CPU:
 			self.Register_address_bus.data = [reg2_addr]
 			self.Registers.enable()
 			self.ALU.set_reg_2()
-			self.execute_AlU_command(opcode&15,reg1_addr)
+			self.execute_ALU_command(opcode&15,reg1_addr)
+			#print opcode&15
 
 		elif not (opcode&240)^32: #reg Addr ALU
 
@@ -347,16 +382,20 @@ class CPU:
 			self.ALU.op()
 			self.ALU.enable_reg_1()
 			
+			self.Memory_address_register.set()
+			self.Memory_address_register.enable()
+			self.Memory.enable()
 			self.ALU.set_reg_2()
 
 			self.Register_address_bus.data = [reg1_addr]
 			self.Registers.enable()
 			self.ALU.set_reg_1()
-			self.execute_AlU_command(opcode&15,reg1_addr)
+			self.execute_ALU_command(opcode&15,reg1_addr)
 
 
 
 	def execute_ALU_command(self,opcode,reg1_addr):
+		self.ALU_op_bus.data = [opcode]
 		self.ALU.op()
 		self.Register_address_bus.data = [reg1_addr]
 		self.ALU.enable_reg_1()
@@ -368,3 +407,7 @@ class CPU:
 		self.Register_address_bus.data = [5]
 		self.ALU.enable_flags()
 		self.Registers.set()
+
+
+
+
