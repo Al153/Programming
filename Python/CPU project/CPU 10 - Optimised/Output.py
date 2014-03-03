@@ -1,4 +1,4 @@
-import Getch
+#import Getch
 import sys
 
 def bytify(binary):
@@ -14,7 +14,7 @@ def bytify(binary):
 
 class IO:
 	def __init__(self,IO_bus,address_bus):
-		self.get_char = Getch._Getch
+		#self.get_char = Getch._Getch
 		self.IO_bus = IO_bus
 		self.address_bus = address_bus
 

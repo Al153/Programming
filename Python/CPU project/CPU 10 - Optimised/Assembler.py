@@ -313,6 +313,7 @@ def expand_macros(tokens):
 		if line[0] == "def":					#defining a term
 			lines_to_remove.append(i)
 			replace_dict[line[1]] = line[2]
+			replace_dict["["+line[1]+"]"] = "["+line[2]+"]"
 		i += 1
 
 	lines_to_remove.reverse()
@@ -457,7 +458,7 @@ def sort_out_variables(tokens,number_of_lines):
 
 			address_copy = count
 			for dword in data_array:
-				tokens.append([str(address_copy),"data_array"])
+				tokens.append([str(address_copy),"Data",dword])
 				address_copy += 4
 			count += 4*length
 			del tokens[i]

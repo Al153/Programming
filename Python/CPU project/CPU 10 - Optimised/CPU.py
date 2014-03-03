@@ -126,13 +126,13 @@ import Memory
 import Registers
 import Output
 
-def append_bytes(byte_list):
-	"""converts a list of bytes (such as on a bus) to a binary value"""
-	result = 0
-	for byte in byte_list:
-		result<<=8
-		result += byte
-	return result
+#def append_bytes(byte_list):
+#	"""converts a list of bytes (such as on a bus) to a binary value"""
+#	result = 0
+#	for byte in byte_list:
+#		result<<=8
+#		result += byte
+#	return result
 def bytify(binary):
 	"""turns a number into bytes"""
 	bytes = [0,0,0,0]
@@ -206,7 +206,7 @@ class CPU:
 
 				self.Register_address_bus.data = 6
 				self.Registers.enable()
-				if not (1<<(31-(conditional&31)))&append_bytes(self.Main_bus.data):
+				if not (1<<(31-(conditional&31)))&self.Main_bus.data:
 					if conditional&31 == 24 or conditional&31 == 25 or conditional&31 == 26:
 						self.Main_bus.data = 4294967071 #reset all three of the  ><= flags
 					else:
@@ -286,7 +286,7 @@ class CPU:
 		elif opcode == 6:				#Compare(reg + data)
 			self.Register_address_bus.data = reg1_addr
 			self.Registers.enable()
-			reg1_value = append_bytes(self.Main_bus.data)
+			reg1_value = self.Main_bus.data
 
 			self.Main_bus.Data = self.addr
 
@@ -298,7 +298,7 @@ class CPU:
 			self.Memory_address_register.enable()
 			self.Memory.enable()
 
-			reg2_value = append_bytes(self.Main_bus.data)
+			reg2_value = self.Main_bus.data
 			if reg1_value > reg2_value:
 				self.Main_bus.data = 64
 			elif reg1_value == reg2_value:
