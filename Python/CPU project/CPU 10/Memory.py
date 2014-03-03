@@ -19,5 +19,7 @@ class Memory:
 			address<<=8 #shift up a byte
 			address += byte
 
+		#print "Memory enable"
 		for i in xrange(4):
+
 			self.Data_bus.data[i] = self.memory_dict.get((address+i)&4294967295,0) 

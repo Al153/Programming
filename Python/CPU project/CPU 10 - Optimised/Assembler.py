@@ -130,10 +130,10 @@ conditional_addresses = {
 
 def low_level_assemble(line_list):
 	machine_code_dict = {}
-	print_tokens(line_list)
+	#print_tokens(line_list)
 	for tokens in line_list:
 		#tokens = tokenize(line)
-		print tokens
+		#print tokens
 		line_no = int(tokens[0])
 		if tokens[1] == "Data":
 			data = int(tokens[2])
@@ -216,18 +216,35 @@ def tokenize(line):
 #							])
 
 def assemble():
+	print "Getting code = ",
 	file_object = get_code() #get the text of the file
+	print "Okay"
+	print "Extracting tokens = ",
 	tokens = full_text_tokenize(file_object)
+	print "Okay"
+	print "Extracting defined terms = ",
 	tokens = expand_macros(tokens)  			#expand pseudo commands such as "Goto ... " or "if ... then ... " or "def ... ... "
+	print "Okay"
+	print "Importing external code = ",
 	while things_to_import(tokens):
 		tokens = do_import(tokens)
+	print "Okay"
+	print "Allocating variables = ",
 	number_of_lines,tokens = count_lines(tokens) 		#counts the number of valid lines for sorting out variables
 	tokens = sort_out_variables(tokens,number_of_lines) 		#creates variable storage and places pointers
+	print "Okay"
+	print "Compiling to low-level assembly = ",
 	tokens = fill_in_gaps(tokens) 				#final checks of compiling to low-level-assembly
+	print "Okay"
 #	print tokens
-	print tokens
+	#print tokens
+	print "Assembling machine code = ",
 	machine_code = low_level_assemble(tokens)	#need to modify low level assemble function to take a non string entry
+	print "Okay"
+	print "Writing to machine code file = ",
 	store(machine_code)
+	print "Okay"
+	print "\n\nAssembly complete"
 
 def get_code():
 	file_name = sys.argv[1]
@@ -659,7 +676,7 @@ def fill_in_gaps_line(line):
 
 def store(machine_code):
 	to_store = json.dumps(machine_code)
-	print to_store
+	#print to_store
 	if len(sys.argv)>2:
 		file_name = sys.argv[2]
 	else:

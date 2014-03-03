@@ -24,8 +24,8 @@ class Register_bank:
 		self.Address_bus = Address_bus
 		flags = flag_register_set(main_bus,main_bus)
 		self.registers = [
-			Read_only_reg([0,0,0,0],main_bus),  #zero
-			Read_only_reg([0,0,0,1],main_bus),  #one
+			Read_only_reg(0,main_bus),  #zero
+			Read_only_reg(1,main_bus),  #one
 			Register(main_bus,main_bus,4), 		#acc
 			Register(main_bus,main_bus,4),		#Jump reg
 
@@ -45,38 +45,36 @@ class Register_bank:
 		]
 
 	def set(self):
-		self.registers[self.Address_bus.data[0]&15].set()
+		self.registers[self.Address_bus.data&15].set()
 	def enable(self):
-		self.registers[self.Address_bus.data[0]&15].enable()
+		self.registers[self.Address_bus.data&15].enable()
 
 class Register:
 	def __init__(self,input_bus,output_bus,size):
 		self.input_bus = input_bus
 		self.output_bus = output_bus
-		self.data = [0]*size
+		self.data = 0
 		self.size = size
+		self.limit = (1<<(size*8))-1
+		#print self.limit
 	def set(self):
-		self.data = list(self.input_bus.data)
+		self.data = self.input_bus.data&self.limit
 
 	def enable(self):
-		self.output_bus.data  = list(self.data)
+		self.output_bus.data  = self.data
 
 class Program_counter(Register):
 	def __init__(self,input_bus,output_bus,size):
 		Register.__init__(self,input_bus,output_bus,size)
 	def add_4(self):
-		data = append_bytes(self.data)
-		data = (data+4)&4294967295
-		self.data = bytify(data)
+		self.data = (self.data+4)&4294967295
 
 class Memory_address_register(Register):
 	def __init__(self,input_bus,output_bus,size):
 		Register.__init__(self,input_bus,output_bus,size)
 	def add(self):
-		data = append_bytes(self.data)
-		to_add = append_bytes(self.input_bus.data)
-		data = (data+to_add)&4294967295
-		self.data = bytify(data)
+		self.data = (self.input_bus.data+self.data)&4294967295
+
 
 
 #		carry = 4
@@ -95,28 +93,26 @@ class flag_register_set: #a way of just setting individual bits
 	def __init__(self,input_bus,output_bus):
 		self.input_bus = input_bus
 		self.output_bus = output_bus
-		self.data = [0,0,0,0]
+		self.data = 0
 
 	def set(self):
-		for i in xrange(4):
-			self.data[i] |= self.input_bus.data[i] #inputs ORed
+		self.data |= self.input_bus.data&4294967295 #inputs ORed
 
 	def enable(self):
-		self.output_bus.data = list(self.data)
+		self.output_bus.data = self.data
 
 class flag_register_reset:
 	def __init__(self,input_bus,output_bus,base_register):
 		self.base_register = base_register
 		self.input_bus = input_bus
 		self.output_bus = output_bus
-		self.data = self.base_register.data
+		self.data = 0
 
 	def set(self):
-		for i in xrange(4):
-			self.base_register.data[i] &= self.input_bus.data[i]
+		self.base_register.data &= self.input_bus.data
 
 	def enable(self):
-		self.output_bus.data = list(self.base_register.data)		
+		self.output_bus.data = self.base_register.data		
 
 class Read_only_reg:
 	def __init__(self,value,output_bus):
@@ -126,4 +122,4 @@ class Read_only_reg:
 	def set(self):
 		pass #read only
 	def enable(self):
-		self.output_bus.data = list(self.data)
+		self.output_bus.data = self.data
