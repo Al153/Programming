@@ -167,6 +167,15 @@ class CPU:
 			self.step()
 			self.instruction_count += 1
 			#print self.instruction_count
+	def debug_run(self):
+		while not self.halt:
+			try:
+				print self.instruction, self.addr,self.Registers.registers[11].data, self.Registers.registers[5].data
+			except:
+				pass
+			self.step()
+			self.instruction_count += 1
+			next = str(raw_input(""))
 
 	def step(self):
 		self.fetch()
@@ -299,6 +308,7 @@ class CPU:
 			self.Memory.enable()
 
 			reg2_value = self.Main_bus.data
+			#print "reg value 1",reg1_value, "reg value 2",reg2_value
 			if reg1_value > reg2_value:
 				self.Main_bus.data = 64
 			elif reg1_value == reg2_value:

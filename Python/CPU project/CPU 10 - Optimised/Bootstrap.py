@@ -12,7 +12,10 @@ def run():
 	print "Done"
 	print "\n\n_____________________ Beginning execution _____________________\n\n"
 	start = time.time()
-	CPU_instance.run()
+	if sys.argv[-1] != "-d":
+		CPU_instance.run()
+	else:
+		CPU_instance.debug_run()
 	end = time.time()
 
 	print "\n\n_____________________ Halted __________________________________"

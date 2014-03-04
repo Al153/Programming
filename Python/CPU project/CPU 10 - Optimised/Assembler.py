@@ -413,12 +413,15 @@ def sort_out_variables(tokens,number_of_lines):
 		if line[0] == "int": #basic integer type
 			name = "@"+line[1]
 			address = str(count)
-			
+			value = "$"+line[1]
 			tokens.append([address,"Data",line[2]])
 			
 			for j in xrange(len(tokens)): #now replace all calls of @name with pointer to variable
-				 while name in tokens[j]:
-				 	tokens[j][tokens[j].index(name)] = address
+				 while name in tokens[j] or value in tokens[j]:
+				 	try:
+				 		tokens[j][tokens[j].index(name)] = address
+				 	except ValueError:
+				 		tokens[j][tokens[j].index(value)] = line[2]
 			del tokens[i]
 			i -= 1 #countereffect plus one at end
 
@@ -517,7 +520,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "ADD":
@@ -526,7 +529,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 
@@ -536,7 +539,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "MUL":
@@ -545,7 +548,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "DIV":
@@ -554,7 +557,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "MOD":
@@ -563,7 +566,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "AND":
@@ -572,7 +575,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "OR":
@@ -581,7 +584,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "XOR":
@@ -590,7 +593,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "NOT":
@@ -599,7 +602,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "NAND":
@@ -608,7 +611,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "NOR":
@@ -617,7 +620,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "XNOR":
@@ -626,7 +629,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "SHL":
@@ -635,7 +638,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "SHR":
@@ -644,7 +647,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "ADDc":
@@ -653,7 +656,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "SUBb":
@@ -662,7 +665,7 @@ def fill_in_gaps_line(line):
 				return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 			else:
 				if length == 5: #0 compare reg addr index
-					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+line[3]
+					return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
 		elif line[1] == "Out":

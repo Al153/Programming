@@ -1,4 +1,4 @@
-array stack	65536 []
+array stack	65536 [] 											#empty array of size 655356
 int stack.io	0
 int stack.temp	0
 int 4 			4

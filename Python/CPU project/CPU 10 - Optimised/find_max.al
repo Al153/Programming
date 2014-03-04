@@ -1,6 +1,6 @@
 int length 6  #define variables and constants
 int 4 4
-array list @length [2,3,5,6,12,1,6]
+array list $length [2,3,5,6,12,1,6]
 ptr loop
 ptr replace
 ptr return
