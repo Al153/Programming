@@ -170,7 +170,7 @@ class CPU:
 	def debug_run(self):
 		while not self.halt:
 			try:
-				print self.instruction, self.addr,self.Registers.registers[11].data, self.Registers.registers[5].data
+				print self.instruction, self.Registers.registers[10].data, self.Registers.registers[11].data, self.Registers.registers[9].data
 			except:
 				pass
 			self.step()

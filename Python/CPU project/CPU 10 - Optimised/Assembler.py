@@ -1,3 +1,12 @@
+#_________________ to do ________________
+#"Load byte" - read Dword then AND with 255
+#"Store byte" - read DWord in then 
+#"Load Word" etc
+#structs
+
+
+
+
 import sys
 import json
 opcodes = {
