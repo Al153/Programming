@@ -104,9 +104,11 @@ class ALU:
 
 	def SHL(self):
 		self.reg1 = (self.reg1<<self.reg2)&4294967295
+		#print self.reg1
 
 	def SHR(self):
 		self.reg1 = (self.reg1>>self.reg2)&4294967295
+		#print self.reg1
 
 	def ADDc(self):
 		self.reg1 = self.reg1+self.reg2+1

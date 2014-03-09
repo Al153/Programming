@@ -2,7 +2,7 @@ int length 6
 int 4 4
 int 2 2
 
-array test_array $length [0,1,2,3,4,5]
+array test_array $length [0,1,2,2,4,5]
 int return_addr 0
 
 

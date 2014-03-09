@@ -21,7 +21,11 @@ class IO:
 
 	def set(self):
 		address = self.address_bus.data&255
-		if address == 0: #screen
-			for char in bytify(self.IO_bus.data):
-				print chr(char),
-				sys.stdout.write('')
+		if address == 0: #char to terminal
+			char = self.IO_bus.data&255
+			sys.stdout.write(chr(char))
+			sys.stdout.flush()
+		elif address == 1: #raw to terminal
+			data = self.IO_bus.data&255
+			sys.stdout.write(str(data))
+			sys.stdout.flush()

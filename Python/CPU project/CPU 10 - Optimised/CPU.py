@@ -170,7 +170,7 @@ class CPU:
 	def debug_run(self):
 		while not self.halt:
 			try:
-				print self.instruction, self.Registers.registers[10].data, self.Registers.registers[11].data, self.Registers.registers[9].data
+				print self.instruction, self.Registers.registers[8].data, self.Registers.registers[9].data
 			except:
 				pass
 			self.step()
@@ -319,14 +319,32 @@ class CPU:
 			self.Register_address_bus.data = 5
 			self.Registers.set()		
 
-		elif opcode == 7:			#out reg
+		elif opcode == 7:			#out char reg
 			self.Output_address_bus.data = 0
 			self.Register_address_bus.data = reg1_addr
 			self.Registers.enable()
 			self.Output.set()
 
-		elif opcode == 8: #out data
+		elif opcode == 8: #out char data
 			self.Output_address_bus.data = 0
+			self.Main_bus.data = self.addr
+			self.Memory_address_register.set()
+			self.Register_address_bus.data = reg2_addr
+			self.Registers.enable()
+			self.Memory_address_register.add()
+		
+			self.Memory_address_register.enable()
+			self.Memory.enable()
+			self.Output.set()
+
+		elif opcode == 9:			#out data reg
+			self.Output_address_bus.data = 1
+			self.Register_address_bus.data = reg1_addr
+			self.Registers.enable()
+			self.Output.set()
+
+		elif opcode == 10: #out data data
+			self.Output_address_bus.data = 1
 			self.Main_bus.data = self.addr
 			self.Memory_address_register.set()
 			self.Register_address_bus.data = reg2_addr

@@ -19,6 +19,8 @@ opcodes = {
 		"CompareAddr":6,
 		"OutReg":7,
 		"OutAddr":8,
+		"OutdReg":9,
+		"OutdAddr":10,
 
 		"ADDReg":16,
 		"SUBReg":17,
@@ -50,9 +52,9 @@ opcodes = {
 		"NORAddr":42,
 		"XNORAddr":43,
 		"SHLAddr":44,
-		"SHRAddr":46,
-		"ADDcAddr":47,
-		"SUBbAddr":48
+		"SHRAddr":45,
+		"ADDcAddr":46,
+		"SUBbAddr":47
 		}
 
 opcodes_to_count = [
@@ -80,7 +82,8 @@ opcodes_to_count = [
 		"SUBb",
 		"CondR",
 		"CondF",
-		"Out"
+		"Out",
+		"Outd"
 ]
 
 register_addresses = {
@@ -139,64 +142,67 @@ conditional_addresses = {
 
 def low_level_assemble(line_list):
 	machine_code_dict = {}
-	#print_tokens(line_list)
 	for tokens in line_list:
-		#tokens = tokenize(line)
-		#print tokens
 		line_no = int(tokens[0])
-		if tokens[1] == "Data":
-			data = int(tokens[2])
-			instr = []
-			for i in xrange(4):
-				instr.append(data&255)
-				data >>= 8
-			instr.reverse()
+		try:
+			if tokens[1] == "Data":
+				data = int(tokens[2])
+				instr = []
+				for i in xrange(4):
+					instr.append(data&255)
+					data >>= 8
+				instr.reverse()	
 
-		else:
-			if tokens[1] == "CondF":
-				flag = tokens[2]
-				cond = 128+conditional_addresses[flag]
-				opcode = opcodes[tokens[3]]
-				reg1 = register_addresses[tokens[4]]
-				reg2 = register_addresses[tokens[5]] 
-				addr = int(tokens[6])%4294967296
-				addr3 = addr&255
-				addr >>= 8
-				addr2 = addr&255
-				addr >>=8
-				addr1 = addr&255
-				addr >>=8
-				addr0 = addr&255
-			elif tokens[1] == "CondR":
-				cond = 128+64+register_addresses[tokens[2]]
-				opcode = opcodes[tokens[3]]
-				reg1 = register_addresses[tokens[4]]
-				reg2 = register_addresses[tokens[5]] 
-				addr = int(tokens[6])%4294967296
-				addr3 = addr&255
-				addr >>= 8
-				addr2 = addr&255
-				addr >>=8
-				addr1 = addr&255
-				addr >>=8
-				addr0 = addr&255
+			elif tokens[1] == "Byte":
+				instr = [int(tokens[2])%256]
 
 			else:
-				opcode = opcodes[tokens[1]]
-				reg1 = register_addresses[tokens[2]]
-				reg2 = register_addresses[tokens[3]] 
-				cond = 0
-				addr = int(tokens[4])%4294967296
-				addr3 = addr&255
-				addr >>= 8
-				addr2 = addr&255
-				addr >>=8
-				addr1 = addr&255
-				addr >>=8
-				addr0 = addr&255
+				if tokens[1] == "CondF":
+					flag = tokens[2]
+					cond = 128+conditional_addresses[flag]
+					opcode = opcodes[tokens[3]]
+					reg1 = register_addresses[tokens[4]]
+					reg2 = register_addresses[tokens[5]] 
+					addr = int(tokens[6])%4294967296
+					addr3 = addr&255
+					addr >>= 8
+					addr2 = addr&255
+					addr >>=8
+					addr1 = addr&255
+					addr >>=8
+					addr0 = addr&255
+				elif tokens[1] == "CondR":
+					cond = 128+64+register_addresses[tokens[2]]
+					opcode = opcodes[tokens[3]]
+					reg1 = register_addresses[tokens[4]]
+					reg2 = register_addresses[tokens[5]] 
+					addr = int(tokens[6])%4294967296
+					addr3 = addr&255
+					addr >>= 8
+					addr2 = addr&255
+					addr >>=8
+					addr1 = addr&255
+					addr >>=8
+					addr0 = addr&255	
 
-			instr = [opcode,reg1,reg2,cond,addr0,addr1,addr2,addr3]
-		
+				else:
+					opcode = opcodes[tokens[1]]
+					reg1 = register_addresses[tokens[2]]
+					reg2 = register_addresses[tokens[3]] 
+					cond = 0
+					addr = int(tokens[4])%4294967296
+					addr3 = addr&255
+					addr >>= 8
+					addr2 = addr&255
+					addr >>=8
+					addr1 = addr&255
+					addr >>=8
+					addr0 = addr&255	
+
+				instr = [opcode,reg1,reg2,cond,addr0,addr1,addr2,addr3]
+		except:
+			print "Error: line: ",tokens
+			quit()
 		for i in xrange(len(instr)):
 			machine_code_dict[line_no+i] = instr[i]
 	return machine_code_dict
@@ -215,15 +221,6 @@ def tokenize(line):
 
 
 
-#print low_level_assemble([
-#			"0 Load gp0 Zero 32 ",
-#			"8 Load gp1 Zero 36",
-#			"16 MULReg gp0 gp1 0",
-#			"24 Store gp0 Zero 32",
-#			"32 Data 2",
-#			"36 Data 3"
-#							])
-
 def assemble():
 	print "Getting code = ",
 	file_object = get_code() #get the text of the file
@@ -237,6 +234,9 @@ def assemble():
 	print "Importing external code = ",
 	while things_to_import(tokens):
 		tokens = do_import(tokens)
+	print "Okay"
+	print "Finding and replacing structs = ",
+	tokens = find_structs(tokens)
 	print "Okay"
 	print "Allocating variables = ",
 	number_of_lines,tokens = count_lines(tokens) 		#counts the number of valid lines for sorting out variables
@@ -369,6 +369,54 @@ def expand_macros(tokens):
 		i += 1
 	return tokens
 
+
+def find_structs(tokens):
+	struct_names = []
+	i = 0
+	while i < len(tokens):
+		line = tokens[i]
+		if line[0] == "Struct":
+			struct = []
+			struct_names.append(line[1])
+			while tokens[i] != ["end","Struct"]:
+				struct.append(tokens[i]) 
+				del tokens[i]
+			del tokens[i]
+			tokens = execute_struct(struct,tokens,struct_names)
+		else:
+			i += 1
+	return tokens
+
+def execute_struct(struct,tokens,struct_names):
+	name = struct[0][1]
+	parameters  = struct[0][2:]
+
+	i = 0
+	while i <len(tokens):
+
+		if tokens[i][0] != name:
+			i += 1
+		else: #struct detected
+			instance_name = tokens[i][1]
+			#print instance_name
+			find_replace_dict = {}
+			for j in xrange(len(parameters)):
+				find_replace_dict[parameters[j]] = tokens[i][2+j]
+
+			instance = []
+			for line in struct[1:]:
+				instance_line = []
+				temp = str(line[1])
+				if line[0] == "int" or line[0] == "char" or line[0] == "ptr" or line[0] =="array" or line[0] in struct_names:
+					line[1] = instance_name+"."+line[1]
+				instance_line = [find_replace_dict.get(token,token) for token in line] #copy across
+				line[1] = temp
+				instance.append(instance_line)
+
+			#print "\n\ninstance = ",instance,"\n\n"
+			tokens = tokens[:i]+instance+[["int",instance_name,"@"+instance[0][1]]]+tokens[i+1:] #creates a pointer to the instance and adds in the instance
+	return tokens
+
 def things_to_import(tokens): #checks where there is anything to import
 	for line in tokens:
 		if line[0] == "import":
@@ -410,6 +458,9 @@ def count_lines(tokens):
 	return count,tokens
 
 def sort_out_variables(tokens,number_of_lines):
+	#variables can be of types:
+	#int,char,array,ptr
+	
 	int_list = []
 	array_list = []
 	ptr_list = []
@@ -424,6 +475,7 @@ def sort_out_variables(tokens,number_of_lines):
 			address = str(count)
 			value = "$"+line[1]
 			tokens.append([address,"Data",line[2]])
+			#print name+" points to " + line[2]
 			
 			for j in xrange(len(tokens)): #now replace all calls of @name with pointer to variable
 				 while name in tokens[j] or value in tokens[j]:
@@ -435,6 +487,23 @@ def sort_out_variables(tokens,number_of_lines):
 			i -= 1 #countereffect plus one at end
 
 			count += 4
+
+		elif line[0]=="char":
+			name = "@"+line[1]
+			address = str(count)
+			value = "$"+line[1]
+			tokens.append([address,"Byte",line[2]])
+			for j in xrange(len(tokens)): #now replace all calls of @name with pointer to variable
+				 while name in tokens[j] or value in tokens[j]:
+				 	try:
+				 		tokens[j][tokens[j].index(name)] = address
+				 	except ValueError:
+				 		tokens[j][tokens[j].index(value)] = line[2]
+			del tokens[i]
+			i -= 1 #countereffect plus one at end
+
+			count += 1
+
 
 		elif line[0] == "ptr":
 			name = "@"+line[1]
@@ -500,6 +569,9 @@ def fill_in_gaps_line(line):
 		return line[:3] + fill_in_gaps_line(semi_line)[1:]
 
 	elif line[1] == "Data":
+		return line
+
+	elif line[1] == "Byte":
 		return line
 	else:
 		length = len(line)
@@ -686,6 +758,15 @@ def fill_in_gaps_line(line):
 					return [line[0]] + [line[1]+"Addr","Zero"]+[line[3][1:-1]]+[line[2]]
 				else:
 					return [line[0]] + [line[1]+"Addr","Zero","Zero"]+[line[2]]
+		elif line[1] == "Outd":
+			if line[2] in register_addresses:
+				#register-rgister compare
+				return [line[0]] + [line[1]+"Reg"]+[line[2]] +["Zero"] + ["0"]
+			else:
+				if length == 4: #0 out addr [index]
+					return [line[0]] + [line[1]+"Addr","Zero"]+[line[3][1:-1]]+[line[2]]
+				else:
+					return [line[0]] + [line[1]+"Addr","Zero","Zero"]+[line[2]]
 
 def store(machine_code):
 	to_store = json.dumps(machine_code)
@@ -708,54 +789,6 @@ def print_tokens(tokens):
 	for line in tokens:
 		print line
 
-#tokens =  full_text_tokenize([
-#"def Areg gp0",
-#"def Breg gp1",
-#"def temp gp2",
-#
-#"ptr loop",
-#"int A 12",
-#"int B 9",
-#
-#"Load Areg @A",
-#"Load Breg @B",
-#
-#"MOD Breg Areg %loop",
-#"if DivByZero then Halt",
-#"Move Areg temp",
-#"Move Breg Areg",
-#"Move temp Breg",
-#"if Areg then Goto @loop",
-#"Halt" 
-	#]
-	#)
-#print "raw tokens"
-#print_tokens(tokens)
-#
-#
-#expanded = expand_macros(tokens)
-#
-#print "\n\nremoved definitions"
-#print_tokens(expanded)
 
-
-
-
-
-#number_of_lines,counted = count_lines(expanded) 		#counts the number of valid lines for sorting out variables#
-
-#print "\n\ncounted"
-#print_tokens(counted)#
-
-#variables_sorted = sort_out_variables(tokens,number_of_lines)
-#print "\n\nvariables sorted"
-#print_tokens(variables_sorted)#
-
-#filled_in_gaps = fill_in_gaps(variables_sorted)
-#print "\n\ngaps filled in"
-#print_tokens(filled_in_gaps)#
-
-#machine_code = low_level_assemble(filled_in_gaps)
-#print machine_code
 
 assemble()
