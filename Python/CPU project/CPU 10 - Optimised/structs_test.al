@@ -5,28 +5,64 @@ Struct card    state suit number next
 	int  next    next 
 end Struct
 
-card ace_of_spades 1 83 1 0
-card queen_of_clubs 1 67 12 $ace_of_spades  
-card new_card 1 68 13 0 			#new card is a king of diamonds
+Struct pile pointer
+	int top pointer
+end Struct
 
 
-def next_pointer gp0
-int 1 4
+card ace_of_spades 0 83 1 0
+card queen_of_clubs 0 67 12 $ace_of_spades  
+pile pile_1 $queen_of_clubs
+
+card new_card 0 68 13 0 			#new card is a king of diamonds
+
+
+int 4 4
+int 8 8
+
+
+
+
+Load print_pile.next_pointer @queen_of_clubs
+Store print_pile.next_pointer @new_card.next
+
+#_______________ Add to Pile _______________
+#gp0 pile, gp1, new_card ==> none
+#adds a face up card to the 
+
+
+#_______________ Print Pile ______________
+#gp0 pile, gp1 aux ==> None
+#prints out face up cards in a pile 
+
+
+
+def print_pile.next_pointer gp0
+def print_pile.state gp1
+
 int return 10
-ptr loop
 
-Load next_pointer @queen_of_clubs
-Store next_pointer @new_card.next
+ptr print_pile
+ptr print_pile.loop
+ptr print_pile.return
 
-Load next_pointer @new_card 
-	ADD next_pointer @1 %loop
-	Load gp1 0 [next_pointer]
-	Out 0 [next_pointer]
-	ADD next_pointer @1
-	Outd 0 [next_pointer]
+
+
+Load print_pile.next_pointer 0 [gp0] %print_pile
+	Load print_pile.state [print_pile.next_pointer] #checl 
+	if print_pile.state then Load PC @print_pile.return
+
+	ADD print_pile.next_pointer @4 
+	Load gp1 0 [print_pile.next_pointer]
+	Out 0 [print_pile.next_pointer]
+	ADD print_pile.next_pointer @4
+	Outd 0 [print_pile.next_pointer]
 	Out @return
-	ADD next_pointer @1
-	Load next_pointer 0 [next_pointer]
-	if next_pointer then Load PC @loop
-Halt
+	ADD print_pile.next_pointer @4
+	Load print_pile.next_pointer 0 [print_pile.next_pointer]
+	if print_pile.next_pointer then Load PC @print_pile.loop
+	
+ADD Jump @8 %print_pile.return
+Move Jump PC
+
 
