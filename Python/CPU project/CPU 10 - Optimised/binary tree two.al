@@ -82,8 +82,8 @@ Move Zero gp2
 Move Zero gp3
 Move Zero gp4
 Move Zero gp5
-ADD Jump @4
-ADD Jump @4
+#ADD Jump @4
+#ADD Jump @4
 
 Move Jump PC
 
@@ -93,8 +93,8 @@ Move Zero gp2
 Move Zero gp3
 Move Zero gp4
 Move Zero gp5
-ADD Jump @4
-ADD Jump @4
+#ADD Jump @4
+#ADD Jump @4
 
 Move Jump PC
 
@@ -104,8 +104,8 @@ Move Zero gp2
 Move Zero gp3
 Move Zero gp4
 Move Zero gp5
-ADD Jump @4
-ADD Jump @4
+#ADD Jump @4
+#ADD Jump @4
 
 Move Jump PC
 

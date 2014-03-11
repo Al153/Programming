@@ -26,8 +26,8 @@ ptr read_byte
 
 int shift_value 24
 
-ADD Jump @8 	%read_byte
-Load gp7 0 [gp6]
+#ADD Jump @8 	
+Load gp7 0 [gp6] %read_byte
 SHR gp7 @shift_value
 Move Jump PC
 
@@ -37,8 +37,8 @@ ptr write_byte
 int reverse_byte_mask 16777215 #0b 00000000 11111111 11111111 11111111
 int shift_value 24
 
-ADD Jump @8 				%write_byte
-Load gp5 @reverse_byte_mask
+#ADD Jump @8 				
+Load gp5 @reverse_byte_mask %write_byte
 AND gp5 0 [gp6]
 SHL gp7 @shift_value
 OR gp7 gp5

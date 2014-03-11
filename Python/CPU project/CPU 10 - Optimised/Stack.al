@@ -16,7 +16,7 @@ ptr stack.underflow
 
 #stack push
 Store gp0 @stack.temp 					%stack.push				#allows use of gp0
-ADD Jump @8														#for return
+#ADD Jump @8														#for return
 Load  gp0 @stack.io												#takes input value
 ADD Stack_pointer @4 										    #increment stack pointer
 Compare Stack_pointer @65536 									#check for overflow
@@ -27,7 +27,7 @@ Move Jump PC
 
 #stack pop
 Store gp0 @stack.temp 					%stack.pop
-ADD Jump @8
+#ADD Jump @8
 Load gp0  @stack [Stack_pointer]
 Store gp0 @stack.io
 Load gp0 @stack.temp

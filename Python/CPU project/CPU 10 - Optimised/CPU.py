@@ -168,12 +168,14 @@ class CPU:
 			self.instruction_count += 1
 			#print self.instruction_count
 	def debug_run(self):
+		ret_value = 0
 		while not self.halt:
 			try:
-				print self.instruction, self.Registers.registers[8].data, self.Registers.registers[9].data
+				print self.instruction, self.Registers.registers[4].data, self.Registers.registers[3].data
 			except:
 				pass
 			self.step()
+			ret_value = self.Registers.registers[4].data
 			self.instruction_count += 1
 			next = str(raw_input(""))
 

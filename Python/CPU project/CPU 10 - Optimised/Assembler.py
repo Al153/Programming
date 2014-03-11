@@ -226,7 +226,7 @@ def assemble():
 	file_object = get_code() #get the text of the file
 	print "Okay"
 	print "Extracting tokens = ",
-	tokens = full_text_tokenize(file_object)
+	tokens = [["int","16","16"]]+full_text_tokenize(file_object)
 	print "Okay"
 	print "Extracting defined terms = ",
 	tokens = expand_macros(tokens)  			#expand pseudo commands such as "Goto ... " or "if ... then ... " or "def ... ... "
@@ -319,6 +319,7 @@ def expand_macros(tokens):
 	i = 0
 	while i < len(tokens):
 		line = tokens[i]
+		print line
 		if line[0] == "def":					#defining a term
 			lines_to_remove.append(i)
 			replace_dict[line[1]] = line[2]
@@ -352,19 +353,23 @@ def expand_macros(tokens):
 		if line[0] == "Goto":					  #non conditional goto regs
 			if line[1] in register_addresses:
 				tokens[i] =  ["Move","PC","Jump"]
-				tokens.insert(i+1,["Move",line[1],"PC"])
+				tokens.insert(i+1,["ADD","Jump","@16"])
+				tokens.insert(i+2,["Move",line[1],"PC"])
 			else: #"Goto @label []"
 				tokens[i] = ["Move","PC","Jump"]
-				tokens.insert(i+1,["Load","PC"]+line[1:])
+				tokens.insert(i+1,["ADD","Jump","@16"])
+				tokens.insert(i+2,["Load","PC"]+line[1:])
 
 
 		if len(line)>2 and line[2] == "Goto":				
 			if line[3] in register_addresses:
 				tokens[i] =  ["Move","PC","Jump"]
-				tokens.insert(i+1,line[:2]+["Move",line[3],"PC"])
+				tokens.insert(i+1,["ADD","Jump","@16"])
+				tokens.insert(i+2,line[:2]+["Move",line[3],"PC"])
 			else: #"Goto @label []"
 				tokens[i] = ["Move","PC","Jump"]
-				tokens.insert(i+1,line[:2]+["Load","PC"]+line[3:])
+				tokens.insert(i+1,["ADD","Jump","@16"])				
+				tokens.insert(i+2,line[:2]+["Load","PC"]+line[3:])
 
 		i += 1
 	return tokens
