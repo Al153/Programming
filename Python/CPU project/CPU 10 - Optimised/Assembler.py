@@ -319,7 +319,7 @@ def expand_macros(tokens):
 	i = 0
 	while i < len(tokens):
 		line = tokens[i]
-		print line
+		#print line
 		if line[0] == "def":					#defining a term
 			lines_to_remove.append(i)
 			replace_dict[line[1]] = line[2]
@@ -351,23 +351,30 @@ def expand_macros(tokens):
 		
 		line = tokens[i]
 		if line[0] == "Goto":					  #non conditional goto regs
+			label = []
+			if line[-1][0] == "%":
+				label = [line[-1]]
 			if line[1] in register_addresses:
-				tokens[i] =  ["Move","PC","Jump"]
+
+				tokens[i] =  ["Move","PC","Jump"] + label
 				tokens.insert(i+1,["ADD","Jump","@16"])
 				tokens.insert(i+2,["Move",line[1],"PC"])
 			else: #"Goto @label []"
-				tokens[i] = ["Move","PC","Jump"]
+				tokens[i] = ["Move","PC","Jump"] + label
 				tokens.insert(i+1,["ADD","Jump","@16"])
 				tokens.insert(i+2,["Load","PC"]+line[1:])
 
 
-		if len(line)>2 and line[2] == "Goto":				
+		if len(line)>2 and line[2] == "Goto":
+			label = []
+			if line[-1][0] == "%":
+				label = [line[-1]]				
 			if line[3] in register_addresses:
-				tokens[i] =  ["Move","PC","Jump"]
+				tokens[i] =  ["Move","PC","Jump"]+label
 				tokens.insert(i+1,["ADD","Jump","@16"])
 				tokens.insert(i+2,line[:2]+["Move",line[3],"PC"])
 			else: #"Goto @label []"
-				tokens[i] = ["Move","PC","Jump"]
+				tokens[i] = ["Move","PC","Jump"]+label
 				tokens.insert(i+1,["ADD","Jump","@16"])				
 				tokens.insert(i+2,line[:2]+["Load","PC"]+line[3:])
 
@@ -447,7 +454,7 @@ def do_import(tokens): #carries out one import
 			#print_tokens(new_tokens)
 			#print_tokens(tokens[i+1:])
 			#quit()
-			return tokens[:i] + new_tokens + tokens[i+1:]
+			return tokens[:i] + tokens[i+1:] + new_tokens
 
 
 def count_lines(tokens):
@@ -514,10 +521,10 @@ def sort_out_variables(tokens,number_of_lines):
 			name = "@"+line[1]
 			label = "%"+line[1]
 			address = str(count)
-			for line in tokens:
-				if label in line:
-					label_address = line[0]
-					to_delete = tokens.index(line)
+			for label_line in tokens:
+				if label in label_line:
+					label_address = label_line[0]
+					to_delete = tokens.index(label_line)
 					del tokens[to_delete][tokens[to_delete].index(label)]
 					break
 			tokens.append([address,"Data",label_address])
