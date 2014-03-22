@@ -557,6 +557,27 @@ def sort_out_variables(tokens,number_of_lines):
 			del tokens[i]
 			i-=1
 
+		elif line[0] == "Byte_array":
+			name = "@"+line[1]
+			length = int(line[2])
+			data_array = json.loads(line[3])
+			#print data_array
+			address = str(count)
+
+
+
+			for j in xrange(len(tokens)): #now replace all calls of @name with pointer to variable
+				 while name in tokens[j]:
+				 	tokens[j][tokens[j].index(name)] = address 
+
+			address_copy = count
+			for byte in data_array:
+				tokens.append([str(address_copy),"Byte",byte])
+				address_copy += 1
+			count += length
+			del tokens[i]
+			i-=1
+
 		#elif line[0] == "str":
 		#	name = "@"+line[1]
 		#	string = line[2][1:-1]

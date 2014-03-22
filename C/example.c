@@ -1,5 +1,6 @@
 #include <stdio.h>
-int fibonacci(n){
+int fibonacci(int n);
+{
 	int i;
 	int a;
 	int b;
@@ -12,5 +13,5 @@ int fibonacci(n){
 }
 
 void main(){
-	printf("%s\n", );
+	printf("%s\n",fibonacci(5) );
 }

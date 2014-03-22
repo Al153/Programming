@@ -19,6 +19,7 @@ end Struct
 
 
 int Context_switch.current_context 0 
+int Context_switch.previous_context
 
 #_____________ init _____________
 Context Context0
@@ -36,14 +37,15 @@ ptr Context_switch.set_context3
 Store gp0 @Context0.PC %Context_switch.set_context0
 Move Jump PC
 
-Store gp0 @Context0.PC %Context_switch.set_context1
+Store gp0 @Context1.PC %Context_switch.set_context1
 Move Jump PC
 
-Store gp0 @Context0.PC %Context_switch.set_context2
+Store gp0 @Context2.PC %Context_switch.set_context2
 Move Jump PC
 
-Store gp0 @Context0.PC %Context_switch.set_context3
+Store gp0 @Context3.PC %Context_switch.set_context3
 Move Jump PC
 
 #_____________ Change_context _____________
-ptr 
+ptr Change_context0
+

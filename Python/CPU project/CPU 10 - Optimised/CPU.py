@@ -80,7 +80,7 @@
 #1c		 SHL		REG
 #1d		 SHR		REG
 #1e		 ADDc 		REG
-#1f 		 SUBb 		REG
+#1f 	 SUBb 		REG
 #
 #.
 #.
@@ -391,6 +391,21 @@ class CPU:
 
 
 	def execute_ALU_command(self,opcode,reg1_addr):
+		if opcode == 14: #add with carry
+			self.Registers.registers[5].enable() #direct flag register enabling
+			flag = self.Main_bus.data
+			if not flag & 16: #if not set
+				opcode = 0
+			self.Main_bus.data = 4294967279
+			self.Registers.registers[6].set()
+		if opcode == 15:
+			self.Registers.registers[5].enable()
+			flag = self.Main_bus.data
+			if not flag & 8: #if not set
+				opcode = 1
+			self.Main_bus.data = 4294967287
+			self.Registers.registers[6].set()
+
 		self.ALU_op_bus.data = opcode
 		self.ALU.op()
 		self.Register_address_bus.data = reg1_addr
