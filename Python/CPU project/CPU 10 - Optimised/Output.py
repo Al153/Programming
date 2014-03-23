@@ -26,6 +26,6 @@ class IO:
 			sys.stdout.write(chr(char))
 			sys.stdout.flush()
 		elif address == 1: #raw to terminal
-			data = self.IO_bus.data&255
+			data = self.IO_bus.data
 			sys.stdout.write(str(data))
 			sys.stdout.flush()

@@ -1,5 +1,3 @@
-int 8 8 
-
 #___________ test ________
 int A 65
 int B 66
@@ -21,30 +19,44 @@ Out @C
 Halt
 
 
-#____________ read_byte _________ #gp6: address ==> gp7: byte
+#____________ read_byte _________ #gp0: address ==> gp0: byte
 ptr read_byte
 
 int shift_value 24
-
-#ADD Jump @8 	
-Load gp7 0 [gp6] %read_byte
-SHR gp7 @shift_value
+	
+Load gp0 0 [gp0] %read_byte
+SHR gp0 @shift_value
 Move Jump PC
 
-#___________ write_byte _________ #gp7: data, gp6: address, gp5 auxilary ==> NULL
+#___________ write_byte _________ #gp0: data, gp1: address, gp2: auxilary ==> NULL
 ptr write_byte
 
 int reverse_byte_mask 16777215 #0b 00000000 11111111 11111111 11111111
 int shift_value 24
-
-#ADD Jump @8 				
-Load gp5 @reverse_byte_mask %write_byte
-AND gp5 0 [gp6]
-SHL gp7 @shift_value
-OR gp7 gp5
-Store gp7 0 [gp6]
+				
+Load gp2 @reverse_byte_mask %write_byte
+AND gp2 0 [gp1]
+SHL gp0 @shift_value
+OR gp0 gp2
+Store gp0 0 [gp1]
 Move Jump PC
 
+#____________ read word ____________
+ptr read_word
+
+Load gp0 0 [gp0] %read_word
+SHR gp0 @16
+Move Jump PC
+
+#____________ write word ____________
+int word_mask 65535
+ptr write_word
+Load gp2 @word_mask %write_word
+AND gp2 0 [gp1]
+SHL gp0 @16
+OR gp0 gp2
+Store gp0 0 [gp1]
+Move Jump PC
 
 
 

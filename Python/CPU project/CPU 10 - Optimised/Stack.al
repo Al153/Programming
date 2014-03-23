@@ -7,7 +7,7 @@ int 65536		65536
 int stackoverflow 2
 int stackunderflow 1
 
-ptr Programstack.push
+ptr Programstack.call
 ptr Programstack.return
 ptr stack.overflow
 ptr stack.underflow
@@ -16,9 +16,9 @@ ptr stack.underflow
 
 #___________ stack push ___________
 #called at start of a subroutine, puts the data @stack.io onto the stack (should have been taken from jump at start of subroutine)
-puts Jump reg onto the stack and goes to the value in register gp0		
+#puts Jump reg onto the stack and goes to the value in register gp0		
 									#takes input value
-ADD Stack_pointer @4				%Programstack.push	    #increment stack pointer
+ADD Stack_pointer @4				%Programstack.call	    #increment stack pointer
 Compare Stack_pointer @65536 									#check for overflow
 if Greater then  Load PC @stack.overflow 						
 Store Jump @Programstack [Stack_pointer]

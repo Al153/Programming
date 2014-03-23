@@ -7,7 +7,7 @@ import random
 
 
 class Pyfth:
-	#A custom implementation o fforth written in python
+	#A custom implementation of forth written in python
 	def __init__(self):
 		self.Data_Stack = []
 		#print self.Data_Stack
