@@ -53,9 +53,21 @@ Move PC @Programstack.return
 #_______ exponentiate matrices _______
 
 #stack: matrix, aux, n ==> matrix^n
-def n gp2
-def aux gp1
-def matrix gp0
+def n gp5
+def aux gp6
+def matrix gp7
+
+matrix = matrix
+soluton = 1
+base = matrix
+while n:
+	if n&1:
+		solution *= base
+	base = base**2
+	n>>=1
+
+
+
 
 
 

@@ -231,6 +231,7 @@ def full_text_tokenize(text_file):
     return token_list
 
 def expand_macros(tokens):
+	using_stack = 0
 	replace_dict = {}
 	lines_to_remove = []
 	i = 0
@@ -252,6 +253,7 @@ def expand_macros(tokens):
 	while i < len(tokens):	
 
 		line = tokens[i]
+
 		
 		for j in xrange(len(line)):
 
@@ -295,7 +297,84 @@ def expand_macros(tokens):
 				tokens.insert(i+1,["ADD","Jump","@16"])				
 				tokens.insert(i+2,line[:2]+["Load","PC"]+line[3:])
 
+		if line[0] == "Push":
+
+			using_stack = 1
+			label = []
+			if line[-1][0] == "%":
+				label = [line[-1]]	
+				line = line[:-1]
+
+			if line[1] in register_addresses:
+				tokens[i] = ["Move",line[1], "gp0"] + label
+				tokens.insert(i+1,["Goto","@Datastack.push"])
+			else:
+				tokens[i] = ["Load", "gp0",line[1]] + label
+				tokens.insert(i+1,["Goto","@Datastack.push"])
+			i -= 1
+
+		if line[0] == "Pop":
+			using_stack = 1
+			label = []
+			if line[-1][0] == "%":
+				label = [line[-1]]	
+				line = line[:-1]
+
+			if line[1] in register_addresses:
+				tokens[i] = ["Goto","@Datastack.pop"] + label
+				tokens.insert(i+1,["Move", "gp0",line[1]])
+			else:
+				tokens[i] = ["Goto","@Datastack.pop"] + label
+				tokens.insert(i+1,["Store","gp0",line[1]])
+			i -=1
+
+		if line[0] == "Call":
+			using_stack = 1
+			label = []
+			if line[-1][0] == "%":
+				label = [line[-1]]	
+				line = line[:-1]
+			tokens[i] = ["Load","gp0", line[1]] + label
+			tokens.insert(i+1,["Goto","@Programstack.call"])
+			i -=1
+ 
+		if len(line)>2 and line[2] == "Call":
+			using_stack = 1
+			label = []
+			if line[-1][0] == "%":
+				label = [line[-1]]	
+				line = line[:-1]
+			tokens[i] = ["Load","gp0", line[1]] + label
+			tokens.insert(i+1,line[:2]+["Goto","@Programstack.call"])
+			i -=1
+
+		if line[0] == "Return":
+			using_stack = 1
+			label = []
+			if line[-1][0] == "%":
+				label = [line[-1]]	
+				line = line[:-1]
+			tokens[i] = ["Load","PC", "@Programstack.return"] + label
+			i -=1
+
+		if len(line)>2 and line[2] == "Return":
+			using_stack = 1
+			label = []
+			if line[-1][0] == "%":
+				label = [line[-1]]
+				line = line[:-1]
+			tokens[i] = line[:2]+["Load","PC","@Programstack.return"]
+			i -= 1
+		print tokens[i]
+
+
+
+
+
+
 		i += 1
+	if using_stack and tokens[0] != ["import","Stack"]:
+		tokens.insert(0,["import","Stack"])
 	return tokens
 
 def things_to_import(tokens): #checks where there is anything to import
