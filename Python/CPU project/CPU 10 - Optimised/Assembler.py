@@ -365,14 +365,16 @@ def expand_macros(tokens):
 				line = line[:-1]
 			tokens[i] = line[:2]+["Load","PC","@Programstack.return"]
 			i -= 1
-		print tokens[i]
 
-
+		for j in xrange(len(tokens[i])):
+			if len(tokens[i][j])>1 and tokens[i][j][0] == "'" and tokens[i][j][2] == "'":
+				tokens[i][j] = str(ord(tokens[i][j][1]))
 
 
 
 
 		i += 1
+
 	if using_stack and tokens[0] != ["import","Stack"]:
 		tokens.insert(0,["import","Stack"])
 	return tokens
@@ -523,7 +525,7 @@ def sort_out_variables(tokens,number_of_lines):
 			tokens.append([address,"Data",label_address])
 
 			for j in xrange(len(tokens)): #now replace all calls of @name with pointer to variable
-				 while name in tokens[j]:
+				while name in tokens[j]:
 				 	tokens[j][tokens[j].index(name)] = address
 			del tokens[i]
 			i -= 1
@@ -791,6 +793,9 @@ def fill_in_gaps_line(line):
 					return [line[0]] + [line[1]+"Addr","Zero"]+[line[3][1:-1]]+[line[2]]
 				else:
 					return [line[0]] + [line[1]+"Addr","Zero","Zero"]+[line[2]]
+		else:
+			print "Unknown command: ",line[1]
+			quit()
 
 def low_level_assemble(line_list):
 	machine_code_dict = {}
