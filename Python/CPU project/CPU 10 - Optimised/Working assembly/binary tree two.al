@@ -26,32 +26,32 @@ def index gp5
 
 
 Load target @4
-Goto @Prep_search
+Goto Prep_search
 Halt
 #__________ prep search _________
 
 
-Load high_bound @length %Prep_search
+Load high_bound length %Prep_search
 
 SUB high_bound One
 Move high_bound index
 MUL index @4
 Move Zero low_bound
 
-Load trial @test_array
+Load trial test_array
 Compare target trial
-if Equal then Load PC @return_low_bound
+if Equal then Load PC return_low_bound
 
-Load trial @test_array [index]
+Load trial test_array [index]
 Compare target trial
-if Equal then Load PC @return_high_bound
+if Equal then Load PC return_high_bound
 
-Load PC @search
+Load PC search
 
 
 #_____________ search _____________
 Compare high_bound low_bound %search
-if Equal then Load PC @return_high_bound
+if Equal then Load PC return_high_bound
 
 #else:
 	Move high_bound middle
@@ -59,14 +59,14 @@ if Equal then Load PC @return_high_bound
 	DIV middle @2
 
 	Compare middle low_bound
-	if Equal then Load PC @return_high_bound
+	if Equal then Load PC return_high_bound
 	#else:
 		Move middle index
 		MUL index @4
-		Load trial @test_array [index]
+		Load trial test_array [index]
 		
 		Compare trial target
-		if Equal then Load PC @return_middle
+		if Equal then Load PC return_middle
 
 		#else:
 			Compare trial target

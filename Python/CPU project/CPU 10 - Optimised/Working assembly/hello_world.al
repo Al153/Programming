@@ -20,8 +20,8 @@ int 11 11
 ptr loop 
 
 
-Out @hello_instance.H [gp0] %loop
+Out hello_instance.H [gp0] %loop
 ADD gp0 One
 Compare gp0 @11
 if Equal then Halt
-Load PC @loop 
+Load PC loop 

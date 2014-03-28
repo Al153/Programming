@@ -15,10 +15,10 @@ Load gp4 @4
 MUL i gp4
 
 SUB i gp4 				%loop  #search loop
-Load trial @list [i]
+Load trial list [i]
 Compare trial max
-if Greater then Load PC @replace
-if i then Load PC @loop 			%return
+if Greater then Load PC replace
+if i then Load PC loop 			%return
 
 
 Move max gp0		#tidying up 
@@ -36,4 +36,4 @@ Halt
 
 Move trial max 	%replace  #if new max is found
 Move i address
-Load PC @return
+Load PC return

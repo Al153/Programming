@@ -307,10 +307,10 @@ def expand_macros(tokens):
 
 			if line[1] in register_addresses:
 				tokens[i] = ["Move",line[1], "gp0"] + label
-				tokens.insert(i+1,["Goto","@Datastack.push"])
+				tokens.insert(i+1,["Goto","Datastack.push"])
 			else:
 				tokens[i] = ["Load", "gp0",line[1]] + label
-				tokens.insert(i+1,["Goto","@Datastack.push"])
+				tokens.insert(i+1,["Goto","Datastack.push"])
 			i -= 1
 
 		if line[0] == "Pop":
@@ -321,10 +321,10 @@ def expand_macros(tokens):
 				line = line[:-1]
 
 			if line[1] in register_addresses:
-				tokens[i] = ["Goto","@Datastack.pop"] + label
+				tokens[i] = ["Goto","Datastack.pop"] + label
 				tokens.insert(i+1,["Move", "gp0",line[1]])
 			else:
-				tokens[i] = ["Goto","@Datastack.pop"] + label
+				tokens[i] = ["Goto","Datastack.pop"] + label
 				tokens.insert(i+1,["Store","gp0",line[1]])
 			i -=1
 
@@ -335,7 +335,7 @@ def expand_macros(tokens):
 				label = [line[-1]]	
 				line = line[:-1]
 			tokens[i] = ["Load","gp0", line[1]] + label
-			tokens.insert(i+1,["Goto","@Programstack.call"])
+			tokens.insert(i+1,["Goto","Programstack.call"])
 			i -=1
  
 		if len(line)>2 and line[2] == "Call":
@@ -345,7 +345,7 @@ def expand_macros(tokens):
 				label = [line[-1]]	
 				line = line[:-1]
 			tokens[i] = ["Load","gp0", line[1]] + label
-			tokens.insert(i+1,line[:2]+["Goto","@Programstack.call"])
+			tokens.insert(i+1,line[:2]+["Goto","Programstack.call"])
 			i -=1
 
 		if line[0] == "Return":
@@ -354,7 +354,7 @@ def expand_macros(tokens):
 			if line[-1][0] == "%":
 				label = [line[-1]]	
 				line = line[:-1]
-			tokens[i] = ["Load","PC", "@Programstack.return"] + label
+			tokens[i] = ["Load","PC", "Programstack.return"] + label
 			i -=1
 
 		if len(line)>2 and line[2] == "Return":
@@ -363,7 +363,7 @@ def expand_macros(tokens):
 			if line[-1][0] == "%":
 				label = [line[-1]]
 				line = line[:-1]
-			tokens[i] = line[:2]+["Load","PC","@Programstack.return"]
+			tokens[i] = line[:2]+["Load","PC","Programstack.return"]
 			i -= 1
 
 		for j in xrange(len(tokens[i])):
@@ -451,7 +451,7 @@ def execute_struct(struct,tokens,struct_names):
 				instance.append(instance_line)
 
 			#print "\n\ninstance = ",instance,"\n\n"
-			tokens = tokens[:i]+instance+[["int",instance_name,"@"+instance[0][1]]]+tokens[i+1:] #creates a pointer to the instance and adds in the instance
+			tokens = tokens[:i]+instance+[["int",instance_name,instance[0][1]]]+tokens[i+1:] #creates a pointer to the instance and adds in the instance
 	return tokens
 
 
@@ -478,8 +478,14 @@ def sort_out_variables(tokens,number_of_lines):
 	count = number_of_lines
 	while i < len(tokens):
 		line = tokens[i]
+
 		if line[0] == "int": #basic integer type
-			name = "@"+line[1]
+			name = line[1]
+			try:
+				int(name)
+				name = "@"+name
+			except ValueError:
+				pass
 			address = str(count)
 			value = "$"+line[1]
 			tokens.append([address,"Data",line[2]])
@@ -496,7 +502,7 @@ def sort_out_variables(tokens,number_of_lines):
 			count += 4
 
 		elif line[0]=="char":
-			name = "@"+line[1]
+			name = line[1]
 			address = str(count)
 			value = "$"+line[1]
 			tokens.append([address,"Byte",line[2]])
@@ -513,7 +519,7 @@ def sort_out_variables(tokens,number_of_lines):
 
 
 		elif line[0] == "ptr":
-			name = "@"+line[1]
+			name = line[1]
 			label = "%"+line[1]
 			address = str(count)
 			for label_line in tokens:
@@ -532,7 +538,7 @@ def sort_out_variables(tokens,number_of_lines):
 			count +=4
 
 		elif line[0] == "array":
-			name = "@"+line[1]
+			name = line[1]
 			length = int(line[2])
 			data_array = json.loads(line[3])
 			address = str(count)
@@ -552,7 +558,7 @@ def sort_out_variables(tokens,number_of_lines):
 			i-=1
 
 		elif line[0] == "Byte_array":
-			name = "@"+line[1]
+			name = line[1]
 			length = int(line[2])
 			data_array = json.loads(line[3])
 			address = str(count)
@@ -570,6 +576,10 @@ def sort_out_variables(tokens,number_of_lines):
 			count += length
 			del tokens[i]
 			i-=1
+
+		elif line[0] == "str":
+			name =  line[1]
+			string = line[2]
 
 		#elif line[0] == "str":
 		#	name = "@"+line[1]

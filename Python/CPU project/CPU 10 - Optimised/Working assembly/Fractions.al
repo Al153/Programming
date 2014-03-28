@@ -11,13 +11,13 @@ int slash 47
 
 Fraction half 1 3
 Fraction third 1 2 
-Load gp0 @half
-Load gp1 @third
-Goto @Fractions.divide
+Load gp0 half
+Load gp1 third
+Goto Fractions.divide
 
-Outd @half.numerator
-Out @slash
-Outd @half.denominator
+Outd half.numerator
+Out slash
+Outd half.denominator
 Halt
 
 #__________________________ GCD __________________________
@@ -28,13 +28,13 @@ def Fractions.GCD.a gp5 	#to keep low address gps free
 def Fractions.GCD.b gp6
 def Fractions.GCD.temp gp7
 
-if Fractions.GCD.a then Load PC @Fractions.GCD_loop 		%Fractions.GCD
+if Fractions.GCD.a then Load PC Fractions.GCD_loop 		%Fractions.GCD
 	Move Jump PC
 Move Fractions.GCD.a Fractions.GCD.temp 	  							%Fractions.GCD_loop
 MOD  Fractions.GCD.b Fractions.GCD.a
 Move Fractions.GCD.b Fractions.GCD.a
 Move Fractions.GCD.temp Fractions.GCD.b
-Load PC @Fractions.GCD
+Load PC Fractions.GCD
 
 #__________________________ ADD __________________________
 #gp0: fraction0, gp1: fraction1 ==> gp0: fraction0 + fraction1
@@ -64,9 +64,9 @@ DIV gp2 gp6
 DIV gp3 gp6 
 Store gp2 0 [Fractions.ADD.fraction0]
 Store gp3 4 [Fractions.ADD.fraction0]
-if Accumulator then Goto @Fractions.Overflow #Overflow control
-if DivByZero then Goto @Fractions.Invalid 	 #Underflow control
-Load PC @Fractions.add.return
+if Accumulator then Goto Fractions.Overflow #Overflow control
+if DivByZero then Goto Fractions.Invalid 	 #Underflow control
+Load PC Fractions.add.return
 
 #__________________________ Multiply __________________________
 ptr Fractions.Multiply
@@ -79,21 +79,21 @@ Load gp2 0 [Fractions.Multiply.fraction0] %Fractions.Multiply
 Load gp3 4 [Fractions.Multiply.fraction0]
 Load gp4 0 [Fractions.Multiply.fraction1]
 Load gp5 4 [Fractions.Multiply.fraction1]
-Store Jump @Fractions.Multiply.return
+Store Jump Fractions.Multiply.return
 
 MUL gp2 gp4
 MUL gp3 gp5
 Move gp2 gp5
 Move gp3 gp6
-Goto @Fractions.GCD
+Goto Fractions.GCD
 DIV gp2 gp6
 DIV gp3 gp6
 
 Store gp2 0 [Fractions.Multiply.fraction0]
 Store gp3 4 [Fractions.Multiply.fraction0]
-if Accumulator then Goto @Fractions.Overflow #Overflow control
-if DivByZero then Goto @Fractions.Invalid 	 #Underflow control
-Load PC @Fractions.Multiply.return
+if Accumulator then Goto Fractions.Overflow #Overflow control
+if DivByZero then Goto Fractions.Invalid 	 #Underflow control
+Load PC Fractions.Multiply.return
 
 #__________________________ invert __________________________
 ptr Fractions.invert
@@ -101,7 +101,7 @@ ptr Fractions.invert
 Load gp2 0 [gp1] %Fractions.invert
 Load gp3 4 [gp1]
 Outd gp2
-Out  @space
+Out  space
 Outd gp3
 Store gp2 4 [gp1]
 Store gp3 0 [gp1]
@@ -111,10 +111,10 @@ Move Jump PC
 ptr Fractions.divide
 int Fractions.divide.return 0
 
-Store Jump @Fractions.divide.return %Fractions.divide
-Goto @Fractions.invert
-Goto @Fractions.Multiply
-Load PC @Fractions.divide.return
+Store Jump Fractions.divide.return %Fractions.divide
+Goto Fractions.invert
+Goto Fractions.Multiply
+Load PC Fractions.divide.return
 
 
 ptr Fractions.Overflow

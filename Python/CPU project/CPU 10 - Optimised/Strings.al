@@ -18,12 +18,12 @@ String str2 'l' $str3
 String str1 'e' $str2
 String str0 'h' $str1
 
-Push					@str0
-Call 					@Strings.print
+Push					str0
+Call 					Strings.print
 Push @2
 Push @6
-Call 					@Strings.splice
-Call 					@Strings.print
+Call 					Strings.splice
+Call 					Strings.print
 Halt
 #____________ print string ____________
 #dup 0 swap index print 4 swap index if print end return
@@ -35,7 +35,7 @@ Load gp0 1 [gp0]
 Compare gp0 Zero 
 if Equal then Return
 Push gp0
-Call 					@Strings.print
+Call 					Strings.print
 Return
 
 #____________ splice ____________
@@ -61,17 +61,17 @@ Move Zero Strings.i
 Move Zero Strings.return_ptr
  
 	Compare Zero 1 [Strings.str] 		%Strings.splice.loop
-	if Equal then Load PC @Strings.splice.return
+	if Equal then Load PC Strings.splice.return
 		Load Strings.str 1 [Strings.str]
 
 		Compare Strings.i Strings.start
 		if Equal then Move Strings.str Strings.return_ptr
 
 		Compare Strings.i Strings.end
-		if Equal then Load PC @Strings.splice.return
+		if Equal then Load PC Strings.splice.return
 
 		ADD Strings.i One
-		Load PC @Strings.splice.loop
+		Load PC Strings.splice.loop
 
 Push Zero %Strings.splice.return
 Return
