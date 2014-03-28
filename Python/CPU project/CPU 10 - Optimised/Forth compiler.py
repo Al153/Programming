@@ -1,6 +1,22 @@
 import sys
 
+#________________________ basic syntax ______________________
+fib:
 
+. . . n ==> . . . fib n
+
+fib
+	dup 1 = if
+			drop 1 return
+	else
+		dup 0 = if
+			drop 1 return
+		endif
+	endif 
+	dup 1 - fib
+	2 - fib n
+	+ 
+;
 
 def compile():
 	source = get_code()
@@ -111,12 +127,85 @@ def compile_words(words):
 		assembly += compile_word(words[name],name,word_names,global_variables)
 	return assembly
 
+
+
+
+
 def compile_word(word,name,word_names,global_variables):
+	local_variables = []
+	assembly = ''
+	if_stack = []
+	for token in word:
+
+
+
+
+
 
 
 
 def compile_block(name,block,return1,return2,word_names,global_variables):
 
 
-class block:
-	def __init__(self,name,)
+class Start:
+	def __init__(self,suboutine_name,child):
+		self.name = suboutine_name
+		self.child = child
+
+	def blockify(self):
+		self.child.blockify
+	def compile(self):
+		return self.child.compile()
+
+
+class Return:
+	def __init__(self):
+		pass
+	def blockify(self):
+		pass
+	def compile(self):
+		return "Return\n"
+
+class Block:
+	def __init__(self,name_space,subroutine_number,tokens,child):
+		self.name_space = name_space
+		self.subroutine_number = subroutine_number
+		self.tokens = tokens
+		self.child = child
+	
+	def blockify(self):
+		new_tokens = []
+		child_tokens = []
+		hit_if =  0
+
+		for token in self.tokens:
+			if not hit_if:
+				if token == "if":
+					hit_if = 1
+				else:
+					new_tokens.append(token)
+			else:
+				child_tokens.append(token)
+
+
+
+		if hit_if:
+
+			if_counter = 1
+			for token in child_tokens
+
+
+
+
+	def compile(self):
+
+	def expand(self):
+
+
+class Branch:
+	def __init__(self,name_space,subroutine_number,tokens,child0,child1):
+		pass
+
+	def blockify(self):
+
+	def compile(self):
