@@ -2,9 +2,6 @@ Struct String character next
 	char character character
 	int next next
 end Struct
-
-int 2 2
-int 6 6
  
 String str10 'd' 0
 String str9 'l' $str10
