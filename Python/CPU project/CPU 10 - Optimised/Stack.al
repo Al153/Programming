@@ -1,9 +1,9 @@
 array Programstack	65536 [] 											#empty array of size 655356
 int stack.io	0
 int stack.temp	0
-int 4 			4
-int 8 			8
-int 65536		65536
+#int 4 			4
+#int 8 			8
+#int 65536		65536
 int stackoverflow 2
 int stackunderflow 1
 

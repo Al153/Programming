@@ -1,3 +1,8 @@
+#imma pop some stacks, only got operands in my pocket
+#shunt-shunt-shunting, this is freaking CompSci
+
+
+
 import sys
 
 #________________________ basic syntax ______________________
@@ -17,6 +22,221 @@ fib
 	2 - fib n
 	+ 
 ;
+
+
+
+
+#____________________ commands _____________________
+
+ 		_________ run_time_words : _________
+
++         . . . a b ==> . . . a+b
+-
+*
+/
+%
+
+&
+|
+^
+~
+
+drop 	. . . a ==> . . . 
+swap    . . . a b ==> . . . b a
+dup     . . . a ==> . . . a a
+
+echo    . . . 'a' ==> . . .              outputs 'a'
+print   . . . a ==>  . . . 			 outputs integer value of a
+
+=       . . . a b ==> . . . c       where c is result of (a == b)
+<       . . . a b ==> . . . c       where c is result of (a < b)
+>       . . . a b ==> . . . c       where c is result of (a > b)
+<=      . . . a b ==> . . . c       where c is result of (a <= b)
+>=      . . . a b ==> . . . c       where c is result of (a >= b)
+
+index 	    . . . list index ==> . . . value of list [index*4]
+			or
+			. . . str index ==> . . . value of str [index]
+
+
+return 								returns on the stack
+
+_____________________ Compile_time_words _____________________
+
+
+global 								creates a global variable/list etc
+ptr <name> variable 				creates pointer variable to a variable
+int <name> 	. . . a ==> . . .       Loads local int of name name with value a
+char <name> . . . 'a' ==> . . . 	Loads local char of name name with value a&255
+list <name> [ . . .] 				creates a list
+str <name>  "blah blah blah"		creates a string
+
+
+if      . . . a ==> . . .   		carries on if a is True, else go to corresponding else or end if
+else 	. . .   ==> . . . 			if in a positive if, then goto corresponding endif 
+endif   . . .   ==> . . . 			pass 
+
+while 	. . . ==> . . . 			if top of stack, then crarry on, else go to corresponding loop		
+loop    . . . ==> . . . 			go to corresponding while
+
+
+_______________ semi_compile_time_words _______________
+<const>
+<var name>
+
+
+
+def compile_header():
+	assembly = '''
+#_______________ HEADER _______________
+Import Stack
+
+ptr FORTH.greater_or_equal
+ptr FORTH.less_or_equal
+ptr FORTH.Equal
+ptr FORTH.Greater
+ptr FORTH.Less
+
+ptr FORTH.push0
+ptr FORTH.push1
+
+
+Pop gp1	%FORTH.Equal
+Pop gp0
+
+Compare gp0 gp1
+if Equal then Goto FORTH.push1
+Goto FORTH.push0
+
+
+Pop gp1	%FORTH.Greater
+Pop gp0
+
+Compare gp0 gp1
+if Greater then Goto FORTH.push1
+Goto FORTH.push0
+
+
+Pop gp1	%FORTH.Less
+Pop gp0
+
+Compare gp0 gp1
+if Less then Goto FORTH.push1
+Goto FORTH.push0
+
+
+
+
+Pop gp1	%FORTH.greater_or_equal
+Pop gp0
+
+Compare gp0 gp1
+if Less then Goto FORTH.push0
+Goto FORTH.push1
+
+
+
+
+Pop gp1	%FORTH.less_or_equal
+Pop gp0
+
+Compare gp0 gp1
+if Greater then Goto FORTH.push0
+Goto FORTH.push1
+
+
+
+Push One %FORTH.push1
+Return
+
+Push Zero %FORTH.push0
+Return
+
+
+
+
+#_______________ END HEADER _______________
+
+'''
+
+def compile_add():
+	assembly = "Pop gp0\nPop gp1\nADD gp0 gp1\nPush gp0\n"
+	return assembly
+def compile_sub():
+	assembly = "Pop gp0\nPop gp1\nSUB gp0 gp1\nPush gp0\n"
+	return assembly
+def compile_mul():
+	assembly = "Pop gp0\nPop gp1\nMUL gp0 gp1\nPush gp0\n"
+	return assembly
+def compile_div():
+	assembly = "Pop gp0\nPop gp1\nDIV gp0 gp1\nPush gp0\n"
+	return assembly
+def compile_mod():
+	assembly = "Pop gp0\nPop gp1\nMOD gp0 gp1\nPush gp0\n"
+	return assembly
+def compile_and():
+	assembly = "Pop gp0\nPop gp1\nAND gp0 gp1\nPush gp0\n"
+	return assembly
+def compile_or():
+	assembly = "Pop gp0\nPop gp1\nOR gp0 gp1\nPush gp0\n"
+	return assembly
+def compile_xor():
+	assembly = "Pop gp0\nPop gp1\nXOR gp0 gp1\nPush gp0\n"
+def compile_not():
+	assembly = "Pop gp0\nPop gp1\nNOT gp0 gp1\nPush gp0\n"
+	return assembly
+
+
+def compile_drop():
+	assembly = "Pop gp0\n"
+	return assembly
+
+def compile_swap():
+	assembly = "Pop gp0\nPop gp1\nPush gp0\nPush gp1\n"
+	return assembly
+
+def compile_dup():
+	assembly = "Pop gp0\nPush gp0\nPush gp0 \n"
+	return assembly
+
+
+def compile_echo():
+	assembly = "Pop gp0\nOut gp0\n"
+	return assembly
+
+def compile_print():
+	assembly = "Pop gp0\nOutd gp0\n"
+	return assembly
+
+def compile_equal():
+	assembly = "Call FORTH.Equal\n"
+	return assembly
+
+def compile_greater():
+	assembly = "Call FORTH.Greater\n"
+	return assembly
+
+def compile_less():
+	assembly = "Call FORTH.Less\n"
+	return assembly
+
+def compile_greater_or_equal():
+	assembly = "Call FORTH.greater_or_equal\n"
+	return assembly
+
+def compile_less_or_equal():
+	assembly = "Call FORTH.less_or_equal\n"
+	return assembly
+
+def compile_index(token_type):
+	if token_type == "int":
+		assembly = "Pop gp0\nPop gp1\nADD gp0 gp1\nLoad gp0 0 [gp0]\nPush gp0\n"
+	else:
+		assembly = "Pop gp0\nPop gp1\nMUL gp0 @4\nADD gp0 gp1\nLoad gp0 0 [gp0]\nPush gp0\n"
+	return assembly
+def compile_return():
+	assembly =  "Return\n"
+	return assembly
 
 def compile():
 	source = get_code()

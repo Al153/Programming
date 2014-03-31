@@ -146,7 +146,7 @@ def assemble():
 	file_object = get_code() #get the text of the file
 	print "Okay"
 	print "Extracting tokens = ",
-	tokens = [["int","16","16"]]+full_text_tokenize(file_object)
+	tokens = full_text_tokenize(file_object) #+ [["int","16","16"]]
 	print "Okay"
 	print "Extracting defined terms = ",
 	tokens = expand_macros(tokens)  			#expand pseudo commands such as "Goto ... " or "if ... then ... " or "def ... ... "
@@ -375,6 +375,24 @@ def expand_macros(tokens):
 
 		i += 1
 
+
+	const_lines = []
+	i = 0
+	while i<len(tokens):
+		j = 0
+		while j <len(tokens[i]):
+			if tokens[i][j][0] == "@" and not (tokens[i][j][1:] in const_lines):
+				try:
+					int(tokens[i][j][1:])
+					const_lines.append(tokens[i][j][1:])
+					tokens.append(["int", tokens[i][j][1:], tokens[i][j][1:] ])
+					print tokens[-1]
+				except:
+					print "Invalid Constant: ", tokens[i][j]
+			j += 1
+		i += 1
+
+
 	if using_stack and tokens[0] != ["import","Stack"]:
 		tokens.insert(0,["import","Stack"])
 	return tokens
@@ -480,6 +498,7 @@ def sort_out_variables(tokens,number_of_lines):
 		line = tokens[i]
 
 		if line[0] == "int": #basic integer type
+			#print line
 			name = line[1]
 			try:
 				int(name)
@@ -526,8 +545,10 @@ def sort_out_variables(tokens,number_of_lines):
 				if label in label_line:
 					label_address = label_line[0]
 					to_delete = tokens.index(label_line)
+					#print tokens[to_delete],
 					del tokens[to_delete][tokens[to_delete].index(label)]
-					break
+					#print tokens[to_delete]
+					#break
 			tokens.append([address,"Data",label_address])
 
 			for j in xrange(len(tokens)): #now replace all calls of @name with pointer to variable
@@ -586,6 +607,8 @@ def sort_out_variables(tokens,number_of_lines):
 		#	string = line[2][1:-1]
 		#	length = len()
 		i+=1
+	for line in tokens:
+		print line
 	return tokens
 
 def fill_in_gaps(tokens):
