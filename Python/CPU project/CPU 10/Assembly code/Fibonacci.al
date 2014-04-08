@@ -1,3 +1,8 @@
+import Stack
+
+ptr Fib
+ptr return_1
+
 int x 15
 
 Load gp0 x

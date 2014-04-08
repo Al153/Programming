@@ -3,49 +3,45 @@ Struct String character next
 	int next next
 end Struct
  
+#String str10 'd' 0
+#String str9 'l' $str10
+#String str8 'r' $str9
+#String str7 'o' $str8
+#String str6 'w' $str7
+#String str5  32 $str6
+#String str4 'o' $str5
+#String str3 'l' $str4
+#String str2 'l' $str3
+#String str1 'e' $str2
+#String str0 'h' $str1#
+
+#Push					str0
+#Call 					Strings.print
+#Push @2
+#Push @6
+#Call 					Strings.splice
+#Call 					Strings.print
+#Halt
 #____________ print string ____________
 #dup 0 swap index print 4 swap index if print end return
-#ptr Strings.print
+ptr Strings.print
 
 Pop gp0 				%Strings.print
-Out -3 [gp0] 			%Strings.print.loop
+Out -3 [gp0]
 Load gp0 1 [gp0]
-if gp0 then Load PC Strings.print.loop
-Return
-
-#____________ Print hex ____________
-array hex_lookup 16 [48,49,50,51,52,53,54,55,56,57,65,66,67,68,69,70]
-
-
-
-Pop gp0 				%Strings.print_hex
-Load gp1 -3 [gp0] 			%Strings.print_hex.loop
-Move gp1 gp2
-
-SHR gp1 @4     #get top and bottom nybbles
-AND gp1 @15
-AND gp2 @15
-MUL gp1 @4
-MUL gp2 @4
-
-Load gp1 hex_lookup [gp1]
-Load gp2 hex_lookup [gp2]
-Out gp1
-Out gp2
-
-Load gp0 1 [gp0]
-
-if gp0 then Load PC Strings.print_hex.loop
-Out @10
+Compare gp0 Zero 
+if Equal then Return
+Push gp0
+Call 					Strings.print
 Return
 
 #____________ splice ____________
 #str start end ==> return_ptr
 
 
-#ptr Strings.splice
-#ptr Strings.splice.loop
-#ptr Strings.splice.return
+ptr Strings.splice
+ptr Strings.splice.loop
+ptr Strings.splice.return
 
 
 def Strings.start gp1

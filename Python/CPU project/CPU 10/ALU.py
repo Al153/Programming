@@ -31,33 +31,25 @@ class ALU:
 
 	def set_reg_1(self):
 		self.flags = 0
-		self.reg1 = 0
-		for byte in self.input_bus.data:
-			self.reg1 <<= 8
-			self.reg1 += byte
+		self.reg1 = self.input_bus.data
 
 	def set_reg_2(self):
-		self.reg2 = 0
-		for byte in self.input_bus.data:
-			self.reg2 <<= 8
-			self.reg2 += byte
+		self.reg2 = self.input_bus.data
 
 	def enable_reg_1(self):
-		for i in xrange(4):
-			self.output_bus.data[3-i] = self.reg1&255
-			self.reg1 >>= 8
+		self.output_bus.data = self.reg1
+
 
 	def enable_reg_2(self):
-		for i in xrange(4):
-			self.output_bus.data[i] = self.reg2&255
-			self.reg2 >>= 8
+		self.output_bus.data = self.reg2
 
 	def enable_flags(self):
-		self.output_bus.data = [0,0,0,self.flags]
+		self.output_bus.data = self.flags
 		self.flags = 0
 
 	def op(self):
-		self.ops[self.op_bus.data[0]]()
+		self.ops[self.op_bus.data]()
+		#print self.reg1,self.reg2
 
 	def Add(self):
 		self.reg1 = self.reg1+self.reg2
@@ -112,9 +104,11 @@ class ALU:
 
 	def SHL(self):
 		self.reg1 = (self.reg1<<self.reg2)&4294967295
+		#print self.reg1
 
 	def SHR(self):
 		self.reg1 = (self.reg1>>self.reg2)&4294967295
+		#print self.reg1
 
 	def ADDc(self):
 		self.reg1 = self.reg1+self.reg2+1

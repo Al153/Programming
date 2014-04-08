@@ -4,6 +4,10 @@ import time
 import sys
 
 def run():
+	flags = []
+	for token in sys.argv:
+		if token[0] == '-':
+			flags.append(token)
 	print "\nImporting Machine Code = ",
 	machine_code = load_code()
 	print "Done"
@@ -12,7 +16,10 @@ def run():
 	print "Done"
 	print "\n\n_____________________ Beginning execution _____________________\n\n"
 	start = time.time()
-	CPU_instance.run()
+	if "-d" in flags:
+		CPU_instance.debug_run()
+	else:
+		CPU_instance.run()
 	end = time.time()
 
 	print "\n\n_____________________ Halted __________________________________"
@@ -20,10 +27,11 @@ def run():
 	print "Registers as follows:"
 	print_registers(CPU_instance)
 
+
 def print_registers(CPU_instance):
 	register_names = ["Zero","One","Accumulator","Jump","PC","Flags_set","Flags_reset","Stack_pointer","gp0","gp1","gp2","gp3","gp4","gp5","gp6","gp7"]
 	for i in xrange(16):
-		print register_names[i], CPU.append_bytes(CPU_instance.Registers.registers[i].data)
+		print register_names[i], CPU_instance.Registers.registers[i].data
 
 
 
@@ -32,7 +40,7 @@ def load_code():
 		return integer_keys(json.loads(open(sys.argv[1]).read()))
 	except IOError:
 		try:
-			return integer_keys(json.loads(open(sys.argv[1]+".ml").read()))
+			return integer_keys(json.loads(open('Machine code\\' + sys.argv[1]).read()))
 		except IOError:
 			print "Error: Could not find file",sys.argv[1]
 			quit()

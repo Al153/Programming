@@ -25,10 +25,13 @@ Push trial
 Call RC4.encrypt
 Pop ciphertext
 
-Push Key_2
-Push trial
-Push trial 
+Push ciphertext 
 Call Strings.print_hex
+Out @10
+
+Push Key_2
+Push ciphertext
+
 Call RC4.encrypt
 Call Strings.print
 
@@ -56,6 +59,8 @@ Move key_index start_of_key
 
 	Compare key_index Zero 			%RC4.key_circle_loop
 	if Equal then  Load PC RC4.Key_circle_return
+	#Out -3 [key_index]
+	#Outd key_index
 	Move key_index previous_key_index
 	Load key_index 1 [key_index]
 	Load PC RC4.key_circle_loop

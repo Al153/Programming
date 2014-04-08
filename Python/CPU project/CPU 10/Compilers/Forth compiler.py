@@ -54,8 +54,9 @@ print   . . . a ==>  . . . 			 outputs integer value of a
 <=      . . . a b ==> . . . c       where c is result of (a <= b)
 >=      . . . a b ==> . . . c       where c is result of (a >= b)
 
-index 	    . . . list index ==> . . . value of list [index
-insert 		. . . data list index ==> . . . inserts into array at correct place
+index 	    . . . list index ==> . . . value of list [index*4]
+			or
+			. . . str index ==> . . . value of str [index]
 
 
 return 								returns on the stack
@@ -159,38 +160,39 @@ Return
 '''
 
 def compile_add():
-	assembly = "Pop gp2\nPop gp1\nADD gp2 gp1\nPush gp2\n"
+	assembly = "Pop gp0\nPop gp1\nADD gp0 gp1\nPush gp0\n"
 	return assembly
 def compile_sub():
-	assembly = "Pop gp2\nPop gp1\nSUB gp2 gp1\nPush gp2\n"
+	assembly = "Pop gp0\nPop gp1\nSUB gp0 gp1\nPush gp0\n"
 	return assembly
 def compile_mul():
-	assembly = "Pop gp2\nPop gp1\nMUL gp2 gp1\nPush gp2\n"
+	assembly = "Pop gp0\nPop gp1\nMUL gp0 gp1\nPush gp0\n"
 	return assembly
 def compile_div():
-	assembly = "Pop gp2\nPop gp1\nDIV gp2 gp1\nPush gp2\n"
+	assembly = "Pop gp0\nPop gp1\nDIV gp0 gp1\nPush gp0\n"
 	return assembly
 def compile_mod():
-	assembly = "Pop gp2\nPop gp1\nMOD gp2 gp1\nPush gp2\n"
+	assembly = "Pop gp0\nPop gp1\nMOD gp0 gp1\nPush gp0\n"
 	return assembly
 def compile_and():
-	assembly = "Pop gp2\nPop gp1\nAND gp2 gp1\nPush gp2\n"
+	assembly = "Pop gp0\nPop gp1\nAND gp0 gp1\nPush gp0\n"
 	return assembly
 def compile_or():
-	assembly = "Pop gp2\nPop gp1\nOR gp2 gp1\nPush gp2\n"
+	assembly = "Pop gp0\nPop gp1\nOR gp0 gp1\nPush gp0\n"
 	return assembly
 def compile_xor():
-	assembly = "Pop gp2\nPop gp1\nXOR gp2 gp1\nPush gp2\n"
+	assembly = "Pop gp0\nPop gp1\nXOR gp0 gp1\nPush gp0\n"
 def compile_not():
-	assembly = "Pop gp0\nNOT gp0\nPush gp0\n"
+	assembly = "Pop gp0\nPop gp1\nNOT gp0 gp1\nPush gp0\n"
 	return assembly
+
 
 def compile_drop():
 	assembly = "Pop gp0\n"
 	return assembly
 
 def compile_swap():
-	assembly = "Pop gp2\nPop gp1\nPush gp2\nPush gp1\n"
+	assembly = "Pop gp0\nPop gp1\nPush gp0\nPush gp1\n"
 	return assembly
 
 def compile_dup():
@@ -226,42 +228,15 @@ def compile_less_or_equal():
 	assembly = "Call FORTH.less_or_equal\n"
 	return assembly
 
-def compile_index():
-	assembly = "Pop gp1\nPop gp0\nADD gp0 gp1\nLoad gp0 0 [gp0]\nPush gp0\n"
+def compile_index(token_type):
+	if token_type == "int":
+		assembly = "Pop gp0\nPop gp1\nADD gp0 gp1\nLoad gp0 0 [gp0]\nPush gp0\n"
+	else:
+		assembly = "Pop gp0\nPop gp1\nMUL gp0 @4\nADD gp0 gp1\nLoad gp0 0 [gp0]\nPush gp0\n"
 	return assembly
-
-def compile_insert():
-	assembly = "Pop gp2\nPop gp1\nPop gp0\nADD gp1 gp2\nStore gp0 0 [gp1]\n"
-	return assembly
-
 def compile_return():
 	assembly =  "Return\n"
 	return assembly
-
-def compile_const(constant):
-	assembly = "Push @" + str(constant)+"\n"
-	return assembly
-
-def compile_variable_call(variable_name):
-	assembly = "Push "+variable_name
-	return assembly
-
-def compile_branch(conditional_direction,default_direction):
-	assembly = "Pop gp0\nMove PC Jump\nAdd Jump @24\nif gp0 then Load PC "+ conditional_direction +"\nLoad PC"  +  default_direction+"\n"
-	return assembly
-
-def compile_while(break_address):
-	assembly ="Pop gp0\nCOmpare gp0 Zero\nif Equal then Load PC "+break_address+"\n"
-	return assembly
-	
-def compile_loop(start_address):
-	assembly = "Load PC" + start_address + "\n"
-	return assembly
-
-
-
-
-
 
 def compile():
 	source = get_code()
@@ -376,14 +351,11 @@ def compile_words(words):
 
 
 
-def compile_word(word,name,name_space,word_names,global_variables):
+def compile_word(word,name,word_names,global_variables):
 	local_variables = []
 	assembly = ''
 	if_stack = []
-	i = 0
-	while < len(word):
-		if word[i] == "if":
-			j = i
+	for token in word:
 
 
 

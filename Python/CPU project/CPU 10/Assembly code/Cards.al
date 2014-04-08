@@ -31,7 +31,7 @@ int C 67
 
 
 #_____ scripting _____
-Load gp0 @pile_1
+Load gp0 pile_1
 
 Load gp1 new_card
 Goto add_to_pile
