@@ -1,4 +1,3 @@
-#import Getch
 import sys
 
 def bytify(binary):

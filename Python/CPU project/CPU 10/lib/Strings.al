@@ -3,25 +3,6 @@ Struct String character next
 	int next next
 end Struct
  
-#String str10 'd' 0
-#String str9 'l' $str10
-#String str8 'r' $str9
-#String str7 'o' $str8
-#String str6 'w' $str7
-#String str5  32 $str6
-#String str4 'o' $str5
-#String str3 'l' $str4
-#String str2 'l' $str3
-#String str1 'e' $str2
-#String str0 'h' $str1#
-
-#Push					str0
-#Call 					Strings.print
-#Push @2
-#Push @6
-#Call 					Strings.splice
-#Call 					Strings.print
-#Halt
 #____________ print string ____________
 #dup 0 swap index print 4 swap index if print end return
 #ptr Strings.print

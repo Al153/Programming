@@ -60,11 +60,13 @@
 #06 	 CMP 		L/S
 #07 	 OUT 		REG
 #08 	 OUT 		L/S
-#
+#09 	 LODB 		L/S
+#10 	 STRB       L/S
+#11      LODW       L/S
+#12      STRW       L/S
 #.
 #.
 #.
-#
 #10		 ADD		REG
 #11		 SUB		REG
 #12		 MUL 		REG
@@ -356,6 +358,60 @@ class CPU:
 			self.Memory_address_register.enable()
 			self.Memory.enable()
 			self.Output.set()
+
+
+
+
+		elif opcode == 11:				#LoadByte
+			self.Main_bus.data = self.addr
+			self.Memory_address_register.set()
+			self.Register_address_bus.data = reg2_addr
+			self.Registers.enable()
+			self.Memory_address_register.add()
+
+			self.Memory_address_register.enable()
+			self.Memory.byte_enable()
+			self.Register_address_bus.data = reg1_addr
+			self.Registers.set()
+
+		elif opcode == 12:				#storeByte
+			self.Main_bus.data = self.addr
+			self.Memory_address_register.set()
+			self.Register_address_bus.data = reg2_addr
+			self.Registers.enable()
+			self.Memory_address_register.add()
+
+			self.Register_address_bus.data = reg1_addr
+			self.Memory_address_register.enable()
+			self.Registers.enable()
+			self.Memory.byte_set()
+
+		elif opcode == 13:				#LoadWord
+			self.Main_bus.data = self.addr
+			self.Memory_address_register.set()
+			self.Register_address_bus.data = reg2_addr
+			self.Registers.enable()
+			self.Memory_address_register.add()
+
+			self.Memory_address_register.enable()
+			self.Memory.word_enable()
+			self.Register_address_bus.data = reg1_addr
+			self.Registers.set()
+
+		elif opcode == 14:				#storeWord
+			self.Main_bus.data = self.addr
+			self.Memory_address_register.set()
+			self.Register_address_bus.data = reg2_addr
+			self.Registers.enable()
+			self.Memory_address_register.add()
+
+			self.Register_address_bus.data = reg1_addr
+			self.Memory_address_register.enable()
+			self.Registers.enable()
+			self.Memory.word_set()
+
+
+
 
 
 

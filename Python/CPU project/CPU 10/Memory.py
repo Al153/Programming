@@ -40,8 +40,14 @@ class Memory:
 		self.memory_dict[self.Address_bus.data] = self.Data_bus.data&255
 
 	def byte_enable(self):
-		
+		self.Data_bus.data = self.memory_dict.get(self.Address_bus.data,0)
 				
 	def word_set(self):
+		high_byte, low_byte = (self.Data_bus.data>>8)&255,self.Data_bus.data&255
+		self.memory_dict[self.Address_bus.data] = high_byte
+		self.memory_dict[(self.Address_bus.data+1)&4294967295] = low_byte
 
 	def word_enable(self):
+		high_byte = self.memory_dict.get(self.Address_bus.data,0)
+		low_byte = self.memory_dict.get((self.Address_bus.data+1)&4294967295,0)
+		self.Data_bus.data = (high_byte<<8)+low_byte

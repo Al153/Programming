@@ -18,6 +18,11 @@ opcodes = {
 		"OutAddr":8,
 		"OutdReg":9,
 		"OutdAddr":10,
+		"LoadByte":11,
+		"StoreByte":12,
+		"LoadWord":13,
+		"StoreWord":14,
+
 
 		"ADDReg":16,
 		"SUBReg":17,
@@ -80,7 +85,11 @@ opcodes_to_count = [
 		"CondR",
 		"CondF",
 		"Out",
-		"Outd"
+		"Outd",
+		"LoadByte",
+		"StoreByte",
+		"LoadWord",
+		"StoreWord",
 ]
 
 register_addresses = {
@@ -884,6 +893,30 @@ def fill_in_gaps_line(line):
 					return [line[0]] + [line[1]+"Addr","Zero"]+[line[3][1:-1]]+[line[2]]
 				else:
 					return [line[0]] + [line[1]+"Addr","Zero","Zero"]+[line[2]]
+		elif line[1] == "LoadByte":
+			if length == 5: #0 Load reg addr index
+				return line[:3]+[line[4][1:-1]]+[line[3]]
+			else:
+				return line[:3]+["Zero"]+[line[3]]
+
+		elif line[1] == "StoreByte":
+			#print	 line
+			if length == 5: #0 Load reg addr index
+				return line[:3]+[line[4][1:-1]]+[line[3]]
+			else:
+				return line[:3]+["Zero"]+[line[3]]
+		elif line[1] == "LoadWord":
+			if length == 5: #0 Load reg addr index
+				return line[:3]+[line[4][1:-1]]+[line[3]]
+			else:
+				return line[:3]+["Zero"]+[line[3]]
+
+		elif line[1] == "StoreWord":
+			#print	 line
+			if length == 5: #0 Load reg addr index
+				return line[:3]+[line[4][1:-1]]+[line[3]]
+			else:
+				return line[:3]+["Zero"]+[line[3]]
 		else:
 			print "Unknown command: ",line[1]
 			quit()
