@@ -33,3 +33,15 @@ class Memory:
 		for i in xrange(4):
 			bytes[i] = self.memory_dict.get((address+i)&4294967295,0)
 		self.Data_bus.data = append_bytes(bytes) 
+
+
+	def byte_set(self):
+		address = self.Address_bus.data	
+		self.memory_dict[self.Address_bus.data] = self.Data_bus.data&255
+
+	def byte_enable(self):
+		
+				
+	def word_set(self):
+
+	def word_enable(self):
