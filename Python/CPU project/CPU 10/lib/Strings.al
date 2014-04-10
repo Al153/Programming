@@ -21,13 +21,12 @@ array Strings.hex_lookup 16 [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99,
 
 Pop gp0 				%Strings.print_hex
 
-Load gp1 -3 [gp0] 			%Strings.print_hex_loop
+LoadByte gp1 0 [gp0] 			%Strings.print_hex_loop
 Move gp1 gp2
 SHR gp1 @4
-AND gp1 @15
 AND gp2 @15
-MUL gp1 @4
-MUL gp2 @4
+SHL gp1 @2
+SHL gp2 @2
 
 Out Strings.hex_lookup [gp1]
 Out Strings.hex_lookup [gp2]
