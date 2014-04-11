@@ -45,7 +45,7 @@ def get_pixel(x,y):
 	return rgb[0], rgb[1], rgb[2]
 
 
-asciify("test.JPG","result.txt")
+asciify("test2.JPG","result2.txt")
 
 
 
