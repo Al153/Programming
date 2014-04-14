@@ -15,7 +15,7 @@ def asciify(name,result_file_name):
 
 def get_image(name):
 	im = Image.open(name)
-	im = im.resize((250,250),Image.ANTIALIAS)
+	im = im.resize((150,150),Image.ANTIALIAS)
 	#print im.size
 	#go = raw_input('')
 	global rgb_im
@@ -37,7 +37,7 @@ def create_ascii(r,g,b):
  	elif smooth_value < 12:
  		ascii_char = "0"
  	else:
- 		ascii_char = "."
+ 		ascii_char = " "
  	return ascii_char
 
 def get_pixel(x,y):
@@ -45,7 +45,7 @@ def get_pixel(x,y):
 	return rgb[0], rgb[1], rgb[2]
 
 
-asciify("test2.JPG","result2.txt")
+asciify("test.JPG","result.txt")
 
 
 
