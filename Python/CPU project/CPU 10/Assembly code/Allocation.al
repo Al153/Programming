@@ -9,18 +9,18 @@ end Struct
 #Algorithm for allocating
 # . . . size ==> . . . pointer
 
-function allocate(size):
-	current_block = block0
+#function allocate(size):
+#	current_block = block0
 
-	while current_block.next != Null do
-		if size <= current_block.size_left do
-			current_block.size_left -= size
-			current_block.Top_of_block -= size
-			return current_block.Top_of_block
-		endif 
-		current_block = current_block.next
-	loop
-	return Failure
+#	while current_block.next != Null do
+#		if size <= current_block.size_left do
+#			current_block.size_left -= size
+#			current_block.Top_of_block -= size
+#			return current_block.Top_of_block
+#		endif 
+#		current_block = current_block.next
+#	loop
+#	return Failure
 
 
 
