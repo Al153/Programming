@@ -23,7 +23,7 @@ def run():
 	end = time.time()
 
 	print "\n\n_____________________ Halted __________________________________"
-	print "executed ",CPU_instance.instruction_count,"instructions in ",end - start, "seconds, at ",CPU_instance.instruction_count/(end-start) if end-start != 0 else "Too fast","Ips"
+	print "executed ",CPU_instance.instruction_count,"instructions in ",end - start, "seconds, at ",CPU_instance.instruction_count/(end-start) if end-start != 0 else "Too fast","I/s"
 	print "Registers as follows:"
 	print_registers(CPU_instance)
 

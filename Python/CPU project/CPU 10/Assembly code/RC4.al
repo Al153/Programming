@@ -187,10 +187,12 @@ Pop current_plaintext_pointer	%RC4.encrypt
 Call RC4.init 		
 Push current_plaintext_pointer
 
-Load gp0 @3072 					%RC4.encrypt.discard #discarding first few values for security
-SUB gp0 One
-Call RC4.generate
-Pop gp1
+Load gp0 @512                #discarding first 512 values for security	 					 					
+	SUB gp0 One 				%RC4.encrypt.discard
+	Push gp0
+	Call RC4.generate
+	Pop gp1
+	Pop gp0
 if gp0 then Load PC RC4.encrypt.discard
 
 
