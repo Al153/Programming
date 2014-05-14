@@ -268,16 +268,20 @@ def expand_macros(tokens):
 	using_strings = 0
 	string_counter = 0
 
-	replace_dict = {}
+	replace_dict = {'':{}}
 	lines_to_remove = []
 	i = 0
+	scope = ''
 	while i < len(tokens):
+		
 		line = tokens[i]
-		#print line
+		if line[0] == "Scope":
+			scope = line[1]
+			replace_dict[scope] = {}
 		if line[0] == "def":					#defining a term
 			lines_to_remove.append(i)
-			replace_dict[line[1]] = line[2]
-			replace_dict["["+line[1]+"]"] = "["+line[2]+"]"
+			replace_dict[scope][line[1]] = line[2]
+			replace_dict[scope]["["+line[1]+"]"] = "["+line[2]+"]"
 		i += 1
 
 	lines_to_remove.reverse()
@@ -286,13 +290,17 @@ def expand_macros(tokens):
 
 
 	i = 0
+	scope = ''
 	while i < len(tokens):	
+		if tokens[i][0] == "Scope":
+			scope = tokens[i][0]
+			del tokens[i]
 
 		line = tokens[i]
 
 		
 		for j in xrange(len(line)):
-			line[j] = replace_dict.get(line[j],line[j])
+			line[j] = replace_dict[scope].get(line[j],line[j])
 
 		if line[0] == "if":
 			if line[1] in conditional_addresses:

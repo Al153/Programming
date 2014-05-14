@@ -15,7 +15,9 @@ def asciify(name,result_file_name):
 
 def get_image(name):
 	im = Image.open(name)
-	im = im.resize((150,150),Image.ANTIALIAS)
+	size = (128,128)
+
+	im.thumbnail(size, Image.ANTIALIAS)
 	#print im.size
 	#go = raw_input('')
 	global rgb_im
@@ -45,7 +47,7 @@ def get_pixel(x,y):
 	return rgb[0], rgb[1], rgb[2]
 
 
-asciify("test.JPG","result.txt")
+asciify("test3.JPG","result3.txt")
 
 
 
