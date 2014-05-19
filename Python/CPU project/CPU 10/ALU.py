@@ -58,8 +58,10 @@ class ALU:
 			self.flags = 16 #carry
 
 	def Sub(self):
+		#print self.reg1, self.reg2
 		self.reg1 = self.reg1-self.reg2
 		if self.reg1<0:
+			print "BORROWING"
 			self.reg1 &= 4294967295
 			self.flags = 8 #borrow
 

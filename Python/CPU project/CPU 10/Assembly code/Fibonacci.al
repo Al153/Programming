@@ -1,5 +1,16 @@
 import Stack
 
+#Demonstrating stack use and recursion
+
+#def fib(n):
+#	if n == 0:
+#		return 1
+#   if n == 1:
+# 		return 1
+#	else:
+# 		return fib(n-1)+fib(n-2)
+
+
 ptr Fib
 ptr return_1
 
@@ -18,6 +29,7 @@ Halt
 
 def n gp0
 def fibn-1 gp1
+
 	Goto Datastack.pop %Fib
 	Compare n Zero
 	if Equal then Goto return_1

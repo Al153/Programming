@@ -5,7 +5,6 @@ end Struct
  
 #____________ print string ____________
 #dup 0 swap index print 4 swap index if print end return
-#ptr Strings.print
 
 Pop gp0 				%Strings.print
 
@@ -36,7 +35,7 @@ Compare gp0 Zero
 if Equal then Return
 Load PC 				Strings.print_hex_loop
 
-#____________ splice ____________
+#____________ splice ____________ ###############Not functioning, some bug in here
 #str start end ==> return_ptr
 
 

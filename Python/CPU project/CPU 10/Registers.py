@@ -33,9 +33,9 @@ class Register_bank:
 			flags, #flags set
 			flag_register_reset(main_bus,main_bus,flags), #flags reset
 			Register(main_bus,main_bus,4),		#stack pointer
-			Register(main_bus,main_bus,4),		#stack base
 
-			Register(main_bus,main_bus,4),		#gp registers
+			Register(main_bus,main_bus,4), 		#gp registers
+			Register(main_bus,main_bus,4),		
 			Register(main_bus,main_bus,4),
 			Register(main_bus,main_bus,4),
 			Register(main_bus,main_bus,4),

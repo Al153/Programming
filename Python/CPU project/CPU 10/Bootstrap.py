@@ -17,7 +17,11 @@ def run():
 	print "\n\n_____________________ Beginning execution _____________________\n\n"
 	start = time.time()
 	if "-d" in flags:
-		CPU_instance.debug_run()
+		try:
+			start = int(sys.argv[-1])
+		except:
+			start = 0
+		CPU_instance.debug_run(start)
 	else:
 		CPU_instance.run()
 	end = time.time()

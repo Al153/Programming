@@ -214,6 +214,8 @@ def full_text_tokenize(text_file):
         if not string:
             line_tokens= []
             current_token = ''
+        if line[:7] == "<Python>":
+        	line = str(eval(line[7:]))
         for character in line:
             if not string and not array:
                 if character == '"' and current_token == '':
@@ -221,8 +223,7 @@ def full_text_tokenize(text_file):
                 elif character == '[' and current_token == '':
                 	array = 1
                 	current_token = "["
-#                    token_list += line_tokens
- #                   line_tokens = []
+
                 elif character == "#" and current_token == '':
                     break
                 elif character != " " and character != "\t" and character != "\n":
@@ -277,7 +278,8 @@ def expand_macros(tokens):
 		line = tokens[i]
 		if line[0] == "Scope":
 			scope = line[1]
-			replace_dict[scope] = {}
+			if not scope in replace_dict:
+				replace_dict[scope] = {}
 		if line[0] == "def":					#defining a term
 			lines_to_remove.append(i)
 			replace_dict[scope][line[1]] = line[2]
@@ -293,7 +295,7 @@ def expand_macros(tokens):
 	scope = ''
 	while i < len(tokens):	
 		if tokens[i][0] == "Scope":
-			scope = tokens[i][0]
+			scope = tokens[i][1]
 			del tokens[i]
 
 		line = tokens[i]
@@ -667,23 +669,13 @@ def sort_out_variables(tokens,number_of_lines):
 
 			address_copy = count
 			for byte in data_array:
-				tokens.append([str(address_copy),"Byte",byte])
+				tokens.append([str(address_copy),"Byte",str(byte)])
 				address_copy += 1
 			count += length
 			del tokens[i]
 			i-=1
 
-		elif line[0] == "str":
-			name =  line[1]
-			string = line[2]
-
-		#elif line[0] == "str":
-		#	name = "@"+line[1]
-		#	string = line[2][1:-1]
-		#	length = len()
 		i+=1
-	#for line in tokens:
-		#print line
 	return tokens
 
 def fill_in_gaps(tokens):

@@ -221,15 +221,21 @@ class CPU:
 				self.step()
 				self.instruction_count += 1
 		except KeyboardInterrupt:
-			print self.instruction_count
-	def debug_run(self):
-		ret_value = 0
-		while not self.halt:
+			pass
+			#print self.instruction_count
+	def debug_run(self,start):
+		try:
+			ret_value = 0
+			while not self.halt:
 			
-			self.step()
-			print self.instruction, self.addr, self.Registers.registers[4].data, self.Registers.registers[3].data
-			self.instruction_count += 1
-			next = str(raw_input(""))
+				self.step()
+				if self.instruction_count >= start:
+					print self.instruction, self.addr, self.Registers.registers[4].data, self.Registers.registers[3].data, self.Registers.registers[7].data
+					next = str(raw_input(""))
+				self.instruction_count += 1
+				
+		except:
+			pass
 		
 
 	def step(self):
