@@ -1,8 +1,8 @@
 Byte_array int_to_char 26 [97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122]
-Byte_array char_to_int 256  [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,21, 22, 23, 24, 25, 100, 100, 100, 100, 100, 100, 0, 1, 2, 4, 3, 5, 6, 7, 8, 9,10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
+Byte_array char_to_int 256  [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,21, 22, 23, 24, 25, 100, 100, 100, 100, 100, 100, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
 
 #python for generating char_to_int
-#alphabet = list("ABCDEFGHIJKLMNOPQRSTUVWXYZabcedfghijklmnopqrstuvwxyz")
+#alphabet = list("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
 #filter_funct = (lambda char: alphabet.index(char)%26 if char in alphabet else 100)
 
 #print map(filter_funct, map(chr,range(256)))
@@ -21,21 +21,20 @@ Byte_array char_to_int 256  [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 1
 int vigenere.test_string 0
 
 Scope Main
-	str key "abcABC"
-	str Plaintext "bbbbbbb"
+	str key "Al is Awesome"
+	str Plaintext "I don't like James; he's smelly!"
 	Push Plaintext
 	Push key
 	Call vigenere.encrypt
-	Pop vigenere.test_string
-	Push vigenere.test_string
 	Call Strings.print
 	Out @10
-	str key2 "abcABC"
-	Push vigenere.test_string
+	Push Plaintext
+	str key2 "Al is Awesome"
+	#Push vigenere.test_string
 	Push key2
 	Call vigenere.decrypt
 	Call Strings.print
-	Return
+	Halt
 
 
 
@@ -99,18 +98,19 @@ LoadByte gp1 int_to_char [char]
 Load key_index 1 [key_index]
 Move Jump PC
 
+
 Scope decrypt_letter
 
 def char gp4
 def key_index gp2
 
 LoadByte gp7 0 [key_index] %vigenere.decrypt_letter
-LoadByte gp6 int_to_char [char]
-Out 	 gp6
-Out @10
+
 ADD char @26
 SUB char gp7
 MOD char @26
+
+
 LoadByte gp1 int_to_char [char]
 
 Load key_index 1 [key_index]
@@ -145,7 +145,6 @@ if string_index then Load PC vigenere.encrypt_subroutine %vigenere.encrypt_loop
 	Return
 
 LoadByte string_char 0 [string_index] %vigenere.encrypt_subroutine
-#Out string_char
 LoadByte string_int char_to_int [string_char]
 Move Zero Flags_reset
 Compare string_int @100

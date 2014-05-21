@@ -61,7 +61,7 @@ class ALU:
 		#print self.reg1, self.reg2
 		self.reg1 = self.reg1-self.reg2
 		if self.reg1<0:
-			print "BORROWING"
+			#print "BORROWING"
 			self.reg1 &= 4294967295
 			self.flags = 8 #borrow
 
