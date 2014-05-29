@@ -54,5 +54,4 @@ def integer_keys(input_dict):
 	for key in input_dict:
 		output_dict[int(key)] = input_dict[key]
 	return output_dict
-
 run()

@@ -541,7 +541,8 @@ def execute_struct(struct,tokens,struct_names):
 			for line in struct[1:]:
 				instance_line = []
 				temp = str(line[1])
-				if line[0] == "int" or line[0] == "char" or line[0] == "ptr" or line[0] =="array" or line[0] in struct_names:
+				initialisation_statements = ["int","char","word","ptr","array","Byte_array"] + struct_names
+				if line[0] in initialisation_statements:
 					line[1] = instance_name+"."+line[1]
 				instance_line = [find_replace_dict.get(token,token) for token in line] #copy across
 				line[1] = temp
@@ -615,6 +616,22 @@ def sort_out_variables(tokens,number_of_lines):
 			i -= 1 #countereffect plus one at end
 
 			count += 1
+
+		elif line[0]=="word":
+			name = line[1]
+			address = str(count)
+			value = "$"+line[1]
+			tokens.append([address,"Word",line[2]])
+			for j in xrange(len(tokens)): #now replace all calls of @name with pointer to variable
+				 while name in tokens[j] or value in tokens[j]:
+				 	try:
+				 		tokens[j][tokens[j].index(name)] = address
+				 	except ValueError:
+				 		tokens[j][tokens[j].index(value)] = line[2]
+			del tokens[i]
+			i -= 1 #countereffect plus one at end
+
+			count += 2
 
 
 		elif line[-1][0] == "%":
@@ -698,6 +715,8 @@ def fill_in_gaps_line(line):
 		return line
 
 	elif line[1] == "Byte":
+		return line
+	elif line[1] == "Word":
 		return line
 	else:
 		length = len(line)
@@ -930,6 +949,14 @@ def low_level_assemble(line_list):
 				data = int(tokens[2])
 				instr = []
 				for i in xrange(4):
+					instr.append(data&255)
+					data >>= 8
+				instr.reverse()	
+
+			if tokens[1] == "Data":
+				data = int(tokens[2])
+				instr = []
+				for i in xrange(2):
 					instr.append(data&255)
 					data >>= 8
 				instr.reverse()	

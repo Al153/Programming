@@ -128,13 +128,6 @@ import Memory
 import Registers
 import Output
 
-#def append_bytes(byte_list):
-#	"""converts a list of bytes (such as on a bus) to a binary value"""
-#	result = 0
-#	for byte in byte_list:
-#		result<<=8
-#		result += byte
-#	return result
 def bytify(binary):
 	"""turns a number into bytes"""
 	bytes = [0,0,0,0]
@@ -324,6 +317,10 @@ class CPU:
 		self.Registers.enable()
 		self.Memory.set()
 	def Compare_reg(self,opcode,reg1_addr,reg2_addr):
+		self.Register_address_bus.data = 6 #clears <>= flags
+		self.Main_bus.data = 4294967071
+		self.Registers.set()
+
 		self.Register_address_bus.data = reg1_addr
 		self.Registers.enable()
 		reg1_value = self.Main_bus.data
@@ -339,6 +336,10 @@ class CPU:
 		self.Register_address_bus.data = 5
 		self.Registers.set()
 	def Compare_addr(self,opcode,reg1_addr,reg2_addr):
+		self.Register_address_bus.data = 6 #clears <>= flags
+		self.Main_bus.data = 4294967071
+		self.Registers.set()
+
 		self.Register_address_bus.data = reg1_addr
 		self.Registers.enable()
 		reg1_value = self.Main_bus.data
