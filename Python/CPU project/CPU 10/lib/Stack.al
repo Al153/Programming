@@ -1,16 +1,9 @@
 array Programstack	65536 [] 											#empty array of size 655356
 int stack.io	0
 int stack.temp	0
-#int 4 			4
-#int 8 			8
-#int 65536		65536
 int stackoverflow 2
 int stackunderflow 1
 
-#ptr Programstack.call
-#ptr Programstack.return
-#ptr stack.overflow
-#ptr stack.underflow
 
 #Add push pop sub
 
@@ -26,6 +19,7 @@ Move gp0 PC
 
 #_______________ stack return _______________
 #takes data straight of stack and puts into the PC, used to return from subroutines
+
 Load Jump  Programstack [Stack_pointer] %Programstack.return
 SUB Stack_pointer @4 
 if Borrow then Halt
@@ -35,32 +29,36 @@ Move Jump PC
 
 array Datastack	65536 [] 											#empty array of size 655356
 int Datastack.pointer 0
-
-#ptr Datastack.push
-#ptr Datastack.pop
+int Datastack.temp
 
 
 
 #____________________ stack push ____________________
 #pushes value in gp0 to the stack
 											#takes input value 
-Load gp7 Datastack.pointer %Datastack.push
+Store gp7 Datastack.temp											%Datastack.push
+Load gp7 Datastack.pointer 
  						
 Store gp0 Datastack [gp7]
 ADD gp7 @4 										    #increment stack pointer
 Compare gp7 @65536 									#check for overflow
 if Greater then  Load PC stack.overflow
 Store gp7 Datastack.pointer
+Load gp7 Datastack.temp
+
 Move Jump PC
 
 #____________________ stack pop ____________________
 #pops from data stack into gp0
 
-Load gp7 Datastack.pointer %Datastack.pop
+
+Store gp7 Datastack.temp %Datastack.pop
+Load gp7 Datastack.pointer 
 SUB gp7 @4 
 if Borrow then Load PC stack.underflow
 Store gp7 Datastack.pointer
 Load gp0  Datastack [gp7]
+Load gp7 Datastack.temp
 
 Move Jump PC
 

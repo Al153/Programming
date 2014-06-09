@@ -211,7 +211,7 @@ def full_text_tokenize(text_file):
     escaped = 0
     array = 0
     for line in text_file:
-        if not string:
+        if not string and not array:
             line_tokens= []
             current_token = ''
         if line[:7] == "<Python>":
@@ -648,6 +648,10 @@ def sort_out_variables(tokens,number_of_lines):
 			for j in xrange(len(tokens)): #now replace all calls of @name with pointer to variable
 				while name in tokens[j]:
 				 	tokens[j][tokens[j].index(name)] = address
+
+			for j in xrange(len(tokens)): #now replace all calls of $name with value of variable
+				while "$" + name in tokens[j]:
+				 	tokens[j][tokens[j].index("$"+name)] = label_address
 			i -= 1
 			count +=4
 
@@ -953,7 +957,7 @@ def low_level_assemble(line_list):
 					data >>= 8
 				instr.reverse()	
 
-			if tokens[1] == "Data":
+			elif tokens[1] == "Word":
 				data = int(tokens[2])
 				instr = []
 				for i in xrange(2):

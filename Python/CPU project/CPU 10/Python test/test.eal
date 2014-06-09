@@ -1,0 +1,5 @@
+LTA 4
+STA 0
+LTA 5
+ADD 0
+HLT
