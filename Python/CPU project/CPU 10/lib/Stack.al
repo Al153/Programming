@@ -29,7 +29,7 @@ Move Jump PC
 
 array Datastack	65536 [] 											#empty array of size 655356
 int Datastack.pointer 0
-int Datastack.temp
+int Datastack.temp 0
 
 
 

@@ -203,7 +203,9 @@ class CPU:
 			44:self.ALU_addr,
 			45:self.ALU_addr,
 			46:self.ALU_addr,
-			47:self.ALU_addr 
+			47:self.ALU_addr,
+			48:self.In_reg,
+			49:self.In_addr
 		}
 
 		
@@ -486,6 +488,20 @@ class CPU:
 		self.ALU.enable_flags()
 		self.Registers.set()
 
+	def In_reg(self,opcode,reg1_addr,reg2_addr):
+		self.Output.enable()
+		#print self.Main_bus.data
+		self.Register_address_bus.data = reg1_addr
+		self.Registers.set()
 
-
+	def In_addr(self,opcode,reg1_addr,reg2_addr):
+		self.Main_bus.data = self.addr
+		self.Memory_address_register.set()
+		self.Register_address_bus.data = reg2_addr
+		self.Registers.enable()
+		self.Memory_address_register.add()
+		self.Output.enable()
+		self.Memory_address_register.enable()
+		self.Registers.enable()
+		self.Memory.set()
 

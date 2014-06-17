@@ -14,7 +14,7 @@ def run():
 	print "\n\nCreating CPU object = ",
 	CPU_instance = CPU.CPU(machine_code)
 	print "Done"
-	print "\n\n_____________________ Beginning execution _____________________\n\n"
+	print "\n\n_____________________ Beginning execution _____________________"
 	start = time.time()
 	if "-d" in flags:
 		try:
@@ -26,7 +26,7 @@ def run():
 		CPU_instance.run()
 	end = time.time()
 
-	print "\n\n_____________________ Halted __________________________________"
+	print "\n_____________________ Halted __________________________________"
 	print "executed ",CPU_instance.instruction_count,"instructions in ",end - start, "seconds, at ",CPU_instance.instruction_count/(end-start) if end-start != 0 else "Too fast","I/s"
 	print "Registers as follows:"
 	print_registers(CPU_instance)

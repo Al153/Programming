@@ -1,4 +1,5 @@
 import sys
+import msvcrt
 
 def bytify(binary):
 	"""turns a number into bytes"""
@@ -28,3 +29,19 @@ class IO:
 			data = self.IO_bus.data
 			sys.stdout.write(str(data))
 			sys.stdout.flush()
+
+	def enable(self):
+		data = poll_keyboard()
+#		if data:
+#			print "successful poll:",chr(data)
+		self.IO_bus.data = data
+
+
+
+def poll_keyboard(): 
+   x = msvcrt.kbhit()
+   if x: 
+      ret = ord(msvcrt.getch()) 
+   else: 
+      ret = 0 
+   return ret
