@@ -1,4 +1,4 @@
-#Pool_generator
+   #Pool_generator
 
 <Python> "\n".join(["char pool"+str(i)+" 0\nint pool_ptr"+str(i)+" "+("pool"+str(i-1) if i else "0") for i in xrange(256)]+["int pool pool255"])
 
