@@ -70,4 +70,38 @@ Scope Multiply
 
 #Multiplies two floats stored in float_objects
 
-(-1)^sign*fraction*2^(exponent-127)
+s1*f1*2**(e1-127) * s2*f2*2**(e2-127) = (s1^s2) *f1*f2 *2**(e1+e2 -256)
+
+ #. . . f1 fp2 fp3 ==> . . . fp3    #fp3 is the result of the Multiply
+		def fp1 gp1
+		def fp2 gp2
+		def fp3 gp3
+
+		Pop fp3
+		Pop fp2
+		Pop fp1
+
+
+		#sign is XOR of input signs
+
+		LoadByte gp4 0 [fp1]   
+		LoadByte gp5 0 [fp2]
+		XOR gp4 gp5
+		StoreByte gp4 0 [fp3]
+
+		#Basis of exponent is sum of other two except with 127 subtracted to counteract two lots of
+		LoadByte gp4 1 [fp1]
+		LoadByte gp5 1 [fp2]
+
+		ADD gp4 gp5
+		SUB gp4 @127
+
+		Load gp5 2 [fp1]
+		Load gp6 2 [fp2]
+		MUL gp5 gp6
+
+
+
+
+Move Acc gp6
+Copmare gp6 
