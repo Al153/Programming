@@ -254,6 +254,8 @@ def full_text_tokenize(text_file):
                         current_token += '"'
                     if character == "n":
                         current_token += "\n"
+                    if character == "\\":
+                    	current_token += "\\"
             elif array:
             	if character == "]":
                     array = 0
@@ -280,16 +282,20 @@ def expand_macros(tokens):
 	i = 0
 	scope = ''
 	while i < len(tokens):
-		
-		line = tokens[i]
-		if line[0] == "Scope":
-			scope = line[1]
-			if not scope in replace_dict:
-				replace_dict[scope] = {}
-		if line[0] == "def":					#defining a term
-			lines_to_remove.append(i)
-			replace_dict[scope][line[1]] = line[2]
-			replace_dict[scope]["["+line[1]+"]"] = "["+line[2]+"]"
+		try:
+			line = tokens[i]
+			if line[0] == "Scope":
+				scope = line[1]
+				if not scope in replace_dict:
+					replace_dict[scope] = {}
+			if line[0] == "def":					#defining a term
+				lines_to_remove.append(i)
+				replace_dict[scope][line[1]] = line[2]
+				replace_dict[scope]["["+line[1]+"]"] = "["+line[2]+"]"
+		except IndexError:
+			print "ERROR. Line too short: ", line
+			quit()
+
 		i += 1
 
 	lines_to_remove.reverse()
@@ -393,8 +399,15 @@ def expand_macros(tokens):
 				tokens[i] = ["Goto","Datastack.pop"] + line[2:]
 				tokens.insert(i+1,["Move", "gp0",line[1]])
 			else:
-				tokens[i] = ["Goto","Datastack.pop"] + line[2:]
-				tokens.insert(i+1,["Store","gp0",line[1]])
+				if line[-1][0] == "[" and line[-1][-1] == "]":
+					tokens[i] = ["Goto","Datastack.pop"] + line[2:-1]
+					tokens.insert(i+1,["Store","gp0",line[1],line[-1]])
+				elif line[-2][0] == "[" and line[-2][-1] == "]":
+					tokens[i] = ["Goto","Datastack.pop"] + line[2:-2]+[line[-1]]
+					tokens.insert(i+1,["Store","gp0",line[1],line[-2]])
+				else:
+					tokens[i] = ["Goto","Datastack.pop"] + line[2:]
+					tokens.insert(i+1,["Store","gp0",line[1]])
 			i -=1
 
 		if len(line)>2 and line[2] == "Pop":
@@ -408,8 +421,15 @@ def expand_macros(tokens):
 				tokens[i] = ["Goto","Datastack.pop"] + line[4:]
 				tokens.insert(i+1,line[:2]+["Move", "gp0",line[3]])
 			else:
-				tokens[i] = ["Goto","Datastack.pop"] + line[4:]
-				tokens.insert(i+1,line[2:]+["Store","gp0",line[3]])
+				if line[-1][0] == "[" and line[-1][-1] == "]":
+					tokens[i] = ["Goto","Datastack.pop"] + line[4:-1]
+					tokens.insert(i+1,line[2:]+["Store","gp0",line[3],line[-1]])
+				elif line[-2][0] == "[" and line[-2][-1] == "]":
+					tokens[i] = ["Goto","Datastack.pop"] + line[4:-2] + [line[-1]]
+					tokens.insert(i+1,line[2:]+["Store","gp0",line[3],line[-2]])
+				else:
+					tokens[i] = ["Goto","Datastack.pop"] + line[4:]
+					tokens.insert(i+1,line[2:]+["Store","gp0",line[3]])
 			i -=1
 
 		if line[0] == "Call":
@@ -628,9 +648,13 @@ def sort_out_variables(tokens,number_of_lines):
 				pass
 			address = str(count)
 			value = "$"+line[1]
-			tokens.append([address,"Data",line[2]])
+			try:
+				data = line[2]
+			except IndexError:
+				data = "0"
+			tokens.append([address,"Data",data])
 			variable_dict[name] =  address
-			variable_dict[value] = line[2]
+			variable_dict[value] = data
 
 			del tokens[i]
 			i -= 1 #countereffect plus one at end
@@ -641,9 +665,13 @@ def sort_out_variables(tokens,number_of_lines):
 			name = line[1]
 			address = str(count)
 			value = "$"+line[1]
-			tokens.append([address,"Byte",line[2]])
+			try:
+				data = line[2]
+			except IndexError:
+				data = "0"
+			tokens.append([address,"Byte",data])
 			variable_dict[name] =  address
-			variable_dict[value] = line[2]
+			variable_dict[value] = data
 
 			del tokens[i]
 			i -= 1 #countereffect plus one at end
@@ -654,9 +682,13 @@ def sort_out_variables(tokens,number_of_lines):
 			name = line[1]
 			address = str(count)
 			value = "$"+line[1]
-			tokens.append([address,"Word",line[2]])
+			try:
+				data = line[2]
+			except IndexError:
+				data = "0"
+			tokens.append([address,"Word",data])
 			variable_dict[name] =  address
-			variable_dict[value] = line[2]
+			variable_dict[value] = data
 
 			del tokens[i]
 			i -= 1 #countereffect plus one at end

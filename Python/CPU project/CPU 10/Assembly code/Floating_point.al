@@ -4,6 +4,8 @@
 #sMMMMMMMMMMMMMMMMMMMMMMMeeeeeeee
 #1 bit of sign, 8 bits of exponent 23 bits of mantissa
 #the mantissa is 1.MMMMMMMMMMMMMMMMMMMMMMM where M is one of 23 bits of mantissa stored
+#the exponent is excess-128
+#if the sign is 1, then the number is negative
 
 Struct Float sign exponent fraction
 	char sign sign
@@ -11,27 +13,8 @@ Struct Float sign exponent fraction
 	int fraction fraction
 end Struct
 
-
-
-
-
-
-Push @22413454
-Push @1375731846
-
-Call Divide
-
-
-Pop gp0
-Outd gp0
-Halt
-
-
-
-
-
-
-Scope float_to_Dword
+#_________________________________ FLoat to Dword _________________________________
+Scope FP.float_to_Dword
 
 #takes a float object and converts it into a dword representing that float
 #. . . float_pointer ==> . . . Dword
@@ -44,22 +27,12 @@ Scope float_to_Dword
 
 
 
-						Pop floatpointer		%float_to_Dword
+						Pop floatpointer		%FP.float_to_Dword
 
 						LoadByte sign 0 [floatpointer]
 						LoadByte exponent 1 [floatpointer]
 						Load fraction 2 [floatpointer]
 
-
-
-
-
-							Outd sign
-							Out @32
-							Outd exponent
-							Out @32
-							Outd fraction
-							Out @10
 
 
 
@@ -73,7 +46,9 @@ Scope float_to_Dword
 						Push exponent
 						Return
 
-Scope Dword_to_float
+#_________________________________ Dword to float _________________________________
+
+Scope FP.Dword_to_float
 	
 #takes a pointer to an empty float object and converts a dword to become that float
 #. .  . floatpointer Dword ==> . . . floatpointer
@@ -85,7 +60,7 @@ Scope Dword_to_float
 		def Dword gp4
 		
 
-		Pop Dword %Dword_to_float
+		Pop Dword %FP.Dword_to_float
 		Pop floatpointer
 		
 		Load exponent @255     #00000000 00000000 00000000 11111111
@@ -108,6 +83,42 @@ Scope Dword_to_float
 		Store fraction 2 [floatpointer]
 
 		Return
+
+#_________________________________ display float _________________________________
+Scope Display
+
+		def sign gp1
+		def exponent gp2
+		def fraction gp3
+		def Dword gp4
+		
+
+		Pop Dword %FP.display
+
+		
+		Load exponent @255     #00000000 00000000 00000000 11111111
+		AND exponent Dword    #extracts bottom 8 bits
+		
+
+		
+		SHR Dword @8         #shifts down
+		Load fraction @8388607    # 00000000 01111111 11111111 11111111
+		AND fraction Dword    #extracts next 23 bits 
+		OR fraction @8388608
+		
+		SHR Dword @23          #removes 8 bits
+		Move Zero sign        #resets sign 
+		if Dword then Move One sign  #adds sign if needed 
+
+			#print out data
+							Outd sign
+							Out @32
+							Outd exponent
+							Out @32
+							Outd fraction
+							Out @10
+		Return
+
 #_________________________________Normalisation for addition and subtraction _________________________________
 # . . . float ==> . . . normalised float
 
@@ -119,7 +130,7 @@ def fraction gp1
 def exponent gp2 
 
 #extract float_parts
-Pop float %normalise
+Pop float %FP.normalise
 Load fraction 2 [float]
 LoadByte exponent 1 [float]
 
@@ -127,41 +138,41 @@ Load Flags_reset @4294967287  			#resets the borrow flag
 
 
 #reduces fraction if too big
-Compare fraction @16777216    			%normalise_stage_1
-if Less then Load PC normalise_stage_2
+Compare fraction @16777216    			%FP.normalise_stage_1
+if Less then Load PC FP.normalise_stage_2
 	SHR fraction One
 	ADD exponent One
-	Load PC normalise_stage_1
+	Load PC FP.normalise_stage_1
 
 
 #checks if exponent is too large
-Compare exponent @255         			%normalise_stage_2
+Compare exponent @255         			%FP.normalise_stage_2
 if Greater then Load PC normalise_return_infinity
 
 
 
 #boosts fraction if too small
-Compare fraction @8388607   			%normalise_stage_3            #8388607 is 2**23 -1
-if Greater then Load PC normalise_stage_4
+Compare fraction @8388607   			%FP.normalise_stage_3            #8388607 is 2**23 -1
+if Greater then Load PC FP.normalise_stage_4
 	SHL fraction One
-	ADD exponent One
+	SUB exponent One
 	if Borrow then Load PC normalise_return_zero
-	Load PC normalise_stage_3
+	Load PC FP.normalise_stage_3
 
 
 
-Store fraction 2 [float]			%normalise_stage_4
+Store fraction 2 [float]			%FP.normalise_stage_4
 StoreByte exponent 1 [float]
 Push float
 Return
 
 Load exponent @255 %normalise_return_infinity
 Load fraction 16777215   #biggest possible value of the fraction
-Load PC normalise_stage_4
+Load PC FP.normalise_stage_4
 
 Move Zero exponent  %normalise_return_zero                   
 Load fraction @8388608  #smallest value of the fraction
-Load PC normalise_stage_4
+Load PC FP.normalise_stage_4
 
 
 #_________________________________ ADD _________________________________
@@ -173,24 +184,24 @@ def float1 gp1
 def float2 gp2
 def result_pointer gp3
 
-Float ADD.result 0 0 0 
-Float ADD.float1 0 0 0 
-Float ADD.float2 0 0 0
+Float FP.ADD.result 0 0 0 
+Float FP.ADD.float1 0 0 0 
+Float FP.ADD.float2 0 0 0
 
-	Pop float2 %Add
+	Pop float2 %FP.Add
 	Pop float1
 
-	Push ADD.float1
+	Push FP.ADD.float1
 	Push float1
-	Push ADD.float2
+	Push FP.ADD.float2
 	Push float2
 
-	Call Dword_to_float
-	Call Dword_to_float
+	Call FP.Dword_to_float
+	Call FP.Dword_to_float
 
-	Load float1 ADD.float1
-	Load float2 ADD.float2
-	Load result_pointer ADD.result
+	Load float1 FP.ADD.float1
+	Load float2 FP.ADD.float2
+	Load result_pointer FP.ADD.result
 
 
 
@@ -199,7 +210,7 @@ Float ADD.float2 0 0 0
 	LoadByte gp4 1 [float1]
 	LoadByte gp5 1 [float2]
 	Compare gp4 gp5
-	if Less then Goto ADD.swap_floats
+	if Less then Goto FP.ADD.swap_floats
 
 	StoreByte gp4 1 [result_pointer]   #the exponent of the rewsult is the same a that of float1
 	SUB gp4 gp5                        #exponent_difference ==> gp4
@@ -214,12 +225,12 @@ Float ADD.float2 0 0 0
 	LoadByte gp6 0 [float1]            #fetch signs
 	LoadByte gp7 0 [float2]
 	Compare gp6 gp7
-	if Equal then  Load PC ADD.Equal_signs
+	if Equal then  Load PC FP.ADD.Equal_signs
 		Load Flags_reset  @4294967287  			#resets the borrow flag
 		SUB gp4 gp5
-		if Borrow then Load PC ADD.negative_fraction
+		if Borrow then Load PC FP.ADD.negative_fraction
 		#else
-		Load PC ADD.return
+		Load PC FP.ADD.return
 
 
 
@@ -228,32 +239,33 @@ Float ADD.float2 0 0 0
 
 
 
-	Store gp4 2 [result_pointer]   %ADD.return
+	Store gp4 2 [result_pointer]   %FP.ADD.return
 	StoreByte gp6 0 [result_pointer]
 	Push result_pointer
-	Call normalise
-	Call float_to_Dword
+
+	Call FP.normalise
+	Call FP.float_to_Dword
 	Return
 
 
 
 
-	Move One gp7					  %ADD.negative_fraction                 #invert sign
+	Move One gp7					  %FP.ADD.negative_fraction                 #invert sign
 	SUB gp7 gp6
 	Move gp7 gp6 
 
 	Move Zero gp5 #invert fraction
 	SUB gp5 gp4
 	Move gp5 gp4
-	Load PC ADD.return 
+	Load PC FP.ADD.return 
 
-	ADD gp4 gp5						 %ADD.Equal_signs
-	Load PC ADD.return
-
-
+	ADD gp4 gp5						 %FP.ADD.Equal_signs
+	Load PC FP.ADD.return
 
 
-	Move float1 gp6             %ADD.swap_floats   #swap float pointers
+
+
+	Move float1 gp6             %FP.ADD.swap_floats   #swap float pointers
 	Move float2 float1
 	Move gp6 float2
 
@@ -266,33 +278,37 @@ Float ADD.float2 0 0 0
 
 
 
-#_________________________________ Subtract _________________________________
+#_________________________________ FP.Subtract _________________________________
 
-Scope Subtract
+Scope FP.Subtract
 
 #variables needed:
 def float1 gp1
 def float2 gp2
 def result_pointer gp3
 
-Float SUB.result 0 0 0 
-Float SUB.float1 0 0 0 
-Float SUB.float2 0 0 0
+Float FP.SUB.result 0 0 0 
+Float FP.SUB.float1 0 0 0 
+Float FP.SUB.float2 0 0 0
 
-	Pop float2 %Subtract
+	Pop float2 %FP.Subtract
 	Pop float1
 
-	Push SUB.float1
+
+	Push FP.SUB.float1
 	Push float1
-	Push SUB.float2
+	Push FP.SUB.float2
 	Push float2
 
-	Call Dword_to_float
-	Call Dword_to_float
 
-	Load float1 SUB.float1
-	Load float2 SUB.float2
-	Load result_pointer SUB.result
+	Call FP.Dword_to_float
+	Call FP.Dword_to_float
+
+
+	Load float1 FP.SUB.float1
+	Load float2 FP.SUB.float2
+	Load result_pointer FP.SUB.result
+
 
 #	invert sign of float2
 	Move One gp4
@@ -300,17 +316,21 @@ Float SUB.float2 0 0 0
 	SUB gp4 gp5
 	StoreByte gp4 0 [float2]
 
+
 	#assume  float1 has largest exponent
 
 	LoadByte gp4 1 [float1]
 	LoadByte gp5 1 [float2]
 	Compare gp4 gp5
-	if Less then Goto SUB.swap_floats
+	if Less then Goto FP.SUB.swap_floats
+
 
 	StoreByte gp4 1 [result_pointer]   #the exponent of the rewsult is the same a that of float1
 	SUB gp4 gp5                        #exponent_difference ==> gp4
 	Load gp5 2 [float1]                #fetch fractions
 	Load gp6 2 [float2]     
+
+
 
 	SHR gp6 gp4                        #scale float2.fraction by the difference in exponents
 
@@ -324,12 +344,12 @@ Float SUB.float2 0 0 0
 
 
 	Compare gp6 gp7
-	if Equal then  Load PC SUB.Equal_signs
+	if Equal then  Load PC FP.SUB.Equal_signs
 		Load Flags_reset  @4294967287  			#resets the borrow flag
 		SUB gp4 gp5
-		if Borrow then Load PC SUB.negative_fraction
+		if Borrow then Load PC FP.SUB.negative_fraction
 		#else
-		Load PC SUB.return
+		Load PC FP.SUB.return
 
 
 
@@ -338,32 +358,31 @@ Float SUB.float2 0 0 0
 
 
 
-	Store gp4 2 [result_pointer]   %SUB.return
+	Store gp4 2 [result_pointer]   %FP.SUB.return
 	StoreByte gp6 0 [result_pointer]
 	Push result_pointer
-	Call normalise
-	Call float_to_Dword
+	Call FP.normalise
+	Call FP.float_to_Dword
 	Return
 
 
 
-
-	Move One gp7					  %SUB.negative_fraction                 #invert sign
+	Move One gp7					  %FP.SUB.negative_fraction                 #invert sign
 	SUB gp7 gp6
 	Move gp7 gp6 
 
 	Move Zero gp5 #invert fraction
 	SUB gp5 gp4
 	Move gp5 gp4
-	Load PC SUB.return 
+	Load PC FP.SUB.return 
 
-	ADD gp4 gp5						 %SUB.Equal_signs
-	Load PC SUB.return
-
-
+	ADD gp4 gp5						 %FP.SUB.Equal_signs
+	Load PC FP.SUB.return
 
 
-	Move float1 gp6             %SUB.swap_floats   #swap float pointers
+
+
+	Move float1 gp6             %FP.SUB.swap_floats   #swap float pointers
 	Move float2 float1
 	Move gp6 float2
 
@@ -389,35 +408,35 @@ Float SUB.float2 0 0 0
 
 
 #_________________________________ MULTIPLICATION _________________________________
-Scope Multiply
+Scope FP.Multiply
 #variables needed:
 def float1 gp1
 def float2 gp2
 def result_pointer gp3
 
-Float Multiply.result 0 0 0 
-Float Multiply.float1 0 0 0 
-Float Multiply.float2 0 0 0
+Float FP.Multiply.result 0 0 0 
+Float FP.Multiply.float1 0 0 0 
+Float FP.Multiply.float2 0 0 0
 
 	#get pointers to the floats
 
-	Pop float1 %Multiply
+	Pop float1 %FP.Multiply
 	Pop float2
 
-	Push Multiply.float1
+	Push FP.Multiply.float1
 	Push float1
-	Push Multiply.float2
+	Push FP.Multiply.float2
 	Push float2
 
-	Call Dword_to_float
-	Call Dword_to_float
+	Call FP.Dword_to_float
+	Call FP.Dword_to_float
 
 
 
 
-	Load float1 Multiply.float1
-	Load float2 Multiply.float2
-	Load result_pointer Multiply.result
+	Load float1 FP.Multiply.float1
+	Load float2 FP.Multiply.float2
+	Load result_pointer FP.Multiply.result
 
 
 
@@ -448,21 +467,21 @@ Float Multiply.float2 0 0 0
 
 
 	Compare gp6 @16777215
-	if Greater then Goto Multiply.normalise
+	if Greater then Goto FP.Multiply.normalise
 	#check for overflows
 
 	Compare gp4 @255
-	if Borrow then Load PC Multiply.return_zero
-	if Greater then Load PC Multiply.return_infinity	
+	if Borrow then Load PC FP.Multiply.return_zero
+	if Greater then Load PC FP.Multiply.return_infinity	
 
 
-	Store gp6 2 [result_pointer]     %Multiply.return
+	Store gp6 2 [result_pointer]     %FP.Multiply.return
 	StoreByte gp4 1 [result_pointer] 
 
 
 
 	Push result_pointer
-	Call float_to_Dword
+	Call FP.float_to_Dword
 
 	Return
 
@@ -471,51 +490,51 @@ Float Multiply.float2 0 0 0
 
 	#normalisation subroutines
 
-	SHR gp6 One %Multiply.normalise
+	SHR gp6 One %FP.Multiply.normalise
 	ADD gp4 One
 	Move Jump PC
 
-	Move Zero gp4 %Multiply.return_zero
+	Move Zero gp4 %FP.Multiply.return_zero
 	Load gp6 @8388608
-	Load PC Multiply.return
+	Load PC FP.Multiply.return
 
-	Load gp6 @16777215 %Multiply.return_infinity
+	Load gp6 @16777215 %FP.Multiply.return_infinity
 	Load gp4 @255
-	Load PC Multiply.return
+	Load PC FP.Multiply.return
 
 
 
 #_________________________________ division _________________________________
 
-Scope Divide
+Scope FP.Divide
 #variables needed:
 def float1 gp1
 def float2 gp2
 def result_pointer gp3
 
-Float Divide.result 0 0 0 
-Float Divide.float1 0 0 0 
-Float Divide.float2 0 0 0
+Float FP.Divide.result 0 0 0 
+Float FP.Divide.float1 0 0 0 
+Float FP.Divide.float2 0 0 0
 
 	#get pointers to the floats
 
-	Pop float2 %Divide
+	Pop float2 %FP.Divide
 	Pop float1
 
-	Push Divide.float1
+	Push FP.Divide.float1
 	Push float1
-	Push Divide.float2
+	Push FP.Divide.float2
 	Push float2
 
-	Call Dword_to_float
-	Call Dword_to_float
+	Call FP.Dword_to_float
+	Call FP.Dword_to_float
 
 
 
 
-	Load float1 Divide.float1
-	Load float2 Divide.float2
-	Load result_pointer Divide.result
+	Load float1 FP.Divide.float1
+	Load float2 FP.Divide.float2
+	Load result_pointer FP.Divide.result
 
 
 
@@ -574,18 +593,21 @@ Float Divide.float2 0 0 0
 	ADD gp4 @128
 	SUB gp4 gp5
 
+	Compare gp6 @8388608
+	if Less then Goto FP.Divide.normalise
+
 	Compare gp4 @255
-	if Borrow then Load PC Divide.return_zero
-	if Greater then Load PC Divide.return_infinity	
+	if Borrow then Load PC FP.Divide.return_zero
+	if Greater then Load PC FP.Divide.return_infinity	
 
 
-	Store gp6 2 [result_pointer]     %Divide.return
+	Store gp6 2 [result_pointer]     %FP.Divide.return
 	StoreByte gp4 1 [result_pointer] 
 
 
 
 	Push result_pointer
-	Call float_to_Dword
+	Call FP.float_to_Dword
 
 	Return
 
@@ -594,14 +616,238 @@ Float Divide.float2 0 0 0
 
 	#normalisation subroutines
 
-	SHR gp6 One %Divide.normalise
-	ADD gp4 One
+	SHL gp6 One %FP.Divide.normalise
+	SUB gp4 One
 	Move Jump PC
 
-	Move Zero gp4 %Divide.return_zero
+	Move Zero gp4 %FP.Divide.return_zero
 	Load gp6 @8388608
-	Load PC Divide.return
+	Load PC FP.Divide.return
 
-	Load gp6 @16777215 %Divide.return_infinity
+	Load gp6 @16777215 %FP.Divide.return_infinity
 	Load gp4 @255
-	Load PC Divide.return
+	Load PC FP.Divide.return
+
+#_________________________________ compare _________________________________
+#compares a pair of floats
+
+
+#
+
+
+
+#______________ Square_root ______________
+
+#guess = 2
+#for i in xrange(10):
+#	guess2 = x/guess
+#	guess = guess + guess2
+#	guess = guess/2
+
+
+#[forth pseudocode] guess {dup x / + 2 / } while counter > 0
+
+def x gp0
+
+int FP.sqrt.guess
+int FP.sqrt.counter
+int FP.sqrt.x
+
+			Pop x	%FP.sqrt
+			Load gp1 @10
+			Load gp2 @129    #guess is equal to 2
+			Store gp1 FP.sqrt.counter
+			Store x FP.sqrt.x
+			Push gp2    #pushes the guess on
+
+				
+				Call stack.dup %FP.sqrt.loop
+
+
+				
+				Push FP.sqrt.x	
+				Call stack.swap
+
+				Call FP.Divide
+
+				Call FP.Add
+				Push @129   #float representation of 2
+				Call FP.Divide
+
+				Load gp1 FP.sqrt.counter
+				SUB gp1 One
+				Store gp1 FP.sqrt.counter
+				if gp1 then Load PC FP.sqrt.loop
+
+			Return
+
+#______________ sin x ______________
+#using mclaurin exansion          initial values
+int FP.sin.x                      #= x
+int FP.sin.denominator            #= 1
+int FP.sin.numerator              #= x
+int FP.sin.i                      #= 1
+int FP.sin.total                  #= x
+int FP.sin.x_squared              #= x**2
+int FP.sin.sign                   #= 1
+
+	Pop gp0  %FP.sin
+	#initialise values
+	Store gp0 FP.sin.total
+	Store gp0 FP.sin.numerator
+
+	Load gp1 @128                      #float of one
+	Store gp1 FP.sin.denominator
+	Store gp1 FP.sin.sign
+	Store gp1 FP.sin.i
+	
+	Push gp0 
+	Push gp0 
+	#Call stack.print
+	Call FP.Multiply
+	Pop FP.sin.x_squared
+
+
+
+
+		#calculate denominator (denominator *= (2*i)*(2*i+1))
+		Push FP.sin.i %FP.sin.loop
+		Push @129              #push 2
+		Call FP.Multiply
+		Call stack.dup
+
+		Push @128 				#push 1
+		Call  FP.Add
+		Call FP.Multiply
+		Push FP.sin.denominator
+		Call FP.Multiply
+
+		Pop FP.sin.denominator
+
+		#calculate numerator (numerator *= x**2)
+
+		Push FP.sin.numerator
+		Push FP.sin.x_squared
+		Call FP.Multiply
+		#Call stack.print
+		Pop FP.sin.numerator
+
+		#calculate sign of term
+		Load gp0 FP.sin.sign
+		XOR gp0 @2147483648
+		Store gp0 FP.sin.sign
+
+		#Add term
+		Push FP.sin.total
+		Push FP.sin.sign
+		Push FP.sin.numerator
+		Push FP.sin.denominator
+
+		Call FP.Divide
+		Call FP.Multiply
+		Call FP.Add
+		Pop FP.sin.total
+
+		Push FP.sin.i
+		Push @128
+		Call FP.Add
+		Pop gp0
+		Store gp0 FP.sin.i
+		Compare gp0 @536871043   #fp of 10
+		if Equal then Load PC FP.sin.return
+		#else:
+		Load PC FP.sin.loop
+
+		Push FP.sin.total %FP.sin.return
+		Return
+
+
+
+
+
+
+
+
+
+
+#______________ cos x ______________
+#using mclaurin exansion          initial values
+int FP.cos.x                      #= x
+int FP.cos.denominator            #= 1
+int FP.cos.numerator              #= 1
+int FP.cos.i                      #= 1
+int FP.cos.total                  #= 1
+int FP.cos.x_squared              #= x**2
+int FP.cos.sign                   #= 1
+
+	Pop gp0  %FP.cos
+	#initialise values
+
+
+	Load gp1 @128                      #float of one
+	Store gp1 FP.cos.denominator
+	Store gp1 FP.cos.sign
+	Store gp1 FP.cos.i
+	Store gp1 FP.cos.total
+	Store gp1 FP.cos.numerator
+	
+	Push gp0 
+	Push gp0 
+	#Call stack.print
+	Call FP.Multiply
+	Pop FP.cos.x_squared
+
+
+
+
+		#calculate denominator (denominator *= (2*i)*(2*i-1))
+		Push FP.cos.i %FP.cos.loop
+		Push @129              #push 2
+		Call FP.Multiply
+		Call stack.dup
+
+		Push @128 				#push 1
+		Call  FP.Subtract
+		Call FP.Multiply
+		Push FP.cos.denominator
+		Call FP.Multiply
+
+		Pop FP.cos.denominator
+
+		#calculate numerator (numerator *= x**2)
+
+		Push FP.cos.numerator
+		Push FP.cos.x_squared
+		Call FP.Multiply
+		#Call stack.print
+		Pop FP.cos.numerator
+
+		#calculate sign of term
+		Load gp0 FP.cos.sign
+		XOR gp0 @2147483648
+		Store gp0 FP.cos.sign
+
+		#Add term
+		Push FP.cos.total
+		Push FP.cos.sign
+		Push FP.cos.numerator
+		Push FP.cos.denominator
+
+		Call FP.Divide
+		Call FP.Multiply
+		Call FP.Add
+		Pop FP.cos.total
+
+		Push FP.cos.i
+		Push @128
+		Call FP.Add
+		Pop gp0
+		Store gp0 FP.cos.i
+		Compare gp0 @536871043   #fp of 10
+		if Equal then Load PC FP.cos.return
+		#else:
+		Load PC FP.cos.loop
+
+		Push FP.cos.total %FP.cos.return
+		Return
+

@@ -22,7 +22,7 @@ class Memory:
 		self.Data_bus = Data_bus
 
 	def set(self):
-		address = self.Address_bus.data			
+		address = self.Address_bus.data		
 		bytes = bytify(self.Data_bus.data)
 		for i in xrange(4):
 			self.memory_dict[(address+i)&4294967295] = bytes[i]

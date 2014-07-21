@@ -15,7 +15,6 @@ class Float:
 
 def add(float1,float2):
 	result_float = Float(0)  #creates a new float
-	print "exponents",float1.exponent, float2.exponent
 	if float2.exponent > float1.exponent:                 #switches if float2 has a bigger exponent
 
 		float1,float2 = float2,float1
@@ -41,7 +40,6 @@ def add(float1,float2):
 def subtract(float1,float2):
 	result_float = Float(0)  #creates a new float
 	float2.sign = 1-float2.sign
-	print "exponents",float1.exponent, float2.exponent
 	if float2.exponent > float1.exponent:                 #switches if float2 has a bigger exponent
 
 		float1,float2 = float2,float1
@@ -109,19 +107,15 @@ def divide(float1,float2):
 	result_float.sign = float1.sign^float2.sign
 
 	mantissa_result = (float1.mantissa<<23) / float2.mantissa
-	print bin(mantissa_result)
 
 
 #calculating matissa result without shifting beyond 32bits
 	mantissa_result2 = (((float1.mantissa<<8)/float2.mantissa)<<15)
 
 	remainder = (((float1.mantissa<<8)%float2.mantissa)<<8)
-	print remainder >= 2**32
 	mantissa_result2 += (remainder/float2.mantissa)<<7
 	remainder = (remainder %float2.mantissa)<<7
-	print remainder >= 2**32
 	mantissa_result2 += remainder/float2.mantissa
-	print bin(mantissa_result2)
 
 
 
@@ -209,13 +203,6 @@ def floatify(number):
 	return_float.exponent = exponent
 	return return_float
 
-a = floatify(16555)
-b = floatify(105)
-
-print a.pack()
-print b.pack()
-
-display_float(divide(a,b))
 
 
 
@@ -248,6 +235,18 @@ def ln(x):
 		result += sign*numerator/denominator
 	return result
 
-print ln(2)
+
+def sin(x):
+	total = x
+	denominator = 1.0
+	numerator = x
+	for i in xrange(1,10):
+		denominator *= (2*i) *(2*i +1)
+		#print denominator
+		numerator *= x**2
+		total += (-1)**(i)*numerator/denominator
+	return total
+
+print floatify(10).pack()
 
 
