@@ -247,6 +247,13 @@ def sin(x):
 		total += (-1)**(i)*numerator/denominator
 	return total
 
-print floatify(10).pack()
+import math
 
 
+
+def square_root(c,d):
+	a_squared = (c + math.sqrt(c**2 + d**2))/2.0 
+	a = math.sqrt(a_squared)
+	return (a,d/(2.0*a)),(-a,d/(-2.0*a))
+
+print square_root(1,1)

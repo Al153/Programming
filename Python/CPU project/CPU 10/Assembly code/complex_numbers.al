@@ -7,31 +7,24 @@ end Struct
 
 
 
-#Complex cmp_1 1073741953 2147483777
-#Complex cmp_2 129 536871042 
-#Complex cmp_rst 0 0 
-#
-#Push cmp_1
-#Push cmp_2
-#Push cmp_rst
-#
-#Call Complex.Multiply
-##Push cmp_2
-##Call Complex.Divide
-#
-#
-#Push cmp_rst.real
-#Call FP.display
-#Push cmp_rst.imaginary
-#Call FP.display
-#
-#
-#
-Push @129
-Call FP.sin
-Call FP.display
-Halt
+Complex cmp_1 128 128
+Complex cmp_rst1 0 0
+Complex cmp_rst2 0 0 
 
+Push cmp_1
+Push cmp_rst1
+Push cmp_rst2
+Call Complex.sqrt
+
+Push cmp_rst1.real
+Call FP.display
+Push cmp_rst1.imaginary
+Call FP.display
+
+Push cmp_rst2.real
+Call FP.display
+Push cmp_rst2.imaginary
+Call FP.display
 
 #______________ Add ______________
 #Adds two complex numbers, leaving the result in a third one
@@ -299,4 +292,71 @@ def result gp3
 	Call Complex.Multiply
 	Return
 
+
+#______________ sqrt ______________
+# . . . complex1 result1 result2
+int Complex.sqrt.complex_ptr 
+int Complex.sqrt.result_complex1 
+int Complex.sqrt.result_complex2 
+
+#C Dup Dup MUL D Dup MUL ADD SQRT ADD 2 DIV SQRT = A
+#D 2 A MUL DIV = B
+
+
+def cmp gp1
+def cmp_result1 gp2
+def cmp_result2 gp3
+
+	Pop Complex.sqrt.result_complex2 %Complex.sqrt
+	Pop Complex.sqrt.result_complex1
+	Pop Complex.sqrt.complex_ptr
+
+	Load cmp Complex.sqrt.complex_ptr
+	Push 0 [cmp]   						#pushes C to add later
+	Push 0 [cmp]
+	Push 0 [cmp]
+	Call FP.Multiply
+
+	Load cmp Complex.sqrt.complex_ptr
+	Push 4 [cmp]
+	Push 4 [cmp]
+	Call FP.Multiply
+	Call FP.Add
+	Call FP.sqrt
+	Call FP.Add
+	Push @129
+	Call FP.Divide
+	Call FP.sqrt
+	Pop gp3
+	Load gp1 Complex.sqrt.result_complex1 
+	Load gp2 Complex.sqrt.result_complex2
+	Store gp3 0 [gp1]
+	Move gp3 gp4
+	XOR gp4 @2147483648
+	Store gp4 0 [gp2]
+
+	Load gp5 Complex.sqrt.complex_ptr
+	Push 4 [gp5]
+	Push @129
+	Push gp4
+
+	Push 4 [gp5]
+	Push @129
+	Push gp3
+
+	Call FP.Multiply
+	Call FP.Divide
+	Load gp1 Complex.sqrt.result_complex1
+	Pop 4 [gp1]
+
+	Call FP.Multiply
+	Call FP.Divide
+	Load gp1 Complex.sqrt.result_complex2
+	Pop 4 [gp1]
+
+
+	Push Complex.sqrt.result_complex1
+	Push Complex.sqrt.result_complex2
+
+	Return
 

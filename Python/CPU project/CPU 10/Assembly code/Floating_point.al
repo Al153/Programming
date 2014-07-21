@@ -631,13 +631,50 @@ Float FP.Divide.float2 0 0 0
 #_________________________________ compare _________________________________
 #compares a pair of floats
 
+def float1 gp1
+def float2 gp2
+ 
+Float FP.Compare.float1 0 0 0 
+Float FP.Compare.float2 0 0 0
 
-#
+	Pop float2 %FP.Compare
+	Pop float1
+
+	Push FP.Compare.float1
+	Push float1
+	Push FP.Compare.float2
+	Push float2
+
+	Call FP.Dword_to_float
+	Call FP.Dword_to_float
+	Load float1 FP.Compare.float1
+	Load float2 FP.Compare.float2
+
+	LoadByte gp3 0 [float1]
+	LoadByte gp4 0 [float2] 
+
+
+
+	LoadByte gp3 1 [float1] %FP.Compare.Positive
+	LoadByte gp4 1 [float2]
+
+	Compare gp3 gp4
+	if Equal then Load PC FP.Compare.Positive.fractions
+	Return
+
+	Load gp3 2 [float1] %FP.Compare.Positive.fractions
+	Load gp4 2 [float2]
+
+	Compare gp3 gp4
+	Return	
+
+
+
 
 
 
 #______________ Square_root ______________
-
+Scope sqrt
 #guess = 2
 #for i in xrange(10):
 #	guess2 = x/guess
@@ -683,6 +720,7 @@ int FP.sqrt.x
 
 #______________ sin x ______________
 #using mclaurin exansion          initial values
+Scope sin
 int FP.sin.x                      #= x
 int FP.sin.denominator            #= 1
 int FP.sin.numerator              #= x
@@ -772,6 +810,8 @@ int FP.sin.sign                   #= 1
 
 #______________ cos x ______________
 #using mclaurin exansion          initial values
+
+Scope cos
 int FP.cos.x                      #= x
 int FP.cos.denominator            #= 1
 int FP.cos.numerator              #= 1
@@ -851,3 +891,62 @@ int FP.cos.sign                   #= 1
 		Push FP.cos.total %FP.cos.return
 		Return
 
+#______________ e**x ______________
+
+Scope exp
+int FP.exp.denominator            #= 1
+int FP.exp.numerator              #= 1
+int FP.exp.i                      #= 2
+int FP.exp.total                  #= 1
+int FP.exp.x                      #= x
+
+	Pop gp0  %FP.exp
+	#initialise values
+	Store gp0 FP.exp.x
+
+	Load gp1 @128
+	Load gp2 @129                      #float of two
+	Store gp1 FP.exp.denominator
+	Store gp1 FP.exp.i
+	Store gp1 FP.exp.total
+	Store gp1 FP.exp.numerator
+
+
+		#calculate denominator d = d*i
+			Push FP.exp.i %FP.exp.loop
+			Push FP.exp.denominator
+			#Call stack.print
+			Call FP.Multiply
+			Pop FP.exp.denominator
+
+		#calculate numerator n = n*x
+			Push FP.exp.x
+			Push FP.exp.numerator
+			Call FP.Multiply
+			Pop FP.exp.numerator
+
+		#add  total total = total + numerator/denominator
+			Push FP.exp.total
+			Push FP.exp.numerator
+			Push FP.exp.denominator
+			Call FP.Divide
+			Call FP.Add
+			Pop FP.exp.total
+
+		#increment i
+
+		Push FP.exp.i
+		Push @128
+		Call FP.Add
+		Pop gp0
+		Store gp0 FP.exp.i
+		Compare gp0 @536871044   #fp of 20
+		if Equal then Load PC FP.exp.return
+		#else:
+		Load PC FP.exp.loop
+
+		Push FP.exp.total %FP.exp.return
+		Return
+
+		#7.389052868
+		#7.389056099
