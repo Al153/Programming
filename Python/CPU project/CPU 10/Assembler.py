@@ -215,6 +215,7 @@ def full_text_tokenize(text_file):
     escaped = 0
     array = 0
     i = 0
+    token_separators = [" ","\t","\n",",","(",")"]
     while i < len(text_file):
     	line = text_file[i]
         if not string and not array:
@@ -232,7 +233,7 @@ def full_text_tokenize(text_file):
                 	current_token = "["
                 elif character == "#" and current_token == '':
                     break
-                elif character != " " and character != "\t" and character != "\n":
+                elif not character in token_separators:
                     current_token += character
                 else:
                     if current_token != "":
@@ -311,6 +312,7 @@ def expand_macros(tokens):
 			del tokens[i]
 
 		line = tokens[i]
+		#print line
 
 		
 		for j in xrange(len(line)):
@@ -434,23 +436,54 @@ def expand_macros(tokens):
 
 		if line[0] == "Call":
 			using_stack = 1
-			label = []
-#			if line[-1][0] == "%":
-#				label = [line[-1]]	
-#				line = line[:-1]
-			tokens[i] = ["Load","gp0"] + line[1:]
-			tokens.insert(i+1,["Goto","Programstack.call"])
-			i -=1
+
+			if line[-1][0] == "%":         #checks for pointer
+				label = [line[-1]]
+				line = line[:-1]
+			else:
+				label = []
+
+			if len(line)>2:
+				#parameters needed
+				parameters = line[2:]
+				parameters = map((lambda parameter: ["Push",parameter]),parameters)  #converts parameters to a list of commands
+				#print parameters
+				#print line[:2]
+				parameters += [line[:2]  + label] #adds the call command
+				#print parameters
+				tokens = tokens[:i] + parameters + tokens[i+1:]
+				line = tokens[i]
+				i -=1
+
+
+
+			else:
+				tokens[i] = ["Load","gp0"] + [line[1]] + label
+				tokens.insert(i+1,["Goto","Programstack.call"])
+				i -=1
  
 		if len(line)>2 and line[2] == "Call":
 			using_stack = 1
-			label = []
-			if line[-1][0] == "%":
-				label = [line[-1]]	
+
+			if line[-1][0] == "%":         #checks for pointer
+				label = [line[-1]]
 				line = line[:-1]
-			tokens[i] = ["Load","gp0"]+ line[3:]
-			tokens.insert(i+1,line[:2]+["Goto","Programstack.call"])
-			i -=1
+			else:
+				label = []
+
+			if len(line)>4:
+				#parameters needed
+				parameters = line[4:]
+				map((lambda parameter: ["Push",parameter]),parameters)  #converts parameters to a list of commands
+				parameters += [line[:4]  + label] #adds the call command
+				tokens = tokens[:i] + parameters + tokens[i+1:]
+				line = tokens[i]
+				i -=1
+
+			else:
+				tokens[i] = ["Load","gp0"]+ [line[3]] + label
+				tokens.insert(i+1,line[:2]+["Goto","Programstack.call"])
+				i -=1
 
 		if line[0] == "Return":
 			using_stack = 1
@@ -485,6 +518,24 @@ def expand_macros(tokens):
 					tokens.append(["String", "str"+str(string_counter) , "'"+string[j]+"'", "$str"+str(string_counter+1) ])
 				string_counter += 1
 
+		if line [0] == "Subroutine":
+			try:
+				subroutine_name = "%" + line[1] #adds a % to convert to pointer format
+				parameters = line [2:]
+
+			except IndexError:
+				print "Un-named Subroutine: ",line
+				quit()
+
+			lines_to_add = []   #empty list of lines of code to add
+			for variable in parameters:
+				lines_to_add.append(["Pop",variable])
+			lines_to_add.reverse()
+			lines_to_add[0].append(subroutine_name)
+
+			tokens = tokens[:i]+ lines_to_add + tokens[i+1:]
+			i -= 1   #so line is passed again
+			line = tokens[i]
 
 
 
@@ -562,6 +613,39 @@ def do_import(tokens): #carries out one import
 		i += 1
 	return tokens
 
+def unwind_control_flow(tokens):
+	#unwinds if statements and bracketed off code eg {}
+	i = 0
+	unbranching = 0
+	unbranched_count = 0
+
+	while i < len(tokens):
+		if not unbranching:
+			if tokens[i][-1] == "{":
+				tokens[i] = tokens[i][:-1] + ["Load","PC","Code_block"]
+
+
+
+		i += 1
+
+def unwind_search(tokens,i):
+	#finds start and end lines of a branched piece of code
+	branch_count = 1
+	i += 1
+	code_to_cut_out = []
+	while branch_count:
+		if "{" in tokens[i]:
+			branch_count += 1
+		if "}" in tokens[i]:
+			branch_count -= 1
+		if branch_count or tokens[i] != ["}"]]:
+			code_to_cut_out.append(tokens[i])
+
+		i +=1
+		if i == len(tokens):
+			print "ERROR: unclosed brackets"
+			quit()
+	return code_to_cut_out,i
 
 def find_structs(tokens):
 	struct_names = []
