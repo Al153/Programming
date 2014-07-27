@@ -274,36 +274,37 @@ def full_text_tokenize(text_file):
     return token_list
 
 def expand_macros(tokens):
+	tokens = unwind_control_flow(tokens)
 	using_stack = 0
 	using_strings = 0
 	string_counter = 0
 
-	replace_dict = {'':{}}
-	lines_to_remove = []
-	i = 0
-	scope = ''
-	while i < len(tokens):
-		try:
+
+	for i in xrange(len(tokens)):
+		line = tokens[i]
+		if line [0] == "Subroutine":
+			try:
+				subroutine_name = line[1] #adds a % to convert to pointer format
+				parameters = line [2:]
+
+			except IndexError:
+				print "ERROR Un-named Subroutine: ",line
+				quit()
+
+			lines_to_add = []   #empty list of lines of code to add
+			for variable in parameters:
+				lines_to_add.append(["Pop",variable])
+			if lines_to_add == []:
+				lines_to_add = [["Pass"]]
+			lines_to_add.reverse()
+			lines_to_add[0].append("%" + subroutine_name)
+			lines_to_add.insert(0,["Scope",subroutine_name])
+
+
+			tokens = tokens[:i]+ lines_to_add + tokens[i+1:]
 			line = tokens[i]
-			if line[0] == "Scope":
-				scope = line[1]
-				if not scope in replace_dict:
-					replace_dict[scope] = {}
-			if line[0] == "def":					#defining a term
-				lines_to_remove.append(i)
-				replace_dict[scope][line[1]] = line[2]
-				replace_dict[scope]["["+line[1]+"]"] = "["+line[2]+"]"
-		except IndexError:
-			print "ERROR. Line too short: ", line
-			quit()
 
-		i += 1
-
-	lines_to_remove.reverse()
-	for i in lines_to_remove:
-		del tokens[i]
-
-
+	replace_dict,tokens = find_and_replace(tokens)
 	i = 0
 	scope = ''
 	while i < len(tokens):	
@@ -313,10 +314,10 @@ def expand_macros(tokens):
 
 		line = tokens[i]
 		#print line
-
-		
 		for j in xrange(len(line)):
 			line[j] = replace_dict[scope].get(line[j],line[j])
+
+
 
 		if line[0] == "if":
 			if line[1] in conditional_addresses:
@@ -491,8 +492,27 @@ def expand_macros(tokens):
 #			if line[-1][0] == "%":
 #				label = [line[-1]]	
 #				line = line[:-1]
-			tokens[i] = ["Load","PC", "Programstack.return"] + line[1:]
-			i -=1
+			if line[-1][0] == "%":         #checks for pointer
+				label = [line[-1]]
+				line = line[:-1]
+			else:
+				label = []
+
+			if len(line)>1:
+				#parameters needed
+				parameters = line[1:]
+				parameters = map((lambda parameter: ["Push",parameter]),parameters)  #converts parameters to a list of commands
+				#print parameters
+				#print line[:2]
+				parameters += ["Load","PC", "Programstack.return"] + label #adds the return command
+				#print parameters
+				tokens = tokens[:i] + parameters + tokens[i+1:]
+				line = tokens[i]
+				i -=1
+
+			else:
+				tokens[i] = ["Load","PC", "Programstack.return"] + label
+				i -=1
 
 		if len(line)>2 and line[2] == "Return":
 			using_stack = 1
@@ -500,8 +520,27 @@ def expand_macros(tokens):
 #			if line[-1][0] == "%":
 #				label = [line[-1]]
 #				line = line[:-1]
-			tokens[i] = line[:2]+["Load","PC","Programstack.return"] + line[3:]
-			i -= 1
+			if line[-1][0] == "%":         #checks for pointer
+				label = [line[-1]]
+				line = line[:-1]
+			else:
+				label = []
+
+			if len(line)>3:
+				#parameters needed
+				parameters = line[3:]
+				parameters = map((lambda parameter: ["Push",parameter]),parameters)  #converts parameters to a list of commands
+				#print parameters
+				#print line[:2]
+				parameters += ["Load","PC", "Programstack.return"] + label #adds the return command
+				#print parameters
+				tokens = tokens[:i] + parameters + tokens[i+1:]
+				line = tokens[i]
+				i -=1
+
+			else:
+				tokens[i] = line[:2] + ["Load","PC", "Programstack.return"] + label
+				i -=1
 
 		if line[0] == "str":
 			using_strings = 1
@@ -517,29 +556,6 @@ def expand_macros(tokens):
 				else:
 					tokens.append(["String", "str"+str(string_counter) , "'"+string[j]+"'", "$str"+str(string_counter+1) ])
 				string_counter += 1
-
-		if line [0] == "Subroutine":
-			try:
-				subroutine_name = "%" + line[1] #adds a % to convert to pointer format
-				parameters = line [2:]
-
-			except IndexError:
-				print "Un-named Subroutine: ",line
-				quit()
-
-			lines_to_add = []   #empty list of lines of code to add
-			for variable in parameters:
-				lines_to_add.append(["Pop",variable])
-			lines_to_add.reverse()
-			lines_to_add[0].append(subroutine_name)
-
-			tokens = tokens[:i]+ lines_to_add + tokens[i+1:]
-			i -= 1   #so line is passed again
-			line = tokens[i]
-
-
-
-
 
 		for j in xrange(len(tokens[i])):
 			if len(tokens[i][j])>1 and tokens[i][j][0] == "'" and tokens[i][j][2] == "'":
@@ -576,6 +592,36 @@ def expand_macros(tokens):
 		tokens.insert(0,["import","lib\Strings"])
 
 	return tokens
+
+
+
+def find_and_replace(tokens):
+	replace_dict = {'':{}}
+	lines_to_remove = []
+	i = 0
+	scope = ''
+	while i < len(tokens):
+		try:
+			line = tokens[i]
+			if line[0] == "Scope":
+				scope = line[1]
+				if not scope in replace_dict:
+					replace_dict[scope] = {}
+			if line[0] == "def":					#defining a term
+				lines_to_remove.append(i)
+				replace_dict[scope][line[1]] = line[2]
+				replace_dict[scope]["["+line[1]+"]"] = "["+line[2]+"]"
+		except IndexError:
+			print "ERROR. Line too short: ", line
+			quit()
+
+		i += 1
+
+	lines_to_remove.reverse()
+	for i in lines_to_remove:
+		del tokens[i]
+	
+	return replace_dict,tokens
 
 def things_to_import(tokens): #checks where there is anything to import
 	for line in tokens:
@@ -616,20 +662,73 @@ def do_import(tokens): #carries out one import
 def unwind_control_flow(tokens):
 	#unwinds if statements and bracketed off code eg {}
 	i = 0
-	unbranching = 0
 	unbranched_count = 0
-
+	tokens.append(["Halt"])
 	while i < len(tokens):
-		if not unbranching:
-			if tokens[i][-1] == "{":
-				tokens[i] = tokens[i][:-1] + ["Load","PC","Code_block"]
+
+		if "{" in tokens[i]:
+			bracket_location =tokens[i].index("{")
+			tokens[i] = tokens[i][:bracket_location] + ["Load","PC","Code_block"+str(unbranched_count)] + tokens[i][bracket_location+1:]
+			cut_code,end_pointer = unwind_search(tokens,i)
+			cut_code[0].append("%Code_block"+str(unbranched_count))
+			unbranched_count +=1
+			cut_code.append(["Load", "PC", "Code_block"+str(unbranched_count)])
+			tokens[end_pointer].append("%Code_block"+str(unbranched_count))
+			unbranched_count += 1
+			del tokens[i+1:end_pointer]
+			tokens += cut_code
+			if tokens[i+1][0] == "else":
+				cut_code,end_pointer = unwind_search(tokens,i+1)
+				label_to_move = tokens[i+1][-1]
+				print label_to_move
+				tokens[i+1] = ["Load", "PC", "Code_block" + str(unbranched_count)]
+				cut_code.append(["Load","PC",label_to_move[1:]])
+				cut_code[0].append("%Code_block"+str(unbranched_count))
+				unbranched_count +=1
+
+
+				print cut_code
+				tokens[end_pointer].append(label_to_move)
+				print tokens[end_pointer]
+				del tokens[i+2:end_pointer]
+				tokens += cut_code
+
+
+#		if tokens[i][-1] == "{":
+
+#			tokens[i] = tokens[i][:-1] + ["Load","PC","Code_block"+str(unbranched_count)]
+#			cut_code,end_pointer = unwind_search(tokens,i)
+#			cut_code[0].append("%Code_block"+str(unbranched_count))
+#			unbranched_count +=1
+#			cut_code.append(["Load", "PC", "Code_block"+str(unbranched_count)])
+#			tokens[end_pointer].append("%Code_block"+str(unbranched_count))
+#			unbranched_count += 1
+#			del tokens[i+1:end_pointer]
+#			tokens += cut_code
+
+#		if len(tokens[i])>=2 and tokens[i][-2] == "{":
+#			tokens[i] = tokens[i][:-2] + ["Load","PC","Code_block"+str(unbranched_count)] + [tokens[i][-1]]
+#			cut_code,end_pointer = unwind_search(tokens,i)
+#			cut_code[0].append("%Code_block"+str(unbranched_count))
+#			unbranched_count +=1
+#			cut_code.append(["Load", "PC", "Code_block"+str(unbranched_count)])
+#			tokens[end_pointer].append("%Code_block"+str(unbranched_count))
+#			unbranched_count += 1
+#			del tokens[i+1:end_pointer]
+#			tokens += cut_code
+
+
+
 
 
 
 		i += 1
+	return tokens
 
 def unwind_search(tokens,i):
 	#finds start and end lines of a branched piece of code
+	#returns end of cut out code line number and the cut out tokens
+	#print "Called"
 	branch_count = 1
 	i += 1
 	code_to_cut_out = []
@@ -638,13 +737,14 @@ def unwind_search(tokens,i):
 			branch_count += 1
 		if "}" in tokens[i]:
 			branch_count -= 1
-		if branch_count or tokens[i] != ["}"]]:
+		if branch_count or tokens[i] != ["}"]:
 			code_to_cut_out.append(tokens[i])
 
 		i +=1
 		if i == len(tokens):
 			print "ERROR: unclosed brackets"
 			quit()
+	#print code_to_cut_out
 	return code_to_cut_out,i
 
 def find_structs(tokens):

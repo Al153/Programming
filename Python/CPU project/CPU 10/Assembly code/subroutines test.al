@@ -1,4 +1,4 @@
-Call max(@5,@6,@7)
+Call max(@5,@7,@6)
 Call max
 Call stack.print
 Halt
@@ -10,11 +10,11 @@ def b gp2
 
 Subroutine max(a,b)
 	Compare a,b
-	if Greater then {
-			Push a %comparison.return_a
-			Return
-		}
-
-	Push b
-	Return
-
+	if Greater then {	
+		Push a 
+		Return	
+	}
+	else {
+		Push b
+		Return
+	}

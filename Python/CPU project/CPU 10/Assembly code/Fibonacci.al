@@ -1,77 +1,43 @@
-import Stack
-
 #Demonstrating stack use and recursion
 
 #def fib(n):
-#	if n == 0:
+#	if n >1:
+#		return fib(n-1)+fib(n-2)
+# 	else:
 #		return 1
-#   if n == 1:
-# 		return 1
-#	else:
-# 		return fib(n-1)+fib(n-2)
 
 
-ptr Fib
-ptr return_1
-
-int x 15
-
-Load gp0 x
-Goto Datastack.push
-
-Load gp0 Fib
-Goto Programstack.call
-Goto Datastack.pop
-Outd gp0
-Halt
+Subroutine main()                       #main Subroutine
+	Call fib(@5)                         #calls fib(5)
+	Pop gp1                             #pops value of fib(5) into register gp1
+	Outd gp1                            #prints out the value
+Return
 
 
+										
 
-def n gp0
-def fibn-1 gp1
+Subroutine fib(n) 						#gets the value into register n
 
-	Goto Datastack.pop %Fib
-	Compare n Zero
-	if Equal then Goto return_1
-	Compare n One
-	if Equal then Goto return_1
-		SUB n One
+	def n gp1  							#renames general purpose register 1 to n
 
-		
-		Goto Datastack.push # . . . n-1 n-1
-		Goto Datastack.push
-		Load gp0 Fib
-		Goto Programstack.call 	 
-		Goto Datastack.pop     	
-		
-		Move gp0 fibn-1 			
-		Goto Datastack.pop 		
-		SUB gp0 One 				
+	Compare n @1
+	if Greater then { 					#if n>1: return fib(n+1) + fib(n-2) 
+		SUB n @1                        # n = n-1
+		Push n                          # pushes n-1 onto the stack
+		SUB n @1                        # n = n-1 again (=original_n -2)
+		Push n                          # pushes n-2 onto the stack
 
-		Move gp0 gp2
-		Move gp1 gp0 				
-		Goto Datastack.push 		
-		Move gp2 gp0
-		Goto Datastack.push        
+		Call fib                        # calls fib on n-2  					stack goes from . . . n-1 n-2 ==> . . . n-1 fib(n-2)
+		Call stack.swap                 # swaps top two valus on the stack
+		Call fib                        # calls fib on n-1    					stack goes from . . . fib(n-2) n-1 ==> . . . fib(n-2) fib(n-1)
+		Pop gp1 						#gets values of fib(n-1) and fib(n-2) into registers gp1 and gp2
+		Pop gp2       
+		ADD gp1 gp2                     #adds them
+		Push gp1                        #pushes them onto the stack
+		Return 							#returns
 
-		Load gp0 Fib 					
-		Goto Programstack.call     
-		
-		Goto Datastack.pop
-		
-
-		
-		Move gp0 gp1
-		Goto Datastack.pop
-
-		ADD gp0 gp1
-
-
-		Goto Datastack.push
-		Load PC Programstack.return
-
-Move One gp0 %return_1
-Goto Datastack.push
-Load PC Programstack.return
-
-
+	}
+	else {                              #otherwise push 1 and return  (return 1)
+		Push @1 						
+		Return
+	}
