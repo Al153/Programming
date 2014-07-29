@@ -248,3 +248,37 @@ Subroutine Forth.Less_or_Equal(a,b)
 	else {
 		Return One
 	}
+
+#____________ Dup _____________
+int Forth.dup.temp
+	Pop Forth.dup.temp		%Forth.dup
+	Push Forth.dup.temp
+	Push Forth.dup.temp
+	Return
+#____________ Swap ____________
+int Forth.swap.temp1
+int Forth.swap.temp2
+
+	Pop Forth.swap.temp1        %Forth.swap
+	Pop Forth.swap.temp2
+	Push Forth.swap.temp1
+	Push Forth.swap.temp2
+
+	Return
+
+#____________ Drop ____________
+int Forth.drop.temp
+	Pop Forth.drop.temp         %Forth.drop 
+	Return
+
+
+#____________ print ____________
+#prints to of stack
+	Pop gp0 					%Forth.print
+	Outd gp0
+
+#____________ print_stack ____________
+#prints whole stack
+
+	Call stack.print %Forth.print_stack
+	Return

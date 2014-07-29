@@ -46,7 +46,7 @@ swap    . . . a b ==> . . . b a
 dup     . . . a ==> . . . a a
 
 echo    . . . 'a' ==> . . .              outputs 'a'
-print   . . . a ==>  . . . 			 outputs integer value of a
+.  . . . a ==>  . . . 			 outputs integer value of a
 
 =       . . . a b ==> . . . c       where c is result of (a == b)
 <       . . . a b ==> . . . c       where c is result of (a < b)
@@ -61,31 +61,58 @@ index 	    . . . list index ==> . . . value of list [index*4]
 
 return 								returns on the stack
 
-_____________________ Compile_time_words _____________________
+_____________________ memory access words _____________________
+ value <name>  	. . . a  ==> . . . 			stores value into variable of name <name>
+<name> 			. . .  ==> . . . a			Pushes value of name
+
+&<name>										variable pointed to by variable <name>
+*<name>   									address of variable <name>
+
+<address> Push 			      				Pushes DWord at address (for indirect addressing) 
+<value> <address> Pop  						Pops to address
+
+<address> PushB 			      				Pushes Byte at address (for indirect addressing) 
+<value> <address> PopB  						Pops to address
+
+<address> PushW 			      				Pushes Word at address (for indirect addressing) 
+<value> <address> PopW  						Pops to address
 
 
-global 								creates a global variable/list etc
-ptr <name> variable 				creates pointer variable to a variable
-int <name> 	. . . a ==> . . .       Loads local int of name name with value a
-char <name> . . . 'a' ==> . . . 	Loads local char of name name with value a&255
-list <name> [ . . .] 				creates a list
-str <name>  "blah blah blah"		creates a string
 
 
-if      . . . a ==> . . .   		carries on if a is True, else go to corresponding else or end if
-else 	. . .   ==> . . . 			if in a positive if, then goto corresponding endif 
-endif   . . .   ==> . . . 			pass 
+_______________ datatypes _______________
+int
+word
+char
 
-while 	. . . ==> . . . 			if top of stack, then crarry on, else go to corresponding loop		
-loop    . . . ==> . . . 			go to corresponding while
+string
+Array
+CArray
+WArray
+
+
+
+
+
 
 
 _______________ semi_compile_time_words _______________
 <const>
 <var name>
 
+#words built into forth
+default_words = {
+	"DUP"
+	SWAP
+	DROP
+	.
+
+}
 
 
+
+
+defined_words = {}
 
 def compile():
 	source = get_code()
@@ -158,14 +185,14 @@ def get_words(tokens,name_space):
 	"""
 	Gathers words within program for execution
 	"""
-	defined_words = {}
+	defined_words = {"main":["return"]}
 	current_word = []
 	found_word = 0
 	import_called = 0
 	for token in tokens:
 		if import_called:
 			import_called = 0
-			token = "..\\" + token+".pyfth"
+			token = "..\\" + token+".fth"
 			name = token
 			#print token
 			imported_program = open(token)
@@ -182,99 +209,26 @@ def get_words(tokens,name_space):
 				current_word.append(token)
 		elif token == "import":
 			import_called = 1
-		else:
+		elif token == ":":  #new word
 			#print "found word: ",token
 			found_word = 1
 			current_word_name = name_space+token
+		else:
+			defined_words["main"].insert(-1,token)
 	return defined_words
 
 def compile_words(words):
-	assembly = 'Goto @main\n'
+	assembly = 'Load PC main\n'
 	global_variables = []
 	word_names =  [name for name in words]
 	for name in words:
-		assembly += compile_word(words[name],name,word_names,global_variables)
+		assembly += compile_word(words[name])
 	return assembly
 
 
 
 
 
-def compile_word(word,name,word_names,global_variables):
-	local_variables = []
-	assembly = ''
-	if_stack = []
-	for token in word:
-
-
-
-
-
-
-
-
-def compile_block(name,block,return1,return2,word_names,global_variables):
-
-
-class Start:
-	def __init__(self,suboutine_name,child):
-		self.name = suboutine_name
-		self.child = child
-
-	def blockify(self):
-		self.child.blockify
-	def compile(self):
-		return self.child.compile()
-
-
-class Return:
-	def __init__(self):
-		pass
-	def blockify(self):
-		pass
-	def compile(self):
-		return "Return\n"
-
-class Block:
-	def __init__(self,name_space,subroutine_number,tokens,child):
-		self.name_space = name_space
-		self.subroutine_number = subroutine_number
-		self.tokens = tokens
-		self.child = child
+def compile_word(word,defined_words):
 	
-	def blockify(self):
-		new_tokens = []
-		child_tokens = []
-		hit_if =  0
 
-		for token in self.tokens:
-			if not hit_if:
-				if token == "if":
-					hit_if = 1
-				else:
-					new_tokens.append(token)
-			else:
-				child_tokens.append(token)
-
-
-
-		if hit_if:
-
-			if_counter = 1
-			for token in child_tokens
-
-
-
-
-	def compile(self):
-
-	def expand(self):
-
-
-class Branch:
-	def __init__(self,name_space,subroutine_number,tokens,child0,child1):
-		pass
-
-	def blockify(self):
-
-	def compile(self):
