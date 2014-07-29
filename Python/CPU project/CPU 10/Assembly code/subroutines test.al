@@ -1,14 +1,32 @@
-Call max(@5,@7,@6)
-Call max
-Call stack.print
+#Call max(@5,@7,@6)
+#Call max
+#Call stack.print
+#Halt
+
+import "Assembly code\\Floating_point"
+Push @130
+Call FP.exp
+Call FP.display
 Halt
 
 
 
-def a gp1
-def b gp2
+
+
+
+
+
+
+
+
+
+
 
 Subroutine max(a,b)
+	
+	def a gp1
+	def b gp2
+	
 	Compare a,b
 	if Greater then {	
 		Push a 
@@ -18,3 +36,5 @@ Subroutine max(a,b)
 		Push b
 		Return
 	}
+
+

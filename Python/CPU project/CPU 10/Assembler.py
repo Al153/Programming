@@ -1300,6 +1300,4 @@ def print_tokens(tokens):
 	for line in tokens:
 		print line
 
-
-
 assemble()
