@@ -2,7 +2,40 @@ abbreviations_list = {
 "ur":"your",
 "u're":"you're",
 "r":"are",
-"ac?": "ah! si?",
+
+"cuz":"because",
+"coz":"because",
+"cos":"because",
+"cause":"because",
+"cause":"because",
+"yea":"yes",
+"ye":"yes",
+"yh":"yes",
+
+
+"plz":"please",
+"pls":"please",
+"plox":"please",
+"pl0x":"please",
+
+"ikr":"i do know",
+"fb":"facebook",
+
+"xd":"[Happy face]"
+"xp":"[sticking out tongue face]"
+"x)":"[Happy face]"
+"x(":"[unhappy face"
+":p":"[sticking out tongue face]"
+":d":"[happy face]"
+":)":"[smiley face]"
+":(":"[unhappy face]"
+";p":"[winking sticking out tongue face]"
+";d":""
+";)":""
+";(":""
+
+
+"obvs":"obvious",
 "aaf": "as a friend",
 "adad": "another day another dollar",
 "adih": "another day in hell",
@@ -210,8 +243,6 @@ abbreviations_list = {
 
 "smiley": "emoticon",
 "smh": "shaking my head",
-"snafu": "situation normal": "all f***ed up",
-"snail-mail": "regular mail",
 "sohf": "sense of humor failure",
 "sos": "there is someone watching over my shoulder",
 "stahp ": "stop",
@@ -303,7 +334,7 @@ def could_be_abbreviation(word):
 		if vowel in word:
 			vowel_count +=1
 
-	if (vowel_count<2 or contains_numbers)and len(word)<=5:
+	if len(word)<=3 or ((vowel_count<2 or contains_numbers)and len(word)<=5):
 		return True
 	else:
 		return False
@@ -325,7 +356,103 @@ def test_run(text):
 			result_words.append(word)
 		result_lines.append(' '.join(result_words))
 		result_words = []
-	return '\n'.join(result_lines)
+	return '\n'.join(result_lines), possible_abbreviations
 
 
+print test_run('''
+Vendus1 day ago
+ 
+I think when your builds look like male genitalia CONSTANTLY I think its a sign... xD﻿Reply1Hidereplies
 
+DeathTheKid1 day ago
+ 
+Dude, hes bi, he tweeted it but yea it is a sign﻿
+Reply   3
+
+Vendus1 day ago
+ 
++DeathTheKid YUP IS SUCH A SIGN!﻿
+Reply   
+
+Kevin Clapp19 hours ago
+ 
+He's bisexual!?!?﻿
+Reply   1
+
+Adrianelle Suncal19 hours ago
+ 
+HE CANT BE BI IF HES HAD TWO GIRLFRIENDS﻿
+Reply   1
+
+Liana Ciarrocchi19 hours ago
+ 
++Adrianelle Suncal y can't he be bi? Just bcuz he hasn't had a bf doesn't mean he isn't. He probs had feelings towards a male before or he wouldn't have said that he's bi﻿
+Reply   1
+
+Gabi Morales18 hours ago
+ 
++Adrianelle Suncal Bisexual is when you like two genders, male or female, no matter the amount of male/female companions you've had. For instance, I have dated two boys and one girl.﻿
+Reply   2
+
+Vendus17 hours ago
+ 
+Did not expect to see an argument over sexual orientation.. I think that its a bit more private information for sky if you're going to talk about that xD﻿
+Reply   
+Darude- Sandstorm﻿
+Reply   32
+Hide replies
+
+CameronPbeats1 week ago
+ 
+It only works if it is a comment reply﻿
+Reply   6
+
+Arttu Homanen1 week ago
+ 
++CameronPbeats darude-sandstorm﻿
+Reply   1
+
+Arttu Homanen1 week ago
+ 
++CameronPbeats darude-sandstorm﻿
+Reply   
+
+Zynoa Piano6 days ago
+ 
+MOST CREATIVE COMMENT EVER XD﻿
+Reply   5
+
+Antoine Riviere6 days ago
+ 
+It only works if you have no originality ﻿
+Reply   13
+
+Freeplugin36 days ago
+ 
+nah... gtfo that song sounds horrible﻿
+Reply   5
+
+TheNoisyBro .5 days ago
+ 
++Rome Foster WHAT IS THIS!!﻿
+Reply   
+
+Rahzufius4 days ago
+ 
+Ankrude - weedstorm.﻿
+Reply   
+
+Donn Textu2 days ago
+ 
+laurude - breakstorm﻿
+theo, u got fb, and after a long time i managed to find u!!! 
+Wai dont yu mine da dimond blocks in ur base etho. so dumb xD
+also how he has many ender pearl. hacker or lagger? xD﻿
+Whats ur CPU? Graphics card? You might be using all of your RAM. Also 64 bit java is recommended. Optifine should help. Also some better fans or heat syncs should help over clock.﻿
+''')
+
+useful links
+http://honnibal.wordpress.com/2013/12/18/a-simple-fast-algorithm-for-natural-language-dependency-parsing/
+https://gist.github.com/syllog1sm/10343947
+https://pythonhosted.org/pyenchant/
+http://www.nltk.org/book/ch08.html
