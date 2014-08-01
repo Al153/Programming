@@ -47,7 +47,7 @@ class frequency_profile:
 		except IndexError:
 			return False
 
-
+	def 
 
 
 

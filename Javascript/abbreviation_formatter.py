@@ -1,7 +1,17 @@
 abbreviations_list = {
+"y'all":"you all",
+"yall":"you all",
 "ur":"your",
 "u're":"you're",
 "r":"are",
+
+"youre": "you're",
+"theyre":"they're",
+"im":"i'm",
+"hes":"he's"
+"shes":"she's"
+
+"Srsly":"seriously",
 
 "cuz":"because",
 "coz":"because",
@@ -30,9 +40,9 @@ abbreviations_list = {
 ":)":"[smiley face]"
 ":(":"[unhappy face]"
 ";p":"[winking sticking out tongue face]"
-";d":""
-";)":""
-";(":""
+";d":"[winking happy face]"
+";)":"[winking face]"
+";(":"[winking unhappy face]"
 
 
 "obvs":"obvious",
@@ -97,7 +107,7 @@ abbreviations_list = {
 "ftfy": "fixed that for you",
 "ftl": "for the loss",
 "ftw": "for the win",
-"ftw?": "fuck the what?",
+"ftw": "fuck the what",
 "fu": "fuck you",
 "fubar": "f***ed up beyond all recognition",
 "fud": "fear, uncertainty and doubt ",
@@ -190,7 +200,7 @@ abbreviations_list = {
 "nvmd": "nevermind",
 "nm": "nevermind",
 "n/m": "nevermind",
-"orly": "oh really?",
+"orly": "oh really",
 "oic": "oh, i see",
 "ofn": "old freaking news",
 "omg": "oh my god",
@@ -299,9 +309,9 @@ abbreviations_list = {
 "wth": "what the hell",
 "wts": "want to sell",
 "wtt": "want to trade",
-"wug": "what you got?",
-"wubu2": "what have you been up to?",
-"wuu2": "what are you up to?",
+"wug": "what you got",
+"wubu2": "what have you been up to",
+"wuu2": "what are you up to",
 "wysiwyg": "what you see is what you get",
 "w8": "wait",
 "yagni": "you ain't gonna need it.",
@@ -309,7 +319,7 @@ abbreviations_list = {
 "ygm": "you've got mail.",
 "yhbt": "you have been trolled.",
 "yec": "young earth creationism",
-"ykw": "you know what?",
+"ykw": "you know what",
 "ymmv": "your mileage may vary.",
 "yolo": "you only live once.",
 "yoyo": "you're on your own.",
@@ -318,141 +328,11 @@ abbreviations_list = {
 "zomg": "oh my god!"
 }
 
-def split_lines(text):
-	return text.split("\n")
-
-def split_words(text):
-	return text.split(" ")
-
-def could_be_abbreviation(word):
-	contains_numbers = 0
-	for number in "0123456789":
-		if number in word:
-			contains_numbers = 1
-	vowel_count = 0
-	for vowel in "aeiouy":
-		if vowel in word:
-			vowel_count +=1
-
-	if len(word)<=3 or ((vowel_count<2 or contains_numbers)and len(word)<=5):
-		return True
+def dict_lookup(word):
+	lowercase_word = word.lower
+	punctuation_to_add = []
+	if lowercaseword in abbreviations_list:
+		lowercaseword = abbreviations_list(lowercaseword)
+		return lowercaseword
 	else:
-		return False
-
-def test_run(text):
-	result_words = []
-	result_lines = []
-	possible_abbreviations = []
-	lines = split_lines(text)
-	for line in lines:
-		words = split_words(words)
-		for word in words:
-			word = word.lower()
-			if word in abbreviations_list:
-				word = abbreviations_list[word]
-			else:
-				if could_be_abbreviation(word):
-					possible_abbreviations.append(word)
-			result_words.append(word)
-		result_lines.append(' '.join(result_words))
-		result_words = []
-	return '\n'.join(result_lines), possible_abbreviations
-
-
-print test_run('''
-Vendus1 day ago
- 
-I think when your builds look like male genitalia CONSTANTLY I think its a sign... xD﻿Reply1Hidereplies
-
-DeathTheKid1 day ago
- 
-Dude, hes bi, he tweeted it but yea it is a sign﻿
-Reply   3
-
-Vendus1 day ago
- 
-+DeathTheKid YUP IS SUCH A SIGN!﻿
-Reply   
-
-Kevin Clapp19 hours ago
- 
-He's bisexual!?!?﻿
-Reply   1
-
-Adrianelle Suncal19 hours ago
- 
-HE CANT BE BI IF HES HAD TWO GIRLFRIENDS﻿
-Reply   1
-
-Liana Ciarrocchi19 hours ago
- 
-+Adrianelle Suncal y can't he be bi? Just bcuz he hasn't had a bf doesn't mean he isn't. He probs had feelings towards a male before or he wouldn't have said that he's bi﻿
-Reply   1
-
-Gabi Morales18 hours ago
- 
-+Adrianelle Suncal Bisexual is when you like two genders, male or female, no matter the amount of male/female companions you've had. For instance, I have dated two boys and one girl.﻿
-Reply   2
-
-Vendus17 hours ago
- 
-Did not expect to see an argument over sexual orientation.. I think that its a bit more private information for sky if you're going to talk about that xD﻿
-Reply   
-Darude- Sandstorm﻿
-Reply   32
-Hide replies
-
-CameronPbeats1 week ago
- 
-It only works if it is a comment reply﻿
-Reply   6
-
-Arttu Homanen1 week ago
- 
-+CameronPbeats darude-sandstorm﻿
-Reply   1
-
-Arttu Homanen1 week ago
- 
-+CameronPbeats darude-sandstorm﻿
-Reply   
-
-Zynoa Piano6 days ago
- 
-MOST CREATIVE COMMENT EVER XD﻿
-Reply   5
-
-Antoine Riviere6 days ago
- 
-It only works if you have no originality ﻿
-Reply   13
-
-Freeplugin36 days ago
- 
-nah... gtfo that song sounds horrible﻿
-Reply   5
-
-TheNoisyBro .5 days ago
- 
-+Rome Foster WHAT IS THIS!!﻿
-Reply   
-
-Rahzufius4 days ago
- 
-Ankrude - weedstorm.﻿
-Reply   
-
-Donn Textu2 days ago
- 
-laurude - breakstorm﻿
-theo, u got fb, and after a long time i managed to find u!!! 
-Wai dont yu mine da dimond blocks in ur base etho. so dumb xD
-also how he has many ender pearl. hacker or lagger? xD﻿
-Whats ur CPU? Graphics card? You might be using all of your RAM. Also 64 bit java is recommended. Optifine should help. Also some better fans or heat syncs should help over clock.﻿
-''')
-
-useful links
-http://honnibal.wordpress.com/2013/12/18/a-simple-fast-algorithm-for-natural-language-dependency-parsing/
-https://gist.github.com/syllog1sm/10343947
-https://pythonhosted.org/pyenchant/
-http://www.nltk.org/book/ch08.html
+		return word
