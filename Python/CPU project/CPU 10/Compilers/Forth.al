@@ -38,41 +38,6 @@ Subroutine Forth.SUB(a,b)
 	Return a
 
 
-#ADD
-Subroutine Forth.ADD(a,b)
-	def a gp1
-	def b gp2
-
-	ADD a b
-	Return a
-
-#SUB
-Subroutine Forth.SUB(a,b)
-# . . . a b
-	def a gp1
-	def b gp2
-
-	SUB a b
-	Return a
-
-#MUL
-Subroutine Forth.MUl(a,b)
-	def a gp1
-	def b gp2
-
-	MUL a b
-	Return a
-
-#DIV
-Subroutine Forth.SUB(a,b)
-# . . . a b
-	def a gp1
-	def b gp2
-
-	DIV a b
-	Return a
-
-
 #MOD
 Subroutine Forth.MOD(a,b)
 	def a gp1

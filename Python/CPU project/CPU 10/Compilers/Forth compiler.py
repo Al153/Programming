@@ -103,10 +103,57 @@ _______________ semi_compile_time_words _______________
 #words built into forth
 default_words = {
 	"DUP"
-	SWAP
-	DROP
-	.
+	"SWAP"
+	"DROP"
+	"."
+	".S"
+	"+":"Forth."
+	"-":"Forth."
+	"*":"Forth."
+	"/":"Forth."
+	"%":"Forth."
+	"&":"Forth."
+	"|":"Forth."
+	"^":"Forth."
+	"~":"Forth."
+	"~&":"Forth."
+	"~|":"Forth."
+	"~^":"Forth."
+	"<<":"Forth."
+	">>":"Forth."
+	">":"Forth."
+	"<":"Forth."
+	"=":"Forth."
+	"<=":"Forth."
+	">=":"Forth."
+	"=<":"Forth."
+	"=>":"Forth."
+	"!=":"Forth."
 
+	"f+":"FP."
+	"f-":"FP."
+	"f*":"FP."
+	"f/":"FP."
+	"fsin":"FP."
+	"fcos":"FP."
+	"fexp":"FP."
+	"fsqrt":"FP."
+
+	"c+":"Complex."
+	"c-":"Complex."
+	"c*":"Complex."
+	"c/":"Complex."
+	"csqrt":"Complex."
+}
+
+special_words = {
+	"if":""
+	"else":""
+	"endif":""
+	"while":""
+	"loop":""
+	"return":""
+	
 }
 
 
@@ -222,13 +269,27 @@ def compile_words(words):
 	global_variables = []
 	word_names =  [name for name in words]
 	for name in words:
-		assembly += compile_word(words[name])
+		assembly += compile_word(name,words[name],defined_words,default_words)
 	return assembly
 
 
 
 
 
-def compile_word(word,defined_words):
+def compile_word(word_name,word,defined_words,default_words):
+	assembly_lines = []
+	for token in word:
+		if token in special_words:
+			assembly_lines.append(special_words[token](word))
+
+		elif token in default_words:
+			assembly_lines.append(["Call",default_words[token]])
+
+		elif token in defined_words:
+			assembly_lines.append(["Call",token])
+
+		else:
+			pass
+	assembly_lines[0].append("%"+word_name)
 	
 
