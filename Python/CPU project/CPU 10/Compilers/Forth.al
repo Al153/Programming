@@ -201,7 +201,7 @@ Subroutine Forth.Less_or_Equal(a,b)
 	}
 
 #!=
-Subroutine Forth.Less_or_Equal(a,b)
+Subroutine Forth.Not_Equal(a,b)
 # . . . a b
 	def a gp1
 	def b gp2

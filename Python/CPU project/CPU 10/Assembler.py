@@ -164,9 +164,12 @@ def assemble():
 	print "Extracting tokens = ",
 	tokens = full_text_tokenize(file_object) #+ [["int","16","16"]]
 	print "Okay"
-	print "Extracting defined terms = ",
+	print "Unwinding program flow = ",
+	tokens = unwind_control_flow(tokens)
+	print "Okay"
 	if "-p" in flags:
 		log(tokens,"log\preparse.log")
+	print "Extracting defined terms = ",
 	tokens = expand_macros(tokens)  			#expand pseudo commands such as "Goto ... " or "if ... then ... " or "def ... ... "
 	print "Okay"
 	print "Importing external code = ",
@@ -274,7 +277,7 @@ def full_text_tokenize(text_file):
     return token_list
 
 def expand_macros(tokens):
-	tokens = unwind_control_flow(tokens)
+
 	using_stack = 0
 	using_strings = 0
 	string_counter = 0
@@ -313,7 +316,6 @@ def expand_macros(tokens):
 			del tokens[i]
 
 		line = tokens[i]
-		#print line
 		for j in xrange(len(line)):
 			line[j] = replace_dict[scope].get(line[j],line[j])
 
@@ -327,6 +329,7 @@ def expand_macros(tokens):
 		
 		line = tokens[i]
 		if line[0] == "Goto":					  #non conditional goto regs
+			print "goto"
 			label = []
 			if line[-1][0] == "%":
 				label = [line[-1]]
@@ -341,9 +344,14 @@ def expand_macros(tokens):
 				tokens[i] = ["Move","PC","Jump"] + label
 				tokens.insert(i+1,["ADD","Jump","@16"])
 				tokens.insert(i+2,["Load","PC"]+line[1:])
+			print "Goto",tokens[i]
+			print "Goto",tokens[i+1]
+			print "Goto",tokens[i+2]
+
 
 
 		if len(line)>2 and line[2] == "Goto":
+			print "cond goto"
 			label = []
 			if line[-1][0] == "%":
 				label = [line[-1]]	
@@ -358,6 +366,7 @@ def expand_macros(tokens):
 				tokens.insert(i+2,line[:2]+["Load","PC"]+line[3:])
 
 		if line[0] == "Push":
+			print "Push"
 
 			using_stack = 1
 #			label = []
@@ -374,7 +383,7 @@ def expand_macros(tokens):
 			i -= 1
 
 		if len(line)>2 and  line[2] == "Push":
-
+			print "cond Push"
 			using_stack = 1
 #			label = []
 #			if line[-1][0] == "%":
@@ -392,6 +401,7 @@ def expand_macros(tokens):
 
 
 		if line[0] == "Pop":
+			print "Pop"
 			using_stack = 1
 #			label = []
 #			if line[-1][0] == "%":
@@ -414,6 +424,7 @@ def expand_macros(tokens):
 			i -=1
 
 		if len(line)>2 and line[2] == "Pop":
+			print "cond Pop"
 			using_stack = 1
 #			label = []
 #			if line[-1][0] == "%":
@@ -436,6 +447,7 @@ def expand_macros(tokens):
 			i -=1
 
 		if line[0] == "Call":
+			print "call"
 			using_stack = 1
 
 			if line[-1][0] == "%":         #checks for pointer
@@ -464,6 +476,7 @@ def expand_macros(tokens):
 				i -=1
  
 		if len(line)>2 and line[2] == "Call":
+			print "cond call"
 			using_stack = 1
 
 			if line[-1][0] == "%":         #checks for pointer
@@ -487,6 +500,7 @@ def expand_macros(tokens):
 				i -=1
 
 		if line[0] == "Return":
+			print "return"
 			using_stack = 1
 #			label = []
 #			if line[-1][0] == "%":
@@ -515,6 +529,7 @@ def expand_macros(tokens):
 				i -=1
 
 		if len(line)>2 and line[2] == "Return":
+			print "cond return"
 			using_stack = 1
 #			label = []
 #			if line[-1][0] == "%":
@@ -543,6 +558,7 @@ def expand_macros(tokens):
 				i -=1
 
 		if line[0] == "str":
+			print "str"
 			using_strings = 1
 
 			name = line[1]
@@ -564,10 +580,7 @@ def expand_macros(tokens):
 
 
 
-
-
 		i += 1
-
 
 	const_lines = []
 	i = 0
@@ -647,6 +660,7 @@ def do_import(tokens): #carries out one import
 			except IOError:
 				print "Invalid import name: ", import_name
 				quit()
+			new_tokens = unwind_control_flow(new_tokens)
 			new_tokens = expand_macros(new_tokens)
 			#print_tokens(tokens[:i])
 			#print "\n\n"
@@ -680,47 +694,18 @@ def unwind_control_flow(tokens):
 			if tokens[i+1][0] == "else":
 				cut_code,end_pointer = unwind_search(tokens,i+1)
 				label_to_move = tokens[i+1][-1]
-				print label_to_move
+				#print label_to_move
 				tokens[i+1] = ["Load", "PC", "Code_block" + str(unbranched_count)]
 				cut_code.append(["Load","PC",label_to_move[1:]])
 				cut_code[0].append("%Code_block"+str(unbranched_count))
 				unbranched_count +=1
 
 
-				print cut_code
+				#print cut_code
 				tokens[end_pointer].append(label_to_move)
-				print tokens[end_pointer]
+				#print tokens[end_pointer]
 				del tokens[i+2:end_pointer]
 				tokens += cut_code
-
-
-#		if tokens[i][-1] == "{":
-
-#			tokens[i] = tokens[i][:-1] + ["Load","PC","Code_block"+str(unbranched_count)]
-#			cut_code,end_pointer = unwind_search(tokens,i)
-#			cut_code[0].append("%Code_block"+str(unbranched_count))
-#			unbranched_count +=1
-#			cut_code.append(["Load", "PC", "Code_block"+str(unbranched_count)])
-#			tokens[end_pointer].append("%Code_block"+str(unbranched_count))
-#			unbranched_count += 1
-#			del tokens[i+1:end_pointer]
-#			tokens += cut_code
-
-#		if len(tokens[i])>=2 and tokens[i][-2] == "{":
-#			tokens[i] = tokens[i][:-2] + ["Load","PC","Code_block"+str(unbranched_count)] + [tokens[i][-1]]
-#			cut_code,end_pointer = unwind_search(tokens,i)
-#			cut_code[0].append("%Code_block"+str(unbranched_count))
-#			unbranched_count +=1
-#			cut_code.append(["Load", "PC", "Code_block"+str(unbranched_count)])
-#			tokens[end_pointer].append("%Code_block"+str(unbranched_count))
-#			unbranched_count += 1
-#			del tokens[i+1:end_pointer]
-#			tokens += cut_code
-
-
-
-
-
 
 		i += 1
 	return tokens
