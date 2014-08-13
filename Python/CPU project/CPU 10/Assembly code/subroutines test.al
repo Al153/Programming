@@ -1,13 +1,13 @@
-#Call max(@5,@7,@6)
-#Call max
-#Call stack.print
-#Halt
-
-import "Assembly code\\Floating_point"
-Push @130
-Call FP.exp
-Call FP.display
+Call max(@5,@7,@6)
+Call max
+Call stack.print
 Halt
+
+#import "Assembly code\\Floating_point"
+#Push @130
+#Call FP.exp
+#Call FP.display
+#Halt
 
 
 
