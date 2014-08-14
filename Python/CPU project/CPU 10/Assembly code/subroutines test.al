@@ -28,13 +28,11 @@ Subroutine max(a,b)
 	def b gp2
 	
 	Compare a,b
-	if Greater then {	
-		Push a 
-		Return	
+	if Greater then {	 
+		Return	a
 	}
 	else {
-		Push b
-		Return
+		Return b
 	}
 
 

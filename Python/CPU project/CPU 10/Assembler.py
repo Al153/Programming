@@ -170,7 +170,7 @@ def assemble():
 	if "-p" in flags:
 		log(tokens,"log\preparse.log")
 	print "Extracting defined terms = ",
-	tokens = expand_macros(tokens)  			#expand pseudo commands such as "Goto ... " or "if ... then ... " or "def ... ... "
+	tokens = expand_macros(tokens)              #expand pseudo commands such as "Goto ... " or "if ... then ... " or "def ... ... "
 	print "Okay"
 	print "Importing external code = ",
 	while things_to_import(tokens):
@@ -180,19 +180,19 @@ def assemble():
 	tokens = find_structs(tokens)
 	print "Okay"
 	print "Allocating variables = ",
-	number_of_lines,tokens = count_lines(tokens) 		#counts the number of valid lines for sorting out variables
+	number_of_lines,tokens = count_lines(tokens)        #counts the number of valid lines for sorting out variables
 	if "-d" in flags:
 		log(tokens,"log\Assembler.log")
-	tokens = sort_out_variables(tokens,number_of_lines) 		#creates variable storage and places pointers
+	tokens = sort_out_variables(tokens,number_of_lines)         #creates variable storage and places pointers
 	print "Okay"
 	print "Compiling to low-level assembly = ",
 	if "-l" in flags:
 		log(tokens,"log\low_level.log")
-	tokens = fill_in_gaps(tokens, "-comp" in flags) 				#final checks of compiling to low-level-assembly
+	tokens = fill_in_gaps(tokens, "-comp" in flags)                 #final checks of compiling to low-level-assembly
 
 	print "Okay"
 	print "Assembling machine code = ",
-	machine_code = low_level_assemble(tokens)	#need to modify low level assemble function to take a non string entry
+	machine_code = low_level_assemble(tokens)   #need to modify low level assemble function to take a non string entry
 	print "Okay"
 	print "Writing to machine code file = ",
 	store(machine_code)
@@ -212,69 +212,65 @@ def get_code():
 			quit()
 
 def full_text_tokenize(text_file):
-    text_file = [line for line in text_file]
-    token_list = []
-    string = 0
-    escaped = 0
-    array = 0
-    i = 0
-    token_separators = [" ","\t","\n",",","(",")"]
-    while i < len(text_file):
-    	line = text_file[i]
-        if not string and not array:
-            line_tokens= []
-            current_token = ''
-        if line[:8] == "<Python>":
-        	text_file = text_file[:i]+ str(eval(line[8:])).split("\n")+text_file[i+1:]
-        	line = text_file[i]
-        for character in line:
-            if not string and not array:
-                if character == '"' and current_token == '':
-                    string = 1
-                elif character == '[' and current_token == '':
-                	array = 1
-                	current_token = "["
-                elif character == "#" and current_token == '':
-                    break
-                elif not character in token_separators:
-                    current_token += character
-                else:
-                    if current_token != "":
-                        line_tokens.append(current_token)
-                        current_token = ""
-            elif string:
-                if not escaped:
-                    if character == '"':
-                        string = 0
-                        line_tokens.append(current_token) 
-                        current_token = ''
-                    elif character == "\\":
-                        escaped = 1
-                    else:
-                        current_token += character
-                else:
-                    escaped = 0
-                    if character == '"':
-                        current_token += '"'
-                    if character == "n":
-                        current_token += "\n"
-                    if character == "\\":
-                    	current_token += "\\"
-            elif array:
-            	if character == "]":
-                    array = 0
-                    line_tokens.append(current_token+"]") 
-                    current_token = ''
-                else:
-                	current_token += character
-        if not string and not array:
-            if current_token != "" and current_token != "\t":
-                line_tokens.append(current_token)
-            if line_tokens != []:
-                token_list.append(line_tokens)
-    	i +=1
-    #print token_list
-    return token_list
+	text_file = [line for line in text_file]
+	token_list = []
+	string = 0
+	escaped = 0
+	array = 0
+	i = 0
+	token_separators = [" ","\t","\n",",","(",")"]
+	escaped_replace_dict = {"n":"\n",'"':'"',"\\":"\\"} #converts escaped n to \n etc
+	while i < len(text_file):
+		line = text_file[i]
+		if not string and not array:
+			line_tokens= []
+			current_token = ''
+		if line[:8] == "<Python>":
+			text_file = text_file[:i]+ str(eval(line[8:])).split("\n")+text_file[i+1:]
+			line = text_file[i]
+		for character in line:
+			if not string and not array:
+				if character == '"' and current_token == '':
+					string = 1
+				elif character == '[' and current_token == '':
+					array = 1
+					current_token = "["
+				elif character == "#" and current_token == '':
+					break
+				elif not character in token_separators:
+					current_token += character
+				else:
+					if current_token != "":
+						line_tokens.append(current_token)
+						current_token = ""
+			elif string:
+				if not escaped:
+					if character == '"':
+						string = 0
+						line_tokens.append(current_token) 
+						current_token = ''
+					elif character == "\\":
+						escaped = 1
+					else:
+						current_token += character
+				else:
+					escaped = 0
+					current_token += escaped_replace_dict.get(character,character)
+			elif array:
+				if character == "]":
+					array = 0
+					line_tokens.append(current_token+"]") 
+					current_token = ''
+				else:
+					current_token += character
+		if not string and not array:
+			if current_token != "" and current_token != "\t":
+				line_tokens.append(current_token)
+			if line_tokens != []:
+				token_list.append(line_tokens)
+		i +=1
+	#print token_list
+	return token_list
 
 def expand_macros(tokens):
 
@@ -310,7 +306,7 @@ def expand_macros(tokens):
 	replace_dict,tokens = find_and_replace(tokens)
 	i = 0
 	scope = ''
-	while i < len(tokens):	
+	while i < len(tokens):  
 		if tokens[i][0] == "Scope":
 			scope = tokens[i][1]
 			del tokens[i]
@@ -328,8 +324,7 @@ def expand_macros(tokens):
 				tokens[i] = ["CondR",line[1]]+line[3:]
 		
 		line = tokens[i]
-		if line[0] == "Goto":					  #non conditional goto regs
-			print "goto"
+		if line[0] == "Goto":                     #non conditional goto regs
 			label = []
 			if line[-1][0] == "%":
 				label = [line[-1]]
@@ -344,35 +339,25 @@ def expand_macros(tokens):
 				tokens[i] = ["Move","PC","Jump"] + label
 				tokens.insert(i+1,["ADD","Jump","@16"])
 				tokens.insert(i+2,["Load","PC"]+line[1:])
-			print "Goto",tokens[i]
-			print "Goto",tokens[i+1]
-			print "Goto",tokens[i+2]
 
 
 
 		if len(line)>2 and line[2] == "Goto":
-			print "cond goto"
 			label = []
 			if line[-1][0] == "%":
-				label = [line[-1]]	
-				line = line[:-1]			
+				label = [line[-1]]  
+				line = line[:-1]            
 			if line[3] in register_addresses:
 				tokens[i] =  ["Move","PC","Jump"]+label
 				tokens.insert(i+1,["ADD","Jump","@16"])
 				tokens.insert(i+2,line[:2]+["Move",line[3],"PC"])
 			else: #"Goto @label []"
 				tokens[i] = ["Move","PC","Jump"]+label
-				tokens.insert(i+1,["ADD","Jump","@16"])				
+				tokens.insert(i+1,["ADD","Jump","@16"])             
 				tokens.insert(i+2,line[:2]+["Load","PC"]+line[3:])
 
 		if line[0] == "Push":
-			print "Push"
-
 			using_stack = 1
-#			label = []
-#			if line[-1][0] == "%":
-#				label = [line[-1]]	
-#				line = line[:-1]
 
 			if line[1] in register_addresses:
 				tokens[i] = ["Move",line[1], "gp0"] + line[2:]
@@ -383,12 +368,7 @@ def expand_macros(tokens):
 			i -= 1
 
 		if len(line)>2 and  line[2] == "Push":
-			print "cond Push"
 			using_stack = 1
-#			label = []
-#			if line[-1][0] == "%":
-#				label = [line[-1]]	
-#				line = line[:-1]
 
 			if line[3] in register_addresses:
 				tokens[i] = ["Move",line[3], "gp0"] + line[4:]
@@ -401,12 +381,7 @@ def expand_macros(tokens):
 
 
 		if line[0] == "Pop":
-			print "Pop"
 			using_stack = 1
-#			label = []
-#			if line[-1][0] == "%":
-#				label = [line[-1]]	
-#				line = line[:-1]
 
 			if line[1] in register_addresses:
 				tokens[i] = ["Goto","Datastack.pop"] + line[2:]
@@ -424,12 +399,7 @@ def expand_macros(tokens):
 			i -=1
 
 		if len(line)>2 and line[2] == "Pop":
-			print "cond Pop"
 			using_stack = 1
-#			label = []
-#			if line[-1][0] == "%":
-#				label = [line[-1]]	
-#				line = line[:-1]
 
 			if line[3] in register_addresses:
 				tokens[i] = ["Goto","Datastack.pop"] + line[4:]
@@ -447,7 +417,6 @@ def expand_macros(tokens):
 			i -=1
 
 		if line[0] == "Call":
-			print "call"
 			using_stack = 1
 
 			if line[-1][0] == "%":         #checks for pointer
@@ -476,7 +445,6 @@ def expand_macros(tokens):
 				i -=1
  
 		if len(line)>2 and line[2] == "Call":
-			print "cond call"
 			using_stack = 1
 
 			if line[-1][0] == "%":         #checks for pointer
@@ -500,12 +468,11 @@ def expand_macros(tokens):
 				i -=1
 
 		if line[0] == "Return":
-			print "return"
 			using_stack = 1
-#			label = []
-#			if line[-1][0] == "%":
-#				label = [line[-1]]	
-#				line = line[:-1]
+#           label = []
+#           if line[-1][0] == "%":
+#               label = [line[-1]]  
+#               line = line[:-1]
 			if line[-1][0] == "%":         #checks for pointer
 				label = [line[-1]]
 				line = line[:-1]
@@ -518,7 +485,9 @@ def expand_macros(tokens):
 				parameters = map((lambda parameter: ["Push",parameter]),parameters)  #converts parameters to a list of commands
 				#print parameters
 				#print line[:2]
-				parameters += ["Load","PC", "Programstack.return"] + label #adds the return command
+
+				parameters.append(["Load","PC", "Programstack.return"]) #adds the return command
+				parameters[0] += label
 				#print parameters
 				tokens = tokens[:i] + parameters + tokens[i+1:]
 				line = tokens[i]
@@ -529,12 +498,11 @@ def expand_macros(tokens):
 				i -=1
 
 		if len(line)>2 and line[2] == "Return":
-			print "cond return"
 			using_stack = 1
-#			label = []
-#			if line[-1][0] == "%":
-#				label = [line[-1]]
-#				line = line[:-1]
+#           label = []
+#           if line[-1][0] == "%":
+#               label = [line[-1]]
+#               line = line[:-1]
 			if line[-1][0] == "%":         #checks for pointer
 				label = [line[-1]]
 				line = line[:-1]
@@ -558,7 +526,6 @@ def expand_macros(tokens):
 				i -=1
 
 		if line[0] == "str":
-			print "str"
 			using_strings = 1
 
 			name = line[1]
@@ -620,7 +587,7 @@ def find_and_replace(tokens):
 				scope = line[1]
 				if not scope in replace_dict:
 					replace_dict[scope] = {}
-			if line[0] == "def":					#defining a term
+			if line[0] == "def":                    #defining a term
 				lines_to_remove.append(i)
 				replace_dict[scope][line[1]] = line[2]
 				replace_dict[scope]["["+line[1]+"]"] = "["+line[2]+"]"
@@ -676,41 +643,39 @@ def do_import(tokens): #carries out one import
 def unwind_control_flow(tokens):
 	#unwinds if statements and bracketed off code eg {}
 	i = 0
-	unbranched_count = 0
+	code_block_count = 0
 	tokens.append(["Halt"])
 	while i < len(tokens):
 
-		if "{" in tokens[i]:
-			bracket_location =tokens[i].index("{")
-			tokens[i] = tokens[i][:bracket_location] + ["Load","PC","Code_block"+str(unbranched_count)] + tokens[i][bracket_location+1:]
-			cut_code,end_pointer = unwind_search(tokens,i)
-			cut_code[0].append("%Code_block"+str(unbranched_count))
-			unbranched_count +=1
-			cut_code.append(["Load", "PC", "Code_block"+str(unbranched_count)])
-			tokens[end_pointer].append("%Code_block"+str(unbranched_count))
-			unbranched_count += 1
-			del tokens[i+1:end_pointer]
-			tokens += cut_code
-			if tokens[i+1][0] == "else":
-				cut_code,end_pointer = unwind_search(tokens,i+1)
-				label_to_move = tokens[i+1][-1]
-				#print label_to_move
-				tokens[i+1] = ["Load", "PC", "Code_block" + str(unbranched_count)]
-				cut_code.append(["Load","PC",label_to_move[1:]])
-				cut_code[0].append("%Code_block"+str(unbranched_count))
-				unbranched_count +=1
+		if "{" in tokens[i]: 														#if there is a section of code to snip out and unwind:
+			bracket_location =tokens[i].index("{")  								#find location of bracket in line
+			tokens[i] = tokens[i][:bracket_location] + ["Load","PC","Code_block"+str(code_block_count)] + tokens[i][bracket_location+1:]  #creates first jump
+			cut_code,end_pointer = matching_bracket_search(tokens,i)				#find the line of the matching bracket, and the code cut out
+			cut_code[0].append("%Code_block"+str(code_block_count)) 				#add the correct label to the cut out code
+			code_block_count +=1                                   					#increment the code block count
+			cut_code.append(["Load", "PC", "Code_block"+str(code_block_count)]) 	#add the return command
+			tokens.insert(end_pointer,["Pass","%Code_block"+str(code_block_count)]) #add a label to the code which stays in place
+			code_block_count += 1                                                   #increment code block count
+			del tokens[i+1:end_pointer]                                             #remove intermediate code (duplicated code)
+			tokens += cut_code                                                      #add cut out code to the end of the tokens
 
+			if tokens[i+2][0] == "else":                                            #checks for an else statement
+				cut_code,end_pointer = matching_bracket_search(tokens,i+2)          #finds new matching } and new cut code
+				label_to_move = tokens[i+1][-1]                                     #we want to send the end of the true bit (eg if a then {a b c}) to a point after the else jump
+				
+				tokens[i+1] = ["Load", "PC", "Code_block" + str(code_block_count)]  #insert else jump
+				cut_code.append(["Load","PC",label_to_move[1:]])                    #tell the end of the else bit to the same label as the end of the true bit (endif)
+				cut_code[0].append("%Code_block"+str(code_block_count))             #add a label to the start of the else code
+				code_block_count +=1                                                #increment code block pointer
 
-				#print cut_code
-				tokens[end_pointer].append(label_to_move)
-				#print tokens[end_pointer]
-				del tokens[i+2:end_pointer]
-				tokens += cut_code
+				tokens.insert(end_pointer,["Pass",label_to_move])                   #gives return label
+				del tokens[i+1:end_pointer]                                         #get rid of cut out code
+				tokens += cut_code                                                  #add cut out code to the end of the tokens
 
 		i += 1
 	return tokens
 
-def unwind_search(tokens,i):
+def matching_bracket_search(tokens,i):
 	#finds start and end lines of a branched piece of code
 	#returns end of cut out code line number and the cut out tokens
 	#print "Called"
@@ -929,12 +894,12 @@ def fill_in_gaps(tokens,print_flag):
 	return results
 
 def fill_in_gaps_line(line,print_flag):
+	''' fills in gaps, giving instructions nearly uniform format before final assembly'''
 	try:
-		if print_flag: print line
-		if line[1] == "CondR" or line[1] == "CondF":
-			semi_line = [line[0]]+line[3:]
-			#print semi_line
-			return line[:3] + fill_in_gaps_line(semi_line,print_flag)[1:]
+		if print_flag: print line #if there is a call to print from elsewhere
+		if line[1] == "CondR" or line[1] == "CondF":  #if there is a conditional instruction
+			semi_line = [line[0]]+line[3:] #cuts out conditional part
+			return line[:3] + fill_in_gaps_line(semi_line,print_flag)[1:] #combines conditional part (line[:3]) with the result of compiling the rest of the line
 	
 		elif line[1] == "Data":
 			return line
@@ -959,7 +924,7 @@ def fill_in_gaps_line(line,print_flag):
 					return line[:3]+["Zero"]+[line[3]]
 	
 			elif line[1] == "Store":
-				#print	 line
+				#print   line
 				if length == 5: #0 Load reg addr index
 					return line[:3]+[line[4][1:-1]]+[line[3]]
 				else:
@@ -971,18 +936,18 @@ def fill_in_gaps_line(line,print_flag):
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "ADD":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 	
 			elif line[1] == "SUB":
 				if line[3] in register_addresses:
@@ -990,135 +955,128 @@ def fill_in_gaps_line(line,print_flag):
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "MUL":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "DIV":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "MOD":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "AND":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "OR":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "XOR":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "NOT":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+				return [line[0]] + [line[1]+ "Reg"]+ line[2:] + ["Zero","0"]
 			elif line[1] == "NAND":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "NOR":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "XNOR":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "SHL":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "SHR":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "ADDc":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "SUBb":
 				if line[3] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
 					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+[line[4][1:-1]]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
-						return [line[0]] + [line[1]+"Addr"]+line[2:3]+["Zero"]+[line[3]]
+						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
 			elif line[1] == "Out":
 				if line[2] in register_addresses:
 					#register-rgister compare
@@ -1153,7 +1111,7 @@ def fill_in_gaps_line(line,print_flag):
 					return line[:3]+["Zero"]+[line[3]]
 	
 			elif line[1] == "StoreByte":
-				#print	 line
+				#print   line
 				if length == 5: #0 Load reg addr index
 					return line[:3]+[line[4][1:-1]]+[line[3]]
 				else:
@@ -1165,7 +1123,7 @@ def fill_in_gaps_line(line,print_flag):
 					return line[:3]+["Zero"]+[line[3]]
 	
 			elif line[1] == "StoreWord":
-				#print	 line
+				#print   line
 				if length == 5: #0 Load reg addr index
 					return line[:3]+[line[4][1:-1]]+[line[3]]
 				else:
@@ -1189,7 +1147,7 @@ def low_level_assemble(line_list):
 				for i in xrange(4):
 					instr.append(data&255)
 					data >>= 8
-				instr.reverse()	
+				instr.reverse() 
 
 			elif tokens[1] == "Word":
 				data = int(tokens[2])
@@ -1197,7 +1155,7 @@ def low_level_assemble(line_list):
 				for i in xrange(2):
 					instr.append(data&255)
 					data >>= 8
-				instr.reverse()	
+				instr.reverse() 
 
 			elif tokens[1] == "Byte":
 				instr = [int(tokens[2])%256]
@@ -1229,7 +1187,7 @@ def low_level_assemble(line_list):
 					addr >>=8
 					addr1 = addr&255
 					addr >>=8
-					addr0 = addr&255	
+					addr0 = addr&255    
 
 				else:
 					opcode = opcodes[tokens[1]]
@@ -1243,7 +1201,7 @@ def low_level_assemble(line_list):
 					addr >>=8
 					addr1 = addr&255
 					addr >>=8
-					addr0 = addr&255	
+					addr0 = addr&255    
 
 				instr = [opcode,reg1,reg2,cond,addr0,addr1,addr2,addr3]
 		except:

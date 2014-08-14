@@ -98,23 +98,23 @@ default_words = {
 #_____________________ special word definitions _____________________
 def deal_with_if():
 	assembly_lines = [
-	["Pop", "gp0"],
-	["if", "gp0", "then", "{"]
+	"Pop gp0",
+	"if gp0 then {"
 					]
 	return assembly_lines
 
 def deal_with_else():
 	assembly_lines = [
-	["}"],
-	["else","{"]
+	"}",
+	"else {"
 	]
 	return assembly_lines
 
 def deal_with_end_if():
-	return [["}"]]
+	return ["}"]
 
 def deal_with_return():
-	return [["return"]]
+	return ["Return"]
 
 #create an object which handles while loop constructs
 class Loop_helper:
@@ -125,8 +125,8 @@ class Loop_helper:
 	def deal_with_while(self):
 		self.while_stack.append(self.while_loop_counter) # pushes return value
 		assembly_lines = [
-			["Pop", "gp0", "%FORTH.while"+str(self.while_loop_counter)],
-			["if", "gp0", "then", "{"]
+			"Pop gp0 %FORTH.while"+str(self.while_loop_counter),
+			"if gp0 then {"
 		]
 		self.while_loop_counter += 1
 		return assembly_lines
@@ -134,8 +134,8 @@ class Loop_helper:
 	def deal_with_loop(self):
 		return_value = self.while_stack.pop()
 		assembly_lines = [
-			["Load", "PC", "FORTH.while"+str(return_value)],
-			["}"]
+			"Load PC FORTH.while"+str(return_value),
+			"}"
 		]
 		return assembly_lines
 
@@ -158,8 +158,9 @@ def compile_forth():
 	words = get_words(tokens,'')
 	variables,words = get_variables(words)
 	
-	assembly = base_compile(words["fib"])
-	print assembly
+	assembly = base_compile(words["fib"],"fib")
+	for line in assembly:
+		print line
 
 #   assembly = compile_words(words)
 #   run_assembler(assembly)
@@ -184,6 +185,7 @@ def tokenize(text_file):
 	array = 0
 	i = 0
 	token_separators = [" ","\t","\n",",","(",")"]
+	escaped_replace_dict = {"n":"\n",'"':'"',"\\":"\\"} #converts escaped n to \n etc
 	while i < len(text_file):
 		line = text_file[i]
 		if not string and not array:
@@ -219,12 +221,7 @@ def tokenize(text_file):
 						current_token += character
 				else:
 					escaped = 0
-					if character == '"':
-						current_token += '"'
-					if character == "n":
-						current_token += "\n"
-					if character == "\\":
-						current_token += "\\"
+					current_token += escaped_replace_dict.get(character,character)
 			elif array:
 				if character == "]":
 					array = 0
@@ -313,20 +310,28 @@ def get_variables(words):
 
 
 
-def base_compile(word):
+def base_compile(word,word_name):
 	assembly = [] 
 	for token in word:
+		#check if int:
+		try:
+			int(token)
+			token = "@"+token
+		except ValueError:
+			pass
+
+
 		if token == "call":
 			assembly.append("Pop gp0")
 			assembly.append("Goto Programstack.call")
 
-		elif token == "return":
-			assembly.append("Return")
+		elif token in special_words:
+			assembly += special_words[token]()
 
 		else:
 			assembly.append("Push "+token)
 		
-
+	assembly[0] += " %"+word_name
 	return assembly
 
 
