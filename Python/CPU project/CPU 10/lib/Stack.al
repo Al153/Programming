@@ -58,6 +58,7 @@ Store gp7 Datastack.temp %Datastack.pop
 Load gp7 Datastack.pointer 
 Load Flags_reset @4294967287  #resets the borrow flag
 SUB gp7 @4 
+Outd Flags_set
 if Borrow then Load PC stack.underflow
 Store gp7 Datastack.pointer
 Load gp0  Datastack [gp7]
@@ -67,10 +68,36 @@ Move Jump PC
 
 #____________________ stack.errors ____________________
 Load Flags_set stackoverflow			%stack.overflow
+Out @'S'
+Out @'T'
+Out @'A'
+Out @'C'
+Out @'K'
+Out @'O'
+Out @'V'
+Out @'E'
+Out @'R'
+Out @'F'
+Out @'L'
+Out @'O'
+Out @'W'
 Move Jump PC
 
 Load Flags_set stackunderflow 			%stack.underflow
-
+Out @'S'
+Out @'T'
+Out @'A'
+Out @'C'
+Out @'K'
+Out @'U'
+Out @'N'
+Out @'D'
+Out @'E'
+Out @'R'
+Out @'F'
+Out @'L'
+Out @'O'
+Out @'W'
 Move Jump PC  
 
 #___________ print stack ___________

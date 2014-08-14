@@ -540,9 +540,11 @@ def expand_macros(tokens):
 					tokens.append(["String", "str"+str(string_counter) , "'"+string[j]+"'", "$str"+str(string_counter+1) ])
 				string_counter += 1
 
-		for j in xrange(len(tokens[i])):
-			if len(tokens[i][j])>1 and tokens[i][j][0] == "'" and tokens[i][j][2] == "'":
+		for j in xrange(len(tokens[i])): 																							#check for char literals
+			if len(tokens[i][j]) == 3 and tokens[i][j][0] == "'" and tokens[i][j][2] == "'":										#if direct value 'X'
 				tokens[i][j] = str(ord(tokens[i][j][1]))
+			if len(tokens[i][j]) == 4 and tokens[i][j][0] == "@" and tokens[i][j][1] == "'" and tokens[i][j][3] == "'":				#if non direct value @'X'
+				tokens[i][j] = "@" + str(ord(tokens[i][j][2]))
 
 
 

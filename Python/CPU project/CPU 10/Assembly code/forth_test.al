@@ -1,12 +1,11 @@
-int n 5
-Push n
+int n 0
+Push @1
 Call fib
 Call Forth.print
 Return
 
 
 Pop n %fib
-Call stack.print
 Push n
 Push @1
 Push Forth.Equal
@@ -189,9 +188,11 @@ Subroutine Forth.Equal(a,b)
 
 	Compare a b
 	if Equal then {
+		Out @'T'
 		Return One
 	}
 	else {
+		Out @'F'
 		Return Zero
 	}
 
