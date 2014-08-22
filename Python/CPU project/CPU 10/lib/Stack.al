@@ -39,6 +39,12 @@ int Datastack.temp 0
 #pushes value in gp0 to the stack
 											#takes input value 
 Store gp7 Datastack.temp											%Datastack.push
+#Out @'P'
+#Out @'U'
+#Out @'S'
+#Out @'H'
+#Out @10
+
 Load gp7 Datastack.pointer 
  						
 Store gp0 Datastack [gp7]
@@ -55,10 +61,13 @@ Move Jump PC
 
 
 Store gp7 Datastack.temp %Datastack.pop
+#Out @'P'
+#Out @'O'
+#Out @'P'
+#Out @10
 Load gp7 Datastack.pointer 
 Load Flags_reset @4294967287  #resets the borrow flag
 SUB gp7 @4 
-Outd Flags_set
 if Borrow then Load PC stack.underflow
 Store gp7 Datastack.pointer
 Load gp0  Datastack [gp7]
@@ -81,6 +90,7 @@ Out @'F'
 Out @'L'
 Out @'O'
 Out @'W'
+Out @10
 Move Jump PC
 
 Load Flags_set stackunderflow 			%stack.underflow
@@ -98,14 +108,15 @@ Out @'F'
 Out @'L'
 Out @'O'
 Out @'W'
+Out @10
 Move Jump PC  
 
 #___________ print stack ___________
 
 Load gp7 Datastack.pointer %stack.print
 Move Zero gp6
-Out @83
-Out @58
+Out @'S'
+Out @':'
 Out @32
 
 Compare gp6 gp7 %stack.print_loop
@@ -120,14 +131,14 @@ Return
 
 
 #____________ Dup _____________
-int stack.dup.temp
+int stack.dup.temp 0
 	Pop stack.dup.temp		%stack.dup
 	Push stack.dup.temp
 	Push stack.dup.temp
 	Return
 #____________ Swap ____________
-int stack.swap.temp1
-int stack.swap.temp2
+int stack.swap.temp1 0
+int stack.swap.temp2 0
 
 	Pop stack.swap.temp1        %stack.swap
 	Pop stack.swap.temp2
@@ -137,6 +148,6 @@ int stack.swap.temp2
 	Return
 
 #____________ Drop ____________
-int stack.drop.temp
+int stack.drop.temp 0
 	Pop stack.drop.temp         %stack.drop 
 	Return

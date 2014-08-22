@@ -16,7 +16,6 @@ Subroutine Forth.SUB(a,b)
 # . . . a b
 	def a gp1
 	def b gp2
-
 	SUB a b
 	Return a
 
@@ -29,7 +28,7 @@ Subroutine Forth.MUl(a,b)
 	Return a
 
 #DIV
-Subroutine Forth.SUB(a,b)
+Subroutine Forth.DIV(a,b)
 # . . . a b
 	def a gp1
 	def b gp2
@@ -134,7 +133,6 @@ Subroutine Forth.Equal(a,b)
 # . . . a b
 	def a gp1
 	def b gp2
-
 	Compare a b
 	if Equal then {
 		Return One
@@ -241,9 +239,30 @@ int Forth.drop.temp
 #prints to of stack
 	Pop gp0 					%Forth.print
 	Outd gp0
+	Return
 
 #____________ print_stack ____________
 #prints whole stack
 
 	Call stack.print %Forth.print_stack
 	Return
+	
+
+Subroutine Forth.Pop(data,address)
+	def data gp1
+	def address gp2
+
+	Store data 0 [address]
+	Return
+
+
+
+Subroutine Forth.Push(address)
+	def data gp1
+	def address gp2
+
+	Load data 0 [address]
+	Return data
+
+Call Strings.print %Forth.echo
+Return

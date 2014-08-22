@@ -165,7 +165,7 @@ def assemble():
 	tokens = full_text_tokenize(file_object) #+ [["int","16","16"]]
 	print "Okay"
 	print "Unwinding program flow = ",
-	tokens = unwind_control_flow(tokens)
+	tokens,code_block_count = unwind_control_flow(tokens,0)
 	print "Okay"
 	if "-p" in flags:
 		log(tokens,"log\preparse.log")
@@ -174,7 +174,7 @@ def assemble():
 	print "Okay"
 	print "Importing external code = ",
 	while things_to_import(tokens):
-		tokens = do_import(tokens)
+		tokens,code_block_count = do_import(tokens,code_block_count)
 	print "Okay"
 	print "Finding and replacing structs = ",
 	tokens = find_structs(tokens)
@@ -278,9 +278,10 @@ def expand_macros(tokens):
 	using_strings = 0
 	string_counter = 0
 
-
-	for i in xrange(len(tokens)):
+	i = 0
+	while i < len(tokens):
 		line = tokens[i]
+		#print line
 		if line [0] == "Subroutine":
 			try:
 				subroutine_name = line[1] #adds a % to convert to pointer format
@@ -301,7 +302,9 @@ def expand_macros(tokens):
 
 
 			tokens = tokens[:i]+ lines_to_add + tokens[i+1:]
-			line = tokens[i]
+			#line = tokens[i]
+			i -= 1
+		i += 1
 
 	replace_dict,tokens = find_and_replace(tokens)
 	i = 0
@@ -543,11 +546,8 @@ def expand_macros(tokens):
 		for j in xrange(len(tokens[i])): 																							#check for char literals
 			if len(tokens[i][j]) == 3 and tokens[i][j][0] == "'" and tokens[i][j][2] == "'":										#if direct value 'X'
 				tokens[i][j] = str(ord(tokens[i][j][1]))
-			if len(tokens[i][j]) == 4 and tokens[i][j][0] == "@" and tokens[i][j][1] == "'" and tokens[i][j][3] == "'":				#if non direct value @'X'
+			if len(tokens[i][j]) == 4 and tokens[i][j][0] == "@" and tokens[i][j][1] == "'" and tokens[i][j][3] == "'":				#if non direct value @'X' create a variable with value ord(chr)
 				tokens[i][j] = "@" + str(ord(tokens[i][j][2]))
-
-
-
 
 		i += 1
 
@@ -613,7 +613,7 @@ def things_to_import(tokens): #checks where there is anything to import
 
 imported_files = []
 
-def do_import(tokens): #carries out one import
+def do_import(tokens,code_block_count): #carries out one import
 	i = 0
 	while i <len(tokens):
 
@@ -629,25 +629,23 @@ def do_import(tokens): #carries out one import
 			except IOError:
 				print "Invalid import name: ", import_name
 				quit()
-			new_tokens = unwind_control_flow(new_tokens)
+			new_tokens,code_block_count = unwind_control_flow(new_tokens,code_block_count)
 			new_tokens = expand_macros(new_tokens)
-			#print_tokens(tokens[:i])
-			#print "\n\n"
-			#print_tokens(new_tokens)
-			#print_tokens(tokens[i+1:])
-			#quit()
-			return tokens[:i] + tokens[i+1:] + new_tokens
+
+			return tokens[:i] + tokens[i+1:] + new_tokens,code_block_count
 		elif tokens[i][0] == "import"  and tokens[i][1] in imported_files:
 			del tokens[i]
 		i += 1
-	return tokens
+	return tokens, code_block_count
 
-def unwind_control_flow(tokens):
+def unwind_control_flow(tokens,code_block_count):
 	#unwinds if statements and bracketed off code eg {}
 	i = 0
-	code_block_count = 0
+	#codeblock count starts at 0, but to account for imports, it is set by the parent function
 	tokens.append(["Halt"])
+	debug_state = 'not_found'
 	while i < len(tokens):
+
 
 		if "{" in tokens[i]: 														#if there is a section of code to snip out and unwind:
 			bracket_location =tokens[i].index("{")  								#find location of bracket in line
@@ -664,18 +662,19 @@ def unwind_control_flow(tokens):
 			if tokens[i+2][0] == "else":                                            #checks for an else statement
 				cut_code,end_pointer = matching_bracket_search(tokens,i+2)          #finds new matching } and new cut code
 				label_to_move = tokens[i+1][-1]                                     #we want to send the end of the true bit (eg if a then {a b c}) to a point after the else jump
-				
+
 				tokens[i+1] = ["Load", "PC", "Code_block" + str(code_block_count)]  #insert else jump
 				cut_code.append(["Load","PC",label_to_move[1:]])                    #tell the end of the else bit to the same label as the end of the true bit (endif)
 				cut_code[0].append("%Code_block"+str(code_block_count))             #add a label to the start of the else code
 				code_block_count +=1                                                #increment code block pointer
 
 				tokens.insert(end_pointer,["Pass",label_to_move])                   #gives return label
-				del tokens[i+1:end_pointer]                                         #get rid of cut out code
+				del tokens[i+2:end_pointer]                                         #get rid of cut out code
 				tokens += cut_code                                                  #add cut out code to the end of the tokens
 
 		i += 1
-	return tokens
+#	for line in tokens: print line
+	return tokens,code_block_count
 
 def matching_bracket_search(tokens,i):
 	#finds start and end lines of a branched piece of code
@@ -1221,6 +1220,9 @@ def store(machine_code):
 		file_name = sys.argv[2]
 	else:
 		if sys.argv[1][:13] == 'Assembly code':
+			file_name = 'Machine code'+sys.argv[1][13:]
+
+		elif sys.argv[1][:13] == 'Compiled code':
 			file_name = 'Machine code'+sys.argv[1][13:]
 
 		else:

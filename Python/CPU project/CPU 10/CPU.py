@@ -225,7 +225,7 @@ class CPU:
 			
 				self.step()
 				if self.instruction_count >= start:
-					print self.instruction, self.addr, self.Registers.registers[4].data, self.Registers.registers[3].data, self.Registers.registers[7].data
+					print "instr: ",self.instruction, "A: ", self.addr, "PC: ",self.Registers.registers[4].data, "JMP: ",self.Registers.registers[3].data, "FLG: ", self.Registers.registers[5].data,
 					next = str(raw_input(""))
 				self.instruction_count += 1
 				

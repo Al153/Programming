@@ -1,25 +1,35 @@
 int n 0
-Push @1
+Push @4
 Call fib
 Call Forth.print
 Return
 
-
 Pop n %fib
+
+Out @'F'
+Out @'I'
+Out @'B'
+Out @32
+Outd n
+Out @10
+
 Push n
 Push @1
 Push Forth.Equal
 Pop gp0
 Goto Programstack.call
+
 Push n
 Push @0
 Push Forth.Equal
 Pop gp0
 Goto Programstack.call
+
 Push Forth.OR
 Pop gp0
 Goto Programstack.call
 Pop gp0
+
 if gp0 then {
 	Push @1
 	Return
@@ -30,11 +40,19 @@ else {
 	Push Forth.SUB
 	Pop gp0
 	Goto Programstack.call
+	
+	Push Forth.dup
+	Pop gp0
+	Goto Programstack.call
+
+	Call Forth.print_stack
 	Push fib
 	Pop gp0
 	Goto Programstack.call
-	Push n
-	Push @2
+	Push Forth.swap
+	Pop gp0
+	Goto Programstack.call
+	Push @1
 	Push Forth.SUB
 	Pop gp0
 	Goto Programstack.call
@@ -67,7 +85,6 @@ Subroutine Forth.SUB(a,b)
 # . . . a b
 	def a gp1
 	def b gp2
-
 	SUB a b
 	Return a
 
@@ -80,7 +97,7 @@ Subroutine Forth.MUl(a,b)
 	Return a
 
 #DIV
-Subroutine Forth.SUB(a,b)
+Subroutine Forth.DIV(a,b)
 # . . . a b
 	def a gp1
 	def b gp2
@@ -185,14 +202,11 @@ Subroutine Forth.Equal(a,b)
 # . . . a b
 	def a gp1
 	def b gp2
-
 	Compare a b
 	if Equal then {
-		Out @'T'
 		Return One
 	}
 	else {
-		Out @'F'
 		Return Zero
 	}
 
