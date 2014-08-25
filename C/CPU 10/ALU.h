@@ -1,0 +1,70 @@
+// __________________ ALU _____________________________
+void ALU_op(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value, unsigned int op){ //need to pass an array to the function
+    unsigned int result = 0;
+	unsigned int top_of_result = 0;
+	unsigned long long_result = 0;
+	unsigned int flags = 0;
+	switch (op){
+		case 0: 			//ADD
+			result = r1_value + r2_value;
+			if (result < r1_value){	//if there is a carry
+				flags = 16;
+			}
+		case 1:		//SUB
+			result = r1_value - r2_value;
+			if (result > r1_value){ 	//if there is a borrow
+				flags = 8;
+			}
+		case 2:		//MUl
+			long_result = (long)r1_value * (long)r2_value;
+			result = long_result & 4294967295;
+			top_of_result = long_result>>32;
+		case 3:		//DIV
+			if  (r2_value == 0){ 	//division by 0
+				flags = 4;
+				result = 4294967295;	
+			}
+			else {
+				result = r1_value/r2_value;
+			}
+		case 4:		//MOD
+			if (r2_value == 0){
+				flags = 4;
+				result = 0;
+			}
+			else {
+				result = r1_value % r2_value;
+			}
+		case 5:		//AND
+			result = r1_value & r2_value;
+		case 6:		//OR
+			result = r1_value | r2_value;
+		case 7:		//XOR
+			result = r1_value ^ r2_value;
+		case 8: 		//NOT
+			result = r1_value ^ 4294967295;
+		case 9:		//NAND
+			result = (r1_value & r2_value) ^ 4294967295;
+		case 10:		//NOR
+			result = (r1_value | r2_value) ^ 4294967295;
+		case 11:		//XNOR
+			result = (r1_value ^ r2_value) ^ 4294967295;
+		case 12:		//SHL
+			result = r1_value << r2_value;
+		case 13:		//SHR
+			result = r1_value >> r2_value;
+		case 14:		//ADDc
+			result = r1_value + r2_value + 1;
+			if (result < r1_value){	//if there is a carry
+				flags = 16;
+			}
+		case 15:		//SUBb
+			result = r1_value - 1 - r2_value;
+			if (result > r1_value){ 	//if there is a borrow
+				flags = 8;
+			}
+	}
+	to_return[0] = result;
+	to_return[1] = top_of_result;
+	to_return[2] = flags;
+}

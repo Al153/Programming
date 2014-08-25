@@ -144,7 +144,7 @@ def get_file_names():
 		i += 1
 
 	if not destination_file:
-		destination_file = "Compiled code\\"+source_file.split("\\")[-1][:-3]+"al" 
+		destination_file = "..\\..\\Compiled code\\"+source_file.split("\\")[-1][:-3]+"al" 
 	return source_file,destination_file,flags
 
 def get_code(file_name):
@@ -325,6 +325,12 @@ def optimisation(assembly):
 	'''
 	optimises the assembly code generated - such as removing unnecessary pushes and pulls
 	'''
+	i = 0
+	while i <len(assembly):
+		if assembly[i][:4] == "Push" and assembly[i+1] == "Pop gp0":
+			assembly[i] = "Load gp0"+ assembly[i][4:]
+			assembly = assembly[:i+1] + assembly[i+2:]
+		i += 1
 	return assembly
 
 def store_to_file(assembly,file_name):
@@ -360,7 +366,7 @@ def parse_hlibs(hlib_list):
 	for hlib_file in to_import:
 		if not hlib_file in imported:								#checks the hlib file has not been imported yet
 			try:
-				hlib_dict = json.loads(open("Compilers\\Forth\\Headers\\"+hlib_file).read())   	#extracts the dictionary from the file
+				hlib_dict = json.loads(open("Headers\\"+hlib_file).read())   	#extracts the dictionary from the file
 				imported.append(hlib_file) 						  	#appends file name to a list of imported hlibs, so the same file isnt imported again
 				source_files |=  set(hlib_dict.get("source",[])) 	#extracts a list of the names of source files and appends to main list, removing duplicates using sets
 				word_dict.update(hlib_dict.get("words",{}))			#extracts the word lookup table and appends it to the main one
@@ -378,7 +384,7 @@ def generate_header(imported_hlib_files,source_files):
 	source_text = "#<FORTH COMPILER: These files are imported by the .hlib files: \n\t\t"
 	for source_file in source_files:
 		try:
-			test = open("Compilers\\Forth\\Headers\\"+source_file)
+			test = open("Headers\\"+source_file)
 			source_text += "import Compilers\\Forth\\Headers\\"+ source_file +"\t\t\n"
 		except IOError:
 			print "ERROR: Unknown source file: "+source_file
@@ -446,7 +452,7 @@ def get_words(tokens,name_space,hlib_list):
 def get_variables(words):
 	#cuts out variable declaring tokens
 	primitive_data_types = ["int","char","word","str"] #an identifier for these is 3 tokens long, eg int i 0
-	primitive_array_data_types = ["Array","Byte_array"] #an identifier for these is 4 tokens long eg array list 5 [3,4,5,6,7]
+	primitive_array_data_types = ["array","byte_array"] #an identifier for these is 4 tokens long eg array list 5 [3,4,5,6,7]
 	variables = { 				#variables stored as name:[type,(size),value]
 		"global":{
 			"global":{}
@@ -461,21 +467,28 @@ def get_variables(words):
 			while i < len(word): #find variable identifying tokens and extract from text
 				token = word[i]  #gets the token
 				if token in primitive_data_types: 											#simple data types
-					variables[name_space][word_name][word[i+1]] = [word[i],word[i+2]] #in forth word[i:i+3] = [int, name, size]
+					if word[i] == "str":													#adds quotes to sstrings
+						word[i+2] = '"'+word[i+2]+'"'
+					variables[name_space][word_name][word[i+1]] = [word[i],word[i+2]] 		#in forth word[i:i+3] = [int, name, size]
 					word = word[:i]+word[i+3:] 												#cuts out declaration
-	
+					i -= 1
+
 				elif token in primitive_array_data_types:
 					variables[name_space][word_name][word[i+1]] = [word[i], word[i+2], word[i+3]] 		
 					word = word[:i]+word[i+4:]
-	
-				elif token == "global":
+					i -= 1
+
+				elif token == "global":														#same for globals
 					if word[i+1] in primitive_data_types:
+						if word[i+1] == "str": 						
+							word[i+3] = '"'+word[i+3]+'"'
 						variables["global"]["global"][word[i+2]] = [word[i+1], word[i+3]]
 						word = word[:i]+word[i+4:]
-	
+						i -= 1
 					elif word[i+1] in primitive_array_data_types:
 						variables["global"]["global"][word[i+2]] = [word[i+1],word[i+3],word[i+4]]
 						word = word[:i]+word[i+5:]
+						i -= 1
 				i += 1 
 			words[name_space][word_name] = word
 	return variables, words
@@ -513,6 +526,10 @@ def fix_variable_calls(body,variable_dict,word_dict):
 					if "." not in token: 						#checks it's not a word call
 						if token in variable_dict[name_space][word_name]:  #checks if a local variable
 							word[i] = name_space + ":" + word_name + ":" + token #puts in full path of variable
+
+						elif token in variable_dict["global"]["global"]: 	#checks if a global variable
+							word[i] = "global:global:"+token
+
 						elif ":" in token:
 							variable_path_list = token.split(":") 				#splits name into path, ie main.main.x ==> main,   main,   x
 
@@ -537,6 +554,7 @@ def fix_variable_calls(body,variable_dict,word_dict):
 								quit()
 						else:
 							if token not in key_words and token not in word_dict.values():
+								print word_name, word
 								print "ERROR: Undefined token: "+ token
 								quit()
 

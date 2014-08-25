@@ -21,13 +21,13 @@
 #    Address     Notes
 #
 #    0x0 		Zero register: always = [0,0,0,0]
-#  	 0x1			One register:  always = [0,0,0,1]
+#  	 0x1		One register:  always = [0,0,0,1]
 #  	 0x2 		Accumulator:   stores the result of most recent multiplication
-#  	 0x3			jump register: the original value of the program counter gets moved into this
-#  	 0x4			Program counter: stores address of the next instruction to execute
+#  	 0x3		jump register: the original value of the program counter gets moved into this
+#  	 0x4		Program counter: stores address of the next instruction to execute
 #  	 0x5 		Flags set 	- data written here will be ORed with the data in the flags register
-#  	 0x6			Flags reset - data written here will be ANDed with the data in the flags register
-#  	 0x7			Stack pointer - reserved for stack use (but stack is not built into hardware)
+#  	 0x6		Flags reset - data written here will be ANDed with the data in the flags register
+#  	 0x7		Stack pointer - reserved for stack use (but stack is not built into hardware)
 # 
 #
 #	 0x8 ==> 0xf GP registers (0...7)

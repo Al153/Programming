@@ -255,6 +255,19 @@ Subroutine Forth.Pop(data,address)
 	Store data 0 [address]
 	Return
 
+Subroutine Forth.Pop_byte(data,address)
+	def data gp1
+	def address gp2
+
+	StoreByte data 0 [address]
+	Return
+
+Subroutine Forth.Pop_word(data,address)
+	def data gp1
+	def address gp2
+
+	StoreWord data 0 [address]
+	Return
 
 
 Subroutine Forth.Push(address)
@@ -264,5 +277,29 @@ Subroutine Forth.Push(address)
 	Load data 0 [address]
 	Return data
 
+Subroutine Forth.Push_byte(address)
+	def data gp1
+	def address gp2
+
+	LoadByte data 0 [address]
+	Return data
+
+Subroutine Forth.PushWord(address)
+	def data gp1
+	def address gp2
+
+	LoadWord data 0 [address]
+	Return data
+
+
+
 Call Strings.print %Forth.echo
+Return
+
+Pop gp0 %Forth.echo_char
+Out gp0
+Return
+
+Out @13 %Forth.Carriage_return
+Out @10
 Return

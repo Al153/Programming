@@ -23,6 +23,7 @@
 			"NAND":"Forth.NAND",
 			"NOR":"Forth.NOR",
 			"XNOR":"Forth.XNOR",
+
 			"<":"Forth.Less",
 			">":"Forth.Greater",
 			"=":"Forth.Equal",
@@ -31,13 +32,28 @@
 			">=":"Forth.Greater_or_Equal",
 			"=>":"Forth.Greater_or_Equal",
 			"!=":"Forth.Not_Equal",
+
 			"SWAP":"Forth.swap",
 			"DUP":"Forth.dup",
 			"DROP":"Forth.drop",
+
 			".":"Forth.print",
 			".s":"Forth.print_stack",
+			".c":"Forth.echo_char",
+			"ECHO":"Forth.echo",
+			"CR":"Forth.Carriage_return",
+
 			"PUSH":"Forth.Push",
+			"PUSHB":"Forth.Push_byte",
+			"PUSHW":"Forth.Push_word",
+			
 			"POP":"Forth.Pop",
-			"ECHO":"Forth.echo"
+			"POPB":"Forth.Pop_byte",
+			"POPW":"Forth.Pop_word",
+			"LOAD":"Forth.Pop",
+			"LOADB":"Forth.Pop_byte",
+			"LOADW":"Forth.Pop_word"
+			
+
 			}
 }

@@ -39,12 +39,6 @@ int Datastack.temp 0
 #pushes value in gp0 to the stack
 											#takes input value 
 Store gp7 Datastack.temp											%Datastack.push
-#Out @'P'
-#Out @'U'
-#Out @'S'
-#Out @'H'
-#Out @10
-
 Load gp7 Datastack.pointer 
  						
 Store gp0 Datastack [gp7]
@@ -61,10 +55,6 @@ Move Jump PC
 
 
 Store gp7 Datastack.temp %Datastack.pop
-#Out @'P'
-#Out @'O'
-#Out @'P'
-#Out @10
 Load gp7 Datastack.pointer 
 Load Flags_reset @4294967287  #resets the borrow flag
 SUB gp7 @4 
