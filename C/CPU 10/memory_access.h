@@ -10,8 +10,8 @@ void store_memory(unsigned int addr,unsigned int data,unsigned char *MEMORY){
 	data_bytes[1] = (unsigned char) data&255;
 	data >>= 8;
 	data_bytes[0] = (unsigned char) data&255;
-
-	for (int i = 0; i <4 ; i++){
+	int i;
+	for (i = 0; i <4 ; i++){
 		MEMORY[(addr + i)&MEMORY_SIZE] = data_bytes[i];
 	}
 	
@@ -23,7 +23,8 @@ void store_word_memory(unsigned int addr,unsigned int data, unsigned char *MEMOR
 	data_bytes[1] =(unsigned char) data&255;
 	data >>= 8;
 	data_bytes[0] = (unsigned char) data&255;
-	for (int i = 0; i <2 ; i++){
+	int i;
+	for ( i = 0; i <2 ; i++){
 		MEMORY[(addr + i)&MEMORY_SIZE] = data_bytes[i];
 	}
 }
@@ -37,8 +38,8 @@ void store_byte_memory(unsigned int addr, unsigned int data, unsigned char *MEMO
 
 unsigned int read_memory(unsigned int addr, unsigned char *MEMORY){
 	unsigned int to_return = 0;
-
-	for (int i = 0; i<4;i++){
+	int i;
+	for (i = 0; i<4;i++){
 		to_return <<= 8;
 		to_return += (unsigned int) MEMORY[(addr+i)&MEMORY_SIZE];
 	}
@@ -47,7 +48,8 @@ unsigned int read_memory(unsigned int addr, unsigned char *MEMORY){
 
 unsigned int read_word_memory(unsigned int addr, unsigned char *MEMORY){
 	unsigned int to_return = 0;
-	for (int i = 0; i<2;i++){
+	int i;
+	for ( i = 0; i<2;i++){
 		to_return <<= 8;
 		to_return += (unsigned int) MEMORY[(addr+i)&MEMORY_SIZE];
 	}

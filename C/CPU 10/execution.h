@@ -20,7 +20,7 @@ unsigned char get_conditional(unsigned int *registers,unsigned char conditional)
 	if (conditional&128){ //if there is a conditional flag
 		if (!(conditional & 64)){ //if looking for a flag
 			if (!((1<<(31-(conditional & 31))) & registers[6])){ //i
-				if ((conditional&31 == 24) || (conditional&31 == 25) || (conditional&31 ==26)){
+				if (((conditional&31) == 24) || ((conditional&31) == 25) || ((conditional&31) ==26)){
 					registers[5] &= 4294967071; //reset all three of the  ><= flags
 				} 
 				else{
@@ -30,13 +30,13 @@ unsigned char get_conditional(unsigned int *registers,unsigned char conditional)
 
 			}
 			else{
-				if  ((conditional&31 == 24) || (conditional&31 == 25) || (conditional&31 ==26)){
+				if  (((conditional&31) == 24) || ((conditional&31) == 25) || ((conditional&31) ==26)){
 					registers[5] &= 4294967071;					//#reset all three of the  ><= flags
-					return 1;
 				}
 				else{
 					registers[5] &= (1<<(31-(conditional&31)))^4294967295;
 				}
+				return 1;
 
 			}
 		}
@@ -197,7 +197,7 @@ unsigned int execute(unsigned char instr, unsigned char reg1,unsigned char reg2,
 				return 0;
 
 			default:
-				if  (16 <= instr < 48){ //ALU operatations
+				if  ((16 <= instr) && (instr < 48)){ //ALU operatations
 					if (instr < 32){	//Reg/reg instr
 						reg1_value = read_registers(registers,reg1); //get values
 						reg2_value = read_registers(registers,reg2);

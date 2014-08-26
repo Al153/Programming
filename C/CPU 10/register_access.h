@@ -14,8 +14,6 @@ void write_registers(unsigned int *registers,unsigned char addr,unsigned int dat
 }
 
 unsigned int read_registers(unsigned int *registers,unsigned char addr){
-	unsigned int to_return = 0;
-
 	if(addr == 6){
 		return registers[5];
 	}
