@@ -37,8 +37,8 @@ void init_memory(unsigned char *MEMORY, char *name){
 	unsigned char chr; 	//exctracted character
 	int i = 0;
 
-	FILE *fp = fopen(name, "rb");
-	if (fp == NULL){
+	FILE *fp = fopen(name, "rb");  //get file
+	if (fp == NULL){ 				//check valid file
 		printf("ERROR: Failed to open file \"%s\"\n",name);
 		exit(1);
 	}
@@ -46,6 +46,7 @@ void init_memory(unsigned char *MEMORY, char *name){
 	state = 0;
 	while (state != 6){   //parsing state machine, state of 6 ==> halt;
 		fread(&chr,1,1,fp);
+		getchar();
 
 		if (state == 0){
 			printf("%x\n",chr);
@@ -91,6 +92,14 @@ void init_memory(unsigned char *MEMORY, char *name){
 		}
 	}
 	fclose(fp);
+}
+
+void alt_init_memory(unsigned char *MEMORY, char *name){
+	FILE *fp = fopen(name, "rb");
+	if (fp == NULL){
+		printf("ERROR: Failed to open file \"%s\"\n",name);
+		exit(1);
+	}
 }
 
 int main(int argc, char *argv[]){

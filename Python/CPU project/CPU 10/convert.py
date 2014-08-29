@@ -5,7 +5,7 @@ import sys
 def bytify(integer):
 	return_array = [0,0,0,0]
 	for i in range(4):
-		return_array[i] = integer&255
+		return_array[i] = integer&255    
 		integer >>= 8
 	return_array.reverse()
 	return_string = ''
@@ -63,6 +63,22 @@ def test():
 		if state == 6:
 			quit()
 
+def alternate_convert():
+	char_array = []
+	json_file = open(sys.argv[1]).read()
+	json_dict = json.loads(json_file)
+	for key in json_dict:
+		address = int(key)
+		char = chr(int(json_dict[key]))
+		if len(char_array)>address: #if space then sticks in correct space
+			char_array[address] =  char
+		else:  #else extend array
+			char_array += [char(0) for i in range(address - len(char_array) + 1)]
+
+	char_string = ''.join(char_array)
+	destination_file = open(sys.argv[1][:-2]+"cml",'w')
+	destination_file.write(binary_string)
+	destination_file.close()
 
 
 
