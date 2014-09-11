@@ -14,14 +14,16 @@ def bytify(integer):
 	return return_string
 
 def main():
-	json_file = open(sys.argv[1]).read()
+	source_name = sys.argv[1]
+	destination_name = "C machine code\\"+source_name.split("\\")[1][:-2]+"cml"
+	json_file = open(source_name).read()
 	json_dict = json.loads(json_file)
 	binary_string = ''
 	for key in json_dict:
 		binary_string += bytify(int(key)) + chr(int(json_dict[key])&255)+chr(0) #the last byte is to tell whether it'sthe end of file
 	binary_string = binary_string[:-1] + chr(1) #adds stop signal
 
-	destination_file = open(sys.argv[1][:-2]+"cml",'w')
+	destination_file = open(destination_name,'wb')
 	destination_file.write(binary_string)
 	destination_file.close()
 
@@ -30,8 +32,8 @@ def set_memory(data,address):
 	pass
 
 def test():
-	print open("Machine code\\Fibonacci.cml",'r').read()
-	test_file = open("Machine code\\Fibonacci.cml",'r')
+	print open("Machine code\\Fibonacci.cml",'rb').read()
+	test_file = open("Machine code\\Fibonacci.cml",'rb')
 	address = 0
 	state = 0
 	for char in test_file.read():
@@ -76,7 +78,7 @@ def alternate_convert():
 			char_array += [char(0) for i in range(address - len(char_array) + 1)]
 
 	char_string = ''.join(char_array)
-	destination_file = open(sys.argv[1][:-2]+"cml",'w')
+	destination_file = open(sys.argv[1][:-2]+"cml",'wb')
 	destination_file.write(binary_string)
 	destination_file.close()
 
@@ -85,5 +87,4 @@ def alternate_convert():
 
 
 main()
-test()
 

@@ -7,7 +7,7 @@ void out_char(unsigned int data){
 }
 
 void out_data(unsigned int data){
-	printf("%u\n", data);
+	printf("%u", data);
 
 }
 

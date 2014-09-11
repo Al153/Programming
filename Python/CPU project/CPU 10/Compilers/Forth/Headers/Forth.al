@@ -2,7 +2,7 @@
 
 #ALU commands
 
-
+import lib\Strings
 #ADD
 Subroutine Forth.ADD(a,b)
 	def a gp1
@@ -20,7 +20,7 @@ Subroutine Forth.SUB(a,b)
 	Return a
 
 #MUL
-Subroutine Forth.MUl(a,b)
+Subroutine Forth.MUL(a,b)
 	def a gp1
 	def b gp2
 

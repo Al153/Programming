@@ -4,6 +4,7 @@ void ALU_op(unsigned int *to_return, unsigned int r1_value, unsigned int r2_valu
 	unsigned int top_of_result = 0;
 	unsigned long long_result = 0;
 	unsigned int flags = 0;
+
 	switch (op){
 		case 0: 			//ADD
 			result = r1_value + r2_value;
@@ -20,7 +21,7 @@ void ALU_op(unsigned int *to_return, unsigned int r1_value, unsigned int r2_valu
 		case 2:		//MUl
 			long_result = (long)r1_value * (long)r2_value;
 			result = long_result & 4294967295;
-			top_of_result = long_result>>32;
+			top_of_result = (unsigned int) long_result>>32;
 			break;
 		case 3:		//DIV
 			if  (r2_value == 0){ 	//division by 0
@@ -80,6 +81,7 @@ void ALU_op(unsigned int *to_return, unsigned int r1_value, unsigned int r2_valu
 			}
 			break;
 	}
+
 	to_return[0] = result;
 	to_return[1] = top_of_result;
 	to_return[2] = flags;
