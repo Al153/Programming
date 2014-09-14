@@ -1,0 +1,9 @@
+{
+	"source":["string_tools.al"],
+	"import":[],
+	"words":{
+		"sCopy":"string_tools.copy",
+		"sAlloc":"string_tools_allocate",
+		"sDealloc":"string_tools_deallocate"
+	}
+}

@@ -1,9 +1,6 @@
-#_________________ to do ________________
+#Compiler for My CPU emulator - not a very good example of code!
 
-
-
-
-
+import os
 import sys
 import json
 opcodes = {
@@ -170,11 +167,11 @@ def assemble():
 	if "-p" in flags:
 		log(tokens,"log\preparse.log")
 	print "Extracting defined terms = ",
-	tokens = expand_macros(tokens)              #expand pseudo commands such as "Goto ... " or "if ... then ... " or "def ... ... "
+	tokens,string_counter = expand_macros(tokens,0)              #expand pseudo commands such as "Goto ... " or "if ... then ... " or "def ... ... "
 	print "Okay"
 	print "Importing external code = ",
 	while things_to_import(tokens):
-		tokens,code_block_count = do_import(tokens,code_block_count)
+		tokens,code_block_count,string_counter = do_import(tokens,code_block_count,string_counter)
 	print "Okay"
 	print "Finding and replacing structs = ",
 	tokens = find_structs(tokens)
@@ -195,7 +192,10 @@ def assemble():
 	machine_code = low_level_assemble(tokens)   #need to modify low level assemble function to take a non string entry
 	print "Okay"
 	print "Writing to machine code file = ",
-	store(machine_code)
+	file_name = store(machine_code)
+	print "Okay"
+	print "Creating C machine language file = ",
+	os.system('python convert.py "' + file_name + '"')
 	print "Okay"
 	print "\n\nAssembly complete"
 
@@ -272,11 +272,12 @@ def full_text_tokenize(text_file):
 	#print token_list
 	return token_list
 
-def expand_macros(tokens):
+def expand_macros(tokens,string_counter):
 
 	using_stack = 0
 	using_strings = 0
-	string_counter = 0
+	#string_counter = 0
+
 
 	i = 0
 	while i < len(tokens):
@@ -567,13 +568,19 @@ def expand_macros(tokens):
 			j += 1
 		i += 1
 
+	i = 0
+	while i<len(tokens):
+		if tokens[i] == ["Move","gp0","gp0"]:
+			del tokens[i]
+			i -= 1
+		i += 1
 
 	if using_stack and tokens[0] != ["import","lib\Stack"]:
 		tokens.insert(0,["import","lib\Stack"])
 	if using_strings and tokens[0] != ["import","lib\Strings"]:
 		tokens.insert(0,["import","lib\Strings"])
 
-	return tokens
+	return tokens,string_counter
 
 
 
@@ -613,7 +620,7 @@ def things_to_import(tokens): #checks where there is anything to import
 
 imported_files = []
 
-def do_import(tokens,code_block_count): #carries out one import
+def do_import(tokens,code_block_count,string_counter): #carries out one import
 	i = 0
 	while i <len(tokens):
 
@@ -630,13 +637,13 @@ def do_import(tokens,code_block_count): #carries out one import
 				print "Invalid import name: ", import_name
 				quit()
 			new_tokens,code_block_count = unwind_control_flow(new_tokens,code_block_count)
-			new_tokens = expand_macros(new_tokens)
+			new_tokens,string_counter = expand_macros(new_tokens,string_counter)
 
-			return tokens[:i] + tokens[i+1:] + new_tokens,code_block_count
+			return tokens[:i] + tokens[i+1:] + new_tokens,code_block_count,string_counter
 		elif tokens[i][0] == "import"  and tokens[i][1] in imported_files:
 			del tokens[i]
 		i += 1
-	return tokens, code_block_count
+	return tokens, code_block_count,string_counter
 
 def unwind_control_flow(tokens,code_block_count):
 	#unwinds if statements and bracketed off code eg {}
@@ -1234,6 +1241,7 @@ def store(machine_code):
 	open_file = open(file_name,"w")
 	open_file.write(to_store)
 	open_file.close()
+	return file_name
 
 def log(tokens,name):
 	log_file = open(name,"w")
