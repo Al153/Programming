@@ -15,18 +15,24 @@ import Compilers\Forth\Headers\forth.al
 
 
 #<FORTH COMPILER the following are declarations for all variables used in the forth program
-			str main:main:message "hello world
+			int main:main:test 0
+			str main:main:gen_string0 "hello world
 "
-			int main:main:*message main:main:message
+			int main:main:*gen_string0 main:main:gen_string0
+			int main:main:*test main:main:test
 #<FORTH COMPILER: end of variable declarations
 
 
 #<FORTH COMPILER: Assembly generated for word: main.main
-Push main:main:message %main.main
-Load gp0 string_tools.copy
+Push main:main:gen_string0 %main.main
+Push main:main:*test
+Load gp0 Forth.Pop
 Goto Programstack.call
-Load gp0 Forth.print_stack
+Push @66
+Push main:main:test
+Load gp0 Forth.Pop_byte
 Goto Programstack.call
+Push main:main:test
 Load gp0 Forth.echo
 Goto Programstack.call
 Return

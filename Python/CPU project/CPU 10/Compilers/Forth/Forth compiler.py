@@ -183,6 +183,7 @@ def tokenize(text_file):
 		for character in line:
 			if not string and not array:
 				if character == '"' and current_token == '':
+					current_token = '"'
 					string = 1
 				elif character == '[' and current_token == '':
 					array = 1
@@ -198,6 +199,7 @@ def tokenize(text_file):
 			elif string:
 				if not escaped:
 					if character == '"':
+						current_token += '"'
 						string = 0
 						line_tokens.append(current_token) 
 						current_token = ''
@@ -463,25 +465,22 @@ def get_variables(words):
 		for word_name in words[name_space]:
 			variables[name_space][word_name] = {} #creates variable space
 			word = words[name_space][word_name]   #gets word tokens
+			generated_string_count = 0 #number of strings in text without declaration (for thngs like ' "hello" ECHO' )
 			i = 0
 			while i < len(word): #find variable identifying tokens and extract from text
 				token = word[i]  #gets the token
 				if token in primitive_data_types: 											#simple data types
-					if word[i] == "str":													#adds quotes to sstrings
-						word[i+2] = '"'+word[i+2]+'"'
 					variables[name_space][word_name][word[i+1]] = [word[i],word[i+2]] 		#in forth word[i:i+3] = [int, name, size]
 					word = word[:i]+word[i+3:] 												#cuts out declaration
 					i -= 1
 
-				elif token in primitive_array_data_types:
+				elif token in primitive_array_data_types:									#creates variable declaration
 					variables[name_space][word_name][word[i+1]] = [word[i], word[i+2], word[i+3]] 		
 					word = word[:i]+word[i+4:]
 					i -= 1
 
 				elif token == "global":														#same for globals
-					if word[i+1] in primitive_data_types:
-						if word[i+1] == "str": 						
-							word[i+3] = '"'+word[i+3]+'"'
+					if word[i+1] in primitive_data_types:						
 						variables["global"]["global"][word[i+2]] = [word[i+1], word[i+3]]
 						word = word[:i]+word[i+4:]
 						i -= 1
@@ -489,6 +488,11 @@ def get_variables(words):
 						variables["global"]["global"][word[i+2]] = [word[i+1],word[i+3],word[i+4]]
 						word = word[:i]+word[i+5:]
 						i -= 1
+				elif token[0] == '"' and token[-1] == '"' and word[i-2] != "str": 			#if an undeclared string is used
+					variables[name_space][word_name]["gen_string"+str(generated_string_count)] = ["str",word[i]]	#string declared
+					word[i] = "gen_string"+str(generated_string_count) 												#string use replaced with a reference
+					generated_string_count += 1 																	#increment count of generated strings
+
 				i += 1 
 			words[name_space][word_name] = word
 	return variables, words

@@ -1,7 +1,9 @@
 using stdio.hlib
 using std.hlib
 
+int test 0
 
-str message "hello world\n"
+"hello world\n" *test POP
+65 test POPB
 
-message sCopy .s ECHO
+test ECHO
