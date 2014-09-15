@@ -223,7 +223,16 @@ def tokenize(text_file):
 			
 			token_list+=line_tokens
 		i +=1
-	#print token_list
+
+	for i in xrange(len(token_list)):
+		if token_list[i][-1] == "F" or token_list[i][-1] == "f":
+			try:
+				float_value = float(token_list[i][:-1])
+
+				token_list[i] = str(convert_float(float_value))
+
+			except ValueError:
+				pass
 	return token_list
 
 
@@ -454,7 +463,7 @@ def get_words(tokens,name_space,hlib_list):
 def get_variables(words):
 	#cuts out variable declaring tokens
 	primitive_data_types = ["int","char","word","str"] #an identifier for these is 3 tokens long, eg int i 0
-	primitive_array_data_types = ["array","byte_array"] #an identifier for these is 4 tokens long eg array list 5 [3,4,5,6,7]
+	primitive_array_data_types = ["array","byteArray"] #an identifier for these is 4 tokens long eg array list 5 [3,4,5,6,7]
 	variables = { 				#variables stored as name:[type,(size),value]
 		"global":{
 			"global":{}
@@ -647,6 +656,42 @@ class Loop_helper:
 			"}"
 		]
 		return assembly_lines
+
+def convert_float(number): #to convert floats to 32bit numbers
+	if number == 0:
+		return 0
+
+	if  number<0:
+
+		sign = 1
+	else:
+		sign = 0
+
+	number = abs(number)
+	exponent = 128
+	while number>=2:
+		exponent += 1
+		number /= 2.0
+		if exponent >= 256:
+			number = 1.9999998807907104
+		 	exponent = 255
+		 	break
+
+
+	while number<1:
+
+		exponent -= 1
+		number *= 2.0
+		if exponent < 0:
+			number = 1
+			exponent = 0
+			break
+
+	number *= 2**23
+	number = int(number)
+	mantissa = number
+	return ((sign&1)<<31)+((mantissa & (2**23   -1)) <<8) + exponent
+
 
 deal_with_loops = Loop_helper()  					#instantiates objects
 

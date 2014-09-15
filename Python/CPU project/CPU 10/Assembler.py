@@ -768,7 +768,7 @@ def count_lines(tokens):
 
 def sort_out_variables(tokens,number_of_lines):
 	#variables can be of types:
-	#int,char,array,ptr
+	#int,char,word,array,byteArray
 	
 	int_list = []
 	array_list = []
@@ -869,7 +869,7 @@ def sort_out_variables(tokens,number_of_lines):
 			del tokens[i]
 			i-=1
 
-		elif line[0] == "Byte_array":
+		elif line[0] == "byteArray":
 			name = line[1]
 			length = int(line[2])
 			data_array = json.loads(line[3])

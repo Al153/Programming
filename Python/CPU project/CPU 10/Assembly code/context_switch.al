@@ -47,5 +47,5 @@ Store gp0 Context3.PC %Context_switch.set_context3
 Move Jump PC
 
 #_____________ Change_context _____________
-ptr Change_context0
+
 

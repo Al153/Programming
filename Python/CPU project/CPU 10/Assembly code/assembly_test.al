@@ -1,5 +1,5 @@
 #checked:
-#Out, Outd, Load, Move, Loadbyte, Load[], LoadByte[], Halt, LoadPC, if reg
+#Out, Outd, Load, Move, LoadByte, Load[], LoadByte[], Halt, LoadPC, if reg
 
 Push @104
 Pop gp1

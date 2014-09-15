@@ -163,7 +163,7 @@ Subroutine Forth.Greater(a,b)
 	def b gp2
 
 	Compare a b
-	if Less then {
+	if Greater then {
 		Return One
 	}
 	else {
@@ -303,3 +303,9 @@ Return
 Out @13 %Forth.Carriage_return
 Out @10
 Return
+
+
+Out @32 %Forth.space
+Return
+
+Halt %Forth.quit

@@ -9,7 +9,7 @@ class Float:
 		self.mantissa = (2**23)|((data>>8)&(2**23 -1))                  #next 8 bits
 		self.exponent = data &255
 
-	def pack(self):
+	def pack(self): #pack float into 32 bits
 		return ((self.sign&1)<<31)+((self.mantissa& (2**23   -1)) <<8) + self.exponent
 
 

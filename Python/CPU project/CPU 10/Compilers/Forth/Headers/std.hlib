@@ -40,6 +40,7 @@
 			".":"Forth.print",
 			".s":"Forth.print_stack",
 			".c":"Forth.echo_char",
+			"SPACE":"Forth.space",
 			"ECHO":"Forth.echo",
 			"CR":"Forth.Carriage_return",
 
@@ -52,7 +53,10 @@
 			"POPW":"Forth.Pop_word",
 			"LOAD":"Forth.Pop",
 			"LOADB":"Forth.Pop_byte",
-			"LOADW":"Forth.Pop_word"
+			"LOADW":"Forth.Pop_word",
+
+
+			"EXIT":"Forth.quit"
 			
 
 			}

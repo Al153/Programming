@@ -119,7 +119,7 @@ Return
 					Compare old_string Zero
 					if Equal then Halt
 				Load data link [old_string]                                  #1
-				Store data forth_string_pool                                       #2
+				Store data forth_string_pool                                 #2
 				LoadByte data 0 [string_to_copy]                             #3
 				StoreByte data 0 [old_string]
 				Load string_to_copy link [string_to_copy]                    #4
@@ -130,7 +130,7 @@ Return
 	Return
 
 
-				Load new_string forth_string_pool %string_tools.copy_loop               #7
+				Load new_string forth_string_pool %string_tools.copy_loop    #7
 					Compare new_string Zero                                  
 					if Equal then Halt
 				Load data link [new_string]                                  #8
@@ -140,7 +140,7 @@ Return
 				Load string_to_copy link [string_to_copy]                    #10
 				Store new_string link [old_string]                           #11
 				Move new_string old_string                                   #12
-	if string_to_copy then Load PC string_tools.copy_loop                        #6
+	if string_to_copy then Load PC string_tools.copy_loop                    #6
 	Store Zero link [old_string]
 	Push top                                                                 #13
 	Return
