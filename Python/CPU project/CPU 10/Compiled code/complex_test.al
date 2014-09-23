@@ -4,11 +4,13 @@ Call main.main
 #<FORTH COMPILER: Using these .hlib files:
 		#std.hlib
 		#math.hlib
+		#debug.hlib
 
 
 
 #<FORTH COMPILER: These files are imported by the .hlib files: 
-		import Compilers\Forth\Headers\complex.al		
+		import Compilers\Forth\Headers\debug.al		
+import Compilers\Forth\Headers\complex.al		
 import Compilers\Forth\Headers\forth.al		
 import Compilers\Forth\Headers\floating_point.al		
 
@@ -16,20 +18,32 @@ import Compilers\Forth\Headers\floating_point.al
 
 
 #<FORTH COMPILER the following are declarations for all variables used in the forth program
-			int main:fft:*step main:fft:step
-			int main:fft:*out main:fft:out
-			int main:fft:*buf main:fft:buf
 			int main:fft:*t main:fft:t
-			int main:fft:*temp_complex main:fft:temp_complex
-			int main:fft:k 0
 			int main:fft:*n main:fft:n
-			int main:fft:n 0
-			int main:fft:step 0
-			array main:fft:t 2 [0, 0]
 			int main:fft:*k main:fft:k
-			array main:fft:temp_complex 2 [0, 0]
-			int main:fft:buf 0
+			int main:fft:*temp_complex main:fft:temp_complex
 			int main:fft:out 0
+			int main:fft:*step main:fft:step
+			int main:fft:*gen_string0 main:fft:gen_string0
+			int main:fft:*gen_string1 main:fft:gen_string1
+			int main:fft:*gen_string2 main:fft:gen_string2
+			int main:fft:*gen_string3 main:fft:gen_string3
+			int main:fft:*buf main:fft:buf
+			int main:fft:*out main:fft:out
+			int main:fft:step 0
+			int main:fft:buf 0
+			str main:fft:gen_string1 "  step = "
+			str main:fft:gen_string0 "
+generating fft(odd) fft(even) n = "
+			str main:fft:gen_string3 "Looping
+"
+			str main:fft:gen_string2 "
+ generated ff(odd) and fft(even)
+ "
+			int main:fft:k 0
+			int main:fft:n 0
+			array main:fft:t 2 [0, 0]
+			array main:fft:temp_complex 2 [0, 0]
 			array main:main:test_out 8 [0, 0,   0, 0,  0, 0,  0, 0]
 			int main:main:*test2 main:main:test2
 			array main:main:test2 2 [128, 129]
@@ -42,6 +56,9 @@ import Compilers\Forth\Headers\floating_point.al
 			int main:main:*test_buf main:main:test_buf
 			int main:floatify:*exponent main:floatify:exponent
 			int main:floatify:exponent 0
+			str main:print_complex_array:gen_string0 "Printing array
+"
+			int main:print_complex_array:*gen_string0 main:print_complex_array:gen_string0
 			int main:print_complex_array:*Array main:print_complex_array:Array
 			int main:print_complex_array:n 0
 			int main:print_complex_array:*size main:print_complex_array:size
@@ -84,6 +101,18 @@ Load gp0 Forth.Less
 Goto Programstack.call
 Pop gp0
 if gp0 then {
+Push main:fft:gen_string0
+Load gp0 Forth.echo
+Goto Programstack.call
+Push main:fft:n
+Load gp0 Forth.print
+Goto Programstack.call
+Push main:fft:gen_string1
+Load gp0 Forth.echo
+Goto Programstack.call
+Push main:fft:step
+Load gp0 Forth.print
+Goto Programstack.call
 Push main:fft:buf
 Push main:fft:out
 Push main:fft:n
@@ -111,6 +140,9 @@ Push @2
 Load gp0 Forth.MUL
 Goto Programstack.call
 Load gp0 main.fft
+Goto Programstack.call
+Push main:fft:gen_string2
+Load gp0 Forth.echo
 Goto Programstack.call
 Push main:fft:*step
 Load gp0 Forth.Pop
@@ -134,6 +166,9 @@ Load gp0 Forth.Less
 Goto Programstack.call
 Pop gp0 %FORTH.while0
 if gp0 then {
+Push main:fft:gen_string3
+Load gp0 Forth.echo
+Goto Programstack.call
 Push @0
 Push main:fft:*temp_complex
 Load gp0 Forth.Pop
@@ -249,18 +284,13 @@ Return
 
 
 #<FORTH COMPILER: Assembly generated for word: main.main
-Push main:main:*test %main.main
-Push main:main:*result
-Load gp0 Complex.exp
-Goto Programstack.call
-Push main:main:*result
-Load gp0 Complex.display
-Goto Programstack.call
-Push main:main:*test_buf
+Push main:main:*test_buf %main.main
 Push main:main:*test_out
 Push @4
 Push @1
 Load gp0 main.fft
+Goto Programstack.call
+Load gp0 debug.wait
 Goto Programstack.call
 Push main:main:*test_out
 Push @4
@@ -362,6 +392,9 @@ Goto Programstack.call
 Push @0
 Push main:print_complex_array:*n
 Load gp0 Forth.Pop
+Goto Programstack.call
+Push main:print_complex_array:gen_string0
+Load gp0 Forth.echo
 Goto Programstack.call
 Push main:print_complex_array:n
 Push main:print_complex_array:size

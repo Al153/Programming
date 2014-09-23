@@ -1,5 +1,6 @@
 using std.hlib
 using math.hlib
+using debug.hlib
 
 array test 2 [0f,0.7853981634f]
 array test2 2 [1f,2f]
@@ -8,10 +9,11 @@ array result 2 [0f,0f]
 array test_buf 8 [1f,0, 0,0, 0,0, 0,0] #8 ints to store 4 complexes
 array test_out 8 [0,0,  0,0, 0,0, 0,0]
 
-*test  *result cexp
-*result .complex
+#*test  *result cexp
+#*result .complex
 
 *test_buf *test_out 4 1 fft
+WAIT
 *test_out 4 print_complex_array 
 
 
@@ -27,16 +29,20 @@ array test_out 8 [0,0,  0,0, 0,0, 0,0]
 	array t 2 [0,0]
 
 	step n < if
+"\ngenerating fft(odd) fft(even) n = " ECHO n .
+"  step = " ECHO step .
 		buf out n step
 
 		out buf n step 2 * fft
 		out step + buf step + n step 2 * fft
 
+"\n generated ff(odd) and fft(even)\n " ECHO
 		*step POP  *n POP  *out POP   *buf POP     #refresh variables
 	   
 
 		0 *k POP
 		k n < while
+		"Looping\n" ECHO
 		   0 *temp_complex POP -3.14159f k floatify  n floatify f/ f* *temp_complex 1 int_POP #temp_complex = 0 - 2         
 		   *temp_complex *t cexp
 		   out k step + int_PUSH
@@ -79,7 +85,10 @@ DUP 0 = if
 
 
 	int n 0 0 *n POP
+
+	"Printing array\n" ECHO
 	n size < while
+		#"Looping 2\n" ECHO
 		Array n complex_PUSH .complex
 	n 1 + *n POP
 	n size < loop

@@ -182,24 +182,51 @@ int main(int argc, char *argv[]){
 			printf("at %lf ips\n", instructions_per_second);
 		}
 	} else {
+		if (argc == 3){	
 
-		printf("______________________ running Debug ______________________\n");
-		gettimeofday(&begin,NULL);
-		while (halt == 0){
-			count += 1;
-			halt = debug_step(registers,MEMORY);
-		}
-		gettimeofday(&end,NULL);
+			printf("______________________ running Debug ______________________\n");
+			gettimeofday(&begin,NULL);
+			while (halt == 0){
+				count += 1;
+				halt = debug_step(registers,MEMORY);
+			}
+			gettimeofday(&end,NULL);	
 
-		seconds_elapsed = (end.tv_sec - begin.tv_sec); //(double) (end.tv_usec - begin.tv_usec)/1000000 + 
-		useconds_elapsed = end.tv_usec - begin.tv_usec;
-		time_elapsed = (double)seconds_elapsed + ((double)useconds_elapsed)/1000000;
-		instructions_per_second = count/time_elapsed; 
-		printf("\n______________________ Execution halted ______________________\n");
-		printf("executed %u instructions in ",count);
-		printf("%lf seconds ", time_elapsed);
-		if (time_elapsed > 0.0001){
-			printf("at %lf ips\n", instructions_per_second);
+			seconds_elapsed = (end.tv_sec - begin.tv_sec); //(double) (end.tv_usec - begin.tv_usec)/1000000 + 
+			useconds_elapsed = end.tv_usec - begin.tv_usec;
+			time_elapsed = (double)seconds_elapsed + ((double)useconds_elapsed)/1000000;
+			instructions_per_second = count/time_elapsed; 
+			printf("\n______________________ Execution halted ______________________\n");
+			printf("executed %u instructions in ",count);
+			printf("%lf seconds ", time_elapsed);
+			if (time_elapsed > 0.0001){
+				printf("at %lf ips\n", instructions_per_second);
+				}
+		} else {
+			int debug_threshold = atoi(argv[3]);
+
+			printf("______________________ running Debug ______________________\n");
+			gettimeofday(&begin,NULL);
+			while (halt == 0 && count < debug_threshold){
+				count += 1;
+				halt = step(registers,MEMORY);
+			}
+			while (halt == 0){
+				count += 1;
+				halt = debug_step(registers,MEMORY);
+			}
+			gettimeofday(&end,NULL);	
+
+			seconds_elapsed = (end.tv_sec - begin.tv_sec); //(double) (end.tv_usec - begin.tv_usec)/1000000 + 
+			useconds_elapsed = end.tv_usec - begin.tv_usec;
+			time_elapsed = (double)seconds_elapsed + ((double)useconds_elapsed)/1000000;
+			instructions_per_second = count/time_elapsed; 
+			printf("\n______________________ Execution halted ______________________\n");
+			printf("executed %u instructions in ",count);
+			printf("%lf seconds ", time_elapsed);
+			if (time_elapsed > 0.0001){
+				printf("at %lf ips\n", instructions_per_second);
+				}
 		}
 	}
 	return 0;

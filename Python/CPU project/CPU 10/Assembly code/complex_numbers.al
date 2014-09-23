@@ -7,24 +7,47 @@ end Struct
 
 
 
-Complex cmp_1 128 128
-Complex cmp_rst1 0 0
-Complex cmp_rst2 0 0 
+#Complex cmp_1 128 128
+#Complex cmp_rst1 0 0
+#Complex cmp_rst2 0 0 
 
-Push cmp_1
-Push cmp_rst1
-Push cmp_rst2
-Call Complex.sqrt
+#Push cmp_1
+#Push cmp_rst1
+#Push cmp_rst2
+#Call Complex.sqrt
 
-Push cmp_rst1.real
-Call FP.display
-Push cmp_rst1.imaginary
-Call FP.display
+#Push cmp_rst1.real
+#Call FP.display
+#Push cmp_rst1.imaginary
+#Call FP.display
 
-Push cmp_rst2.real
-Call FP.display
-Push cmp_rst2.imaginary
-Call FP.display
+#Push cmp_rst2.real
+#Call FP.display
+#Push cmp_rst2.imaginary
+#Call FP.display
+
+
+Subroutine Complex.display(Complex.display.z)
+	def z gp1
+	int Complex.display.z 0
+
+	Load z Complex.display.z
+	Out @'R'
+	Out @'e'
+	Out @':'
+	Out @32
+	Push 0 [z]
+	Call FP.display
+
+	Load z Complex.display.z
+	Out @10
+	Out @13
+	Out @'I'
+	Out @'m'
+	Out @32
+	Push 4 [z]
+	Call FP.display
+	Return
 
 #______________ Add ______________
 #Adds two complex numbers, leaving the result in a third one
@@ -74,9 +97,6 @@ def cmp_result gp3
 		Load gp1 Complex.Add.result_complex
 		Pop 4 [gp1]
 
-
-
-		Push Complex.Add.result_complex
 		Return
 
 
@@ -135,9 +155,6 @@ def cmp_result gp3
 		Load gp1 Complex.Subtract.result_complex
 		Pop 4 [gp1]
 
-		
-
-		Push Complex.Subtract.result_complex
 		Return
 
 
@@ -150,9 +167,13 @@ int Complex.Multiply.complex1_ptr 0
 int Complex.Multiply.complex2_ptr 0
 int Complex.Multiply.result_complex 0
 
+Complex Complex.Multiply.intermediate_result 0 0
+
 def cmp1 gp1
 def cmp2 gp2
 def cmp_result gp3
+
+# x z result ==> none   - puts value directly into the result
 
 		Pop Complex.Multiply.result_complex %Complex.Multiply
 		Pop cmp2
@@ -185,7 +206,7 @@ def cmp_result gp3
 
 		Call FP.Subtract
 
-		Load cmp_result Complex.Multiply.result_complex
+		Load cmp_result Complex.Multiply.intermediate_result
 		Pop 0 [cmp_result]
 
 
@@ -207,10 +228,18 @@ def cmp_result gp3
 		Call FP.Multiply
 		Call FP.Add
 
-		Load cmp_result Complex.Multiply.result_complex
+		Load cmp_result Complex.Multiply.intermediate_result
 		Pop 4 [cmp_result]
 
-		Push Complex.Multiply.result_complex
+		#copy values into return value 
+		Load gp0 Complex.Multiply.intermediate_result
+		Load gp1 Complex.Multiply.result_complex
+		Load gp2 0 [gp0]
+		Store gp2 0 [gp1]
+		Load gp2 4 [gp0]
+		Store gp2 4 [gp1]
+
+
 		Return
 
 
@@ -261,10 +290,12 @@ def result gp3
 	#create conjugate of the denominator
 
 	Load denominator Complex.Divide.denominator_ptr
-	Load gp4 4 [denominator]
-	XOR gp4 @2147483648
-	Load denominator Complex.Divide.denom_conjugate
-	Store gp4 4 [denominator] #inverts sign bit
+	Load gp4 0 [denominator]
+	Load gp5 4 [denominator]
+	XOR gp5 @2147483648
+	Load denominator Complex.Divide.denom_conjugate #inverts sign bit
+	Store gp4 0 [denominator]
+	Store gp5 4 [denominator] 
 
 
 	#divide numerator by the modulus squared
@@ -354,9 +385,95 @@ def cmp_result2 gp3
 	Load gp1 Complex.sqrt.result_complex2
 	Pop 4 [gp1]
 
-
-	Push Complex.sqrt.result_complex1
-	Push Complex.sqrt.result_complex2
-
 	Return
+
+#__________________ e**z __________________ 
+Scope exp
+Complex Complex.exp.denominator 128 0           #= 1
+Complex Complex.exp.numerator   128 0           #= 1
+Complex Complex.exp.total       128 0           #= 1
+Complex Complex.exp.temp		0 0
+Complex Complex.exp.one			128 0
+
+int Complex.exp.x                     #= x
+int Complex.exp.result
+int Complex.exp.i_int
+int Complex.exp.i 
+
+	Pop Complex.exp.result %Complex.exp
+	Pop Complex.exp.x
+	
+
+	#initialise values
+
+	Load gp0 @128
+
+	Load gp1 Complex.exp.denominator
+	Store gp0 0 [gp1]
+	Load gp1 Complex.exp.numerator
+	Store gp0 0 [gp1]
+	Load gp1 Complex.exp.i
+	Store gp0 0 [gp1]
+	Load gp1 Complex.exp.total
+	Store gp0 0 [gp1]
+	Store Zero Complex.exp.i_int
+	Store gp0 Complex.exp.i
+
+
+
+		#calculate denominator d = d*i
+			Push Complex.exp.i 					%Complex.exp.loop
+			Load gp1 Complex.exp.denominator
+			Push 0 [gp1]
+			Call FP.Multiply
+			Load gp1 Complex.exp.denominator
+			Pop 0 [gp1]
+
+
+
+		#calculate numerator n = n*x
+			Push Complex.exp.x
+			Push Complex.exp.numerator
+			Push Complex.exp.numerator
+			Call Complex.Multiply
+
+
+
+		#add  fraction to total:  total = total + numerator/denominator
+			Push Complex.exp.numerator
+			Push Complex.exp.denominator
+			Push Complex.exp.temp
+			Call Complex.Divide
+
+
+			Push Complex.exp.temp
+			Push Complex.exp.total
+			Push Complex.exp.total
+			Call Complex.Add
+
+		#increment i
+		Push Complex.exp.i
+		Push @128
+		Call FP.Add
+		Pop Complex.exp.i
+		
+		Load gp0 Complex.exp.i_int
+		ADD gp0 One
+		Store gp0 Complex.exp.i_int
+
+
+		Compare gp0 @20 
+		if Equal then Load PC Complex.exp.return
+		#else:
+		Load PC Complex.exp.loop
+
+
+
+		Load gp1 Complex.exp.total %Complex.exp.return
+		Load gp2 Complex.exp.result
+		Load gp0 0 [gp1]
+		Store gp0 0 [gp2]
+		Load gp0 4 [gp1]
+		Store gp0 4 [gp2]
+		Return
 
