@@ -1,5 +1,5 @@
 {
-	"source":["floating_point.al"],
+	"source":["floating_point.al","complex.al"],
 	"import":[],
 	"words":{
 		"f+":"FP.Add",
@@ -14,11 +14,19 @@
 		"f>=":"FP.Greater_or_Equal",
 		"f=>":"FP.Greater_or_Equal",
 		"f!=":"FP.Not_Equal",
-		"SQRT":"FP.sqrt",
+		"sqrt":"FP.sqrt",
 		"sin":"FP.sin",
 		"cos":"FP.cos",
 		"exp":"FP.exp",
-		".f":"FP.display"
+		".f":"FP.display",
+
+		"c+":"Complex.Add",
+		"c-":"Complex.Subtract",
+		"c*":"Complex.Multiply",
+		"c/":"Complex.Divide",
+		"csqrt":"Complex.sqrt",
+		"cexp":"Complex.exp",
+		".complex":"Complex.display"
 
 
 	}

@@ -57,7 +57,6 @@ unsigned int do_ALU_op(unsigned int value1,unsigned int value2,unsigned char opc
 	unsigned int ALU_return_array[3];
 	opcode &= 15;
 
-
 	if (opcode == 14){ //add with carry
 		if (!(registers[5]&16)){ //if no carry flag do a normal addition
 			opcode = 0;

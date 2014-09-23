@@ -235,8 +235,8 @@ def tokenize(text_file):
 				pass
 		elif len(token_list)> 1 and token_list[i][0] == "[" and token_list[i][-1] == "]":
 			#if an array, need to check elements in array
+			new_elements = []
 			for element in token_list[i][1:-1].split(","):
-				new_elements = []
 				if element[-1] == "F" or element[-1] == "f":
 					try:
 						new_elements.append(str(convert_float(float(element[:-1]))))

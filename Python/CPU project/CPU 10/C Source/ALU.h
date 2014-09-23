@@ -2,7 +2,7 @@
 void ALU_op(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value, unsigned int op){ //need to pass an array to the function
     unsigned int result = 0;
 	unsigned int top_of_result = 0;
-	unsigned long long_result = 0;
+	unsigned long long long_result = 0;
 	unsigned int flags = 0;
 
 	switch (op){
@@ -19,9 +19,9 @@ void ALU_op(unsigned int *to_return, unsigned int r1_value, unsigned int r2_valu
 			}
 			break;
 		case 2:		//MUl
-			long_result = (long)r1_value * (long)r2_value;
+			long_result = (unsigned long long)r1_value * (unsigned long long)r2_value;
 			result = long_result & 4294967295;
-			top_of_result = (unsigned int) long_result>>32;
+			top_of_result = (unsigned int) (long_result>>32);
 			break;
 		case 3:		//DIV
 			if  (r2_value == 0){ 	//division by 0
@@ -63,10 +63,18 @@ void ALU_op(unsigned int *to_return, unsigned int r1_value, unsigned int r2_valu
 			result = (r1_value ^ r2_value) ^ 4294967295;
 			break;
 		case 12:		//SHL
-			result = r1_value << r2_value;
+			if (r2_value < 32){
+				result = (r1_value << r2_value)&4294967295;
+			} else {
+				result = 0;
+			}
 			break;
 		case 13:		//SHR
-			result = r1_value >> r2_value;
+			if (r2_value < 32){
+				result = (r1_value >> r2_value)&4294967295;
+			} else {
+				result = 0;
+			}
 			break;
 		case 14:		//ADDc
 			result = r1_value + r2_value + 1;
@@ -75,7 +83,7 @@ void ALU_op(unsigned int *to_return, unsigned int r1_value, unsigned int r2_valu
 			}
 			break;
 		case 15:		//SUBb
-			result = r1_value - 1 - r2_value;
+			result = r1_value - r2_value - 1;
 			if (result > r1_value){ 	//if there is a borrow
 				flags = 8;
 			}

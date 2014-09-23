@@ -1,0 +1,10 @@
+{
+	"source":["debug.al"],
+	"import":[],
+	"words":{
+		".flags":"debug.print_flags",
+		"WAIT":"debug.wait",
+		"CLF":"debug.clear_flags",
+		".acc":"debug.print_acc"
+	}
+}

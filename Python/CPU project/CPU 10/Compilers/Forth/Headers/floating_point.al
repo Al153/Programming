@@ -116,7 +116,6 @@ Scope Display
 							Outd exponent
 							Out @32
 							Outd fraction
-							Out @10
 		Return
 
 #_________________________________Normalisation for addition and subtraction _________________________________
@@ -503,7 +502,6 @@ Float FP.Multiply.float2 0 0 0
 	Load PC FP.Multiply.return
 
 
-
 #_________________________________ division _________________________________
 
 Scope FP.Divide
@@ -639,7 +637,7 @@ Float FP.Compare.float2 0 0 0
 
 	Pop float2 %FP.Compare
 	Pop float1
-
+	
 	Push FP.Compare.float1
 	Push float1
 	Push FP.Compare.float2
@@ -647,30 +645,70 @@ Float FP.Compare.float2 0 0 0
 
 	Call FP.Dword_to_float
 	Call FP.Dword_to_float
+	
+	
 	Load float1 FP.Compare.float1
 	Load float2 FP.Compare.float2
 
+
 	LoadByte gp3 0 [float1]
-	LoadByte gp4 0 [float2] 
+	LoadByte gp4 0 [float2]
+	if gp3 then Load PC FP.Compare.fl1Negative
+	Load PC FP.Compare.fl1Positive
+
+
+	if gp4 then Load PC FP.Compare.fl1Posfl2Neg	%FP.Compare.fl1Positive #fl2 is negative
+	Load PC FP.Compare.Positive
+
+	if gp4 then Load PC FP.Compare.Negative	%FP.Compare.fl1Negative
+	Load PC FP.Compare.fl1Negfl2Pos
+
+	Load Flags_set @128 %FP.Compare.fl1Posfl2Neg
+	Return
+
+	Load Flags_set @64 %FP.Compare.fl1Negfl2Pos
+	Return
+
+
+
+
+
 
 
 
 	LoadByte gp3 1 [float1] %FP.Compare.Positive
 	LoadByte gp4 1 [float2]
 
+
 	Compare gp3 gp4
 	if Equal then Load PC FP.Compare.Positive.fractions
+	Compare gp3 gp4
 	Return
+
 
 	Load gp3 2 [float1] %FP.Compare.Positive.fractions
 	Load gp4 2 [float2]
-
 	Compare gp3 gp4
 	Return
 
+
+	LoadByte gp3 1 [float1] %FP.Compare.Negative
+	LoadByte gp4 1 [float2]
+
+	Compare gp4 gp3
+	if Equal then Load PC FP.Compare.Negative.fractions
+	Compare gp4 gp3
+	Return
+
+	Load gp3 2 [float1] %FP.Compare.Negative.fractions
+	Load gp4 2 [float2]
+
+	Compare gp4 gp3
+	Return
+
+
 #=
 Subroutine FP.Equal()
-
 	Call FP.Compare
 	if Equal then {
 		Return One
@@ -682,8 +720,8 @@ Subroutine FP.Equal()
 
 #<
 Subroutine FP.Less()
-
 	Call FP.Compare
+	Out  @10
 	if Less then {
 		Return One
 	}
@@ -1010,6 +1048,3 @@ int FP.exp.x                      #= x
 
 		Push FP.exp.total %FP.exp.return
 		Return
-
-		#7.389052868
-		#7.389056099

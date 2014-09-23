@@ -477,13 +477,15 @@ class CPU:
 
 		self.ALU_op_bus.data = opcode
 		self.ALU.op()
-		self.Register_address_bus.data = reg1_addr
-		self.ALU.enable_reg_1()
-		self.Registers.set()
+		
 		if opcode == 2: #multiplication
 			self.Register_address_bus.data = 2
 			self.ALU.enable_reg_2()
 			self.Registers.set()
+
+		self.Register_address_bus.data = reg1_addr
+		self.ALU.enable_reg_1()
+		self.Registers.set()
 		self.Register_address_bus.data = 5
 		self.ALU.enable_flags()
 		self.Registers.set()
