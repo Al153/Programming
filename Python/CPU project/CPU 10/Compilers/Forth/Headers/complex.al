@@ -38,8 +38,9 @@ Subroutine Complex.display(Complex.display.z)
 	Call FP.display
 
 	Load z Complex.display.z
-	Out @10
-	Out @13
+	Out @32
+	Out @32
+	Out @32
 	Out @'I'
 	Out @'m'
 	Out @32
@@ -132,7 +133,6 @@ def cmp_result gp3
 
 		Load gp1 Complex.Subtract.result_complex
 		Pop 0 [gp1]
-
 		
 
 		Load cmp1 Complex.Subtract.complex1_ptr
@@ -393,10 +393,10 @@ Complex Complex.exp.total       128 0           #= 1
 Complex Complex.exp.temp		0 0
 Complex Complex.exp.one			128 0
 
-int Complex.exp.x                     #= x
-int Complex.exp.result
-int Complex.exp.i_int
-int Complex.exp.i 
+int Complex.exp.x        0             #= x
+int Complex.exp.result 	 0
+int Complex.exp.i_int 	 0
+int Complex.exp.i  		 0
 
 	Pop Complex.exp.result %Complex.exp
 	Pop Complex.exp.x
@@ -410,8 +410,7 @@ int Complex.exp.i
 	Store gp0 0 [gp1]
 	Load gp1 Complex.exp.numerator
 	Store gp0 0 [gp1]
-	Load gp1 Complex.exp.i
-	Store gp0 0 [gp1]
+	Store gp0 Complex.exp.i
 	Load gp1 Complex.exp.total
 	Store gp0 0 [gp1]
 	Store Zero Complex.exp.i_int

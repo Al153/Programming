@@ -12,9 +12,8 @@ array test_out 8 [0,0,  0,0, 0,0, 0,0]
 #*test  *result cexp
 #*result .complex
 
-*test_buf *test_out 4 1 fft
-WAIT
-*test_out 4 print_complex_array 
+*test_buf *test_out 2 1 fft
+*test_buf 2 print_complex_array 
 
 
 
@@ -36,19 +35,24 @@ WAIT
 		out buf n step 2 * fft
 		out step + buf step + n step 2 * fft
 
+
+
+
 "\n generated ff(odd) and fft(even)\n " ECHO
 		*step POP  *n POP  *out POP   *buf POP     #refresh variables
 	   
+		buf n print_complex_array
+		EXIT
 
 		0 *k POP
 		k n < while
 		"Looping\n" ECHO
-		   0 *temp_complex POP -3.14159f k floatify  n floatify f/ f* *temp_complex 1 int_POP #temp_complex = 0 - 2         
+		   0 *temp_complex POP -3.14159f k floatify  n floatify f/ f* *temp_complex 4 + POP #temp_complex = 0 - 2         
 		   *temp_complex *t cexp
-		   out k step + int_PUSH
-		   *t *t c*
-		   out k step + complex_PUSH *t buf k 2 / step + complex_PUSH  c+
-		   out k step + complex_PUSH *t buf n + 2 / k step + complex_PUSH  c-
+
+		   out k step + complex_PUSH	*t *t c*
+		   out k complex_PUSH *t buf 	 k 2 / complex_PUSH  	c+
+		   out k complex_PUSH *t buf n k + 2 / complex_PUSH  	c-
 
 
 		k step 2 * + *k POP
@@ -89,7 +93,7 @@ DUP 0 = if
 	"Printing array\n" ECHO
 	n size < while
 		#"Looping 2\n" ECHO
-		Array n complex_PUSH .complex
+		Array n complex_PUSH .complex CR
 	n 1 + *n POP
 	n size < loop
 

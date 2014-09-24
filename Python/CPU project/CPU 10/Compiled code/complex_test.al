@@ -156,6 +156,12 @@ Goto Programstack.call
 Push main:fft:*buf
 Load gp0 Forth.Pop
 Goto Programstack.call
+Push main:fft:buf
+Push main:fft:n
+Load gp0 main.print_complex_array
+Goto Programstack.call
+Load gp0 Forth.quit
+Goto Programstack.call
 Push @0
 Push main:fft:*k
 Load gp0 Forth.Pop
@@ -185,8 +191,10 @@ Goto Programstack.call
 Load gp0 FP.Multiply
 Goto Programstack.call
 Push main:fft:*temp_complex
-Push @1
-Load gp0 main.int_POP
+Push @4
+Load gp0 Forth.ADD
+Goto Programstack.call
+Load gp0 Forth.Pop
 Goto Programstack.call
 Push main:fft:*temp_complex
 Push main:fft:*t
@@ -197,7 +205,7 @@ Push main:fft:k
 Push main:fft:step
 Load gp0 Forth.ADD
 Goto Programstack.call
-Load gp0 main.int_PUSH
+Load gp0 main.complex_PUSH
 Goto Programstack.call
 Push main:fft:*t
 Push main:fft:*t
@@ -205,9 +213,6 @@ Load gp0 Complex.Multiply
 Goto Programstack.call
 Push main:fft:out
 Push main:fft:k
-Push main:fft:step
-Load gp0 Forth.ADD
-Goto Programstack.call
 Load gp0 main.complex_PUSH
 Goto Programstack.call
 Push main:fft:*t
@@ -215,9 +220,6 @@ Push main:fft:buf
 Push main:fft:k
 Push @2
 Load gp0 Forth.DIV
-Goto Programstack.call
-Push main:fft:step
-Load gp0 Forth.ADD
 Goto Programstack.call
 Load gp0 main.complex_PUSH
 Goto Programstack.call
@@ -225,22 +227,16 @@ Load gp0 Complex.Add
 Goto Programstack.call
 Push main:fft:out
 Push main:fft:k
-Push main:fft:step
-Load gp0 Forth.ADD
-Goto Programstack.call
 Load gp0 main.complex_PUSH
 Goto Programstack.call
 Push main:fft:*t
 Push main:fft:buf
 Push main:fft:n
+Push main:fft:k
 Load gp0 Forth.ADD
 Goto Programstack.call
 Push @2
 Load gp0 Forth.DIV
-Goto Programstack.call
-Push main:fft:k
-Push main:fft:step
-Load gp0 Forth.ADD
 Goto Programstack.call
 Load gp0 main.complex_PUSH
 Goto Programstack.call
@@ -286,14 +282,12 @@ Return
 #<FORTH COMPILER: Assembly generated for word: main.main
 Push main:main:*test_buf %main.main
 Push main:main:*test_out
-Push @4
+Push @2
 Push @1
 Load gp0 main.fft
 Goto Programstack.call
-Load gp0 debug.wait
-Goto Programstack.call
-Push main:main:*test_out
-Push @4
+Push main:main:*test_buf
+Push @2
 Load gp0 main.print_complex_array
 Goto Programstack.call
 Return
@@ -407,6 +401,8 @@ Push main:print_complex_array:n
 Load gp0 main.complex_PUSH
 Goto Programstack.call
 Load gp0 Complex.display
+Goto Programstack.call
+Load gp0 Forth.Carriage_return
 Goto Programstack.call
 Push main:print_complex_array:n
 Push @1

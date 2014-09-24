@@ -57,19 +57,27 @@ int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt
 
 	debug_instruction(decoded,instruction);
 
-	printf("\n%u|  ",registers[4] - 8);
-	int i;
-	for (i = 0; i<4;i++){
-	printf("%i   ", (int) decoded[i]);
-	}
 
 
-	getchar();
+
+
+
 	
 	instr = decoded[0];
 	reg1 = decoded[1]&15;
 	reg2 = decoded[2]&15;
 	conditional = decoded[3];
+
+	printf("\n%u|  ",registers[4] - 8);
+
+	printf("%i   ", (int) instr);
+	printf("%i   ", (int) reg1);
+	printf("%i   ", (int) reg2);
+	printf("%i   ", (int) conditional);
+
+	printf(" address = %u\n", address);
+	getchar();
+
 	return execute(instr,reg1,reg2,conditional,address,registers,MEMORY);   //returned value is 1 if needs to return, otherwise false
 
 }
@@ -145,7 +153,7 @@ void alt_init_memory(unsigned char *MEMORY, char *name){
 }
 
 int main(int argc, char *argv[]){
-	static unsigned char MEMORY[1048576]; 					//setting up memory and registers
+	static unsigned char MEMORY[1048576] = {0}; 					//setting up memory and registers
 	static unsigned int registers[16] = {0,1};
 	int halt = 0;
 	long count = 0;

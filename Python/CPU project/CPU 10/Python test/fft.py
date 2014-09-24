@@ -23,18 +23,4 @@ import math
 from numpy.fft import fft
 from numpy import array
 a = array([1.0, 0.0])
-print a
-
-def fft2(buf,out,n,step):
-	if step<n:
-		fft2(out,buf,n,step*2)
-		fft2(out[step:],buf[step:],n,step*2)
-		for k in xrange(0,n,2*step):
-			t = out[k+step]*math.e**complex(0,-2*math.pi*k/n)
-			buf[k/2] = out[k]+t
-			buf[(k+n)/2] = out[k]-t
-
-a = [1,0]
-b = [0]*len(a)
-fft2(a,b,len(a),1)
-print a
+print fft(a)

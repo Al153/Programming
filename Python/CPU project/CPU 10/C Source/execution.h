@@ -98,9 +98,17 @@ void debug_instruction(unsigned char *decoded,unsigned int instruction){ //decod
 unsigned int execute(unsigned char instr, unsigned char reg1,unsigned char reg2,unsigned char conditional,unsigned int address,unsigned int *registers, unsigned char *MEMORY){
 		unsigned int reg1_value;
 		unsigned int reg2_value;
+		
+ 
+		
 		char will_execute = get_conditional(registers,conditional);
 		//printf("will_execute = %i\n",(int) will_execute);
+
 		if (will_execute){
+			
+			reg1 = reg1&15; //actual register addresses, prevents bugs due to code beign rewritten
+			reg2 = reg2&15;
+			
 			// execute instruction
 			switch(instr){
 				case 0:

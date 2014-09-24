@@ -3,6 +3,9 @@
 
 void store_memory(unsigned int addr,unsigned int data,unsigned char *MEMORY){
 	unsigned char data_bytes[4];
+	if (addr>MEMORY_SIZE){
+		printf("ADDRESS OVERFLOW: %u\n",addr);
+	}
 	data_bytes[3] = (unsigned char) data&255;
 	data >>= 8;
 	data_bytes[2] = (unsigned char) data&255;
