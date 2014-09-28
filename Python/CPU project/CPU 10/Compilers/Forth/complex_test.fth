@@ -22,7 +22,6 @@ array test_out 8 [0,0,  0,0, 0,0, 0,0]
 	int n      0     *n    POP
 	int out    0     *out  POP  #out and buf are pointers to the first value in an array
 	int buf    0     *buf  POP
-
 	int k 0
 	array temp_complex 2 [0,0]
 	array t 2 [0,0]
@@ -42,7 +41,6 @@ array test_out 8 [0,0,  0,0, 0,0, 0,0]
 		*step POP  *n POP  *out POP   *buf POP     #refresh variables
 	   
 		buf n print_complex_array
-		EXIT
 
 		0 *k POP
 		k n < while

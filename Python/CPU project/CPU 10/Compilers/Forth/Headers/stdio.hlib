@@ -4,6 +4,8 @@
 	"words":{
 		"sCopy":"string_tools.copy",
 		"sAlloc":"string_tools_allocate",
-		"sDealloc":"string_tools_deallocate"
+		"sDealloc":"string_tools_deallocate",
+		"getF":"string_tools.insert_to_pool_file",
+		"getL":"string_tools.insert_to_pool_line"
 	}
 }
