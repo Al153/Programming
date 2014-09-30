@@ -32,23 +32,24 @@ def main2():
 	destination_name = "Bootstrap Machine Code\\"+source_name.split("\\")[1][:-2]+"bml"
 	json_file = open(source_name).read()
 	json_dict = json.loads(json_file)
-	list_size = 1048000
-	binary_list = [0]*list_size
+	list_size = 1040000
+	binary_list = [0]
+	current_list_size = 1
 	for key in json_dict:
 		if int(key)<list_size:
-			binary_list[int(key)] = int(json_dict[key])&255
+			if int(key)<current_list_size:
+				binary_list[int(key)] = int(json_dict[key])&255
+			else:
+				binary_list += [0]*(1 + int(key) - current_list_size)
+				current_list_size = 1 + int(key)
+				binary_list[int(key)] = int(json_dict[key])&255
 	new_binary_list = []
-	for i in xrange(len(binary_list)-1,-1,-1):
-		if binary_list[i]:
-			break
-		else:
-			binary_list = binary_list[:i]
-	binary_list.reverse
 
 	for i in binary_list:
-		if i:
-			new_binary_list += [chr(16 + (i>>4)),chr(16 + (i&15))]
-
+		new_binary_list += [hex(i>>4)[2:],hex(i&15)[2:]]
+	
+	new_binary_list += ["x"]
+	
 	new_binary_list += [chr(128)]
 	destination_file = open(destination_name,'wb')
 	destination_file.write(''.join(new_binary_list))
