@@ -49,12 +49,10 @@ def main2():
 		new_binary_list += [hex(i>>4)[2:],hex(i&15)[2:]]
 	
 	new_binary_list += ["x"]
-	
-	new_binary_list += [chr(128)]
 	destination_file = open(destination_name,'wb')
 	destination_file.write(''.join(new_binary_list))
 	destination_file.close()
 
 main()
-main2()
+#main2()
 
