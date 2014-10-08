@@ -90,27 +90,6 @@ byteArray test 256 [
 	endif
 ;
 
-#def sift_down(heap,size,i):
-#	left,right = child(i)
-#	if left < size and heap[left] > heap[i]:
-#		largest = left
-#	else:
-#		largest = i
-
-#	if right < size and heap[left] > heap[largest]:
-#		largest = r
-
-#	if largest == i:
-#		return
-#	else:
-#		swap_values(heap[i],heap[largest])
-#		sift_down(heap,size,largest)
-
-
-
-
-
-
 : sift_down 
 	int left 0
 	int right 0
