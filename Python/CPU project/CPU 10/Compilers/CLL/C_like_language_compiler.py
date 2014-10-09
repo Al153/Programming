@@ -293,8 +293,10 @@ class Parser:
 		return rules
 
 
-	def get_item_sets(self):
+	def closure(self,item):
 		
+
+
 
 	def find_all_items(self,rule,added_symbols = []):
 		items = []
@@ -315,8 +317,6 @@ class Parser:
 				sorted_items[item[1].index("BLOB")] = [item]
 		return sorted_items
 
-<<<<<<< HEAD
-=======
 	def find_item_sets(self,rule,done_tokens):
 		item_set = []
 		for pattern in rule.rhs:
@@ -332,8 +332,11 @@ class Parser:
 					item_set += find_item_sets(new_rule,done_tokens)
 			item_set += [rule.lhs,pattern+["[BLOB]"]]
 		return item_set 
-	
->>>>>>> origin/master
+
+
+
+
+
 
 	def generate_patterns(self,ABNF_tree):
 		rules = ABNF_tree.rules
