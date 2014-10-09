@@ -38,8 +38,8 @@
 #
 
 #					There must be a global expression known as "PROGRAM"
-#					There must be a global expression known as "ELEMENTARY TOKENS" which defines
-
+#					There must be a global expression known as "ELEMENTARY TOKENS" which defines the specific tokens other than id and int
+#					the rule <GOAL> ::= <PROGRAM> "END" is added, as is the token "END"
 #so ABNF defined in itself is:
 
 #<PROGRAM> ::= <set_of_rules>
@@ -267,14 +267,16 @@ class Parser:
 		token_list = []
 		for character in source_text:
 			if character in token_triggers:
-				token_list.append(get_parse_tree_node(current_token))
-				token_list.append(get_parse_tree_node(character))
+				token_list.append(self.get_parse_tree_node(current_token))
+				token_list.append(self.get_parse_tree_node(character))
 				current_token = ''
 			else:
 				current_token += character
 
 		if current_token != '':
-			token_list.append(get_parse_tree_node(current_token))
+			token_list.append(self.get_parse_tree_node(current_token))
+		token_list.append(Terminal_parse_tree_node("END","END"))
+		return token_list
 
 	def get_terminal_expressions(self,ABNF_tree):
 		#recognises terminal expressions
@@ -284,9 +286,10 @@ class Parser:
 	def get_lookahead_action_table(self):
 
 	def get_rules_table(self):
-		rules = []
+		rules = {}
 		for rule in self.ABNF_tree.rules:
-			rules.append(Rule(rule,self.ABNF_tree.rules[rule]))
+			rules[rule] = Rule(rule,self.ABNF_tree.rules[rule]))
+		rules["<GOAL>"] = [["<PROGRAM>",'"END"']]
 		return rules
 
 
@@ -312,6 +315,25 @@ class Parser:
 				sorted_items[item[1].index("BLOB")] = [item]
 		return sorted_items
 
+<<<<<<< HEAD
+=======
+	def find_item_sets(self,rule,done_tokens):
+		item_set = []
+		for pattern in rule.rhs:
+			for i in xrange(len(pattern)):
+				item_set += [rule.lhs,pattern[:i]+["[BLOB]"]+pattern[i:]]
+				next_token = pattern[i]
+				if next_token not in done_tokens and next_token[0] == "<" and next_token[-1] == ">":
+					done_tokens.append(next_token)
+					try:
+						new_rule = self.rules[next_token]
+					except KeyError:
+						print "ERROR: undefined token in grammar: " + next_token
+					item_set += find_item_sets(new_rule,done_tokens)
+			item_set += [rule.lhs,pattern+["[BLOB]"]]
+		return item_set 
+	
+>>>>>>> origin/master
 
 	def generate_patterns(self,ABNF_tree):
 		rules = ABNF_tree.rules
