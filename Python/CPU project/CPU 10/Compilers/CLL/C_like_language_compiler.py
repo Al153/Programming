@@ -290,11 +290,28 @@ class Parser:
 		return rules
 
 
+	def get_item_sets(self):
+		
 
-	def find_item_sets(self,rule):
-		item_set = []
-		for 
-	
+	def find_all_items(self,rule,added_symbols = []):
+		items = []
+		for i in xrange(len(rule.rhs)):
+			items.append([rule.lhs,rule.rhs[:i]+["BLOB"]+rule.rhs[i:]])
+			if rule.rhs[i] not in added_symbols and rule.rhs[i][0] == "<" and rule.rhs[i][-1] == "<":
+				added_symbols.append(rule.rhs[i])
+				items += find_all_item_sets(self.rules[rule.rhs[i]],added_symbols)
+		items.append([rule.lhs,rule.rhs+["BLOB"]])
+		return items
+
+	def sort_items(self,items):
+		sorted_items = {}
+		for item in items:
+			try:
+				sorted_items[item[1].index("BLOB")].append(item)
+			except:
+				sorted_items[item[1].index("BLOB")] = [item]
+		return sorted_items
+
 
 	def generate_patterns(self,ABNF_tree):
 		rules = ABNF_tree.rules
@@ -308,15 +325,15 @@ class Parser:
 				patterns[pattern] = rule
 		return patterns
 
-def get_parse_tree_node(self,current_token):
-	if current_token in self.terminal_expressions: 			#if it is a special string, eg "=" 
-		return Terminal_parse_tree_node('"'+current_token+'"',current_token))
-	else:
-		try:
-			current_token = int(current_token)
-			return Terminal_parse_tree_node("int",current_token)
-		except ValueError:
-			return Terminal_parse_tree_node("id",current_token)
+	def get_parse_tree_node(self,current_token):
+		if current_token in self.terminal_expressions: 			#if it is a special string, eg "=" 
+			return Terminal_parse_tree_node('"'+current_token+'"',current_token))
+		else:
+			try:
+				current_token = int(current_token)
+				return Terminal_parse_tree_node("int",current_token)
+			except ValueError:
+				return Terminal_parse_tree_node("id",current_token)
 
 
 
