@@ -97,8 +97,8 @@ Return
 
 
 #<FORTH COMPILER: Assembly generated for word: main.main
-Push @4 %main.main
-Push @6
+Push @17 %main.main
+Push @18
 Push @3
 Push @4
 Load gp0 main.add_fractions

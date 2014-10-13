@@ -1,6 +1,6 @@
 using std.hlib 			#contains standard built-in words
 
-4 6     3 4    add_fractions SWAP . CR .  #main program: prints the sum of 2/3 and 3/4
+17 18     3 4    add_fractions SWAP . CR .  #main program: prints the sum of 2/3 and 3/4
 : add_fractions 
 #inputs of numerator1, denominator1, numerator2, denominator2
 	int numerator1 0					#define variables

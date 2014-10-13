@@ -191,20 +191,21 @@ my_parse_tree.express_parse_tree()
 
 class Parser:
 	def __init__(ABNF_grammar,source_text):
-		self.ABNF_tree = self.ABNF_parse_tree(ABNF_grammar)  				#parses grammar specification
-		self.rules = self.get_rules_table()									#gets a list of rules from the ABNF tree
-		self.ABNF_patterns = self.generate_patterns(self.ABNF_tree) 		#inverts rules table to get a lhs for each pattern
-		self.terminal_expressions = self.get_terminal_expressions(ABNF_tree) #searches rules to get a list of terminal strings which are directly referenced in the grammar
+		self.ABNF_tree = self.ABNF_parse_tree(ABNF_grammar)  										#parses grammar specification
+		self.rules = self.get_rules_table()															#gets a list of rules from the ABNF tree
+		self.items = self.get_items(self.rules["GOAL"])
+		self.ABNF_patterns = self.generate_patterns(self.ABNF_tree) 								#inverts rules table to get a lhs for each pattern
+		self.terminal_expressions = self.get_terminal_expressions(ABNF_tree) 						#searches rules to get a list of terminal strings which are directly referenced in the grammar
 
-		self.tokens = self.tokenise(source_text) 							#tokeniser takes in text and produces a list of terminal objects
-		self.LHS_goto_table = self.get_LHS_goto_table() 					#generates lookup and lookahead tables
+		self.tokens = self.tokenise(source_text) 													#tokeniser takes in text and produces a list of terminal objects
+		self.LHS_goto_table = self.get_LHS_goto_table() 											#generates lookup and lookahead tables
 		self.lookahead_action_table = self.get_lookahead_action_table()
-		self.parse_tree_stack = [0] 										#starts with just starting state
+		self.parse_tree_stack = [0] 																#starts with just starting state
 
 
 
-		self.lookahead = self.tokens[0] 									#Loads in lookahead token 
-		self.token_index = 1 												#fixes index within stream
+		self.lookahead = self.tokens[0] 															#Loads in lookahead token 
+		self.token_index = 1 																		#fixes index within stream
 
 
 	def parse(self):
@@ -212,71 +213,98 @@ class Parser:
 			pass
 		return 
 
-	def parse_step(self):
-		top_state = self.parse_tree_stack[-1]
+	def parse_step(self):																			#main parsing step, repeated till done or error
+		top_state = self.parse_tree_stack[-1] 														#get the top state of the stack
 		try:
-			next_action_tuple = self.lookahead_action_table[top_state,self.lookahead.type]
+			next_action_tuple = self.lookahead_action_table[top_state,self.lookahead.type] 			#uses table to calculate next values
 		except KeyError:
-			next_action_tuple = ("error","unidentified terminal"
-		if next_action_tuple[0] == "shift":
-			self.shift(next_action_tuple[1])
+			next_action_tuple = ("error","unidentified terminal")									#if there is an error, then call error
+		if next_action_tuple[0] == "shift":															#carries out a shift operation
+			self.shift(next_action_tuple[1])														
+			return 0 																				#returns 1 if done, so this is not done
+		elif next_action_tuple[0] == "reduce":
+			self.reduce(next_action_tuple[1]) 			#next action tuple[1] = pattern number 		#carries out a reduce operation
 			return 0
-		elif next_action[0] == "reduce":
-			self.reduce(pattern,lhs)
-			return 0
-		elif next_action[0] == "done":
+		elif next_action_tuple[0] == "done":														#if parsing complete, report back that it is done
 			done = self.done()
 			if done:
 				return 1
-		elif next_action[0] == "error":
+		elif next_action_tuple[0] == "error": 														#otherwise report an error
 			self.error(next_action_tuple[1])
 
-	def shift(self,next_state):
-		self.parse_tree_stack.append(self.match(self.lookahead))
-		self.parse_tree_stack.append(next_state)
-		self.lookahead = self.tokens[self.token_index]
+	def shift(self,next_state):																		#shift operation
+		self.parse_tree_stack.append(self.lookahead) 												#pushes lookahead symbol
+		self.parse_tree_stack.append(next_state) 													#pushes new state
+		self.lookahead = self.tokens[self.token_index]												#loads a new lookahead symbol
 		self.token_index += 1
 	
-	def reduce(self,pattern,lhs):
-		length_to_pop = 2*len(pattern)
-		popped = self.parse_tree_stack[-length_to_pop::2]
-		self.parse_tree_stack = self.parse_tree_stack[:-length_to_pop]
-		state_p = self.parse_tree_stack[-1]
-		next_state = LHS_goto_table[state_p][lhs]
-		tree_to_push = Non_terminal_parse_tree_node(node_type,popped)
-		self.parse_tree_stack += [tree_to_push,next_state]
+	def reduce(self,pattern_number):
+
+		#<logic to get pattern and lhs>
 
 
-	def done(self):
-		if len(self.parse_tree_stack) == 2 and self.parse_tree_stack[0] == 0:   #if stack consists of a parse tree and the success state 
+		length_to_pop = 2*len(pattern)																#the length of the pattern to reduce is doubled (to accomodate for state values)
+		popped = self.parse_tree_stack[-length_to_pop::2] 											#pops off symbols to be matched
+		self.parse_tree_stack = self.parse_tree_stack[:-length_to_pop] 								#rest of pop operation
+		state_p = self.parse_tree_stack[-1] 														#gets previous state
+		next_state = LHS_goto_table[state_p][lhs]													#calculates new state
+		tree_to_push = Non_terminal_parse_tree_node(lhs,popped) 									#creates  new parse tree node
+		self.parse_tree_stack += [tree_to_push,next_state]											#pushes new tree and state
+
+
+	def done(self): 																				#halts operation
+		if len(self.parse_tree_stack) == 1 and self.parse_tree_stack[-1] == 0:   					#if stack consists of a parse tree and the success state 
 			return 1
 		else:
-			self.error("False_EOF")
-	def error(self,reason):
-
+			self.error("False_EOF")																	#calls an errors
+	
+	def error(self,reason):																			#error reporting
 		quit()
 
-	def match(self,token):
-
-	def check_patterns(self,parse_tree_stack,ABNF_patterns):
-	
-
-	def tokenise(self,source_text):
-		token_triggers = self.ABNF_tree.rules["<ELEMENTARY_TOKENS>"]
-		current_token = ''
+	def tokenise(self,source_text): 																#splits text according to elementary tokens - chars which indicate a new token
+		token_triggers = self.rules["<ELEMENTARY_TOKENS>"]											#fetch elementary tokens
+		current_token = ''																			#initialise current token and token list
 		token_list = []
-		for character in source_text:
-			if character in token_triggers:
-				token_list.append(self.get_parse_tree_node(current_token))
-				token_list.append(self.get_parse_tree_node(character))
+		for character in source_text: 																#iterate through source text
+			if character in token_triggers: 														#splits if elementary token found
+				token_list.append(self.get_parse_tree_node(current_token)) 							#generates parse tree node object
+				token_list.append(self.get_parse_tree_node(character))								#adds in parse tree node for elementary token causing splitting
 				current_token = ''
 			else:
-				current_token += character
+				current_token += character 															#otherwise place the character in the token
 
-		if current_token != '':
+		if current_token != '': 																	#clean up final token
 			token_list.append(self.get_parse_tree_node(current_token))
-		token_list.append(Terminal_parse_tree_node("END","END"))
-		return token_list
+		token_list.append(Terminal_parse_tree_node("END","END"))									#adds end symbol to end of code
+		return token_list			
+
+	def get_rules_table(self):																		#extracts rules into an easy to access table, addressed by the lhs of each rule
+		rules = {}
+		for rule in self.ABNF_tree.rules:															#iterates through rules
+			rules[rule] = Rule(rule,self.ABNF_tree.rules[rule])) 									#reordering rules table
+		rules["<GOAL>"] = Rule("<GOAL>",[["<PROGRAM>","END"]])													#adds global rule
+		self.get_enumerated_rules_table()															#generates an enumerated list of the patterns for table generation									
+		return rules
+
+	def get_enumerated_rules_table(self):															#separates out rules into a version for each rhs an enumberates them
+		self.enum_rules = []																		#new list
+		for rule in self.rules:																		#cycles through rules
+			rhs = self.rules[rule].rhs 																#gets rhs
+			for rhs_part in rhs: 																	#iterates through patterns creating enumerated rules
+				self.enum_rules.append(EnumRule(rule,rhs_part,len(self.enum_rules)))
+
+	def get_parse_tree_node(self,current_token):													#gets a node for the parse tree
+		if current_token in self.terminal_expressions: 												#if it is a special string, eg "=" then create a terminal 
+			return Terminal_parse_tree_node('"'+current_token+'"',current_token))
+		else:
+			try:
+				current_token = int(current_token)
+				return Terminal_parse_tree_node("int",current_token)								#if integerise-able then produce an integer token
+			except ValueError:
+				return Terminal_parse_tree_node("id",current_token)									#otherwise then produce an identifier
+
+
+
 
 	def get_terminal_expressions(self,ABNF_tree):
 		#recognises terminal expressions
@@ -285,57 +313,80 @@ class Parser:
 
 	def get_lookahead_action_table(self):
 
-	def get_rules_table(self):
-		rules = {}
-		for rule in self.ABNF_tree.rules:
-			rules[rule] = Rule(rule,self.ABNF_tree.rules[rule]))
-		rules["<GOAL>"] = [["<PROGRAM>",'"END"']]
-		return rules
+
+	def first(self,symbol):
+		result = set({})
+		if symbol in self.terminal_expressions: return result + set({symbol})
+		if ['""'] in self.rules[symbol].rhs: result += set({'""'})
 
 
-	def closure(self,item):
+	def follow(self,symbol):
+
+
+	def closure(self,item_set):
+		#input is a set of items: item has lhs, rhs, and lookahead, where rhs contains 'blob'
+		done = 0
+		while not done:
+			for item in item_set:
+				try:
+					next_symbol = item.rhs[item.rhs.index("BLOB")+1]
+					if next_symbol not in self.terminal_expressions:
+						for production in self.rules[next_symbol]:
+							for terminal in self.first(item.rhs[item.rhs.index("BLOB"):],item.lookahead)
+								item_set += [item(production.lhs,["BLOB"]+production.rhs,terminal)]
+				except IndexError:
+					pass
+
+				####################################################	
+				#add in logic to check whether anything left to add#
+				####################################################
+
+		return item_set
+
+	def goto(self,item_set,token):
+
+		###################################
+		#make nicer and add error checking#
+		###################################
 		
+		j_item_set = []
+		for item in item_set:
+			token_ptr = item.rhs.index(token)
+			blob_ptr = item.rhs.index("BLOB")
+			if  token_ptr == blob_ptr + 1:
+			j_item_set.append(item(item.lhs,item.rhs[:blob_ptr]+[token,blob]+item.rhs[token_ptr+1]))
+		return self.closure(j_item_set)
+
+	def get_item_sets(self):
+
+		#################################################
+		#Add method for getting all x in grammar symbols#
+		#################################################
+
+
+		C_set = [self.closure([item("GOAL",["BLOB"] +self.rules["GOAL"].rhs,"END")])]
+		done = 0
+		while not done:
+			for item_set in C:
+				for X in grammar_symbols:
+					goto_of_x = goto(item_set,X)
+					if len(goto_of_x)>0 and goto_of_x not in C_set:
+						C_set.append(goto_of_x)
+		return C_set
 
 
 
-	def find_all_items(self,rule,added_symbols = []):
+
+
+	def get_items(self,rule,added_symbols = []):
 		items = []
 		for i in xrange(len(rule.rhs)):
-			items.append([rule.lhs,rule.rhs[:i]+["BLOB"]+rule.rhs[i:]])
+			items.append(item(rule.lhs,rule.rhs[:i]+["BLOB"]+rule.rhs[i:],None))
 			if rule.rhs[i] not in added_symbols and rule.rhs[i][0] == "<" and rule.rhs[i][-1] == "<":
 				added_symbols.append(rule.rhs[i])
 				items += find_all_item_sets(self.rules[rule.rhs[i]],added_symbols)
-		items.append([rule.lhs,rule.rhs+["BLOB"]])
+		#items.append([rule.lhs,rule.rhs+["BLOB"]])
 		return items
-
-	def sort_items(self,items):
-		sorted_items = {}
-		for item in items:
-			try:
-				sorted_items[item[1].index("BLOB")].append(item)
-			except:
-				sorted_items[item[1].index("BLOB")] = [item]
-		return sorted_items
-
-	def find_item_sets(self,rule,done_tokens):
-		item_set = []
-		for pattern in rule.rhs:
-			for i in xrange(len(pattern)):
-				item_set += [rule.lhs,pattern[:i]+["[BLOB]"]+pattern[i:]]
-				next_token = pattern[i]
-				if next_token not in done_tokens and next_token[0] == "<" and next_token[-1] == ">":
-					done_tokens.append(next_token)
-					try:
-						new_rule = self.rules[next_token]
-					except KeyError:
-						print "ERROR: undefined token in grammar: " + next_token
-					item_set += find_item_sets(new_rule,done_tokens)
-			item_set += [rule.lhs,pattern+["[BLOB]"]]
-		return item_set 
-
-
-
-
 
 
 	def generate_patterns(self,ABNF_tree):
@@ -350,31 +401,35 @@ class Parser:
 				patterns[pattern] = rule
 		return patterns
 
-	def get_parse_tree_node(self,current_token):
-		if current_token in self.terminal_expressions: 			#if it is a special string, eg "=" 
-			return Terminal_parse_tree_node('"'+current_token+'"',current_token))
-		else:
-			try:
-				current_token = int(current_token)
-				return Terminal_parse_tree_node("int",current_token)
-			except ValueError:
-				return Terminal_parse_tree_node("id",current_token)
 
 
+class item_set:
+	def __init__(self,rule_list):
+		self.rule_list = rule_list
 
-class Non_terminal_parse_tree_node:
+class Non_terminal_parse_tree_node:																	#class for non terminals (ie have children)
 	def __init__(self,node_type,children):
 		self.terminal = 0
 		self.type = node_type
 		self.children = []
 
-class Terminal_parse_tree_node:
+class Terminal_parse_tree_node:																		#class for terminals
 	def __init__(self,node_type,token_string):
 		self.terminal = 0
 		self.type = node_type
 		self.string = token_string
 
-class Rule:
+class Rule: 																						#simple rule class
 	def __init__(self,lhs,rhs):
+		self.lhs = lhs
+		self.rhs = rhs
+
+class EnumRule:
+	def __init__(self,lhs,rhs,number):
+		self.lhs = lhs
+		self.rhs = rhs
+		self.number = number
+class Item:
+	def __init__(self,lhs,rhs,lookahead):
 		self.lhs = lhs
 		self.rhs = rhs

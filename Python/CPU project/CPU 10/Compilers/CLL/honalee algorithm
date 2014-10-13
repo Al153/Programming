@@ -1,0 +1,93 @@
+// Initialize
+doneList = empty;
+incList =  empty;
+toDoList = empty;
+comeFrom = null;
+setCount = 0;
+
+// Create initial item set (i0)
+create initial item set i0,
+    containing the initial kernel item constructed from
+    the augmented grammar rule: '$accept : $goal',
+    [$accept -> . $goal, $end]*;
+append item set i0 to toDoList;
+
+// Construct all item sets
+mainLoop:
+while incList is not empty,
+    // Phase 1
+    comeFrom = null;
+    set = first (incomplete) item set in incList;
+    comeFrom = set;
+
+    // Generate shift transitions from the incomplete set
+    transitionLoop:
+    for each item in set,
+        if item is a shift with no action, [A -> B . S X, u],
+            // Create a new transition set by shifting S
+            S = shifted symbol S in item;
+            create new transition item set newSet;
+            append newSet to toDoList;
+
+            // Mark all items shifting S in set
+            for each shift shItem in set,
+                if marked symbol of shItem is S, [A -> H . S J, v],
+                    create new kernel item k, [A -> H S . J, v]*;
+                    add item k to newSet;
+                    mark shItem.action as (S, newSet);
+                end if;
+            end for;
+        end if;
+    end transitionLoop;
+
+    // Item set is now complete
+    mark set as complete;
+    move set to end of doneList;
+
+    // Phase 2
+    while toDoList is not empty,
+        set = pop first incomplete item set from toDoList;
+
+        // Prepare the transition set for possible merging
+        generate closure items for set;
+        mark all reduction items in set;
+
+        // Attempt to merge set with an existing item set
+        mergeLoop:
+        for each gSet in doneList with identical kernel item cores as set,
+            if no r/r conflicts arise from merging set and gSet,
+                // Merge set into gSet
+                merge set into gSet;
+                if merging added items to gSet,
+                    increment mergedSetCount;
+
+                // Fix previous transitions to the merged set
+                for each item shItem in comeFrom
+                    if shItem.action is (S, set),
+                        change shItem.action to (S, gSet);
+
+                // Fix merged set previously marked as complete
+                if gSet.complete and merging added shift items to gSet,
+                    for each item shItem in gSet
+                        if gSet.action is (S, set),
+                            reset gSet.action;
+                    mark gSet as incomplete;
+                    move gSet from doneList to incList;
+                end if;
+
+                discard set;
+                set = null;
+                break mergeLoop;
+            else
+                the grammar is LR but not LALR;
+            end if;
+        end for;
+
+        // Move the new (still incomplete) set to the incomplete list
+        if set not null (was not discarded),
+            increment setCount;
+            set.number = setCount;
+            append (incomplete) set to incList;
+        end if;
+    end while;
+end mainLoop;
