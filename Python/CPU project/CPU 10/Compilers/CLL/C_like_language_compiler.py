@@ -193,9 +193,13 @@ class Parser:
 	def __init__(ABNF_grammar,source_text):
 		self.ABNF_tree = self.ABNF_parse_tree(ABNF_grammar)  										#parses grammar specification
 		self.rules = self.get_rules_table()															#gets a list of rules from the ABNF tree
-		self.items = self.get_items(self.rules["GOAL"])
-		self.ABNF_patterns = self.generate_patterns(self.ABNF_tree) 								#inverts rules table to get a lhs for each pattern
+		self.item_set = get_item_sets() #finds all items reachable from "GOAL"
+
+
 		self.terminal_expressions = self.get_terminal_expressions(ABNF_tree) 						#searches rules to get a list of terminal strings which are directly referenced in the grammar
+
+		self.elementary_tokens = self.rules["<ELEMENTARY_TOKENS>"]
+		del self.rules[elementary_tokens]
 
 		self.tokens = self.tokenise(source_text) 													#tokeniser takes in text and produces a list of terminal objects
 		self.LHS_goto_table = self.get_LHS_goto_table() 											#generates lookup and lookahead tables
@@ -262,7 +266,7 @@ class Parser:
 		quit()
 
 	def tokenise(self,source_text): 																#splits text according to elementary tokens - chars which indicate a new token
-		token_triggers = self.rules["<ELEMENTARY_TOKENS>"]											#fetch elementary tokens
+		token_triggers = self.elementary_tokens 													#fetch elementary tokens
 		current_token = ''																			#initialise current token and token list
 		token_list = []
 		for character in source_text: 																#iterate through source text
@@ -320,93 +324,47 @@ class Parser:
 		if ['""'] in self.rules[symbol].rhs: result += set({'""'})
 
 
-	def follow(self,symbol):
 
-
+#_______________________________ set finding algorithms ______________________
 	def closure(self,item_set):
 		#input is a set of items: item has lhs, rhs, and lookahead, where rhs contains 'blob'
 		done = 0
-		while not done:
-			for item in item_set:
-				try:
-					next_symbol = item.rhs[item.rhs.index("BLOB")+1]
-					if next_symbol not in self.terminal_expressions:
-						for production in self.rules[next_symbol]:
-							for terminal in self.first(item.rhs[item.rhs.index("BLOB"):],item.lookahead)
-								item_set += [item(production.lhs,["BLOB"]+production.rhs,terminal)]
-				except IndexError:
-					pass
-
-				####################################################	
-				#add in logic to check whether anything left to add#
-				####################################################
-
+		for item in item_set:
+			try:
+				next_symbol = item.rhs[item.rhs.index("BLOB")+1]
+				if next_symbol not in self.terminal_expressions:
+					for production in self.rules[next_symbol]:
+						for terminal in self.first(item.rhs[item.rhs.index("BLOB"):],item.lookahead)
+							item_set += set([item(production.lhs,["BLOB"]+production.rhs,terminal)])
+			except IndexError:
+				pass
 		return item_set
 
-	def goto(self,item_set,token):
-
-		###################################
-		#make nicer and add error checking#
-		###################################
-		
-		j_item_set = []
+	def goto(self,item_set,token):	
+		j_item_set = set([])
 		for item in item_set:
 			token_ptr = item.rhs.index(token)
 			blob_ptr = item.rhs.index("BLOB")
-			if  token_ptr == blob_ptr + 1:
-			j_item_set.append(item(item.lhs,item.rhs[:blob_ptr]+[token,blob]+item.rhs[token_ptr+1]))
+			if token_ptr == blob_ptr + 1:
+				j_item_set += set([item(item.lhs,item.rhs[:blob_ptr]+[token,"BLOB"]+item.rhs[token_ptr+1])])
 		return self.closure(j_item_set)
 
 	def get_item_sets(self):
+		grammar_symbols = [symbol for symbol in self.rules] + self.terminals
 
-		#################################################
-		#Add method for getting all x in grammar symbols#
-		#################################################
-
-
-		C_set = [self.closure([item("GOAL",["BLOB"] +self.rules["GOAL"].rhs,"END")])]
+		C_set = set([self.closure([item("GOAL",["BLOB"] +self.rules["GOAL"].rhs,"END")])])
 		done = 0
+
 		while not done:
 			for item_set in C:
 				for X in grammar_symbols:
 					goto_of_x = goto(item_set,X)
 					if len(goto_of_x)>0 and goto_of_x not in C_set:
-						C_set.append(goto_of_x)
+						C_set += goto_of_x
 		return C_set
 
 
-
-
-
-	def get_items(self,rule,added_symbols = []):
-		items = []
-		for i in xrange(len(rule.rhs)):
-			items.append(item(rule.lhs,rule.rhs[:i]+["BLOB"]+rule.rhs[i:],None))
-			if rule.rhs[i] not in added_symbols and rule.rhs[i][0] == "<" and rule.rhs[i][-1] == "<":
-				added_symbols.append(rule.rhs[i])
-				items += find_all_item_sets(self.rules[rule.rhs[i]],added_symbols)
-		#items.append([rule.lhs,rule.rhs+["BLOB"]])
-		return items
-
-
-	def generate_patterns(self,ABNF_tree):
-		rules = ABNF_tree.rules
-		patterns = {}
-		for rule in rules:
-			pattern_possibilities = rules[rule]
-			for pattern in pattern_possibilities:
-				if pattern in patterns:
-					print "ERROR: ambiguous use of pattern: ",pattern
-					quit()
-				patterns[pattern] = rule
-		return patterns
-
-
-
-class item_set:
-	def __init__(self,rule_list):
-		self.rule_list = rule_list
-
+#________________________________________________________________________________________________________________
 class Non_terminal_parse_tree_node:																	#class for non terminals (ie have children)
 	def __init__(self,node_type,children):
 		self.terminal = 0
@@ -429,6 +387,7 @@ class EnumRule:
 		self.lhs = lhs
 		self.rhs = rhs
 		self.number = number
+		
 class Item:
 	def __init__(self,lhs,rhs,lookahead):
 		self.lhs = lhs
