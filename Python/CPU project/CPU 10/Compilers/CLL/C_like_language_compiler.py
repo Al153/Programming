@@ -192,7 +192,8 @@ my_parse_tree.express_parse_tree()
 class Parser:
 	def __init__(ABNF_grammar,source_text):
 		self.ABNF_tree = self.ABNF_parse_tree(ABNF_grammar)  										#parses grammar specification
-		self.rules = self.get_rules_table()															#gets a list of rules from the ABNF tree
+		self.rules = self.get_rules_table()												#gets a list of rules from the ABNF tree
+		self.first_sets = {}
 		self.item_set = get_item_sets() #finds all items reachable from "GOAL"
 
 
@@ -319,11 +320,9 @@ class Parser:
 
 
 	def first(self,symbol):
-		result = set({})
-		if symbol in self.terminal_expressions: return result + set({symbol})
-		if ['""'] in self.rules[symbol].rhs: result += set({'""'})
-
-
+		if symbol in self.first_sets:
+			return self.first_sets[symbol]
+		
 
 #_______________________________ set finding algorithms ______________________
 	def closure(self,item_set):
