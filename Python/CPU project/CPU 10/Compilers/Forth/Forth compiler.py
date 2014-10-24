@@ -1,7 +1,4 @@
-#imma pop some stacks, only got operands in my pocket
-#shunt-shunt-shunting, this is freaking CompSci
-
-
+#_______________________  A compiler for a forth like language I have designed and written myself. ___________________
 
 #____________________ Words _____________________
 #the only "true" in built words are the call and return words
@@ -27,7 +24,7 @@
 
 #Header Final Layer (HFL) - fixes Header to be joined with body assembly
 
-#optimization layer  - optimises by removing unnecessary stack calls.
+#optimization layer  - improves output assembly by removing unnecessary usage.
 
 #wrapper - combines header and body and writes assembly to a file, calls assembler
 
@@ -40,23 +37,23 @@
 #Body - consists purely of variable pushes, control flow, and word calls
 
 
-#__________________________ Storing Headers ______________________________
+#__________________________ Storing Header data ______________________________
 
-#Headers are stored in .al files
-#Meta data on headers is stored in .hlib files
+#Header data is stored in .al files
+#Meta data for interfacing headers is stored in .hlib files
 #.hlib files are json files containing dictionaries:
 #		- keys:
 #				- "source" - list of header files to import
 #				- "import" - list of more hlib files to import
 #				- "words"  - dict to link keywords to words eg "+":Forth.ADD
-#.hlib files are specifiec by "using example.hlib"
+#.hlib files are specified by "using example.hlib"
 
 
 
 #____________________ word syntax _______________________________________
 #all used words should be defined in the hlib files for a program or in the program itself
-#just word_name will push the address of the word onto the stack and then call it
-#just __word_name will push the address of the word onto the stack and will not call it (for meta programming)
+#word_name will push the address of the word onto the stack and then call it
+#__word_name will push the address of the word onto the stack and will not call it (for meta programming)
 
 #when calling words in the original forth, use . to separate name_spaces ie imported_file.function_name
 #when calling variables, use : instead ie  imported_file:main:x
@@ -66,19 +63,6 @@
 # var means a variable
 # *var means a pointer to a variable
 
-# will add non int types later
-
-
-
-
-
-
-
-
-
-
-
-
 #_______________ datatypes _______________
 #int
 #word
@@ -87,6 +71,8 @@
 #string
 #Array
 #CArray
+
+#The language relies heavily on assembler native datatypes, as a result variable definitions ae left for the assembler to allocate addresses to.
 
 import sys
 import json
@@ -263,7 +249,7 @@ def PPL_step(tokens):
 
 def VHL_step(body,header,word_dict):
 	'''
-	step which identifies variable  declarations in the code and generates header assembly words for popping to that variable + accessing pointers 
+	step which identifies variable  declarations in the code and deals with their manipulation 
 	'''
 	variable_dict,body = get_variables(body)  						#finds variables and cuts declarations out of main body
 	variable_dict = create_variable_pointers(variable_dict)			#creates a pointer to each variable

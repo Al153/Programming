@@ -320,7 +320,20 @@ class Parser:
 
 
 	def first(self,symbol):
+		#checks memo of first rules sets
+		#if exists, then returns the rules
 		if symbol in self.first_sets:
+			return self.first_sets[symbol]
+		else:
+			new_first_set = set([])
+			rules = self.rules[symbol].rhs
+			for pattern in rules:
+				if pattern[0] in self.rules: #if a non terminal, then first(X) += first(Y)
+					self.first(pattern[0])
+					new_first_set += self.first_sets[pattern[0]]
+				else:						#if a terminal, then first(X) += Y
+					new_first_set += set([pattern[0]])
+			self.first_sets[symbol] = new_first_set	
 			return self.first_sets[symbol]
 		
 
