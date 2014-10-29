@@ -163,54 +163,60 @@ class ABNF_rule:
 
 
  
-my_parse_tree = ABNF_parse_tree('''
-<PROGRAM> ::= <set_of_rules>
-<ELEMENTARY_TOKENS> ::= " " | "\\n" | "\\t" "<" | ">"
+#my_parse_tree = ABNF_parse_tree('''
+#<PROGRAM> ::= <set_of_rules>
+#<ELEMENTARY_TOKENS> ::= " " | "\\n" | "\\t" "<" | ">"
 
-<set_of_rules> ::= <rule> <cr> <set_of_rules> | <rule>
-<rule>	::= <assignment> <ws0> <assigned>
+#<set_of_rules> ::= <rule> <cr> <set_of_rules> | <rule>
+#<rule>	::= <assignment> <ws0> <assigned>
 
-<assignment> ::= <expression_name> <ws0> "::="
+#<assignment> ::= <expression_name> <ws0> "::="
 
-<assigned> ::= <expression_name> | <special> | <composite>
-<composite> ::= <assigned> <ws1> "|" <ws1> <assigned> | <assigned> ws1 <assigned>
-<special> ::= "id" | "dig"
+#<assigned> ::= <expression_name> | <special> | <composite>
+#<composite> ::= <assigned> <ws1> "|" <ws1> <assigned> | <assigned> ws1 <assigned>
+#<special> ::= "id" | "dig"
 
-<expression_name> ::= "<" <name> ">"
-<name> ::= id
-<cr> ::= <ws0> "\\n" <cr> | <ws0> "\\n"
-<ws0> ::= <ws> <ws0> | ""
-<ws1> ::= <ws> <ws1> | <ws>
-<ws> ::= " " | "\\t"
+#<expression_name> ::= "<" <name> ">"
+#<name> ::= id
+#<cr> ::= <ws0> "\\n" <cr> | <ws0> "\\n"
+#<ws0> ::= <ws> <ws0> | ""
+#<ws1> ::= <ws> <ws1> | <ws>
+#<ws> ::= " " | "\\t"
 
-''')
-my_parse_tree.express_parse_tree()
+#''')
+#my_parse_tree.express_parse_tree()
 
 
 
 
 class Parser:
-	def __init__(ABNF_grammar,source_text):
-		self.ABNF_tree = self.ABNF_parse_tree(ABNF_grammar)  										#parses grammar specification
+	def __init__(self,ABNF_grammar,source_text):
+		self.ABNF_tree = ABNF_parse_tree(ABNF_grammar)  										#parses grammar specification
+		self.ABNF_tree.express_parse_tree()
+		print "\n\n"
 		self.rules = self.get_rules_table()												#gets a list of rules from the ABNF tree
-		self.first_sets = {}
-		self.item_set = get_item_sets() #finds all items reachable from "GOAL"
-
-
-		self.terminal_expressions = self.get_terminal_expressions(ABNF_tree) 						#searches rules to get a list of terminal strings which are directly referenced in the grammar
-
 		self.elementary_tokens = self.rules["<ELEMENTARY_TOKENS>"]
-		del self.rules[elementary_tokens]
+		del self.rules["<ELEMENTARY_TOKENS>"]
+		self.terminal_expressions = self.get_terminal_expressions() 						#searches rules to get a list of terminal strings which are directly referenced in the grammar
+		self.first_sets = {}																		#used to speed up testing of first sets
+		self.tested_first_set = [] 																	#used to prevent infinite recursion of first set calculations, stores sets for which calculation has been attempted
+		self.item_set = self.get_item_sets() 														#finds all items reachable from "GOAL"
+		self.print_fsm()
 
-		self.tokens = self.tokenise(source_text) 													#tokeniser takes in text and produces a list of terminal objects
-		self.LHS_goto_table = self.get_LHS_goto_table() 											#generates lookup and lookahead tables
-		self.lookahead_action_table = self.get_lookahead_action_table()
-		self.parse_tree_stack = [0] 																#starts with just starting state
 
 
+#
+#
 
-		self.lookahead = self.tokens[0] 															#Loads in lookahead token 
-		self.token_index = 1 																		#fixes index within stream
+#		self.tokens = self.tokenise(source_text) 													#tokeniser takes in text and produces a list of terminal objects
+#		self.LHS_goto_table = self.get_LHS_goto_table() 											#generates lookup and lookahead tables
+#		self.lookahead_action_table = self.get_lookahead_action_table()
+#		self.parse_tree_stack = [0] 																#starts with just starting state#
+#
+#
+
+#		self.lookahead = self.tokens[0] 															#Loads in lookahead token 
+#		self.token_index = 1 																		#fixes index within stream
 
 
 	def parse(self):
@@ -228,7 +234,7 @@ class Parser:
 			self.shift(next_action_tuple[1])														
 			return 0 																				#returns 1 if done, so this is not done
 		elif next_action_tuple[0] == "reduce":
-			self.reduce(next_action_tuple[1]) 			#next action tuple[1] = pattern number 		#carries out a reduce operation
+			self.reduce(next_action_tuple[1]) 														#next action tuple[1] = pattern number 		#carries out a reduce operation
 			return 0
 		elif next_action_tuple[0] == "done":														#if parsing complete, report back that it is done
 			done = self.done()
@@ -286,21 +292,21 @@ class Parser:
 	def get_rules_table(self):																		#extracts rules into an easy to access table, addressed by the lhs of each rule
 		rules = {}
 		for rule in self.ABNF_tree.rules:															#iterates through rules
-			rules[rule] = Rule(rule,self.ABNF_tree.rules[rule])) 									#reordering rules table
-		rules["<GOAL>"] = Rule("<GOAL>",[["<PROGRAM>","END"]])													#adds global rule
-		self.get_enumerated_rules_table()															#generates an enumerated list of the patterns for table generation									
+			rules[rule] = Rule(rule,self.ABNF_tree.rules[rule])										#reordering rules table
+		rules["<GOAL>"] = Rule("<GOAL>",[["<PROGRAM>","END"]])										#adds global rule
+		self.get_enumerated_rules_table(rules)															#generates an enumerated list of the patterns for table generation									
 		return rules
 
-	def get_enumerated_rules_table(self):															#separates out rules into a version for each rhs an enumberates them
+	def get_enumerated_rules_table(self,rules):															#separates out rules into a version for each rhs an enumberates them
 		self.enum_rules = []																		#new list
-		for rule in self.rules:																		#cycles through rules
-			rhs = self.rules[rule].rhs 																#gets rhs
+		for rule in rules:																		#cycles through rules
+			rhs = rules[rule].rhs 																#gets rhs
 			for rhs_part in rhs: 																	#iterates through patterns creating enumerated rules
 				self.enum_rules.append(EnumRule(rule,rhs_part,len(self.enum_rules)))
 
 	def get_parse_tree_node(self,current_token):													#gets a node for the parse tree
 		if current_token in self.terminal_expressions: 												#if it is a special string, eg "=" then create a terminal 
-			return Terminal_parse_tree_node('"'+current_token+'"',current_token))
+			return Terminal_parse_tree_node('"'+current_token+'"',current_token)
 		else:
 			try:
 				current_token = int(current_token)
@@ -311,17 +317,27 @@ class Parser:
 
 
 
-	def get_terminal_expressions(self,ABNF_tree):
+	def get_terminal_expressions(self):
 		#recognises terminal expressions
+		terminal_expressions = []
+		for symbol in self.rules:
+			for pattern in self.rules[symbol].rhs:
+				for token in pattern:
+					if not(token[0] == "<" and token[-1] == ">") and token not in terminal_expressions:
+						terminal_expressions.append(token)
+		return terminal_expressions
+
 
 	def get_LHS_goto_table(self):
-
+		pass
 	def get_lookahead_action_table(self):
-
+		pass
 
 	def first(self,symbol):
 		#checks memo of first rules sets
 		#if exists, then returns the rules
+		#print symbol
+		self.tested_first_set.append(symbol)
 		if symbol in self.first_sets:
 			return self.first_sets[symbol]
 		else:
@@ -329,51 +345,103 @@ class Parser:
 			rules = self.rules[symbol].rhs
 			for pattern in rules:
 				if pattern[0] in self.rules: #if a non terminal, then first(X) += first(Y)
-					self.first(pattern[0])
-					new_first_set += self.first_sets[pattern[0]]
+					if pattern[0] not in self.tested_first_set:
+						self.first(pattern[0])
+						new_first_set |= self.first_sets[pattern[0]]
 				else:						#if a terminal, then first(X) += Y
-					new_first_set += set([pattern[0]])
+					new_first_set |= set([pattern[0]])
 			self.first_sets[symbol] = new_first_set	
 			return self.first_sets[symbol]
+	
+	def alternate_first(self,symbol):
+#		If X is a terminal then First(X) is just X!
+#		If there is a Production X → ε then add ε to first(X)
+#		If there is a Production X → Y1Y2..Yk then add first(Y1Y2..Yk) to first(X)
+#		First(Y1Y2..Yk) is either
+#    		First(Y1) (if First(Y1) doesn't contain ε)
+#    		OR (if First(Y1) does contain ε) then First (Y1Y2..Yk) is everything in First(Y1) <except for ε > as well as everything in First(Y2..Yk)
+#    	If First(Y1) First(Y2)..First(Yk) all contain ε then add ε to First(Y1Y2..Yk) as well.
 		
+#		first(A) is the set of all {t in terminals: A ==> t alpha}
+		
+		#this is the initialisation function,
+		if symbol in self.first_sets:
+			return self.first_sets[symbol]
+		else:
+			self.checking_sets = [symbol]
+			self.first_sets[symbol] = alternate_first_recursion(symbol)
+
+	def alternate_first_recursion(self,symbol):
+		#the recursive part
+		if symbol in self.terminal_expressions: #if x is a terminal
+			return symbol
+		patterns = self.rules[symbol].rhs
+		
+
+	def alternate_first_of_list(self,symbol_list):
 
 #_______________________________ set finding algorithms ______________________
 	def closure(self,item_set):
 		#input is a set of items: item has lhs, rhs, and lookahead, where rhs contains 'blob'
-		done = 0
+		print "Calculating closure: ",item_set
 		for item in item_set:
-			try:
+			print "Item  = ",item.lhs,item.rhs
+			if item.rhs.index("BLOB") + 1 < len(item.rhs):
 				next_symbol = item.rhs[item.rhs.index("BLOB")+1]
+				print "next symbol = ",next_symbol
 				if next_symbol not in self.terminal_expressions:
-					for production in self.rules[next_symbol]:
-						for terminal in self.first(item.rhs[item.rhs.index("BLOB"):],item.lookahead)
-							item_set += set([item(production.lhs,["BLOB"]+production.rhs,terminal)])
-			except IndexError:
-				pass
-		return item_set
+					for production in self.rules[next_symbol].rhs:
+						print "production = ",production
+						first_set = self.first(item.rhs[item.rhs.index("BLOB")+1])
+						print "first_set = ",first_set
+						for terminal in first_set:
+							item_to_add = Item(production.lhs,["BLOB"]+production.rhs,terminal)
+							print "Adding item to closure: ", item_to_add.right_hand_side,item_to_add.lhs,item_to_add.lookahead
+							item_set |= set([item_to_add])
+		print "closure",item_set
+		return frozenset(item_set)
 
 	def goto(self,item_set,token):	
 		j_item_set = set([])
 		for item in item_set:
-			token_ptr = item.rhs.index(token)
-			blob_ptr = item.rhs.index("BLOB")
-			if token_ptr == blob_ptr + 1:
-				j_item_set += set([item(item.lhs,item.rhs[:blob_ptr]+[token,"BLOB"]+item.rhs[token_ptr+1])])
-		return self.closure(j_item_set)
+			if token in item.rhs:
+				token_ptr = item.rhs.index(token)
+				blob_ptr = item.rhs.index("BLOB")
+				if token_ptr == blob_ptr + 1:
+					try:
+						j_item_set |= set([Item(item.lhs, item.rhs[:blob_ptr]+[token,"BLOB"]+item.rhs[token_ptr+1:],item.lookahead)])
+					except IndexError:
+						pass
+		return self.closure(j_item_set) if len(j_item_set) else frozenset(j_item_set)
 
 	def get_item_sets(self):
-		grammar_symbols = [symbol for symbol in self.rules] + self.terminals
+		grammar_symbols = [symbol for symbol in self.rules] + self.terminal_expressions
+		print "grammar_symbols = ", grammar_symbols
+		starting_state = self.closure([Item("<GOAL>",["BLOB"] +self.rules["<GOAL>"].rhs[0],"END")]) 
+		C_set = [starting_state]
+		print starting_state
+		self.enumerated_states = {0:Finite_automaton_state(starting_state,0)} 	#allows for creation of finite automaton
+		state_number = 1 								#counts number of states
 
-		C_set = set([self.closure([item("GOAL",["BLOB"] +self.rules["GOAL"].rhs,"END")])])
-		done = 0
+		for item_set in C_set:
+			print "\n\n", item_set,"\n\n"
+			state_index = C_set.index(item_set)
+			for X in grammar_symbols:
+				goto_of_x = self.goto(item_set,X)
+				print X,goto_of_x
+				if len(goto_of_x)>0 and (goto_of_x not in C_set):
+					print "ADDING", goto_of_x
+					C_set += [goto_of_x]
+					self.enumerated_states[state_number] = Finite_automaton_state(goto_of_x,state_number)
+					self.enumerated_states[state_index].goto_table[X] = state_number
+					state_number += 1
+		return frozenset(C_set)
 
-		while not done:
-			for item_set in C:
-				for X in grammar_symbols:
-					goto_of_x = goto(item_set,X)
-					if len(goto_of_x)>0 and goto_of_x not in C_set:
-						C_set += goto_of_x
-		return C_set
+	def print_fsm(self):
+		for index in self.enumerated_states:
+			print "\n\n\n________________________ STATE ",int(index),"______________________________"
+			print self.enumerated_states[index].goto_table
+
 
 
 #________________________________________________________________________________________________________________
@@ -404,3 +472,21 @@ class Item:
 	def __init__(self,lhs,rhs,lookahead):
 		self.lhs = lhs
 		self.rhs = rhs
+		self.lookahead = lookahead
+
+class Finite_automaton_state:
+	def __init__(self,own_set,number):
+		self.own_set = own_set			
+		self.goto_table = {}
+
+
+#test_code:
+
+test_abnf = '''
+<PROGRAM> ::= <Sums>
+<Sums> ::= <Sums> "+" <Products> | <Products>
+<Products> ::= <Products> "*" <Value> | <Products>
+<Value> ::= dig | id
+<ELEMENTARY_TOKENS> ::= "*" | "+" | dig | id
+'''
+test_parser = Parser(test_abnf,'')
