@@ -210,6 +210,8 @@ class Parser:
 		cont = raw_input('')
 
 		self.item_set = self.get_item_sets()                                                        #finds all items reachable from "GOAL"
+		self.get_parsing_tables()
+
 		self.print_fsm()
 
 
@@ -323,10 +325,34 @@ class Parser:
 
 
 
-	def get_LHS_goto_table(self):
-		pass
-	def get_lookahead_action_table(self):
-		pass
+	def get_parsing_tables(self):
+		self.LHS_goto_table = {}
+		self.lookahead_action_table = {}
+		for state in self.enumerated_states:
+			self.LHS_goto_table[state] = {}
+			self.lookahead_action_table[state] = {}
+
+			for symbol in self.enumerated_states[state].goto_table:
+				if symbol == "END" and self.is_in_item_set(Item("<GOAl>",['<PROGRAM>', 'BLOB', 'END' ],'END'), self.enumerated_states[state].own_set): 	#if the final rule, accept
+					self.lookahead_action_table[state][symbol] = ("accept",0)					
+				if symbol in self.terminals:
+					self.lookahead_action_table[state][symbol] = ("shift",self.enumerated_states[state].goto_table[symbol]) 	#shift symbol onto stack, goto new state
+				else:
+					self.LHS_goto_table[state][symbol] = self.enumerated_states[state].goto_table[symbol] 		#once a reduction has occured, get the new state
+
+			for item in self.enumerated_states[state].own_set:
+				if item.rhs.index("BLOB")+1 == len(item.rhs): #reduce
+					for rule in self.enum_rules:			  #searching for acceptable rules
+						found = 0
+						if rule.lhs == item.lhs and rule.rhs == item.rhs[:-1]: #if rule is correct
+							found = 1
+							rule_number = rule.number
+					if found:
+						self.lookahead_action_table[state][item.lookahead] = ("reduce",rule_number)
+					else:
+						print "ERROR: no correct rule found for item", 
+						self.print_item(item)
+
 
 
 #________________________________ Functions for extracting rules from the ABNF parse tree _______________________________________________________
@@ -360,25 +386,24 @@ class Parser:
 #_______________________________ set finding algorithms ______________________
 	def closure(self,items):
 		#input is a set of items: item has lhs, rhs, and lookahead, where rhs contains 'blob'
-		print "Calculating closure: ",items,type(items)
+		#print "Calculating closure: ",items,type(items)
 		items = list(items)
 		for item in items:
-			print "Item  = ",item.lhs,item.rhs
+			#print "Item  = ",item.lhs,item.rhs
 			if item.rhs.index("BLOB") + 1 < len(item.rhs):
 				next_symbol = item.rhs[item.rhs.index("BLOB")+1]
-				print "next symbol = ",next_symbol
+				#print "next symbol = ",next_symbol
 				if next_symbol not in self.terminals:
 					for production in self.rules[next_symbol].rhs:
-						print "production = ",production
+						#print "production = ",production
 						first_set = self.first_sets[item.rhs[item.rhs.index("BLOB")+1]]
-						print "first_set = ",first_set
+						#print "first_set = ",first_set
 						for terminal in first_set:
 							item_to_add = Item(next_symbol,["BLOB"]+production,terminal)
-							print "Adding item to closure: ", item_to_add.lhs, "==>", item_to_add.rhs,",",item_to_add.lookahead
+							#print "Adding item to closure: ", item_to_add.lhs, "==>", item_to_add.rhs,",",item_to_add.lookahead
 							if not self.is_in_item_set(item_to_add,items):
 								items.append(item_to_add)
 		item_set = set(items)
-		print "closure",item_set
 		return frozenset(item_set)
 
 	def goto(self,item_set,token):  
@@ -404,17 +429,19 @@ class Parser:
 
 
 		for item_set in C_set:
-			cont = raw_input("")
-			print "\n\n", item_set,"\n\n"
 			state_index = C_set.index(item_set)
 			for X in grammar_symbols:
 				goto_of_x = self.goto(item_set,X)
-				if len(goto_of_x)>0 and not self.is_in_c_set(goto_of_x,C_set):
+				in_c_set, index = self.is_in_c_set(goto_of_x,C_set)
+				if len(goto_of_x)>0 and not in_c_set:
 					print "ADDING", X
 					C_set += [goto_of_x]
 					self.enumerated_states[state_number] = Finite_automaton_state(goto_of_x,state_number)
 					self.enumerated_states[state_index].goto_table[X] = state_number
 					state_number += 1
+				elif len(goto_of_x)>0: #otherwise, link back
+					print "LINKING", X
+					self.enumerated_states[state_index].goto_table[X] = index
 		return frozenset(C_set)
 
 
@@ -508,8 +535,8 @@ class Parser:
 		#checks if an item set is a member of a list
 		for item_set in C_set:
 			if self.compare_item_sets(item_set,goto_set):
-				return True
-		return False
+				return True, C_set.index(item_set)
+		return False, None
 
 
 	def merge_lists(self,list1,list2):
@@ -527,12 +554,16 @@ class Parser:
 	def print_fsm(self):
 		for index in self.enumerated_states:
 			print "\n\n\n________________________ STATE ",int(index),"______________________________"
+			for item in self.enumerated_states[index].own_set:
+				self.print_item(item)
 			print self.enumerated_states[index].goto_table
 
 	def print_first_sets(self):
 		for symbol in self.rules:
 			print "FIRST("+symbol+") = ",self.first_sets[symbol]
 
+	def print_item(self,item):
+		print item.lhs, "==>", item.rhs,",",item.lookahead
 
 
 
@@ -568,7 +599,8 @@ class Item:
 
 class Finite_automaton_state:
 	def __init__(self,own_set,number):
-		self.own_set = own_set          
+		self.own_set = own_set  
+		self.number = number       
 		self.goto_table = {}
 
 #test_code:
@@ -586,4 +618,11 @@ test_abnf = '''
 #<S> ::=	dig
 #<ELEMENTARY_TOKENS> ::= 
 #'''
+
+test_abnf = '''
+<PROGRAM> ::= <PROGRAM> <T> | <T>
+<T> ::= <T> "*" <F> | <F>
+<F> ::= "(" <PROGRAM> ")" | id
+<ELEMENTARY_TOKENS> ::= "("
+'''
 test_parser = Parser(test_abnf,'')
