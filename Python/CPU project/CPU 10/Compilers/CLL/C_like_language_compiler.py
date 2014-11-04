@@ -212,7 +212,7 @@ class Parser:
 		self.item_set = self.get_item_sets()                                                        #finds all items reachable from "GOAL"
 		self.get_parsing_tables()
 
-		self.print_fsm()
+		self.print_lookahead_table()
 
 
 
@@ -557,6 +557,16 @@ class Parser:
 			for item in self.enumerated_states[index].own_set:
 				self.print_item(item)
 			print self.enumerated_states[index].goto_table
+
+
+	def print_lookahead_table(self):
+		for state in self.lookahead_action_table:
+			print "\n\n\n________________________ STATE ",state,"______________________________"
+			for item in self.enumerated_states[state].own_set:
+				self.print_item(item)
+			print "\n__________________________ lookahead table ____________________________"
+			for symbol in self.lookahead_action_table[state]:
+				print symbol, "==>", self.lookahead_action_table[state][symbol]
 
 	def print_first_sets(self):
 		for symbol in self.rules:
