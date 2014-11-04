@@ -195,8 +195,12 @@ class Parser:
 		self.ABNF_tree.express_parse_tree()
 		print "\n\n"
 		self.rules = self.get_rules_table()                                             #gets a list of rules from the ABNF tree
+
 		self.elementary_tokens = self.rules["<ELEMENTARY_TOKENS>"]
 		del self.rules["<ELEMENTARY_TOKENS>"]
+		print self.elementary_tokens
+		self.to_ignore = self.rules["<IGNORE>"]
+		del self.rules["<IGNORE>"]
 
 		self.terminals = self.get_terminals()                                                #searches rules to get a list of terminal strings which are directly referenced in the grammar
 		self.grammar_symbols = [symbol for symbol in self.rules] + self.terminals                        #gets all grammar symbols
@@ -213,22 +217,18 @@ class Parser:
 		self.get_parsing_tables()
 
 		self.print_lookahead_table()
+		cont = raw_input('')
 
 
 
-#
-#
+		self.tokens = self.tokenise(source_text)                                                    #tokeniser takes in text and produces a list of terminal objects
+		self.parse_tree_stack = [0]                                                                 #starts with just starting state#
 
-#       self.tokens = self.tokenise(source_text)                                                    #tokeniser takes in text and produces a list of terminal objects
-#       self.LHS_goto_table = self.get_LHS_goto_table()                                             #generates lookup and lookahead tables
-#       self.lookahead_action_table = self.get_lookahead_action_table()
-#       self.parse_tree_stack = [0]                                                                 #starts with just starting state#
-#
-#
 
-#       self.lookahead = self.tokens[0]                                                             #Loads in lookahead token 
-#       self.token_index = 1                                                                        #fixes index within stream
 
+		self.lookahead = self.tokens[0]                                                             #Loads in lookahead token 
+		self.token_index = 1                                                                        #fixes index within stream
+		self.parse()
 
 
 #_________________________________________________ Parse related functions ______________________________________________
@@ -263,10 +263,9 @@ class Parser:
 		self.lookahead = self.tokens[self.token_index]                                              #loads a new lookahead symbol
 		self.token_index += 1
 	
-	def reduce(self,pattern_number):
+	def reduce(self,rule_number):
 
-		#<logic to get pattern and lhs>
-
+		pattern = self.enum_rules[pattern_number]
 
 		length_to_pop = 2*len(pattern)                                                              #the length of the pattern to reduce is doubled (to accomodate for state values)
 		popped = self.parse_tree_stack[-length_to_pop::2]                                           #pops off symbols to be matched
@@ -293,13 +292,14 @@ class Parser:
 
 
 	def tokenise(self,source_text):                                                                 #splits text according to elementary tokens - chars which indicate a new token
-		token_triggers = self.elementary_tokens                                                     #fetch elementary tokens
+		token_triggers = self.elementary_tokens.rhs                                                     #fetch elementary tokens
 		current_token = ''                                                                          #initialise current token and token list
 		token_list = []
 		for character in source_text:                                                               #iterate through source text
 			if character in token_triggers:                                                         #splits if elementary token found
-				token_list.append(self.get_parse_tree_node(current_token))                          #generates parse tree node object
-				token_list.append(self.get_parse_tree_node(character))                              #adds in parse tree node for elementary token causing splitting
+				if current_token not in self.to_ignore.rhs:
+					token_list.append(self.get_parse_tree_node(current_token))                          #generates parse tree node object
+					token_list.append(self.get_parse_tree_node(character))                              #adds in parse tree node for elementary token causing splitting
 				current_token = ''
 			else:
 				current_token += character                                                          #otherwise place the character in the token
@@ -328,25 +328,28 @@ class Parser:
 	def get_parsing_tables(self):
 		self.LHS_goto_table = {}
 		self.lookahead_action_table = {}
+		for rule in self.enum_rules:
+			print rule.number,"|",rule.lhs," ==> ", rule.rhs
 		for state in self.enumerated_states:
 			self.LHS_goto_table[state] = {}
 			self.lookahead_action_table[state] = {}
 
 			for symbol in self.enumerated_states[state].goto_table:
-				if symbol == "END" and self.is_in_item_set(Item("<GOAl>",['<PROGRAM>', 'BLOB', 'END' ],'END'), self.enumerated_states[state].own_set): 	#if the final rule, accept
-					self.lookahead_action_table[state][symbol] = ("accept",0)					
+				if symbol == "END" and self.is_in_item_set(Item("<GOAl>",['<PROGRAM>', 'BLOB', 'END' ],'END'), self.enumerated_states[state].own_set):  #if the final rule, accept
+					self.lookahead_action_table[state][symbol] = ("accept",0)                   
 				if symbol in self.terminals:
-					self.lookahead_action_table[state][symbol] = ("shift",self.enumerated_states[state].goto_table[symbol]) 	#shift symbol onto stack, goto new state
+					self.lookahead_action_table[state][symbol] = ("shift",self.enumerated_states[state].goto_table[symbol])     #shift symbol onto stack, goto new state
 				else:
-					self.LHS_goto_table[state][symbol] = self.enumerated_states[state].goto_table[symbol] 		#once a reduction has occured, get the new state
+					self.LHS_goto_table[state][symbol] = self.enumerated_states[state].goto_table[symbol]       #once a reduction has occured, get the new state
 
 			for item in self.enumerated_states[state].own_set:
 				if item.rhs.index("BLOB")+1 == len(item.rhs): #reduce
-					for rule in self.enum_rules:			  #searching for acceptable rules
+					for rule in self.enum_rules:              #searching for acceptable rules
 						found = 0
 						if rule.lhs == item.lhs and rule.rhs == item.rhs[:-1]: #if rule is correct
 							found = 1
 							rule_number = rule.number
+							break
 					if found:
 						self.lookahead_action_table[state][item.lookahead] = ("reduce",rule_number)
 					else:
@@ -366,9 +369,10 @@ class Parser:
 		return rules
 
 	def get_enumerated_rules_table(self,rules):                                                         #separates out rules into a version for each rhs an enumberates them
+		rules_to_ignore = ["<ELEMENTARY_TOKENS>","<IGNORE>"]
 		self.enum_rules = []                                                                        #new list
 		for rule in rules:                                                                     #cycles through rules
-			if rule != "<ELEMENTARY_TOKENS>":													#not a real rule
+			if rule not in rules_to_ignore:                                                   #not a real rule
 				rhs = rules[rule].rhs                                                               #gets rhs
 				for rhs_part in rhs:                                                                    #iterates through patterns creating enumerated rules
 					self.enum_rules.append(EnumRule(rule,rhs_part,len(self.enum_rules)))
@@ -457,8 +461,8 @@ class Parser:
 			pattern = rule.rhs
 			for symbol in pattern:
 				if not symbol in self.first_sets[non_terminal]:
-					self.first_sets[non_terminal].append(symbol) 		#adds the symbol
-				if not self.null_dict[symbol]:							#if the symbol derives the empty string then the next symbol is added to first
+					self.first_sets[non_terminal].append(symbol)        #adds the symbol
+				if not self.null_dict[symbol]:                          #if the symbol derives the empty string then the next symbol is added to first
 					break
 
 		#now while there are still changes each non terminal in each set is used to get the existing symbols in its first set
@@ -482,7 +486,7 @@ class Parser:
 	def get_nulls(self):
 		'''checks if the empty string can be derived from symbol. modified from http://www.andrews.edu/~bidwell/456'''
 		self.null_dict = {symbol:False for symbol in self.grammar_symbols}
-		if not '""' in self.null_dict: 	#if no symbols can be null
+		if not '""' in self.null_dict:  #if no symbols can be null
 			return
 		changes = 1
 		while changes:
@@ -508,17 +512,17 @@ class Parser:
 
 	def compare_item_sets(self,item_set1,item_set2):
 		#sees if two item sets are the same
-		counting_item_set = set(item_set2) 				#each time an item is matched, it is removed
+		counting_item_set = set(item_set2)              #each time an item is matched, it is removed
 		for item1 in item_set1:
 			found = 0
-			for item2 in item_set2: 					#tries to find each item in the second set, and removes it from the copy of the second set
+			for item2 in item_set2:                     #tries to find each item in the second set, and removes it from the copy of the second set
 				if self.compare_items(item1,item2):
 					found = 1
 					counting_item_set.remove(item2)
 					break
 			if not found:
 				return False
-		if len(counting_item_set):   					#if there are additional items in the second set, then the copy set will still have items in it
+		if len(counting_item_set):                      #if there are additional items in the second set, then the copy set will still have items in it
 			return False
 		else: 
 			return True
@@ -625,7 +629,7 @@ test_abnf = '''
 #test_abnf = '''
 #<PROGRAM> ::= <E>
 #<E> ::= id <S> <E> | id
-#<S> ::=	dig
+#<S> ::=    dig
 #<ELEMENTARY_TOKENS> ::= 
 #'''
 
@@ -633,6 +637,9 @@ test_abnf = '''
 <PROGRAM> ::= <PROGRAM> <T> | <T>
 <T> ::= <T> "*" <F> | <F>
 <F> ::= "(" <PROGRAM> ")" | id
-<ELEMENTARY_TOKENS> ::= "("
+
+<ELEMENTARY_TOKENS> ::= "(" | " " 
+<IGNORE> ::= " "
+
 '''
-test_parser = Parser(test_abnf,'')
+test_parser = Parser(test_abnf,'a * (b * c)(f)*(f)')
