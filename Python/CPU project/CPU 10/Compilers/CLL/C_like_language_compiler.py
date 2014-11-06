@@ -424,20 +424,20 @@ class Parser:
 		state_number = 1                                #counts number of states
 
 
-
+		print "RETRIEVING ITEM SETS"
 		for item_set in C_set:
 			state_index = C_set.index(item_set)
 			for X in grammar_symbols:
 				goto_of_x = self.goto(item_set,X)
 				in_c_set, index = self.is_in_c_set(goto_of_x,C_set)
 				if len(goto_of_x)>0 and not in_c_set:
-					print "ADDING", X
+					#print "ADDING", X
 					C_set += [goto_of_x]
 					self.enumerated_states[state_number] = Finite_automaton_state(goto_of_x,state_number)
 					self.enumerated_states[state_index].goto_table[X] = state_number
 					state_number += 1
 				elif len(goto_of_x)>0: #otherwise, link back
-					print "LINKING", X
+					#print "LINKING", X
 					self.enumerated_states[state_index].goto_table[X] = index
 		return frozenset(C_set)
 
@@ -735,6 +735,8 @@ cll_abnf = '''
 '''
 test_parser = Parser(cll_abnf,'''
 a = b + c;
-d = a+b/c;
+if (a) then
+	d = a+b/c;
+endif;
 return a;
 ''')
