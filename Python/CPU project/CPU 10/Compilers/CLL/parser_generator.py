@@ -1,13 +1,26 @@
+import json
+
+def generate_parser(name,ABNF_grammar):
+	parser = Parser(ABNF_grammar)
+	parser_summary =  {
+						"lookahead_action_table":parser.lookahead_action_table,
+						"goto_table":parser.LHS_goto_table,
+						"elementary_tokens":parser.elementary_tokens,
+						"to_ignore":parser.to_ignore,
+						"terminals":parser.terminals,
+						"rules":[(rule.lhs,rule.rhs,rule.number) for rule in parser.enum_rules]
+					}
+	parser_summary_string = json.dumps(parser_summary)
+	output_file = open(name+".parse","w")
+	output_file.write(parser_summary_string)
+
 class Parser:
-	def __init__(self,ABNF_grammar,source_text):
+	def __init__(self,ABNF_grammar):
 		self.ABNF_tree = ABNF_parse_tree(ABNF_grammar)                                          #parses grammar specification
-		self.ABNF_tree.express_parse_tree()
-		print "\n\n"
 		self.rules = self.get_rules_table()                                             #gets a list of rules from the ABNF tree
 
-		self.elementary_tokens = self.rules["<ELEMENTARY_TOKENS>"]
+		self.elementary_tokens = [character[0][1:-1] for character in self.rules["<ELEMENTARY_TOKENS>"].rhs] 
 		del self.rules["<ELEMENTARY_TOKENS>"]
-		print self.elementary_tokens
 		self.to_ignore = [character[0][1:-1] for character in self.rules["<IGNORE>"].rhs]
 		del self.rules["<IGNORE>"]
 
@@ -15,120 +28,15 @@ class Parser:
 		self.grammar_symbols = [symbol for symbol in self.rules] + self.terminals                        #gets all grammar symbols
 		self.first_sets = {}                                                                     #used to speed up testing of first sets
 		self.initialise_first_sets()
-		print "calculated first sets: "
-		self.print_first_sets()
-
-		cont = raw_input('')
 
 		self.item_set = self.get_item_sets()                                                        #finds all items reachable from "GOAL"
 		self.get_parsing_tables()
 
-		cont = raw_input('')
-
-		#self.print_lookahead_table()
-
-		self.tokens = self.tokenise(source_text)                                                    #tokeniser takes in text and produces a list of terminal objects
-		self.parse_tree_stack = [0]                                                                 #starts with just starting state
-
-		self.lookahead = self.tokens[0]                                                             #Loads in lookahead token 
-		self.token_index = 1                                                                        #fixes index within stream
-
-		parse_tree = self.parse()
-		self.print_parse_tree(parse_tree)
-
-
 #_________________________________________________ Parse related functions ______________________________________________
-
-	def parse(self):
-		while not self.parse_step():
-			pass
-		return self.parse_tree_stack[1]
-
-	def parse_step(self):                                                                           #main parsing step, repeated till done or error
-		top_state = self.parse_tree_stack[-1]                                                       #get the top state of the stack
-		try:
-			print self.lookahead.type,self.lookahead.string,
-			next_action_tuple = self.lookahead_action_table[top_state][self.lookahead.type]          #uses table to calculate next values
-		except KeyError:
-			next_action_tuple = ("error",'not expecting terminal type = '+self.lookahead.type+', terminal = "'+self.lookahead.string+'"')                                   #if there is an error, then call error
-		print next_action_tuple
-		if next_action_tuple[0] == "shift":                                                         #carries out a shift operation
-			self.shift(next_action_tuple[1])                                                        
-			return 0                                                                                #returns 1 if done, so this is not done
-		elif next_action_tuple[0] == "reduce":
-			return self.reduce(next_action_tuple[1])                                                       #next action tuple[1] = pattern number      #carries out a reduce operation
-		elif next_action_tuple[0] == "done":                                                        #if parsing complete, report back that it is done
-			done = self.done()
-			if done:
-				return 1
-		elif next_action_tuple[0] == "error":                                                       #otherwise report an error
-			self.error(next_action_tuple[1])
-
-	def shift(self,next_state):                                                                     #shift operation
-		self.parse_tree_stack.append(self.lookahead)                                                #pushes lookahead symbol
-		self.parse_tree_stack.append(next_state)                                                    #pushes new state
-		self.lookahead = self.tokens[self.token_index]                                              #loads a new lookahead symbol
-		self.token_index += 1
-	
-	def reduce(self,rule_number):
-		pattern = self.enum_rules[rule_number].rhs
-		lhs = self.enum_rules[rule_number].lhs
-		if lhs == "<GOAL>":
-			return self.done()
-		length_to_pop = 2*len(pattern)                                                              #the length of the pattern to reduce is doubled (to accomodate for state values)
-		popped = self.parse_tree_stack[-length_to_pop::2]                                           #pops off symbols to be matched
-		self.parse_tree_stack = self.parse_tree_stack[:-length_to_pop]                              #rest of pop operation
-		state_p = self.parse_tree_stack[-1]                                                         #gets previous state
-		next_state = self.LHS_goto_table[state_p][lhs]                                                   #calculates new state
-		tree_to_push = Non_terminal_parse_tree_node(lhs,popped)                                     #creates  new parse tree node
-		self.parse_tree_stack += [tree_to_push,next_state]                                          #pushes new tree and state
-		return 0
-
-	def done(self):
-		print self.parse_tree_stack[1].type                                                                                 #halts operation
-		if len(self.parse_tree_stack) == 3 and self.parse_tree_stack[0] == 0:                      #if stack consists of a parse tree and the success state 
-			return 1
-		else:
-			self.error("False_EOF")                                                                 #calls an errors
-	
-	def error(self,reason):                                                                         #error reporting
-		print reason
-		quit()
-
-	def tokenise(self,source_text):                                                                 #splits text according to elementary tokens - chars which indicate a new token
-		token_triggers = [character[0][1:-1] for character in self.elementary_tokens.rhs]                                                     #fetch elementary tokens
-		current_token = ''                                                                          #initialise current token and token list
-		token_list = []
-		for character in source_text:                                                               #iterate through source text
-			if character in token_triggers:                                                         #splits if elementary token found
-				if current_token not in self.to_ignore and current_token != '':
-					token_list.append(self.get_parse_tree_node(current_token))                          #generates parse tree node object
-				if character not in self.to_ignore:
-					token_list.append(self.get_parse_tree_node(character))                              #adds in parse tree node for elementary token causing splitting
-				current_token = ''
-			else:
-				current_token += character                                                          #otherwise place the character in the token
-
-		if current_token != '' and current_token not in self.to_ignore:                         #clean up final token
-			token_list.append(self.get_parse_tree_node(current_token))
-		token_list.append(Terminal_parse_tree_node("END","END"))                                    #adds end symbol to end of code
-		return token_list           
-
-	def get_parse_tree_node(self,current_token):                                                    #gets a node for the parse tree
-		if '"' + current_token + '"' in self.terminals:                                              #if it is a special string, eg "=" then create a terminal 
-			return Terminal_parse_tree_node('"'+current_token+'"',current_token)
-		else:
-			try:
-				current_token = int(current_token)
-				return Terminal_parse_tree_node("int",current_token)                                #if integerise-able then produce an integer token
-			except ValueError:
-				return Terminal_parse_tree_node("id",current_token)                                 #otherwise then produce an identifier
 
 	def get_parsing_tables(self):
 		self.LHS_goto_table = {}
 		self.lookahead_action_table = {}
-		for rule in self.enum_rules:
-			print rule.number,"|",rule.lhs," ==> ", rule.rhs
 		for state in self.enumerated_states:
 			self.LHS_goto_table[state] = {}
 			self.lookahead_action_table[state] = {}
@@ -189,24 +97,16 @@ class Parser:
 #_______________________________ set finding algorithms ______________________
 	def closure(self,input_items):
 		#input is a set of items: item has lhs, rhs, and lookahead, where rhs contains 'blob'
-		#print "Calculating closure: ",items,type(items)
 		items = list(input_items)
 
 		for item in items:
-			#print "Item  = ",item.lhs,item.rhs
 			if item.rhs.index("BLOB") + 1 < len(item.rhs):
 				next_symbol = item.rhs[item.rhs.index("BLOB")+1]
-				#print "next symbol = ",next_symbol
 				if next_symbol not in self.terminals:
 					lookaheads = self.lookaheads(next_symbol,items)
-					#sprint "lookaheads = ",lookaheads
 					for production in self.rules[next_symbol].rhs:
-						#print "production = ",production
-						#first_set = self.first_sets[item.rhs[item.rhs.index("BLOB")+1]]
-
 						for terminal in lookaheads:
 							item_to_add = Item(next_symbol,["BLOB"]+production,terminal)
-							#print "Adding item to closure: ", item_to_add.lhs, "==>", item_to_add.rhs,",",item_to_add.lookahead
 							if not self.is_in_item_set(item_to_add,items):
 								items.append(item_to_add)
 		item_set = set(items)
@@ -240,13 +140,11 @@ class Parser:
 				goto_of_x = self.goto(item_set,X)
 				in_c_set, index = self.is_in_c_set(goto_of_x,C_set)
 				if len(goto_of_x)>0 and not in_c_set:
-					print "ADDING", X
 					C_set += [goto_of_x]
 					self.enumerated_states[state_number] = Finite_automaton_state(goto_of_x,state_number)
 					self.enumerated_states[state_index].goto_table[X] = state_number
 					state_number += 1
 				elif len(goto_of_x)>0: #otherwise, link back
-					print "LINKING", X
 					self.enumerated_states[state_index].goto_table[X] = index
 		return frozenset(C_set)
 
@@ -389,7 +287,7 @@ class Parser:
 
 	def print_lookahead_table(self):
 		for state in self.lookahead_action_table:
-			print "\n\n\n________________________ STATE ",state,"______________________________"
+			print "\n\n\n________________________ STATE ",state,"_____________________________"
 			for item in self.enumerated_states[state].own_set:
 				self.print_item(item)
 			print "\n__________________________ lookahead table ____________________________"
@@ -404,32 +302,7 @@ class Parser:
 	def print_item(self,item):
 		print item.lhs, "==>", item.rhs,",",item.lookahead
 
-	def print_parse_tree(self,parse_tree_node,offset = ''):
-		if parse_tree_node.terminal:
-			print offset+parse_tree_node.type+"("+parse_tree_node.string+")"
-			return
-		else:
-			print offset+parse_tree_node.type+"("
-			for child in parse_tree_node.children:
-				self.print_parse_tree(child,offset+"  ")
-			print offset+")"
-
-
-
-
-#________________________________________________________________________________________________________________
-class Non_terminal_parse_tree_node:                                                                 #class for non terminals (ie have children)
-	def __init__(self,node_type,children):
-		self.terminal = 0
-		self.type = node_type
-		self.children = children
-
-class Terminal_parse_tree_node:                                                                     #class for terminals
-	def __init__(self,node_type,token_string):
-		self.terminal = 1
-		self.type = node_type
-		self.string = token_string
-
+#______________________________________________ Auxilary classes __________________________________________________________________
 class Rule:                                                                                         #simple rule class
 	def __init__(self,lhs,rhs):
 		self.lhs = lhs
@@ -452,3 +325,102 @@ class Finite_automaton_state:
 		self.own_set = own_set  
 		self.number = number       
 		self.goto_table = {}
+
+class ABNF_parse_tree:
+	def __init__(self,ABNF_string):
+		self.ABNF = ABNF_string
+		self.get_rules()
+	def get_rules(self):
+		#split text into lines,ignoring excess whitespace
+		lines = self.ABNF.split("\n")
+		rules_list = [self.tokenise_line(line) for line in lines if self.tokenise_line(line)]
+		self.rules = {rule.left_hand_side:rule.right_hand_side for rule in map(ABNF_rule,rules_list)}
+	def tokenise_line(self,line):
+		#simple line tokeniser
+		whitespace = [' ','\t']
+		escaped_dict = {"n":"\n","t":"\t",'"':'"'}
+		line_tokens = []
+		current_token = ''
+		string = 0
+		escaped = 0
+
+
+		for character in line:
+			if not string:                          #vanilla tokens
+				if character in whitespace:         #removes whitespace
+					if current_token == '':
+						pass
+					else:
+						line_tokens.append(current_token)
+						current_token = ''
+				elif character == '"' and current_token == '':      #start of string
+					string = 1
+					current_token += character
+				else:                                               #typical character
+					current_token += character
+
+
+			else:
+				if not escaped:
+					if character == "\\":       #escaped
+						escaped = 1
+					elif character == '"':      #end of string
+						current_token += '"'
+						line_tokens.append(current_token)
+						current_token = ''
+						string = 0
+					else:
+						current_token += character
+
+				else:
+					current_token += escaped_dict[character]
+					escaped = 0
+		if current_token != '':
+			line_tokens.append(current_token)
+		if line_tokens == []:
+			return False
+		else:
+			return line_tokens
+	def express_parse_tree(self):
+		for rule in self.rules:
+			print rule, ":=",self.rules[rule]
+
+
+
+
+
+
+class ABNF_rule:
+	def __init__(self,rule_list):
+		#rule_list is a list of tokens containing the rule
+		self.rule = rule_list
+		self.left_hand_side = self.get_lhs()
+		self.right_hand_side = self.get_rhs()
+	def get_lhs(self):
+		#gets the left handside of rule equation and checks it's valid
+		if "::=" !=  self.rule[1]:
+			raise SyntaxError('"::=" Operator not present or in incorrect position in rule "'+' '.join(self.rule)+ '".')
+		else:
+			lhs = self.rule[0]
+			if lhs[0] == "<" and lhs[-1] == ">":
+				return lhs
+			else:
+				raise SyntaxError('"'+lhs+ '" expression does not have <> brackets.')
+	def get_rhs(self):
+		#generates a list of possible right hand sides of rule equation
+		replacement_possibilities = []
+		current_possibility = []
+		for token in self.rule[2:]:
+			if token == "|":
+				if current_possibility != []:
+					replacement_possibilities.append(current_possibility)
+					current_possibility = []
+				else:
+					raise SyntaxError('ABNF parser did not expect "|" operator in rule "'+ ' '.join(self.rule) + '".')
+			else:
+				current_possibility.append(token)
+		if current_possibility != []:
+			replacement_possibilities.append(current_possibility)
+		return replacement_possibilities
+
+

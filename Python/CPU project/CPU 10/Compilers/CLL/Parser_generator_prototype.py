@@ -62,8 +62,6 @@
 	# an ABNF parser based on the above will parse a set of BNF rules which define the language syntax
 	# using the now internalised language ABNF, the parser parses the program
 
-import copy
-
 class ABNF_parse_tree:
 	def __init__(self,ABNF_string):
 		self.ABNF = ABNF_string
