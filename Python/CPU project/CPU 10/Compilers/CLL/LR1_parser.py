@@ -16,10 +16,8 @@ class Parser:
 		self.terminals = self.parse_settings["terminals"]
 		self.enum_rules = [EnumRule(rule[0],rule[1],rule[2]) for rule in self.parse_settings["rules"]]
 
-		print "AFTER_A:",self.lookahead_action_table[42]
-		cont = raw_input('')
-
 	def parse(self,source):
+		self.debug_string = ''
 		self.tokens = self.tokenise(source)                                                    #tokeniser takes in text and produces a list of terminal objects
 		self.parse_tree_stack = [0]                                                                 #starts with just starting state
 
@@ -33,12 +31,13 @@ class Parser:
 	def parse_step(self):                                                                           #main parsing step, repeated till done or error
 		top_state = self.parse_tree_stack[-1]                                                       #get the top state of the stack
 		try:
-			print self.lookahead.type,self.lookahead.string,
+			#print self.lookahead.type,self.lookahead.string,
 			next_action_tuple = self.lookahead_action_table[top_state][self.lookahead.type]          #uses table to calculate next values
-			print next_action_tuple
+			#print next_action_tuple
 		except KeyError:
 			next_action_tuple = ("error",'not expecting terminal type = '+self.lookahead.type+', terminal = "'+self.lookahead.string+'"')                                   #if there is an error, then call error
 		if next_action_tuple[0] == "shift":                                                         #carries out a shift operation
+			self.debug_string += self.lookahead.string
 			self.shift(next_action_tuple[1])                                                        
 			return 0                                                                                #returns 1 if done, so this is not done
 		elif next_action_tuple[0] == "reduce":
@@ -71,7 +70,7 @@ class Parser:
 		return 0
 
 	def done(self):
-		print self.parse_tree_stack[1].type                                                                                 #halts operation
+		#print self.parse_tree_stack[1].type                                                                                 #halts operation
 		if len(self.parse_tree_stack) == 3 and self.parse_tree_stack[0] == 0:                      #if stack consists of a parse tree and the success state 
 			return 1
 		else:
@@ -79,6 +78,7 @@ class Parser:
 	
 	def error(self,reason):                                                                         #error reporting
 		print reason
+		print "current_tokens: ",self.debug_string[-50:] if len(self.debug_string)>50 else self.debug_string
 		quit()
 
 	def tokenise(self,source_text):                                                                 #splits text according to elementary tokens - chars which indicate a new token
@@ -106,7 +106,7 @@ class Parser:
 		else:
 			try:
 				int(current_token)
-				return Terminal_parse_tree_node("int",current_token)                                #if integerise-able then produce an integer token
+				return Terminal_parse_tree_node("num",current_token)                                #if integerise-able then produce an integer token
 			except ValueError:
 				return Terminal_parse_tree_node("id",current_token)                                 #otherwise then produce an identifier
 
@@ -139,3 +139,10 @@ class EnumRule:
 		self.lhs = lhs
 		self.rhs = rhs
 		self.number = number
+
+if __name__ == "__main__":
+	import sys
+	source_name = sys.argv[1]
+	grammar_name = sys.argv[2]
+	local_parser = Parser(grammar_name)
+	local_parser.print_parse_tree(local_parser.parse(open(source_name,"r").read()))

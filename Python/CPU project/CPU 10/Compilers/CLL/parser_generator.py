@@ -1,4 +1,5 @@
 import json
+import sys
 
 def generate_parser(name,ABNF_grammar):
 	parser = Parser(ABNF_grammar)
@@ -116,9 +117,9 @@ class Parser:
 		j_item_set = set([])
 		for item in item_set:
 			if token in item.rhs:
-				token_ptr = item.rhs.index(token)
 				blob_ptr = item.rhs.index("BLOB")
-				if token_ptr == blob_ptr + 1:
+				if blob_ptr+1 < len(item.rhs) and item.rhs[blob_ptr+1] == token:
+					token_ptr = blob_ptr + 1
 					try:
 						j_item_set |= set([Item(item.lhs, item.rhs[:blob_ptr]+[token,"BLOB"]+item.rhs[token_ptr+1:],item.lookahead)])
 					except IndexError:
@@ -410,7 +411,7 @@ class ABNF_rule:
 		#generates a list of possible right hand sides of rule equation
 		replacement_possibilities = []
 		current_possibility = []
-		for token in self.rule[2:]:
+		for token in self.rule[2:]: 
 			if token == "|":
 				if current_possibility != []:
 					replacement_possibilities.append(current_possibility)
@@ -422,5 +423,6 @@ class ABNF_rule:
 		if current_possibility != []:
 			replacement_possibilities.append(current_possibility)
 		return replacement_possibilities
-
-
+		
+if __name__ == '__main__':
+	generate_parser(sys.argv[1].split(".")[0],open(sys.argv[1]).read())
