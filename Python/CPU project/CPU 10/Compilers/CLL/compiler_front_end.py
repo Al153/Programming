@@ -19,16 +19,43 @@ import sys
 #begin code generation
 
 
+#to generate code, I will probably use forth code to write assemblky forthe run time environment - error handling, function calling etc
 
-def main():
-	source = get_source_file()
-	parse_tree = get_parse_tree(source)
-	functions = [function(tree) for tree in find_functions(parse_tree)]
-#	cont = raw_input('')
-	header_code = linearise_code(parse_tree)
-	for function_instance in functions:
-		for line in function_instance.lines:
-			print_parse_tree(line)
+class Program:
+	def __init__(self,is_main = True,already_imported_list = []): 		#is main argument is to tell ow much setup should occur			
+		self.source = get_source_file()
+		self.parse_tree = get_parse_tree(source)
+
+		#########################################
+		#	Code to get inbuilt functions 		#
+		#########################################
+
+		self.functions = [function(tree) for tree in find_functions(self.parse_tree)]+self.inbuilt_functions
+		self.functions = {function.name:function for function in self.functions}
+		self.header_code = linearise_code(self.parse_tree)
+
+		for line in self.header_code:
+			#####################
+			#	do imports 		#
+			#####################
+
+		if is_main:
+			#################################
+			#	check function calls etc    #
+			#################################
+
+			#################################
+			#	Code generation step 		#
+			#################################
+
+
+
+
+
+
+#		for function_instance in functions:
+#			for line in function_instance.lines:
+#				print_parse_tree(line)
 
 
 
@@ -102,7 +129,7 @@ class function:
 	#extracts all information needed to compile a function
 	def __init__(self,parse_tree):
 		self.type = "defined_function"
-		self.return_type = parse_tree.children[0]
+		self.return_type = get_type(parse_tree.children[0])
 		self.name = parse_tree.children[1]
 		self.parse_tree = parse_tree.children[-2]
 		if len(parse_tree.children) == 7:		#has arguments
@@ -110,6 +137,7 @@ class function:
 		else:
 			self.input_parameters = []
 		self.lines = self.blockify_code(self.parse_tree)
+		self.variables = self.get_variables(self.line)
 
 
 
@@ -146,6 +174,36 @@ class function:
 			elif line.type == "<other>":
 				pass
 		return parse_tree
+
+	def check_function_calls(self,parent_program,block):
+		pass
+
+	def get_variables(self,parse_tree):
+		return_variables = {}
+		for child in parse_tree:
+			if child.type == "<block>":
+				return_variables.update(self.get_variables(child.children))
+			elif child.type == "<var_dec>":
+				return_variables[child.children[1].string] = get_type(child.children[1])			#adds an entry for the new variable
+		return return_variables
+
+	def get_type(self,type_tree):
+		#reduces a type parse tree to a string
+		if len(type_tree.children) == 1:
+			return type_tree.children[0].string
+		elif len(type_tree.children) == 2:
+			if type_tree.children[0].type == "@":
+				return type_tree.children[0].string + type_tree.children[1].string
+			else:
+				return "array|" + type_tree.children[1].string
+		else: 
+			##################################################
+			# parse array and return it alongside definition #
+			##################################################	
+
+
+
+
 
 class built_in_function(function):
 	def __init__self(self,arguments,return_type,name,assembly_equivalent):
