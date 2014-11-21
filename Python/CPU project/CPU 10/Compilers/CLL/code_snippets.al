@@ -1,5 +1,3 @@
-
-
 << setup routines >>
 
 #is run before main program, sets up stacks and global variables
@@ -24,7 +22,7 @@ def STACK_SIZE 65536   #makes stack sizes easy to change
 #gp4				|				Call-auxilary - holds important call information eg stack frame size
 #gp5 				|				stack_pointer manipulation
 #gp6				|				indexing register  for relative addressing whilst using stack frames
-#gp7 				|				expression_stack_ptr								
+#gp7 				|				expression_stack_pointer								
 
 
 
@@ -42,6 +40,71 @@ ADD Stack_pointer gp0
 
 Load PC <main_program_name>
 
+	
+Out @'E'	%Stack_overflow_error 					#deal with an Expression_stack overflow  
+Out @'R'
+Out @'R'
+Out @'O'
+Out @'R'
+Out @':'
+Out @32
+Out @'S'
+Out @'T'
+Out @'A'
+Out @'C'
+Out @'K'
+Out @32
+Out @'O'
+Out @'V'
+Out @'E'
+Out @'R'
+Out @'F'
+Out @'L'
+Out @'O'
+Out @'W'
+Halt
+
+	
+Out @'E' %Recursion_limit_reached 				#deal with a recursion error
+Out @'R'
+Out @'R'
+Out @'O'
+Out @'R'
+Out @32
+Out @'M'
+Out @'A'
+Out @'X'
+Out @'I'
+Out @'M'
+Out @'U'
+Out @'M'
+Out @32
+Out @'R'
+Out @'E'
+Out @'C'
+Out @'U'
+Out @'R'
+Out @'S'
+Out @'I'
+Out @'O'
+Out @'N'
+Out @32
+Out @'D'
+Out @'E'
+Out @'P'
+Out @'T'
+Out @'H'
+Out @32
+Out @'R'
+Out @'E'
+Out @'A'
+Out @'C'
+Out @'H'
+Out @'E'
+Out @'D'
+Halt
+
+
 << ADD >>
 <getgp0> 															#compiler will work out whether gp0 is loaded or Pushed
 <getgp1>
@@ -51,9 +114,8 @@ ADD gp0 gp1
 << SUB >>
 <getgp0>
 <getgp0>
-Load Flags_reset @4294967287  #resets the borrow flag
 SUB gp0 gp1
-
+Load Flags_reset @4294967287  #resets the borrow flag
 <storegp0>
 
 << MUL>>
@@ -120,15 +182,19 @@ def previous_stack_ptr gp5
 
 
 
-Load length 4 [Stack_pointer]				%<function_name> #gets length of current top stack_frame
-Move Stack_pointer previous_stack_ptr						 #gets a copy of the current stack pointer
-SUB Stack_pointer length 									 #shift stack pointer on
-Compare Stack_pointer $Callstack  							 #checks for a stack overflow
-Store ret_addr 0 [Stack_pointer] 							 #stores address to return to
-Load gp0 @<new_length> 										 #gets the newlength (compiled in)
-Store gp0 4 [Stack_pointer] 								 #gives new length
-Store previous_stack_ptr 8 [Stack_pointer]					 #gives pointer to pop off of stack
-<Popgp1>													 #get passed in parameters, repeated as many times as needed 
+Load length 4 [Stack_pointer]				%<function_name> 	#gets length of current top stack_frame
+Move Stack_pointer previous_stack_ptr						 	#gets a copy of the current stack pointer
+SUB Stack_pointer length 										#shift stack pointer on
+Compare Stack_pointer $Callstack  								#checks for a stack overflow
+if Less then Load PC Recursion_limit_reached
+Store ret_addr 0 [Stack_pointer] 								#stores address to return to
+Load gp0 @<new_length> 											#gets the newlength (compiled in)
+Store gp0 4 [Stack_pointer] 									#gives new length
+Store previous_stack_ptr 8 [Stack_pointer]						#gives pointer to pop off of stack
+<get_parameters>												#get passed in parameters, repeated as many times as needed 
+
+<< get parameters >>
+<Popgp0>
 Store gp1 <index> [Stack_pointer]
 
 
@@ -165,56 +231,54 @@ Load PC loop<number>entry
 Pass %loop<number>exit 										#another placeholder
 
 
-<< if statement code >>
-<Calculate_condition>
-<Popgp0>
-NOT gp0
-if gp0 then Load PC if<number>endif
-	<conditional code>
-Pass %if<number>endif
+<< if statement code >> 									
+<Calculate_condition> 										#boolean calculation
+<Popgp0> 													#gets result of boolean calculation into gp0
+NOT gp0 													#inverts result of boolean calculation since next step is easier to calculate this way
+if gp0 then Load PC if<number>endif 						#jumps to the the endif if condition is false
+	<conditional code> 										#code to execute otherwise
+Pass %if<number>endif 										#placeholder for label (endif)
 
 <<if-else statement code >>
-<Calculate_condition>
+<Calculate_condition> 										#same set up as nefore
 <Popgp0>
-if gp0 then Locad PC if<number>true
-	<False_code>
-	Load pc if<number>endif
-Pass %if<number>true
-	<true_code>
-Pass %if<number>endif
+if gp0 then Load PC if<number>true 							#if true then jump to true code
+	<False_code> 											#false code runs by default
+	Load PC if<number>endif									#goto endif
+Pass %if<number>true  										#placeholder for label
+	<true_code> 
+Pass %if<number>endif           
 
 
 
 #______________________________________ Snippets to load and store registers ______________________________________
 
 <<Popgp0>>				
-Store gp0 <index> [Stack_pointer]
-SUB gp7 @4
-if Borrow then  Load PC Stack_underflow_error
-Load gp0 expression_stack_ptr
+SUB gp7 @4 															#decrement stack pointer to point to top of stack
+if Borrow then  Load PC Stack_underflow_error 						#check for empty stack
+Load gp0  Expression_stack [gp7] 									#pop into gp0
 
-<<Popgp1>>				
-Store gp0 <index> [Stack_pointer]
+<<Popgp1>>				 											#same for gp1 and index
 SUB gp7 @4
 if Borrow then  Load PC Stack_underflow_error
-Load gp0 expression_stack_ptr
+Load gp1 Expression_stack [gp7]
 
 <<Popindex>>				
-Store gp0 <index> [Stack_pointer]
 SUB gp7 @4
 if Borrow then  Load PC Stack_underflow_error
-Load gp0 expression_stack_ptr
+Load gp6 Expression_stack [gp7]
 
-<<Pushgp0>>
-Store gp0 Expression_stack [expression_stack_ptr]
-Add expression_stack_ptr @4
-Compare expression_stack_ptr stack_length
+
+<<Pushgp0>> 														#Push routine
+Store gp0 Expression_stack [gp7] 									#stores gp0 to top of stack
+Add gp7 @4 															#increment stack pointer
+Compare gp7 stack_length 											#check for stack overflow
 if Greater then Load PC Stack_overflow_error
 
-<<Pushgp1>>
-Store gp1 Expression_stack [expression_stack_ptr]
-Add expression_stack_ptr @4
-Compare expression_stack_ptr stack_length
+<<Pushgp1>> 														#same for gp1
+Store gp1 Expression_stack [gp7]
+Add gp7 @4
+Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
@@ -223,31 +287,31 @@ if Greater then Load PC Stack_overflow_error
 
 
 << to load gp0 >>
-Load gp0 <absolute_address> [Stack_pointer]
+Load gp0 <absolute_address> [Stack_pointer] 						#Recursion stack increments downwards
 
 << to load gp1 >>
-Load gp1 <absolute_address> [Stack_pointer]
+Load gp1 <absolute_address> [Stack_pointer] 
 
 << load gp0 relative >>
+<get index expr> 													#generates index and pops to the index register (gp6)
+<Popindex>
+ADD gp6 Stack_pointer 												#combines index and stackpointer
+Load gp0 <absolute_address> [gp6] 									#Loads
+
+<< load gp1 relative >> 											#same for gp1
 <get index expr>
 <Popindex>
 ADD gp6 Stack_pointer
-Load gp0 <absolute_address> [gp6]
-
-<< load gp0 relative >>
-<get index expr>
-<Popindex>
-ADD gp6 Stack_pointer
-Load gp0 <absolute_address> [gp6]
+Load gp1 <absolute_address> [gp6]
 
 
-<< to store gp0 >>
+<< to store gp0 >> 													#same functions but for Storing
 Store gp0 <absolute_address> [Stack_pointer]
 
 << to store gp1 >>
 Store gp1 <absolute_address> [Stack_pointer]
 
-<< store gp0 relative >>
+<< store gp0 relative >> 
 <get index expr>
 <Popindex>
 ADD gp6 Stack_pointer
@@ -258,3 +322,7 @@ Store gp0 <absolute_address> [gp6]
 <Popindex>
 ADD gp6 Stack_pointer
 Store gp0 <absolute_address> [gp6]
+
+<<display>>
+Load gp0 12 [stack_pointer]
+Outd gp0
