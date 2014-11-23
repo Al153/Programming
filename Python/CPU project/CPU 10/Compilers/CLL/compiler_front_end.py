@@ -150,21 +150,21 @@ class function:
 
 	def blockify_code(self,parse_tree):
 		'''linearises blocks of code, but also searches control structures in order to linearise the lines stored within them'''
-		parse_tree = linearise_code(parse_tree) 		#forms a list of lines
+		parse_tree.children = linearise_code(parse_tree) 		#forms a list of lines
 		for i in xrange(len(parse_tree)):
-			line = parse_tree[i]
+			line = parse_tree.children[i]
 			if line.type == "<cntrl_flow>":
 				new_line = line.children[0]
 				if new_line.type == "<if_stmnt>":
 					#reduces an if statement to a condition and a block or a condition and two blocks
 					if len(new_line.children)== 5:
-						new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3]))]
+						new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3])).children]
 					else:
-						new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3])),Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[5]))]
+						new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3])).children,Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[5]))]
 				elif new_line.type == "<while_loop>":	#changes a while loop to a condition and a block
-					new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3]))]
+					new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3])).children]
 				elif new_line.type == "<for_loop>": 	#for loop becomes a start assignment, a test and a repeated assignment
-					new_line.children = [new_line.children[2],new_line.children[4],new_line.children[6],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[8]))]
+					new_line.children = [new_line.children[2],new_line.children[4],new_line.children[6],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[8])).children]
 			elif line.type == "<fun_dec>": #does not expect a function declaration inside a function 
 				error("SEMANTIC","Did not expect the definition of function '"+line.children[1].string+"'")
 			elif line.type == "<assignment>":
@@ -173,6 +173,7 @@ class function:
 				pass
 			elif line.type == "<other>":
 				pass
+		parse_tree.children.append(Non_terminal_parse_tree_node("<other>",Terminal_parse_tree_node("return","return")))
 		return parse_tree
 
 	def check_function_calls(self,parent_program,block):
@@ -217,8 +218,18 @@ class Non_terminal_parse_tree_node:                                             
 		self.type = node_type
 		self.children = children
 
+class Terminal_parse_tree_node:                                                                     #class for terminals
+	def __init__(self,node_type,token_string):
+		self.terminal = 1
+		self.type = node_type
+		self.string = token_string
+
+
 def error(error_type,reason_string):
 	print error_type+" ERROR: ",reason_string
 	quit()
+
+
+
 
 main()

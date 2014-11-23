@@ -11,6 +11,7 @@ def process_snippets(filename):
 				"get_parameters":"blah blah blah"
 			}
 		)
+	return snippets_dict
 
 def parse_snippets(text):
 	#simple splitting up job
@@ -118,5 +119,30 @@ class snippet: 										   #class to do main snippet processing
 		return ''.join(new_code)
 
 
+def generate_function_code(function_parse_tree,parameters,input_variables,stack_frame_size,function_name):
+	'''generates code fo a function,
+	input variables is a dict matching variables to a stack frame index
+	'''
+	global snippets
+	pop_to_gp0_code = snippets["Popgp0"].generate_code({})
+	code_to_get_parameters = ''.join([snippets.get_parameters(
+		{
+			"Popgp0":pop_to_gp0_code,
+			"index":input_variables[variable]
+			}
+		) for variable in input_variables])
+	assembly_code = snippets[" function startup routine "].generate_code(
+		{
+		"function_name":function_name,
+		"new_length":str(stack_frame_size),
+		"get_parameters":code_to_get_parameters
+		})
+	for line in function_parse_tree.children:
+		assembly_code += generate_block_code(line)
+	#last line should be a return command
+
+
+
+
 import sys
-process_snippets(sys.argv[1])
+snippets = process_snippets(sys.argv[1])

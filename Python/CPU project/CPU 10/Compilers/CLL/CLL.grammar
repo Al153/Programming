@@ -11,7 +11,7 @@
 <cntrl_flow> ::= <if_stmnt> | <while_loop> | <for_loop>
 <var_dec> ::= <type> id 
 <fun_dec> ::= <type> id "(" <inargs> ")" <block> "end" | <type> id "(" ")" <block> "end"
-<other> ::= "return" <expr> | "import" <expr> | <fun_call>
+<other> ::= "return" <expr> | "return" | "import" <expr> | <fun_call>
 
 <inargs> ::= <type> id | <inargs> "," <type> id
 
