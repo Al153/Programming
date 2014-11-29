@@ -1,3 +1,14 @@
+#Snippets which define how the compiled program behaves at runtime
+
+#____________ routines defined ____________
+#		- setup and error handling
+#		- arithmetic-logic operations
+#		- function call, stack frame manipulation, etc
+# 		-
+
+
+
+
 << setup routines >>
 
 #is run before main program, sets up stacks and global variables
@@ -162,7 +173,58 @@ XOR gp0 gp1
 NOT gp0 gp1
 <storegp0>
 
+#_________________________ Comparison operations _________________________
+<<is equal>>
+<getgp0>
+<getgp1>
+Move Zero gp2
+Compare gp1 gp0
+if Equal then Move One gp2
+Move gp2 gp0
+<Push gp0>
 
+<<is less>>
+<getgp0>
+<getgp1>
+Move Zero gp2
+Compare gp1 gp0
+if Greater then Move One gp2
+Move gp2 gp0
+<Push gp0>
+
+<<is less>>
+<getgp0>
+<getgp1>
+Move Zero gp2
+Compare gp1 gp0
+if Less then Move One gp2
+Move gp2 gp0
+<Push gp0>
+
+<<not greater>>
+<getgp0>
+<getgp1>
+Move One gp2
+Compare gp1 gp0
+if Greater then Move Zero gp2
+Move gp2 gp0
+<Push gp0>
+
+<<not less>>
+<getgp0>
+<getgp1>
+Move One gp2
+Compare gp1 gp0
+if Less then Move Zero gp2
+Move gp2 gp0
+<Push gp0>
+
+<<is true>>
+<getgp0>
+if gp0 then Move One gp0
+<Push gp0>
+
+#________________________________ Function usage routines ________________________________
 
 << function call routine >>
 <Push args> 				#compiled part
@@ -196,6 +258,8 @@ Store previous_stack_ptr 8 [Stack_pointer]						#gives pointer to pop off of sta
 << get parameters >>
 <Popgp0>
 Store gp1 <index> [Stack_pointer]
+
+<< push args >>
 
 
 
@@ -243,7 +307,7 @@ Pass %if<number>endif 										#placeholder for label (endif)
 <Calculate_condition> 										#same set up as nefore
 <Popgp0>
 if gp0 then Load PC if<number>true 							#if true then jump to true code
-	<False_code> 											#false code runs by default
+	<false_code> 											#false code runs by default
 	Load PC if<number>endif									#goto endif
 Pass %if<number>true  										#placeholder for label
 	<true_code> 
@@ -255,17 +319,14 @@ Pass %if<number>endif
 
 <<Popgp0>>				
 SUB gp7 @4 															#decrement stack pointer to point to top of stack
-if Borrow then  Load PC Stack_underflow_error 						#check for empty stack
-Load gp0  Expression_stack [gp7] 									#pop into gp0
+LOad gp0  Expression_stack [gp7] 									#pop into gp0
 
 <<Popgp1>>				 											#same for gp1 and index
 SUB gp7 @4
-if Borrow then  Load PC Stack_underflow_error
 Load gp1 Expression_stack [gp7]
 
 <<Popindex>>				
 SUB gp7 @4
-if Borrow then  Load PC Stack_underflow_error
 Load gp6 Expression_stack [gp7]
 
 

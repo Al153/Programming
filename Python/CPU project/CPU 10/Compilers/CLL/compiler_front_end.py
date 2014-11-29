@@ -158,16 +158,17 @@ class function:
 				if new_line.type == "<if_stmnt>":
 					#reduces an if statement to a condition and a block or a condition and two blocks
 					if len(new_line.children)== 5:
-						new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3])).children]
+						new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3]))]
 					else:
-						new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3])).children,Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[5]))]
+						new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3])),Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[5]))]
 				elif new_line.type == "<while_loop>":	#changes a while loop to a condition and a block
-					new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3])).children]
-				elif new_line.type == "<for_loop>": 	#for loop becomes a start assignment, a test and a repeated assignment
-					new_line.children = [new_line.children[2],new_line.children[4],new_line.children[6],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[8])).children]
+					new_line.children = [new_line.children[1],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[3]))]
+				elif new_line.type == "<for_loop>": 	#for loop becomes a start assignment, a test and a repeated assignment, and repeated code
+					new_line.children = [new_line.children[2],new_line.children[4],new_line.children[6],Non_terminal_parse_tree_node("<block>",self.blockify_code(new_line.children[8]))]
 			elif line.type == "<fun_dec>": #does not expect a function declaration inside a function 
 				error("SEMANTIC","Did not expect the definition of function '"+line.children[1].string+"'")
 			elif line.type == "<assignment>":
+				#assignments become a lhs and rhs
 				line.children = [line.children[0],line.children[2]]
 			elif line.type == "<var_dec>>":
 				pass
