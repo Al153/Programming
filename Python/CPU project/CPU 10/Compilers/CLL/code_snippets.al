@@ -113,7 +113,7 @@ ADD gp0 gp1
 
 << SUB >>
 <getgp0>
-<getgp0>
+<getgp1>
 SUB gp0 gp1
 Load Flags_reset @4294967287  #resets the borrow flag
 <storegp0>
@@ -171,7 +171,7 @@ Goto <Call_address> 		#needs to sub in call address
 
 
 << function startup routine >>
-#creates a stack frame and loads it with correct values 
+#creates a stack frame and loads it with correct  values 
 
 Scope <function_name>
 
