@@ -324,7 +324,10 @@ def generate_get_local_variable(variable_parse_tree,variable_type_dict,variable_
 	variable_type = variable_type_dict[variable_name]
 	variable_address = str(variable_type_dict[variable_name])
 	if len(variable_parse_tree.children) == 1:
-		return snippets[" to load gp0 "].generate_code({"absolute_address":variable_address}) + snippets["Pushgp0"].generate_code({})
+		if variable_type == "int":
+			return snippets[" to load gp0 "].generate_code({"absolute_address":variable_address}) + snippets["Pushgp0"].generate_code({})
+		elif variable_type == "char":
+			return snippets[" to load gp0 char "].generate_code({"absolute_address":variable_address}) + snippets["Pushgp0"].generate_code({})			
 	else:
 		if variable_type = "@int":
 			index_expr = generate_expression_code(variable_parse_tree.children[2])
@@ -335,10 +338,35 @@ def generate_get_local_variable(variable_parse_tree,variable_type_dict,variable_
 			index_expr = generate_expression_code(variable_parse_tree.children[2])
 			pop_index = snippets["Popindex"].generate_code({})
 			get_index = snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
-			return snippets[" load gp0 relative "].generate_code({"get_index":get_index,"absolute_address":variable_address})
+			return snippets[" load gp0 relative char "].generate_code({"get_index":get_index,"absolute_address":variable_address})
 		else:
 			print "ERROR: unexpected variable type for relative addressing: "+variable_type
 			quit()
+
+
+def generate_store_local_variable(variable_parse_tree,variable_type_dict,variable_address_dict):
+	variable_name = variable_parse_tree.children[0].string
+	variable_type = variable_type_dict[variable_name]
+	variable_address = str(variable_type_dict[variable_name])
+	if len(variable_parse_tree.children) == 1:
+		if variable_type == "int":
+			return snippets[" to store gp0 "].generate_code({"absolute_address":variable_address}) + snippets["Pushgp0"].generate_code({})
+		elif variable_type == "char":
+			return snippets[" to store gp0 char "].generate_code({"absolute_address":variable_address}) + snippets["Pushgp0"].generate_code({})			
+	else:
+		if variable_type = "@int":
+			index_expr = generate_expression_code(variable_parse_tree.children[2])
+			pop_index = snippets["Popindex"].generate_code({})
+			get_index = snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
+			return snippets[" store gp0 relative "].generate_code({"get_index":get_index,"absolute_address":variable_address})
+		elif variable_type == "@char":
+			index_expr = generate_expression_code(variable_parse_tree.children[2])
+			pop_index = snippets["Popindex"].generate_code({})
+			get_index = snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
+			return snippets[" store gp0 relative char "].generate_code({"get_index":get_index,"absolute_address":variable_address})
+		else:
+			print "ERROR: unexpected variable type for relative addressing: "+variable_type
+			quit()	
 
 def generate_get_global_variables(variable_parse_tree,variable_type_dict):
 

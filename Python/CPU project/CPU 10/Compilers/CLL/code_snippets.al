@@ -336,32 +336,48 @@ Add gp7 @4 															#increment stack pointer
 Compare gp7 stack_length 											#check for stack overflow
 if Greater then Load PC Stack_overflow_error
 
-<<Pushgp1>> 														#same for gp1
-Store gp1 Expression_stack [gp7]
-Add gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
-
-
-
+#__________________________ Load-store integers __________________________
 
 
 << to load gp0 >>
 Load gp0 <absolute_address> [Stack_pointer] 						#Recursion stack increments downwards
-
-<< to load gp1 >>
-Load gp1 <absolute_address> [Stack_pointer] 
 
 << load gp0 relative >>
 <get_index>
 ADD gp6 Stack_pointer 												#combines index and stackpointer
 Load gp0 <absolute_address> [gp6] 									#Loads
 
-<< load gp1 relative >> 											#same for gp1
-<get_index>
+<< to store gp0 >> 													#same functions but for Storing
+Store gp0 <absolute_address> [Stack_pointer]
+
+<< store gp0 relative >> 
+<get index expr>
+<Popindex>
 ADD gp6 Stack_pointer
-Load gp1 <absolute_address> [gp6]
+Store gp0 <absolute_address> [gp6]
+
+#_________________________ Load store char _________________________
+
+<< to load gp0 char >>
+LoadByte gp0 <absolute_address> [Stack_pointer] 						#Recursion stack increments downwards
+
+<< to store gp0 char >>
+<get_index>
+ADD gp6 Stack_pointer 												#combines index and stackpointer
+LoadByte gp0 <absolute_address> [gp6] 									#Loads
+
+<< load gp0 relative char >>
+StoreByte gp0 <absolute_address> [Stack_pointer]
+
+<< store gp0 relative char >>
+<get index expr>
+<Popindex>
+ADD gp6 Stack_pointer
+Store gp0 <absolute_address> [gp6]
+
+#_________________________ index operations _________________________
+
+
 
 << get index integer >>
 <index expr>
@@ -372,28 +388,19 @@ MUL gp6 @4
 <index expr>
 <pop index>
 
+
+#____________ ptr operations
+
 << get ptr >>
 Move Stack_pointer gp0
 ADD gp0 <absolute_address>
 <Push gp0>
 
-<< to store gp0 >> 													#same functions but for Storing
-Store gp0 <absolute_address> [Stack_pointer]
 
-<< to store gp1 >>
-Store gp1 <absolute_address> [Stack_pointer]
 
-<< store gp0 relative >> 
-<get index expr>
-<Popindex>
-ADD gp6 Stack_pointer
-Store gp0 <absolute_address> [gp6]
 
-<< store gp0 relative >>
-<get index expr>
-<Popindex>
-ADD gp6 Stack_pointer
-Store gp0 <absolute_address> [gp6]
+
+
 
 <<display>>
 Load gp0 12 [stack_pointer]
