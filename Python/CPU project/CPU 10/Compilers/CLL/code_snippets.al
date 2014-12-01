@@ -183,7 +183,7 @@ if Equal then Move One gp2
 Move gp2 gp0
 <Push gp0>
 
-<<is less>>
+<<is greater>>
 <getgp0>
 <getgp1>
 Move Zero gp2
@@ -354,17 +354,28 @@ Load gp0 <absolute_address> [Stack_pointer] 						#Recursion stack increments do
 Load gp1 <absolute_address> [Stack_pointer] 
 
 << load gp0 relative >>
-<get index expr> 													#generates index and pops to the index register (gp6)
-<Popindex>
+<get_index>
 ADD gp6 Stack_pointer 												#combines index and stackpointer
 Load gp0 <absolute_address> [gp6] 									#Loads
 
 << load gp1 relative >> 											#same for gp1
-<get index expr>
-<Popindex>
+<get_index>
 ADD gp6 Stack_pointer
 Load gp1 <absolute_address> [gp6]
 
+<< get index integer >>
+<index expr>
+<pop index>
+MUL gp6 @4
+
+<< get index char >>
+<index expr>
+<pop index>
+
+<< get ptr >>
+Move Stack_pointer gp0
+ADD gp0 <absolute_address>
+<Push gp0>
 
 << to store gp0 >> 													#same functions but for Storing
 Store gp0 <absolute_address> [Stack_pointer]

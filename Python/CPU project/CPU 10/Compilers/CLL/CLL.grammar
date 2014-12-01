@@ -17,7 +17,7 @@
 
 
 
-<variable> ::= id | <variable> "[" <expr> "]" | "[" <expr> "]"
+<variable> ::= id | id "[" <expr> "]" 
 <const> ::= num | "$" id
 
 <expr> ::= <expr> <addop> <term> | <term> | <unary_op> <term>S
@@ -55,5 +55,5 @@
 <while_loop> ::= "while" <bool_expr> "do" <block> "loop"
 <for_loop> ::= "for" "(" <assignment> "," <for_bool_expr> "," <assignment> ")" <block> "loop"
 
-<type> ::= "int" | "char" | "@" "int" | "@" "char"	| "array" num | "array" num "[" <array> "]" | "void"
+<type> ::= "int" | "char" | "@" "int" | "@" "int" num | "@" "int" num "[" <array> "]" | "@" "char" | "@" "char" num | "@" num "[" <array> "]" | "void"
 <array> ::= <array> "," num | num

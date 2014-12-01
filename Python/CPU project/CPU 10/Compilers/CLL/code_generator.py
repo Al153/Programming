@@ -128,6 +128,7 @@ class snippet: 										   #class to do main snippet processing
 #	if statement, if - else code 							DONE
 #	block code
 #	function call, and function execution code  			DONE
+#	variable fetching and storing code
 
 #	assignments
 
@@ -296,11 +297,56 @@ def generate_comparison(bool_parse_tree):
 		pop_gp0 = snippets["Popgp0"].generate_code({})
 		pop_gp1 = snippets["Popgp1"].generate_code({})
 		push_gp0 = snippets["Pushgp0"].generate_code({})
+		comparison_operation = bool_parse_tree.children[1]
+		if len(comparison_operation.children) == 2: 						#is equal
+			return snippets["is equal"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"push gp0":push_gp0})
+		elif len(comparison_operation.children) == 1: 						#other operations
+			if comparison_operation.children[0].terminal:  					#if a < or >
+				if comparison_operation.children[0].string == "<":
+					return snippets["is less"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"push gp0":push_gp0})
+				elif comparison_operation.children[0].string == ">":
+					return snippets["is greater"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"push gp0":push_gp0})
+				else:
+					print "ERROR: not expecting comparisopn operator: "+comparison_operation.children[0].string
+					quit()
+			else:
+				if comparison_operation.children[0].type == "<not_less>": 			#deal with non terminals
+					return snippets["not less"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"push gp0":push_gp0})
+				elif comparison_operation.children.type == "<not_greater>":
+					return snippets["is greater"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"push gp0":push_gp0})
+				else:
+					print "ERROR: not expecting comparisopn operator: "+comparison_operation.children[0].type
+					quit()
 
-		############################################################		
-		# Needs to check what kind of comparison before generations#
-		############################################################
+def generate_get_local_variable(variable_parse_tree,variable_type_dict,variable_address_dict):
+	#gets a variable's value onto the stack
+	variable_name = variable_parse_tree.children[0].string
+	variable_type = variable_type_dict[variable_name]
+	variable_address = str(variable_type_dict[variable_name])
+	if len(variable_parse_tree.children) == 1:
+		return snippets[" to load gp0 "].generate_code({"absolute_address":variable_address}) + snippets["Pushgp0"].generate_code({})
+	else:
+		if variable_type = "@int":
+			index_expr = generate_expression_code(variable_parse_tree.children[2])
+			pop_index = snippets["Popindex"].generate_code({})
+			get_index = snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
+			return snippets[" load gp0 relative "].generate_code({"get_index":get_index,"absolute_address":variable_address})
+		elif variable_type == "@char":
+			index_expr = generate_expression_code(variable_parse_tree.children[2])
+			pop_index = snippets["Popindex"].generate_code({})
+			get_index = snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
+			return snippets[" load gp0 relative "].generate_code({"get_index":get_index,"absolute_address":variable_address})
+		else:
+			print "ERROR: unexpected variable type for relative addressing: "+variable_type
+			quit()
 
+def generate_get_global_variables(variable_parse_tree,variable_type_dict):
+
+
+
+
+
+ 
 import sys
 snippets = process_snippets(sys.argv[1])
 IF_COUNT = 0
