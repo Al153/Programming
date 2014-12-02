@@ -336,6 +336,7 @@ Add gp7 @4 															#increment stack pointer
 Compare gp7 stack_length 											#check for stack overflow
 if Greater then Load PC Stack_overflow_error
 
+#______________________________________ Local vars ______________________________________
 #__________________________ Load-store integers __________________________
 
 
@@ -351,7 +352,7 @@ Load gp0 <absolute_address> [gp6] 									#Loads
 Store gp0 <absolute_address> [Stack_pointer]
 
 << store gp0 relative >> 
-<get index expr>
+<get_index>
 <Popindex>
 ADD gp6 Stack_pointer
 Store gp0 <absolute_address> [gp6]
@@ -370,10 +371,45 @@ LoadByte gp0 <absolute_address> [gp6] 									#Loads
 StoreByte gp0 <absolute_address> [Stack_pointer]
 
 << store gp0 relative char >>
-<get index expr>
-<Popindex>
+<get_index>
 ADD gp6 Stack_pointer
 Store gp0 <absolute_address> [gp6]
+
+
+
+#______________________________________ global vars ______________________________________
+
+<< to load gp0 global >>
+Load gp0 <absolute_address>  						#Recursion stack increments downwards
+
+<< load gp0 relative global >>
+<get_index>
+Load gp0 <absolute_address> [gp6] 									#Loads
+
+<< to store gp0 global >> 													#same functions but for Storing
+Store gp0 <absolute_address>
+
+<< store gp0 relative global >> 
+<get_index>
+Store gp0 <absolute_address> [gp6]
+
+#_________________________ Load store char _________________________
+
+<< to load gp0 char global >>
+LoadByte gp0 <absolute_address> 									#Recursion stack increments downwards
+
+<< to store gp0 char global >>
+<get_index>
+LoadByte gp0 <absolute_address> [gp6] 									#Loads
+
+<< load gp0 relative char global >>
+StoreByte gp0 <absolute_address>
+
+<< store gp0 relative char global >>
+<get_index>
+Store gp0 <absolute_address> [gp6]
+
+
 
 #_________________________ index operations _________________________
 

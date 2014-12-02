@@ -18,7 +18,7 @@
 
 
 <variable> ::= id | id "[" <expr> "]" 
-<const> ::= num | "$" id
+<const> ::= num | "@" id
 
 <expr> ::= <expr> <addop> <term> | <term> | <unary_op> <term>S
 <term> ::= <term> <mulop> <factor> | <factor>

@@ -128,12 +128,12 @@ class snippet: 										   #class to do main snippet processing
 #	if statement, if - else code 							DONE
 #	block code
 #	function call, and function execution code  			DONE
-#	variable fetching and storing code
+#	variable fetching and storing code 						DONE
 
 #	assignments
 
 
-
+# _________________________________ functions  _________________________________
 def generate_function_code(function_parse_tree,parameters,input_variables,stack_frame_size,function_name):
 	'''generates code fo a function,
 	input variables is a dict matching variables to a stack frame index
@@ -177,6 +177,9 @@ def generate_push_args(args_parse_tree):
 			push_args_code += generate_expression_code(args_parse_tree.children[0])
 			break
 	return push_args_code
+
+
+#__________________________________________________ control flow _____________________________________
 
 def generate_if_code(if_parse_tree):
 	if len(if_parse_tree.children)>1: 		#two kinds of if
@@ -248,6 +251,8 @@ def generate_for_loop(for_parse_tree):
 	LOOP_COUNT += 1
 	return return_code
 
+#______________________________________________ Bolean code ________________________________________
+
 def generate_boolean_expression(bool_parse_tree):  			#set of mutually recursive functions
 	if bool_parse_tree.children[1].type == "bool_factor":  	#follows grammar parse tree
 		return generate_boolean_factor(bool_parse_tree.children[1])   
@@ -318,6 +323,15 @@ def generate_comparison(bool_parse_tree):
 					print "ERROR: not expecting comparisopn operator: "+comparison_operation.children[0].type
 					quit()
 
+
+
+
+#___________________________________________ getting and storing variables _______________________
+
+def generate_get_value(value_parse_tree):
+
+def generate_store_value(variable_parse_tree):
+
 def generate_get_local_variable(variable_parse_tree,variable_type_dict,variable_address_dict):
 	#gets a variable's value onto the stack
 	variable_name = variable_parse_tree.children[0].string
@@ -368,8 +382,62 @@ def generate_store_local_variable(variable_parse_tree,variable_type_dict,variabl
 			print "ERROR: unexpected variable type for relative addressing: "+variable_type
 			quit()	
 
-def generate_get_global_variables(variable_parse_tree,variable_type_dict):
+def generate_get_global_variables(variable_parse_tree,variable_type_dict,variable_address_dict):
+	#gets a variable's value onto the stack
+	variable_name = variable_parse_tree.children[0].string
+	variable_type = variable_type_dict[variable_name]
+	variable_address = str(variable_type_dict[variable_name])
+	if len(variable_parse_tree.children) == 1:
+		if variable_type == "int":
+			return snippets[" to load gp0 "].generate_code({"absolute_address":variable_address}) + snippets["Pushgp0"].generate_code({})
+		elif variable_type == "char":
+			return snippets[" to load gp0 char "].generate_code({"absolute_address":variable_address}) + snippets["Pushgp0"].generate_code({})			
+	else:
+		if variable_type = "@int":
+			index_expr = generate_expression_code(variable_parse_tree.children[2])
+			pop_index = snippets["Popindex"].generate_code({})
+			get_index = snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
+			return snippets[" load gp0 relative "].generate_code({"get_index":get_index,"absolute_address":variable_address})
+		elif variable_type == "@char":
+			index_expr = generate_expression_code(variable_parse_tree.children[2])
+			pop_index = snippets["Popindex"].generate_code({})
+			get_index = snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
+			return snippets[" load gp0 relative char "].generate_code({"get_index":get_index,"absolute_address":variable_address})
+		else:
+			print "ERROR: unexpected variable type for relative addressing: "+variable_type
+			quit()
 
+def generate_store_global_variable(variable_parse_tree,variable_type_dict,variable_address_dict):
+	variable_name = variable_parse_tree.children[0].string
+	variable_type = variable_type_dict[variable_name]
+	variable_address = str(variable_type_dict[variable_name])
+	if len(variable_parse_tree.children) == 1:
+		if variable_type == "int":
+			return snippets[" to store gp0 global "].generate_code({"absolute_address":variable_address}) + snippets["Pushgp0"].generate_code({})
+		elif variable_type == "char":
+			return snippets[" to store gp0 char global "].generate_code({"absolute_address":variable_address}) + snippets["Pushgp0"].generate_code({})			
+	else:
+		if variable_type = "@int":
+			index_expr = generate_expression_code(variable_parse_tree.children[2])
+			pop_index = snippets["Popindex"].generate_code({})
+			get_index = snippets[" get index integer global "].generate_code({"index expr":index_expr,"pop index":pop_index})
+			return snippets[" store gp0 relative global "].generate_code({"get_index":get_index,"absolute_address":variable_address})
+		elif variable_type == "@char":
+			index_expr = generate_expression_code(variable_parse_tree.children[2])
+			pop_index = snippets["Popindex"].generate_code({})
+			get_index = snippets[" get index char global "].generate_code({"index expr":index_expr,"pop index":pop_index})
+			return snippets[" store gp0 relative char global "].generate_code({"get_index":get_index,"absolute_address":variable_address})
+		else:
+			print "ERROR: unexpected variable type for relative addressing: "+variable_type
+			quit()	
+
+#______________________________________________ Line types _________________________________
+def generate_assignment_code(assignment_parse_tree):
+	lhs = assignment_parse_tree.children[0]
+	rhs = assignment_parse_tree.children[1]
+	expression_code = generate_expression_code(rhs)
+	assignment_code = generate_store_value(lhs)
+	return expression_code + assignment_code
 
 
 
@@ -379,3 +447,6 @@ import sys
 snippets = process_snippets(sys.argv[1])
 IF_COUNT = 0
 LOOP_COUNT = 0
+global_variable_address_dictionary = {}
+local_variable_address_dictionary = {}
+current_function_name = ''
