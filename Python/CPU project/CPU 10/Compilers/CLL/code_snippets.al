@@ -345,7 +345,7 @@ Load gp0 <absolute_address> [Stack_pointer] 						#Recursion stack increments do
 
 << load gp0 relative >>
 <get_index>
-ADD gp6 Stack_pointer 												#combines index and stackpointer
+#ADD gp6 Stack_pointer 												#relative addressing always occurs outside of the stack frame
 Load gp0 <absolute_address> [gp6] 									#Loads
 
 << to store gp0 >> 													#same functions but for Storing
@@ -354,7 +354,7 @@ Store gp0 <absolute_address> [Stack_pointer]
 << store gp0 relative >> 
 <get_index>
 <Popindex>
-ADD gp6 Stack_pointer
+#ADD gp6 Stack_pointer
 Store gp0 <absolute_address> [gp6]
 
 #_________________________ Load store char _________________________
@@ -362,17 +362,17 @@ Store gp0 <absolute_address> [gp6]
 << to load gp0 char >>
 LoadByte gp0 <absolute_address> [Stack_pointer] 						#Recursion stack increments downwards
 
-<< to store gp0 char >>
+<< load gp0 relative char >>
 <get_index>
-ADD gp6 Stack_pointer 												#combines index and stackpointer
+#ADD gp6 Stack_pointer 												#combines index and stackpointer
 LoadByte gp0 <absolute_address> [gp6] 									#Loads
 
-<< load gp0 relative char >>
+<< to store gp0 char >>
 StoreByte gp0 <absolute_address> [Stack_pointer]
 
 << store gp0 relative char >>
 <get_index>
-ADD gp6 Stack_pointer
+#ADD gp6 Stack_pointer
 Store gp0 <absolute_address> [gp6]
 
 
@@ -398,11 +398,11 @@ Store gp0 <absolute_address> [gp6]
 << to load gp0 char global >>
 LoadByte gp0 <absolute_address> 									#Recursion stack increments downwards
 
-<< to store gp0 char global >>
+<< load gp0 relative char global >>
 <get_index>
 LoadByte gp0 <absolute_address> [gp6] 									#Loads
 
-<< load gp0 relative char global >>
+<< to store gp0 char global >>
 StoreByte gp0 <absolute_address>
 
 << store gp0 relative char global >>
@@ -425,7 +425,7 @@ MUL gp6 @4
 <pop index>
 
 
-#____________ ptr operations
+#____________ ptr operations _________________________
 
 << get ptr >>
 Move Stack_pointer gp0
