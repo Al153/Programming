@@ -130,19 +130,25 @@ class code_generator:
 		self.variable_address_dict = variable_type_dict
 
 		self.function_name = function_name
+
 	#Code generation code to write:
 	#	expression generation code
-	#	boolean expression generation code
+	#	boolean expression generation code 						DONE	
 	# 		- Bool factor, bool_expr
 	#	for loop code 											DONE
 	#	while loop code 										DONE
 	#	if statement, if - else code 							DONE
-	#	block code
+	#	block code 												DONE
 	#	function call, and function execution code  			DONE
 	#	variable fetching and storing code 						DONE
 	
-	#	assignments
+	#	assignments 											DONE
 	
+
+	#############################
+	# 		   MISC TO DO 		#
+	#############################
+	#- fix global variable addressing - allow assembler to do heavy lifting 
 	
 	# _________________________________ functions  _________________________________
 	def generate_function_code(self,function_parse_tree,parameters,input_variables,stack_frame_size,function_name):
@@ -162,22 +168,22 @@ class code_generator:
 			"new_length":str(stack_frame_size),
 			"get_parameters":code_to_get_parameters
 			})
-		for line in function_parse_tree.children:
-			assembly_code += self.generate_block_code(line)
+		assembly_code += self.generate_block_code(function_parse_tree)
+		return assembly_code
 		#last line should be a return command
 	
-	def generate_function_call(self,args_parse_tree,function_name):
+	def generate_function_call(self,args_parse_tree):
 		'''Generates the code to call a function'''
 		function_call_code = self.snippets[" function call routine "].generate_code(
 			{
 			"Push args":self.generate_push_args(args_parse_tree),
-			"Call_address":function_name
+			"Call_address":self.function_name
 			}
 			)
 		return function_call_code
 	
 	def generate_push_args(self,args_parse_tree):
-		'''generates code to push argumetns onto the stack for the start of a function'''
+		'''generates code to push arguments onto the stack for the start of a function'''
 		push_args_code = ''
 		while 1:
 			if len(args_parse_tree)>1: 	#if not at end, add the code, and update the parse tree
@@ -188,7 +194,43 @@ class code_generator:
 				break
 		return push_args_code
 	
-	
+	def generate_block_code(self,block):
+		return "\n".join([self.generate_line(line) for line in block.children])
+
+	def generate_line(self,line):
+		if line.type == "<assignment>": #line tree is simplified by semantic checking
+			return self.generate_assignment_code(line)
+		elif line.type == "<cntrl_flow>":
+			if line.children[0].type == "<if_stmnt>":
+				return self.generate_if_code(line.children[0])
+			elif line.children[0].type == "<while_loop>":
+				return self.generate_while_code(line.children[0])
+			elif line.children[0].type == "<for_loop>":
+				return self.generate_for_loop(line.children[0])
+			else:
+				print "ERROR: did not expect tree of type "+line.children[0].type + " as control flow"
+		elif line.type == "<other>":
+			if len(line.children) == 1:
+				if line.children[0].type == "return":
+					return self.snippets[" return routine "].generate_code({"generate value to return":""})
+				elif line.children[0].type == "<func_call>":
+					return self.generate_function_call(line.children[0])
+				else:
+					print "ERROR: not expecting tree of type: "+line.children[0].type+" as an \"<other>\" line"
+					quit()
+			elif len(line.children) == 2:
+				if line.children[0].type == "return":
+					return self.snippets[" return routine "].generate_code({"generate value to return":self.generate_expression_code(line.children[1])})
+				else:
+					print "ERROR: not expecting type: "+line.children[0].type+" in other tree"	
+					quit()
+			else:
+				print "ERROR: line too long to be an \"<other>\""
+				quit()
+
+		else:
+			print "ERROR: invalid line: ",line
+			quit()
 	#__________________________________________________ control flow _____________________________________
 	
 	def generate_if_code(self,if_parse_tree):
@@ -239,13 +281,13 @@ class code_generator:
 		return return_code
 	
 	def generate_for_loop(self,for_parse_tree): 
-		assign_1 = self.generate_assign_statement(for_parse_tree.children[0]) 		#2 assignments are an initial assignment and a repeated assignment
+		assign_1 = self.generate_assign_code(for_parse_tree.children[0]) 		#2 assignments are an initial assignment and a repeated assignment
 		if for_parse_tree.children[1].children[0].type == "bool_factor":
 			condition = self.generate_boolean_factor(for_parse_tree.children[1].children[0])
 		else:
 			condition = self.generate_comparison(for_parse_tree.children[1].children[0])
 		pop_gp0 = self.snippets["Popgp0"].generate_code({})
-		assign_2 = self.generate_assign_statement(for_parse_tree.children[2])
+		assign_2 = self.generate_assign_code(for_parse_tree.children[2])
 		block = self.generate_block_code(for_parse_tree.children[3])
 		return_code = self.snippets[" for loop code "].generate_code({
 				"assignment1":assign_1,
@@ -342,8 +384,25 @@ class code_generator:
 		elif value_parse_tree.type  == "<variable>":
 			return self.generate_get_variable(value_parse_tree)
 
-	def generate_get_constant
-
+	def generate_get_constant(self,constant_parse_tree):
+		if len(constant_parse_tree.children) == 1 and constant_parse_tree.children[0].type == "num":
+			#if a numerical constant
+			return "Load gp0 @"+constant_parse_tree.children[0].string+"\n"+self.snippets["Pushgp0"].generate_code({})
+		elif len(constant_parse_tree.children) == 2 and constant_parse_tree.children[1].type == "id":
+			#if a pointer
+			variable_name = constant_parse_tree.children[1].string
+			push_gp0 = self.snippets["Pushgp0"].generate_code({})
+			if variable_name in self.variable_address_dict: #if a local variable
+				return self.snippets[" get ptr "].generate_code({"absolute_address":self.variable_address_dict[variable_name],"Push gp0":push_gp0})
+			elif variable_name in self.global_variable_address_dict: #if a global variable
+				return self.snippets[" get ptr global "].generate_code({"absolute_address":self.global_variable_address_dict[variable_name],"Push gp0":push_gp0})
+			else:
+				print "ERROR: unrecognised variable name: ",constant_parse_tree.children[1].string
+				quit()
+		else:
+			print "ERROR: incorrect constant: ",
+			print constant_parse_tree.children
+			quit()
 	def generate_store_value(self,variable_parse_tree):
 		variable_name = variable_parse_tree.children[0].string
 		if variable_name in self.variable_address_dict:
@@ -363,8 +422,12 @@ class code_generator:
 				return self.snippets[" to load gp0 "].generate_code({"absolute_address":variable_address}) + self.snippets["Pushgp0"].generate_code({})
 			elif variable_type == "char":
 				return self.snippets[" to load gp0 char "].generate_code({"absolute_address":variable_address}) + self.snippets["Pushgp0"].generate_code({})			
+			if variable_type == "int":
+				return self.snippets[" to load gp0 "].generate_code({"absolute_address":variable_address}) + self.snippets["Pushgp0"].generate_code({})
+			elif variable_type == "char":
+				return self.snippets[" to load gp0 char "].generate_code({"absolute_address":variable_address}) + self.snippets["Pushgp0"].generate_code({})			
 		else:
-			if variable_type = "@int":
+			if variable_type == "@int":
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
@@ -388,8 +451,13 @@ class code_generator:
 				return self.snippets[" to store gp0 "].generate_code({"absolute_address":variable_address}) + self.snippets["Pushgp0"].generate_code({})
 			elif variable_type == "char":
 				return self.snippets[" to store gp0 char "].generate_code({"absolute_address":variable_address}) + self.snippets["Pushgp0"].generate_code({})			
+			elif variable_type == "@int":
+				return self.snippets[" to store gp0 "].generate_code({"absolute_address":variable_address}) + self.snippets["Pushgp0"].generate_code({})
+			elif variable_type == "@char":
+				return self.snippets[" to store gp0 char "].generate_code({"absolute_address":variable_address}) + self.snippets["Pushgp0"].generate_code({})			
+	
 		else:
-			if variable_type = "@int":
+			if variable_type == "@int":
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
@@ -419,7 +487,7 @@ class code_generator:
 				return self.snippets[" to load gp0 char global "].generate_code({"absolute_address":variable_address}) + self.snippets["Pushgp0"].generate_code({})			
 	
 		else:
-			if variable_type = "@int":
+			if variable_type == "@int":
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
@@ -450,7 +518,7 @@ class code_generator:
 				print "ERROR: unexpected variable type: "+variable_type
 				quit()
 		else:
-			if variable_type = "@int":
+			if variable_type == "@int":
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
@@ -472,6 +540,7 @@ class code_generator:
 		assignment_code = self.generate_store_value(lhs)
 		return expression_code + assignment_code
 
+	def generate_expression_code(expression_parse_tree):
 
 
 

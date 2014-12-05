@@ -138,8 +138,9 @@ class function:
 			self.input_parameters = []
 		self.lines = self.blockify_code(self.parse_tree)
 		self.variables = self.get_variables(self.line)
-
-
+		################################################
+		# Needs an expression - type checking function #
+		################################################
 
 	def linearise_arguments(self,args):
 		'''given the input arguments to a function, produce a list of parameters'''
