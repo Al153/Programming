@@ -1,0 +1,58 @@
+This is documentation for my CLL (C Like Language)
+
+Contents:
+-	syntax:
+	- grammar
+	- notes on grammar:
+		- function declarations
+		- variable declarations
+		- shortened operations
+
+-	semantics:
+	- functions
+		- inbuilt functions
+
+	- Variables:
+		- local variables
+		- global variables
+	- run time:
+		- stack frames
+		- expression stack
+	- type checking
+	- code generation
+
+- future:
+	- strings
+	- more types 
+	- classes
+	- Multitasking
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+_________________________________________ Syntax ____________________________________
+
+_____________ Grammar ______________
+
+_____________ function delarations ____________
+
+_____________ variable declarations ____________
+
+_____________ shortened operations ____________
+As of yet, there is no support for shortened operations (+=, ++, -- etc)
+
+
+
+_________________________________________ Semantics _________________________________
+_____________ The CLL runtime ____________
+The CLL compiler constructs a minimalist run time, consisting of global variable setup, the call to the main function, and the processes for calling and returning from functions. Since CLL is 
