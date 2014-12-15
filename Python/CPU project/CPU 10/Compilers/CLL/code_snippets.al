@@ -428,6 +428,16 @@ MUL gp6 @4
 <pop index>
 
 
+#____________ type casting operations ____________
+<< cast int to char >>
+<Popgp0 >
+AND gp0 @255
+<Push gp0>
+
+<< cast char to int >>
+# do nothing to cast
+
+
 #____________ ptr operations _________________________
 
 << get ptr >>

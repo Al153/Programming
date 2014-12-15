@@ -541,6 +541,13 @@ class code_generator:
 		return expression_code + assignment_code
 
 	def generate_expression_code(expression_parse_tree):
+		##### needs to deal with 
+	def generate_term_code():
+
+	def generate_factor_code():
+
+	def generate_cast_code(): 
+
 
 
 

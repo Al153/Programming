@@ -1,0 +1,9 @@
+int check_if_equal(@char word1, @char word2, int len)
+	int i;
+	for(i = 0, i<len,i = i + 1)
+		if (not(word1[i] == word2[i])) then
+			return 0;
+		endif;
+	loop;
+	return 1;
+end;

@@ -1,7 +1,11 @@
 import json
 
 class Parser:
-	def __init__(self,parse_file_name):
+	def __init__(self,parse_file_name,new_tokeniser = False):
+		self.external_tokeniser = 0
+		if new_tokeniser:
+			self.tokenise = new_tokeniser
+			self.external_tokeniser = 1
 		parse_table_file = open(parse_file_name,"r")
 		self.parse_settings = json.loads(parse_table_file.read())
 		self.elementary_tokens = self.parse_settings["elementary_tokens"]
@@ -18,7 +22,10 @@ class Parser:
 
 	def parse(self,source):
 		self.debug_string = ''
-		self.tokens = self.tokenise(source)                                                    #tokeniser takes in text and produces a list of terminal objects
+		if self.external_tokeniser:
+			self.tokens = self.tokenise(self,source)                                                    #tokeniser takes in text and produces a list of terminal objects
+		else:
+			self.tokens = self.tokenise(source)
 		self.parse_tree_stack = [0]                                                                 #starts with just starting state
 
 		self.lookahead = self.tokens[0]                                                             #Loads in lookahead token 
@@ -95,7 +102,7 @@ class Parser:
 			else:
 				current_token += character                                                          #otherwise place the character in the token
 
-		if current_token != '' and current_token not in self.to_ignore:                         #clean up final token
+		if current_token != '' and current_token not in self.to_ignore:                         	#clean up final token
 			token_list.append(self.get_parse_tree_node(current_token))
 		token_list.append(Terminal_parse_tree_node("END","END"))                                    #adds end symbol to end of code
 		return token_list           
