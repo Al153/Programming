@@ -5,7 +5,9 @@ int count_block_palindromes(@char word, int length)  //this is a comment
 	int i;
 	printf("this is a string\n");  //strings and stuff
 	for(i = 0,i<limit,i = i + 1)
-		if (check_if_equal(word,word+length-i,i)) then
+		int p;  					// testing declaring vars inside control strutures
+		if (check_if_equal(word,word+length-i,i)) then 
+			@int 3 [1,2,3] q;		// again testing var decs
 			total = total + count_block_palindromes(word+i, length-i);
 		endif;
 	loop;

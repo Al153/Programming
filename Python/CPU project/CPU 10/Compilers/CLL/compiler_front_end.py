@@ -128,8 +128,10 @@ def print_parse_tree(parse_tree_node,offset = ''):
 def get_type(type_tree):
 	if len(type_tree.children) == 1: #int or char
 		return type_tree.children[0].string
-	elif len(type_tree.children) == 2: #int or char
+	elif len(type_tree.children) >= 2: #@int or @char
 		return type_tree.children[0].string+type_tree.children[1].string
+	print type_tree.type
+	quit()
 
 
 class function:
@@ -220,28 +222,46 @@ class function:
 				values.update(new_variables[1])
 				widths.update(new_variables[2])
 			if child.type == "<cntrl_flow>":
-				pass
+				if child.children[0].type == "<if_stmnt>": #get variables in an if
+					for new_child in child.children[0].children[1:]: #could be an if then or an if then else
+						new_variables = self.get_variables(new_child)
+						return_variables.update(new_variables[0])
+						values.update(new_variables[1])
+						widths.update(new_variables[2])
+				elif child.children[0].type == "<for_loop>":
+					new_child = child.children[0].children[3] 		#child is cntrl flow, child.children[0] is the loop, loop.children 3 is the block
+					new_variables = self.get_variables(new_child)
+					return_variables.update(new_variables[0])
+					values.update(new_variables[1])
+					widths.update(new_variables[2])
+				elif child.children[0].type == "<while_loop>":
+					new_child = child.children[0].children[1]
+					new_variables = self.get_variables(new_child)
+					return_variables.update(new_variables[0])
+					values.update(new_variables[1])
+					widths.update(new_variables[2])
+				else:
+					print "ERROR: non control flow parse tree: "+child.children[0].type
 			elif child.type == "<var_dec>":
 				#print "VAR DEC"
 				#print_parse_tree(parse_tree)
-				return_variables[child.children[1].string] = self.get_type(child.children[0])			#adds an entry for the new variable
+				print get_type(child.children[0])
+				return_variables[child.children[1].string] = get_type(child.children[0])			#adds an entry for the new variable
 				widths[child.children[1].string] = widths_lookup[get_type(child.children[0])]
-				if len(child.children) > 2:
+				if len(child.children) > 2: #if there is an assignment
 					values[child.children[1].string] = child.children[3] #gets the assignment
-				if len(child.children[0].children)>4: #array_tree
-					array_length =int(child.children[0].children[2].string)*widths_lookup[self.get_type(child.children[0])[1:]] #adds the length of the array to lengths
+				if len(child.children[0].children)>=3: #if tjere is an array type 
+					array_type = get_type(child.children[0])[1:] 			#type of variables in array
+					array_length =int(child.children[0].children[2].string)*widths_lookup[array_type] #adds the length of the array to lengths
 					widths["Array_of_"+child.children[1].string] = array_length
 					return_variables["Array_of_"+child.children[1].string] 	= return_variables[child.children[1].string] + "array" #adds @intarray and @chararray types internally
 					if len(child.children[0].children) == 6: #if there is an array to parse
-						values["Array_of_"+child.children[1].string] = self.parse_array(child.children[4]) #sets up values as an array
+						values["Array_of_"+child.children[1].string] = self.parse_array(child.children[0].children[4]) #sets up values as an array
 				parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:] #deletes variable declaration
 				#print len(parse_tree.children)
 				i -= 1 #makes up for shortened parse tree
 				#cont = raw_input("")
 			i += 1
-		######################################################################
-		# 			needs code to search structures other than blocks 		 #
-		######################################################################
 		return (return_variables,values,widths)
 
 	def get_var_width(self,var_type):
@@ -253,21 +273,21 @@ class function:
 		if len(array_tree.children) == 1:
 			return [int(array_tree.children[0].string)]
 		else:
-			return [int(array_tree.children[2].string)]+parse_array(array_tree.children[0])
+			return [int(array_tree.children[2].string)]+self.parse_array(array_tree.children[0])
 
-	def get_type(self,type_tree):
-		#reduces a type parse tree to a string
-		#print_parse_tree(type_tree)
-		if len(type_tree.children) == 1:
-			return type_tree.children[0].string
-		elif len(type_tree.children) == 2:
-			if type_tree.children[0].type == "@":
-				return type_tree.children[0].string + type_tree.children[1].string
-		else: 
-			##################################################
-			# parse array and return it alongside definition #
-			##################################################	
-			pass
+#	def get_type(self,type_tree):
+#		#reduces a type parse tree to a string
+#		#print_parse_tree(type_tree)
+#		if len(type_tree.children) == 1:
+#			return type_tree.children[0].string
+#		elif len(type_tree.children) == 2:
+#			if type_tree.children[0].type == "@":
+#				return type_tree.children[0].string + type_tree.children[1].string
+#		else: 
+#			##################################################
+#			# parse array and return it alongside definition #
+#			##################################################	
+#			pass
 
 	def get_overall_type(self,specific_type):
 		#reduces ints, chars, pointers etc to what they can be treated as, ie an @int is basically an int in terms of arithmetic
@@ -409,7 +429,7 @@ class function:
 				for parameter in parameters:
 					parameter_type = self.check_typing(parameter)
 					if parameter_type != self.get_overall_type(function_parameters[i][0]):
-						print "ERROR: parameter of type "+parameter_type+" passed to function "+function_name+", expected "+ self.get_type(function_parameters[i][1])+" of type" + self.get_type(function_parameters[i][0])
+						print "ERROR: parameter of type "+parameter_type+" passed to function "+function_name+", expected "+ get_type(function_parameters[i][1])+" of type" + get_type(function_parameters[i][0])
 						quit()
 			else:
 				print "ERROR: Function "+function_name+" takes "+str(len(function_parameters))+ "arguments, "+ str(len(parameters)) + " given"

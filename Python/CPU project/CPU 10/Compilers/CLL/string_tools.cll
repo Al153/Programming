@@ -3,6 +3,7 @@ int check_if_equal(@char word1, @char word2, int len)
 	for(i = 0, i<len,i = i + 1)
 		if (not(word1[i] == word2[i])) then
 			return 0;
+		@int p; //testing declaring variables
 		endif;
 	loop;
 	return 1;
