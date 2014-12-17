@@ -29,23 +29,22 @@ class Program:
 		self.functions = [function(tree) for tree in find_functions(self.parse_tree)]#+self.inbuilt_functions
 		self.functions = {function.name:function for function in self.functions}
 		self.header_code = Non_terminal_parse_tree_node("<block>",linearise_code(self.parse_tree))
-		#print_parse_tree(self.header_code)
 
-		#print self.functions
-
+		self.global_var_types = {}
+		self.global_array_values = {}
+		self.global_var_values = [] #for simple type global vars
+		self.global_var_sizes = {}
 		for line in self.header_code.children:
 			if line.type == "<var_dec>":
 				self.get_var(line)
 			else:
 				print "ERROR: not expecting line of type "+line.type+" outside of function definitions"
-		#################################
-		# get dicts of global variables #
-		#################################
-			pass
-		self.global_var_types = {"string0":"@char"} #dummy values
-		self.global_var_values = {}
+
+
+		self.functions["main"].parse_tree.children = self.global_var_values + self.functions["main"].parse_tree.children #inserts assignments for global variables
 
 		for function_name in self.functions:
+			self.functions[function_name].process()
 			self.functions[function_name].check_function_typing(self.functions[function_name].parse_tree)
 			print_parse_tree(self.functions[function_name].parse_tree)
 
@@ -53,20 +52,42 @@ class Program:
 		#	Code generation step 		#
 		#################################
 
-	def get_var(self,var_line):
-		var_name = var_line.children[1].string
+	def get_var(self,var_line): 				#gets a global variable
+		var_name = var_line.children[1].string 	
 		var_type_tree = var_line.children[0]
-		var_type = get_type(var_type_tree)
-		if len(var_line.children) == 4:
+		var_type = self.get_type(var_type_tree)
+		if len(var_type)>4: #if an array:
+			var_length = var_type[4:]
+			var_type = var_type[:4]
+		else:
+			var_length = 1
+		if len(var_line.children) == 4: #if there is a preset value for the variable
+			self.get_value(var_line.children[3],var_name)
+		self.global_var_types[var_name] = var_type
+		self.global_var_sizes[var_name] = var_length
 
 
-
-	def get_value(self,expression_tree):
+	def get_value(self,expression_tree,name):
+		if len(expression_tree.children) == 3: #if an array
+			self.global_array_values[name] = self.parse_array(expression_tree.children[1]) #adds array value to array values list
+		else: #create an assignment to add to main function
+			var_node = Non_terminal_parse_tree_node("<variable>",[Terminal_parse_tree_node("id",name)])
+			equ_node = Terminal_parse_tree_node("=","=")
+			assignment_node = Non_terminal_parse_tree_node("<assignment>",[var_node,equ_node,expression_tree])
+			self.global_var_values.append(assignment_node)
 
 	def get_type(self,type_tree):
+		type_string = ''
+		for node in type_tree.children:
+			type_string += node.string
+		return type_string
 
-
-
+	def parse_array(self,array_tree):
+		#print array_tree.type
+		if len(array_tree.children) == 1:
+			return [int(array_tree.children[0].string)]
+		else:
+			return [int(array_tree.children[2].string)]+self.parse_array(array_tree.children[0])
 
 
 
@@ -164,10 +185,12 @@ class function:
 		else:
 			self.input_parameters = []
 		self.lines = self.blockify_code(self.parse_tree)
+
+	def process(self):
 		if self.return_type != "void": #adds a default return statement
-			parse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return"),Terminal_parse_tree_node("num",0)]))
+			self.parse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return"),Terminal_parse_tree_node("num","0")]))
 		else:
-			arse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return")]))
+			self.parse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return")]))
 		self.variables = self.get_variables(self.parse_tree)
 		self.variable_preset_values = self.variables[1]
 		self.variable_sizes = self.variables[2]
@@ -262,18 +285,18 @@ class function:
 			elif child.type == "<var_dec>":
 				#print "VAR DEC"
 				#print_parse_tree(parse_tree)
-				print get_type(child.children[0])
+				#print get_type(child.children[0])
 				return_variables[child.children[1].string] = get_type(child.children[0])			#adds an entry for the new variable
 				widths[child.children[1].string] = widths_lookup[get_type(child.children[0])]
 				if len(child.children) > 2: #if there is an assignment
-					values[child.children[1].string] = child.children[3] #gets the assignment
-				if len(child.children[0].children)>=3: #if tjere is an array type 
+					#big one liner to process the value  						
+					values[child.children[1].string] = child.children[3].children[0] if len(child.children[3].children)==1 else self.parse_array(child.children[3].children[1]) #gets the assignment
+														#^if is an expression 															^if is an array
+				if len(child.children[0].children)==3: #if there is an array type 
 					array_type = get_type(child.children[0])[1:] 			#type of variables in array
 					array_length =int(child.children[0].children[2].string)*widths_lookup[array_type] #adds the length of the array to lengths
 					widths["Array_of_"+child.children[1].string] = array_length
 					return_variables["Array_of_"+child.children[1].string] 	= return_variables[child.children[1].string] + "array" #adds @intarray and @chararray types internally
-					if len(child.children[0].children) == 6: #if there is an array to parse
-						values["Array_of_"+child.children[1].string] = self.parse_array(child.children[0].children[4]) #sets up values as an array
 				parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:] #deletes variable declaration
 				#print len(parse_tree.children)
 				i -= 1 #makes up for shortened parse tree
@@ -287,6 +310,7 @@ class function:
 		return widths_lookup[var_type]
 
 	def parse_array(self,array_tree):
+		#print array_tree.type
 		if len(array_tree.children) == 1:
 			return [int(array_tree.children[0].string)]
 		else:
@@ -484,10 +508,10 @@ def tokenise(self,source_text):
 	string_counter = 0 #string counter allows string names to be unique
 	for current_token in string_token_list:
 		if current_token[0] == current_token[-1] == '"': #if a string
-			current_token = "string"+str(string_counter)
-			values_list = zip([str(ord(char)) for char in current_token[1:-1]],["," for char in current_token[1:-1]])
+			name  = "string"+str(string_counter)
+			values_list = zip([str(ord(char)) for char in current_token[1:-1]]+["0"],["," for char in current_token[1:]]) #adds 0 as an end of string
 			values_list = [elem for pair in values_list for elem in pair][:-1] #flatten list of tuples,remove last comma
-			string_token_list += ["@","char",str(len(current_token)-2),"["]+values_list + ["]",current_token,";"]
+			string_token_list += ["@","char",str(len(current_token)-2),name,"=","["]+values_list + ["]",";"]
 			string_counter += 1
 		elif current_token[0] == current_token[-1] == "'":
 			current_token = str(ord(current_token[1]))

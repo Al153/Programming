@@ -9,7 +9,8 @@
 
 <assignment> ::= <variable> "=" <expr>
 <cntrl_flow> ::= <if_stmnt> | <while_loop> | <for_loop>
-<var_dec> ::= <type> id | <type> id "=" <expr>  
+<var_dec> ::= <type> id | <type> id "=" <var_value>
+<var_value> ::= "[" <array> "]" | <expr> 
 <fun_dec> ::= <type> id "(" <inargs> ")" <block> "end" | <type> id "(" ")" <block> "end"
 <other> ::= "return" <expr> | "return" | <fun_call>
 
@@ -54,5 +55,5 @@
 <while_loop> ::= "while" <bool_expr> "do" <block> "loop"
 <for_loop> ::= "for" "(" <assignment> "," <for_bool_expr> "," <assignment> ")" <block> "loop"
 
-<type> ::= "int" | "char" | "@" "int" | "@" "int" num | "@" "int" num "[" <array> "]" | "@" "char" | "@" "char" num | "@" "char" num "[" <array> "]" | "void"
+<type> ::= "int" | "char" | "@" "int" | "@" "int" num | "@" "int" num  | "@" "char" | "@" "char" num | "void"
 <array> ::= <array> "," num | num

@@ -7,9 +7,13 @@ int count_block_palindromes(@char word, int length)  //this is a comment
 	for(i = 0,i<limit,i = i + 1)
 		int p;  					// testing declaring vars inside control strutures
 		if (check_if_equal(word,word+length-i,i)) then 
-			@int 3 [1,2,3] q;		// again testing var decs
+			@int 3 q = [1,2,3];		// again testing var decs
 			total = total + count_block_palindromes(word+i, length-i);
 		endif;
 	loop;
 	return total;
+end;
+
+void main()
+	count_block_palindromes("aabcbaa",7);
 end;
