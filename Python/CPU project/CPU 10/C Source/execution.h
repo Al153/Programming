@@ -2,23 +2,23 @@
 
 unsigned int fetch_instruction(unsigned int *registers, unsigned char *MEMORY){ //fetches next instruction
 	unsigned int instruction; 				
-	instruction = read_memory(registers[4],MEMORY);
-	registers[4] += 4;
+	instruction = read_memory(registers[4],MEMORY); //reads instruction from memory, using registers[4] (program counter as an index)
+	registers[4] += 4; 								//increments program counter
 	return instruction;
 }
 
 unsigned int fetch_address(unsigned int *registers, unsigned char *MEMORY){ //fetches address of instruction
-	unsigned int address;
+	unsigned int address;													//mostly the same as fetch_instruction
 	address = read_memory(registers[4],MEMORY);
 	registers[4] += 4;
-
 	return address;
 }
 
 unsigned char get_conditional(unsigned int *registers,unsigned char conditional){ //checks whether instr is conditional and if condition is true returns 1
-	if (conditional&128){ //if there is a conditional flag
-		if (!(conditional & 64)){ //if looking for a flag
-			if (!((1<<(31-(conditional & 31))) & registers[5])){ //i
+	//woop woop, lot's of logic!
+	if (conditional&128){ //if there is a conditional bit set (if instruction is conditional)
+		if (!(conditional & 64)){ //if conditional based on a flag
+			if (!((1<<(31-(conditional & 31))) & registers[5])){ //if condition true
 				if (((conditional&31) == 24) || ((conditional&31) == 25) || ((conditional&31) == 26)){
 					registers[5] &= 4294967071; //reset all three of the  ><= flags
 				} 
@@ -39,7 +39,7 @@ unsigned char get_conditional(unsigned int *registers,unsigned char conditional)
 
 			}
 		}
-		else{ //if looking for a register
+		else{ //if conditional based on a register
 			if  (registers[conditional&15]){
 				return 1;
 			}
@@ -85,8 +85,8 @@ unsigned int do_ALU_op(unsigned int value1,unsigned int value2,unsigned char opc
 
 }
 
-void debug_instruction(unsigned char *decoded,unsigned int instruction){ //decodes instruction into bytes
-	decoded[3] = instruction & 255;
+void decode_instruction(unsigned char *decoded,unsigned int instruction){ //decodes instruction into bytes
+	decoded[3] = instruction & 255; //pretty simple, separates instruction into bytes
 	instruction >>= 8;
 	decoded[2] = instruction & 255;
 	instruction >>= 8;
@@ -101,16 +101,16 @@ unsigned int execute(unsigned char instr, unsigned char reg1,unsigned char reg2,
 		
  
 		
-		char will_execute = get_conditional(registers,conditional);
+		char will_execute = get_conditional(registers,conditional); // if condition is true, then it will execute
 		//printf("will_execute = %i\n",(int) will_execute);
 
 		if (will_execute){
 			
-			reg1 = reg1&15; //actual register addresses, prevents bugs due to code beign rewritten
+			reg1 = reg1&15; //actual register addresses, prevents C buffer overflows due to machine code self modifying
 			reg2 = reg2&15;
 			
 			// execute instruction
-			switch(instr){
+			switch(instr){ //checks opcode
 				case 0:
 					return 1;   		//halt
 	

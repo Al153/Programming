@@ -18,7 +18,7 @@ int step(unsigned int *registers, unsigned char *MEMORY){   //returns halt, carr
 	unsigned int address = 0;
 	unsigned char decoded[4];
 
-	unsigned char instr;
+	unsigned char instr;  //instruction data
 	unsigned char reg1;
 	unsigned char reg2;
 	unsigned char conditional;
@@ -26,7 +26,7 @@ int step(unsigned int *registers, unsigned char *MEMORY){   //returns halt, carr
 	instruction = fetch_instruction(registers,MEMORY);
 	address = fetch_address(registers,MEMORY);
 
-	debug_instruction(decoded,instruction);
+	decode_instruction(decoded,instruction);
 
 	//int i;
 	//for (i = 0; i<4;i++){
@@ -42,7 +42,7 @@ int step(unsigned int *registers, unsigned char *MEMORY){   //returns halt, carr
 
 }
 
-int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt, carries out game logic
+int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt? values, carries out logic
 	unsigned int instruction = 0;
 	unsigned int address = 0;
 	unsigned char decoded[4];
@@ -55,7 +55,7 @@ int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt
 	instruction = fetch_instruction(registers,MEMORY);
 	address = fetch_address(registers,MEMORY);
 
-	debug_instruction(decoded,instruction);
+	decode_instruction(decoded,instruction);
 
 
 
@@ -68,7 +68,7 @@ int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt
 	reg2 = decoded[2]&15;
 	conditional = decoded[3];
 
-	printf("\n%u|  ",registers[4] - 8);
+	printf("\n%u|  ",registers[4] - 8);  //prints out runtime data
 
 	printf("%i   ", (int) instr);
 	printf("%i   ", (int) reg1);
@@ -83,6 +83,7 @@ int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt
 }
 
 void init_memory(unsigned char *MEMORY, char *name){
+	//extracts  program from file and constucts memory using it
 	char state;   //uses a state machine to switch between address and data
 	unsigned int address;
 	unsigned char chr; 	//exctracted character
@@ -144,13 +145,6 @@ void init_memory(unsigned char *MEMORY, char *name){
 	fclose(fp);
 }
 
-void alt_init_memory(unsigned char *MEMORY, char *name){
-	FILE *fp = fopen(name, "rb");
-	if (fp == NULL){
-		printf("ERROR: Failed to open file \"%s\"\n",name);
-		exit(1);
-	}
-}
 
 int main(int argc, char *argv[]){
 	static unsigned char MEMORY[1048576] = {0}; 					//setting up memory and registers
@@ -172,24 +166,24 @@ int main(int argc, char *argv[]){
 	if (argc < 3){
 
 		printf("______________________ running ______________________\n");
-		gettimeofday(&begin,NULL);
+		gettimeofday(&begin,NULL); //uses this to work out running time
 		while (halt == 0){
-			count += 1;
-			halt = step(registers,MEMORY);
+			count += 1; 					//counts number of instructions executed
+			halt = step(registers,MEMORY); //executes 1 instruction
 		}
 		gettimeofday(&end,NULL);
 
-		seconds_elapsed = (end.tv_sec - begin.tv_sec); //(double) (end.tv_usec - begin.tv_usec)/1000000 + 
-		useconds_elapsed = end.tv_usec - begin.tv_usec;
+		seconds_elapsed = (end.tv_sec - begin.tv_sec); //calculates running time
+		useconds_elapsed = end.tv_usec - begin.tv_usec;  //microseconds
 		time_elapsed = (double)seconds_elapsed + ((double)useconds_elapsed)/1000000;
-		instructions_per_second = count/time_elapsed; 
+		instructions_per_second = count/time_elapsed;  //speed of operation
 		printf("\n______________________ Execution halted ______________________\n");
 		printf("executed %u instructions in ",count);
 		printf("%lf seconds ", time_elapsed);
 		if (time_elapsed > 0.0001){
 			printf("at %lf ips\n", instructions_per_second);
 		}
-	} else {
+	} else { //does a debug run - pauses between instructions etc
 		if (argc == 3){	
 
 			printf("______________________ running Debug ______________________\n");
@@ -211,7 +205,7 @@ int main(int argc, char *argv[]){
 				printf("at %lf ips\n", instructions_per_second);
 				}
 		} else {
-			int debug_threshold = atoi(argv[3]);
+			int debug_threshold = atoi(argv[3]); //if a debug threshold of n is set, then executes n instructions before going into debug mode
 
 			printf("______________________ running Debug ______________________\n");
 			gettimeofday(&begin,NULL);

@@ -29,11 +29,15 @@ class Program:
 		self.functions = [function(tree) for tree in find_functions(self.parse_tree)]#+self.inbuilt_functions
 		self.functions = {function.name:function for function in self.functions}
 		self.header_code = Non_terminal_parse_tree_node("<block>",linearise_code(self.parse_tree))
-#		print_parse_tree(self.header_code)
+		#print_parse_tree(self.header_code)
 
-#		print self.functions
+		#print self.functions
 
 		for line in self.header_code.children:
+			if line.type == "<var_dec>":
+				self.get_var(line)
+			else:
+				print "ERROR: not expecting line of type "+line.type+" outside of function definitions"
 		#################################
 		# get dicts of global variables #
 		#################################
@@ -48,6 +52,19 @@ class Program:
 		#################################
 		#	Code generation step 		#
 		#################################
+
+	def get_var(self,var_line):
+		var_name = var_line.children[1].string
+		var_type_tree = var_line.children[0]
+		var_type = get_type(var_type_tree)
+		if len(var_line.children) == 4:
+
+
+
+	def get_value(self,expression_tree):
+
+	def get_type(self,type_tree):
+
 
 
 
@@ -275,20 +292,6 @@ class function:
 		else:
 			return [int(array_tree.children[2].string)]+self.parse_array(array_tree.children[0])
 
-#	def get_type(self,type_tree):
-#		#reduces a type parse tree to a string
-#		#print_parse_tree(type_tree)
-#		if len(type_tree.children) == 1:
-#			return type_tree.children[0].string
-#		elif len(type_tree.children) == 2:
-#			if type_tree.children[0].type == "@":
-#				return type_tree.children[0].string + type_tree.children[1].string
-#		else: 
-#			##################################################
-#			# parse array and return it alongside definition #
-#			##################################################	
-#			pass
-
 	def get_overall_type(self,specific_type):
 		#reduces ints, chars, pointers etc to what they can be treated as, ie an @int is basically an int in terms of arithmetic
 		return "char" if specific_type == "char" else "int"
@@ -331,8 +334,8 @@ class function:
 				overall_type = lhs_type #left hand rule
 
 				#print lhs_type,rhs_type
-#				print_parse_tree(parse_tree)
-#				cont = raw_input("")
+		#				print_parse_tree(parse_tree)
+		#				cont = raw_input("")
 
 				parse_tree.children[2] = self.cast_type(rhs_type,lhs_type,parse_tree.children[2]) #casts rhs into the type
 				parse_tree.children[1].type = "<"+parse_tree.children[1].type[1:-1]+lhs_type+">" #fixes the operator to a specific type
@@ -434,6 +437,7 @@ class function:
 			else:
 				print "ERROR: Function "+function_name+" takes "+str(len(function_parameters))+ "arguments, "+ str(len(parameters)) + " given"
 				quit()
+	
 	def get_given_parameters(self,parameters_parse_tree):
 		#print_parse_tree(parameters_parse_tree)
 		if len(parameters_parse_tree.children) == 1:
@@ -470,7 +474,7 @@ def error(error_type,reason_string):
 
 def tokenise(self,source_text):
 	#tokeniser which handles strings and comments, deals with import directives etc
-#	source_text = fix_strings_and_comments(source_text)
+	#source_text = fix_strings_and_comments(source_text)
 	#print "tokenising"
 	source_text = pretokenise(source_text)
 
@@ -511,9 +515,6 @@ def main_tokenise(self,text_file):
 		if not string:
 			line_tokens= []
 			current_token = ''
-#		if line[:8] == "<Python>":
-#			text_file = text_file[:i]+ str(eval(line[8:])).split("\n")+text_file[i+1:]
-#			line = text_file[i]
 		for character in line:
 			if not string:
 				if character == '"' and current_token == '': #if a string
