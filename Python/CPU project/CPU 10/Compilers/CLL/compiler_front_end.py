@@ -41,12 +41,15 @@ class Program:
 				print "ERROR: not expecting line of type "+line.type+" outside of function definitions"
 
 
+
 		self.functions["main"].parse_tree.children = self.global_var_values + self.functions["main"].parse_tree.children #inserts assignments for global variables
 
 		for function_name in self.functions:
+			#if function_name == "main":
+			#	print_parse_tree(self.functions["main"].parse_tree)
 			self.functions[function_name].process()
 			self.functions[function_name].check_function_typing(self.functions[function_name].parse_tree)
-			print_parse_tree(self.functions[function_name].parse_tree)
+		print_parse_tree(self.functions["main"].parse_tree)
 
 		#################################
 		#	Code generation step 		#
@@ -72,7 +75,7 @@ class Program:
 			self.global_array_values[name] = self.parse_array(expression_tree.children[1]) #adds array value to array values list
 		else: #create an assignment to add to main function
 			var_node = Non_terminal_parse_tree_node("<variable>",[Terminal_parse_tree_node("id",name)])
-			equ_node = Terminal_parse_tree_node("=","=")
+			equ_node = Terminal_parse_tree_node('"="',"=")
 			assignment_node = Non_terminal_parse_tree_node("<assignment>",[var_node,equ_node,expression_tree])
 			self.global_var_values.append(assignment_node)
 
@@ -191,16 +194,19 @@ class function:
 			self.parse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return"),Terminal_parse_tree_node("num","0")]))
 		else:
 			self.parse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return")]))
+		#if self.name == "main":
+		#	print_parse_tree(self.parse_tree)
 		self.variables = self.get_variables(self.parse_tree)
+
 		self.variable_preset_values = self.variables[1]
 		self.variable_sizes = self.variables[2]
 		self.variables = self.variables[0]
-		#adds input parameters
-		self.variables.update({pair[1]:pair[0] for pair in self.input_parameters})
+		
+		self.variables.update({pair[1]:pair[0] for pair in self.input_parameters}) #adds input parameters
 		self.variable_sizes.update({pair[1]:self.get_var_width(pair[0]) for pair in self.input_parameters})
 
-		for var_name in self.variables:
-			print var_name, ":",self.variables[var_name]
+		#for var_name in self.variables:
+		#	print var_name, ":",self.variables[var_name]
 
 
 	def linearise_arguments(self,args):
@@ -248,37 +254,38 @@ class function:
 
 	def get_variables(self,parse_tree):
 		return_variables = {}  #names:types
-		values = {} 		   #names:preset expressions
+		values = [] 		   #names:preset expressions
 		widths = {} 		   #names:bytewidth
 		widths_lookup = {"int":4,"char":1,"@int":4,"@char":4} #arrays for @chars and @ints are 4+n or 4+(n*4), ptr, then array
 		i = 0
 		while i < len(parse_tree.children):
 			#print i, len(parse_tree.children)
+			assignment_present = 0
 			child = parse_tree.children[i]
 
 			if child.type == "<block>":
 				new_variables = self.get_variables(child)
 				return_variables.update(new_variables[0])
-				values.update(new_variables[1])
+				values+= new_variables[1]
 				widths.update(new_variables[2])
 			if child.type == "<cntrl_flow>":
 				if child.children[0].type == "<if_stmnt>": #get variables in an if
 					for new_child in child.children[0].children[1:]: #could be an if then or an if then else
 						new_variables = self.get_variables(new_child)
 						return_variables.update(new_variables[0])
-						values.update(new_variables[1])
+						values += new_variables[1]
 						widths.update(new_variables[2])
 				elif child.children[0].type == "<for_loop>":
 					new_child = child.children[0].children[3] 		#child is cntrl flow, child.children[0] is the loop, loop.children 3 is the block
 					new_variables = self.get_variables(new_child)
 					return_variables.update(new_variables[0])
-					values.update(new_variables[1])
+					values += new_variables[1]
 					widths.update(new_variables[2])
 				elif child.children[0].type == "<while_loop>":
 					new_child = child.children[0].children[1]
 					new_variables = self.get_variables(new_child)
 					return_variables.update(new_variables[0])
-					values.update(new_variables[1])
+					values += new_variables[1]
 					widths.update(new_variables[2])
 				else:
 					print "ERROR: non control flow parse tree: "+child.children[0].type
@@ -288,16 +295,52 @@ class function:
 				#print get_type(child.children[0])
 				return_variables[child.children[1].string] = get_type(child.children[0])			#adds an entry for the new variable
 				widths[child.children[1].string] = widths_lookup[get_type(child.children[0])]
-				if len(child.children) > 2: #if there is an assignment
-					#big one liner to process the value  						
-					values[child.children[1].string] = child.children[3].children[0] if len(child.children[3].children)==1 else self.parse_array(child.children[3].children[1]) #gets the assignment
-														#^if is an expression 															^if is an array
-				if len(child.children[0].children)==3: #if there is an array type 
+				
+				if len(child.children[0].children)==3: #if there is an array type 	
 					array_type = get_type(child.children[0])[1:] 			#type of variables in array
 					array_length =int(child.children[0].children[2].string)*widths_lookup[array_type] #adds the length of the array to lengths
 					widths["Array_of_"+child.children[1].string] = array_length
 					return_variables["Array_of_"+child.children[1].string] 	= return_variables[child.children[1].string] + "array" #adds @intarray and @chararray types internally
-				parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:] #deletes variable declaration
+
+				if len(child.children) > 2: #if there is an assignment
+
+					assignment_present = 1
+														#^if is an expression 															^if is an array
+					if len(child.children[3].children)==1: #if a simple expression
+						assign_expression = child.children[3].children[0] #gets the assignment trees	
+						var_name = Non_terminal_parse_tree_node("<variable>",[child.children[1]]) 
+						assignment = Non_terminal_parse_tree_node("<assignment>",[var_name,assign_expression]) #generate tree
+						parse_tree.children[i] = assignment #place back into code
+					elif child.children[3].children[1].type == "<array>":
+						array_vars = self.parse_array(child.children[3].children[1])
+						parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:] #deletes variable declaration	
+						for j in xrange(len(array_vars)):
+							index_parse_tree = Terminal_parse_tree_node("num",str(j)) #build up the  indexing expression
+							index_parse_tree = Non_terminal_parse_tree_node("<const>",[index_parse_tree]) #constant layer
+							index_parse_tree = Non_terminal_parse_tree_node("<factor>",[index_parse_tree]) #factor layer
+							index_parse_tree = Non_terminal_parse_tree_node("<term>",[index_parse_tree]) 	#term
+							index_parse_tree = Non_terminal_parse_tree_node("<expr>",[index_parse_tree]) 	#packaged up in an expr before becoming part of the lhs
+
+							lhs_parse_tree = Non_terminal_parse_tree_node("<variable>",[child.children[1],Terminal_parse_tree_node('"["',"["),index_parse_tree,Terminal_parse_tree_node('"]"',"]")])
+
+							rhs_parse_tree = Terminal_parse_tree_node("num",str(array_vars[j])) #build up the  indexing expression
+							rhs_parse_tree = Non_terminal_parse_tree_node("<const>",[rhs_parse_tree]) #constant layer
+							rhs_parse_tree = Non_terminal_parse_tree_node("<factor>",[rhs_parse_tree]) #factor layer
+							rhs_parse_tree = Non_terminal_parse_tree_node("<term>",[rhs_parse_tree]) 	#term
+							rhs_parse_tree = Non_terminal_parse_tree_node("<expr>",[rhs_parse_tree])
+
+							assignment_tree =Non_terminal_parse_tree_node("<assignment>",[lhs_parse_tree,rhs_parse_tree]) #generates an assignment
+							parse_tree.children.insert(i+j,assignment_tree)
+
+
+				if not assignment_present:
+					parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:] #deletes variable declaration	
+
+
+				
+
+
+				
 				#print len(parse_tree.children)
 				i -= 1 #makes up for shortened parse tree
 				#cont = raw_input("")
@@ -506,17 +549,25 @@ def tokenise(self,source_text):
 	string_token_list = main_tokenise(self,source_text)
 	token_list = []
 	string_counter = 0 #string counter allows string names to be unique
-	for current_token in string_token_list:
+	i = 0
+	while i < len(string_token_list):
+		current_token = string_token_list[i]
+		#print current_token
 		if current_token[0] == current_token[-1] == '"': #if a string
 			name  = "string"+str(string_counter)
 			values_list = zip([str(ord(char)) for char in current_token[1:-1]]+["0"],["," for char in current_token[1:]]) #adds 0 as an end of string
 			values_list = [elem for pair in values_list for elem in pair][:-1] #flatten list of tuples,remove last comma
 			string_token_list += ["@","char",str(len(current_token)-2),name,"=","["]+values_list + ["]",";"]
+			string_token_list[i] = name
+			#if string_token_list[i] == name:
+			#	print "String found: ",name,current_token
+			#	cont = raw_input('')
 			string_counter += 1
 		elif current_token[0] == current_token[-1] == "'":
-			current_token = str(ord(current_token[1]))
+			string_token_list[i] = str(ord(current_token[1]))
 		if current_token not in self.to_ignore:
-			token_list.append(self.get_parse_tree_node(current_token))
+			token_list.append(self.get_parse_tree_node(string_token_list[i]))
+		i += 1
 	token_list.append(Terminal_parse_tree_node("END","END"))                                    #adds end symbol to end of code
 	#print [token.string for token in token_list]
 	return token_list

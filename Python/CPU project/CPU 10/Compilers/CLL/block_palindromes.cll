@@ -16,4 +16,5 @@ end;
 
 void main()
 	count_block_palindromes("aabcbaa",7);
+	@int 4 p = [1,2,3];
 end;

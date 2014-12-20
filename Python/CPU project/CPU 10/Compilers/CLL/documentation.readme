@@ -27,6 +27,9 @@ Contents:
 		- type checking
 		- pointers
 		- casting types
+	- defining variables
+		- creating assignments within definitions
+			- assignments occur right at the
 
 	- code generation
 
