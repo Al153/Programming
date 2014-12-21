@@ -119,17 +119,24 @@ class snippet: 										   #class to do main snippet processing
 		return ''.join(new_code)
 
 class code_generator:
-	def __init__(self,function_name,variable_address_dict,global_variable_address_dictionary,variable_type_dict,global_variable_type_dict,function_object,snippets):
-		snippets = process_snippets(sys.argv[1])
-		self.IF_COUNT = 0
-		self.LOOP_COUNT = 0
+	def __init__(self,function_object,global_variable_address_dictionary,global_variable_type_dict):
+		# this line can be moved outside the class at some point
+		self.snippets = process_snippets(sys.argv[1])
+		#######################################################
+		self.IF_COUNT = 0 							#initialises if and loop counts
+		self.LOOP_COUNT = 0 
 
-		self.global_variable_address_dict = global_variable_address_dictionary
-		self.local_variable_address_dict = variable_address_dict
+		self.global_variable_address_dict = global_variable_address_dictionary #gets globals
 		self.global_variable_type_dict = global_variable_type_dict
-		self.variable_address_dict = variable_type_dict
 
-		self.function_name = function_name
+		self.function_name = function_object.name
+		self.variable_address_dict,self.stack_frame_size = self.get_var_addresses(function_object.variable_types)
+		self.variable_types = function_object.variables
+		self.input_variables = self.get_input_variables(function_object)
+
+
+		#does the generation
+		self.assembly = generate_function_code(function_object.parse_tree,self.input_variables,self.variable_types,self.stack_frame_size)
 
 	#Code generation code to write:
 	#	expression generation code
@@ -150,21 +157,42 @@ class code_generator:
 	#############################
 	#- fix global variable addressing - allow assembler to do heavy lifting 
 	
+
+	def get_var_addresses(self,var_sizes):
+		#generates a dictionary of the addresses of variables used b a function
+		address_dict = {}
+		current_address = 12 #4 ints are alreadying in stack frame: Return address, length of stack frame and previous top of stack
+		for var in var_sizes:
+			address_dict[var] = current_address
+			current_address += var_sizes[var]
+		return address_dict,current_address #current address is stack frame size
+
+	def get_input_variables(self,function):
+		# extracts a list of the names of input variables from the function
+		return [pair[1] for pair in function.input_parameters]
+
+
+
 	# _________________________________ functions  _________________________________
-	def generate_function_code(self,function_parse_tree,parameters,input_variables,stack_frame_size,function_name):
+	def generate_function_code(self,function_parse_tree,input_variables,var_types,stack_frame_size):
 		'''generates code fo a function,
 		input variables is a dict matching variables to a stack frame index
 		'''
+		#var types is overall type - ie @int and @char are ints
 		pop_to_gp0_code = self.snippets["Popgp0"].generate_code({})
-		code_to_get_parameters = ''.join([snippets.get_parameters(
-			{
-				"Popgp0":pop_to_gp0_code,
-				"index":input_variables[variable]
-				}
-			) for variable in input_variables])
+		code_to_get_parameters = ''
+		for var in input_variables:
+			if var_types[var] == "int":
+				pop_code = pop_to_gp0_code + self.snippets[" to store gp0 "].generate_code({"absolute_address":self.variable_address_dict[var]})
+			elif var_types[var] == "char":
+ 				pop_code = pop_to_gp0_code + self.snippets[" to store gp0 char "].generate_code({"absolute_address":self.variable_address_dict[var]})
+			else:
+				 print "ERROR: incorrect type passed to code generator: ", var_types[var]
+				 quit()
+			code_to_get_parameters += "\n"+pop_code
 		assembly_code = self.snippets[" function startup routine "].generate_code(
 			{
-			"function_name":function_name,
+			"function_name":self.function_name,
 			"new_length":str(stack_frame_size),
 			"get_parameters":code_to_get_parameters
 			})
@@ -172,12 +200,15 @@ class code_generator:
 		return assembly_code
 		#last line should be a return command
 	
-	def generate_function_call(self,args_parse_tree):
+	def generate_function_call(self,call_parse_tree):
 		'''Generates the code to call a function'''
+		function_name = call_parse_tree.children[0].string
+		args_parse_tree = call_parse_tree.children[2]
+
 		function_call_code = self.snippets[" function call routine "].generate_code(
 			{
 			"Push args":self.generate_push_args(args_parse_tree),
-			"Call_address":self.function_name
+			"Call_address":function_name
 			}
 			)
 		return function_call_code
@@ -211,9 +242,9 @@ class code_generator:
 				print "ERROR: did not expect tree of type "+line.children[0].type + " as control flow"
 		elif line.type == "<other>":
 			if len(line.children) == 1:
-				if line.children[0].type == "return":
-					return self.snippets[" return routine "].generate_code({"generate value to return":""})
-				elif line.children[0].type == "<func_call>":
+				if line.children[0].type == "return": #nothing to return
+					return self.snippets[" return routine "].generate_code({"generate value to return":''})
+				elif line.children[0].type == "<fun_call>":
 					return self.generate_function_call(line.children[0])
 				else:
 					print "ERROR: not expecting tree of type: "+line.children[0].type+" as an \"<other>\" line"
@@ -369,7 +400,7 @@ class code_generator:
 					elif comparison_operation.children.type == "<not_greater>":
 						return self.snippets["is greater"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"push gp0":push_gp0})
 					else:
-						print "ERROR: not expecting comparisopn operator: "+comparison_operation.children[0].type
+						print "ERROR: not expecting comparison operator: "+comparison_operation.children[0].type
 						quit()
 	
 	
@@ -541,12 +572,74 @@ class code_generator:
 		return expression_code + assignment_code
 
 	def generate_expression_code(expression_parse_tree):
-		##### needs to deal with 
-	def generate_term_code():
+		#needs to deal with typing etc
+		if len(expression_parse_tree.children) == 1:
+			#term, factor, variable, const, fun_call
+			child = expression_parse_tree.children[0]
+			if child.type in ["<term>","<factor>","<cast>"]: #simple to do, just pass on to another recursion level
+				return self.generate_expression_code(child)
+			elif child.type in ["<fun_call>"]:  			#handled by another function
+				return self.generate_function_call(child)
+			elif child.type in ["<variable>","<const>"]: 	#handled by generate_get_value
+				return self.generate_get_value(child)
+			else:
+				print "ERROR: code generator cannot handle expressions of type: "+child.type+" with length 1"
+				quit()
 
-	def generate_factor_code():
+		elif len(expression_parse_tree.children) == 2: #unary ops only: handled by unary ops generator
+			return self.generate_expression_code(expression_parse_tree.children[1])+self.generate_unary_op(expression_parse_tree.children[0])
 
-	def generate_cast_code(): 
+		elif len(expression_parse_tree.children) == 3:
+			#[expr addop term]
+			#[term mulop factor]
+			#[( expr )]
+			#[expr  type type] -cast
+			if expression_parse_tree.children[1].type in ["<addopchar>","<addopint>","<mulopchar>","<mulopint>"]: #handles externally mostly
+				#binary operations
+				expr1_code = self.generate_expression_code(expression_parse_tree.children[0])
+				expr2_code = self.generate_expression_code(expression_parse_tree.children[2])
+				operation_code = self.generate_binary_op(expression_parse_tree.children[1])
+				return expr1_code + expr2_code+operation_code
+			elif expression_parse_tree.children[0].type in ["("]: #if ( expr ), simply return the code from expr
+				return self.generate_expression_code(expression_parse_tree.children[1])
+			elif expression_parse_tree.type == "<cast>": #does the casting
+				start_type = expression_parse_tree.children[1].string
+				destination_type = expression_parse_tree.children[2].string
+				expression_code = self.generate_expression_code(expression_parse_tree.children[0])
+				return expression_code + self.cast(start_type,destination_type)
+		
+		print "ERROR: unrecognised tree handled by code generator: "+parse_tree.type
+		quit()
+
+	def generate_unary_op(self,unary_op_tree):
+
+	def generate_binary_op(self,binary_op_tree):
+		get_gp0 =
+		get_gp1 =
+		store_gp0 = 
+
+		if binary_op_tree.type == "<addopint>":
+
+		elif binary_op_tree.type == "<addopchar":
+
+		elif binary_op_tree.type == "<mulopint>":
+
+		elif binary_op_tree.type == "<mulopchar>":
+
+		else:
+			print "ERROR: unrecognised operation passed to code generator: "+binary_op_tree.type
+	def cast(self,start_type,destination_type):
+		if start_type == destination_type:
+			return ''
+		elif start_type == "int" and destination_type == "char":
+			Popgp0 = self.snippets["Popgp0"].generate_code({})
+			Pushgp0 = self.snippets["Pushgp0"].generate_code({})
+			return self.snippets[" cast int to char "].generate_code({"Popgp0":Popgp0,"Push gp0":Pushgp0})
+		elif start_type == "char" and destination_type == "int":
+			return ''
+		else:
+			print "ERROR: unhandled type casting: "+start_type+" and "+destination_type
+			quit()
 
 
 

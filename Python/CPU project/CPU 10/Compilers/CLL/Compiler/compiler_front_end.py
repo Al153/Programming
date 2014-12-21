@@ -49,7 +49,7 @@ class Program:
 			#	print_parse_tree(self.functions["main"].parse_tree)
 			self.functions[function_name].process()
 			self.functions[function_name].check_function_typing(self.functions[function_name].parse_tree)
-		print_parse_tree(self.functions["main"].parse_tree)
+		print_parse_tree(self.functions["arithmetic_test"].parse_tree)
 
 		#################################
 		#	Code generation step 		#
@@ -198,7 +198,7 @@ class function:
 		#	print_parse_tree(self.parse_tree)
 		self.variables = self.get_variables(self.parse_tree)
 
-		self.variable_preset_values = self.variables[1]
+		#self.variable_preset_values = self.variables[1]
 		self.variable_sizes = self.variables[2]
 		self.variables = self.variables[0]
 		
@@ -517,7 +517,7 @@ class built_in_function(function):
 	def __init__(self,arguments,return_type,name,assembly_equivalent):
 		self.return_type = return_type
 		self.parameters = arguments
-		self.name = named
+		self.name = name
 		##########################
 		#    Add assembly code 	 #
 		##########################

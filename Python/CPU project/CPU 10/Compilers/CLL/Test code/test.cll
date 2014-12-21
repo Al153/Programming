@@ -1,0 +1,30 @@
+#include string_tools.cll
+void main()
+	int hello = 1;
+	int foo = hello +20;
+	@char 10 buf;
+	int_to_string(foo,buf);
+	printf(buf);
+end;
+
+int compare(int a, int b)
+	int dummy;
+	if (a>b) then
+		return 0;
+	else
+		if (a == b) then
+			return 1;
+		else
+			return 2;
+		endif;
+	endif;
+end;
+
+int arithmetic_test()
+	int a = 123432;
+	char b = 2;
+	int c;
+
+	c = b+a/3*4;
+	return 1;
+end;

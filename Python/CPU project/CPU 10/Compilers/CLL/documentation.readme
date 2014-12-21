@@ -27,14 +27,16 @@ Contents:
 		- type checking
 		- pointers
 		- casting types
+		- strings
 	- defining variables
 		- creating assignments within definitions
 			- assignments occur right at the
 
 	- code generation
 
+
+
 - future:
-	- strings
 	- more types 
 	- classes
 	- Multitasking

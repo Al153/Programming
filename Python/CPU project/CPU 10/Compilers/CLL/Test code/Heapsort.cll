@@ -1,0 +1,67 @@
+void heapsort(@int ptr, int length)
+	build_heap(ptr,length);
+	sort_heap(ptr,length);
+end;
+
+int parent(int index)
+	return (index-1)/2;
+end;
+
+int lchild(int index)
+	return 2*index+1;
+end;
+
+int rchild(int index)
+	return 2*index+2;
+end;
+
+void build_heap(@int ptr, int length)
+	int i;
+	for (i = 1, i<length,i = i+1)
+		sift_up(ptr,i);
+	loop;
+end;
+
+void sift_up(@int ptr, int i)
+	int j;
+	j = parent(i);
+	int jvalue;
+	int ivalue;
+
+	jvalue = ptr[j];
+	ivalue = ptr[i];
+	if (ivalue>jvalue) then
+		ptr[i] = jvalue;
+		ptr[j] = ivalue;
+		sift_up(ptr,j);
+	endif;
+end;
+
+void sort_heap(@int ptr, int length)
+	int i;
+	for (i=length-1, i>0, i = i-1)
+		int temp;
+		temp = ptr[0];
+		ptr[0] = ptr[i];
+		ptr[i] = temp;
+		sift_down(ptr,0,i);
+	loop;
+end;
+
+void sift_down(@int ptr,int start ,int limit)
+	int j;
+	int k;
+	if (start<limit) then
+		j = lchild(start);
+		k = rchild(start);
+		if (ptr[j]<ptr[k]) then
+			j = k;
+		endif;
+		if (ptr[j]>ptr[start]) then
+			k = ptr[start];
+			ptr[start] = ptr[j];
+			ptr[j] = k;
+			sift_down(ptr,j,limit);
+		endif;
+	endif;
+end;

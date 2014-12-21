@@ -129,7 +129,7 @@ SUB gp0 gp1
 Load Flags_reset @4294967287  #resets the borrow flag
 <storegp0>
 
-<< MUL>>
+<< MUL >>
 <getgp0>
 <getgp1>
 MUL gp0 gp1
@@ -155,7 +155,7 @@ if DivByZero then Load PC DIV_BY_ZERO
 AND gp0 gp1
 <storegp0>
 
-<< OR >
+<< OR >>
 <getgp0>
 <getgp1>
 OR gp0 gp1
@@ -169,8 +169,78 @@ XOR gp0 gp1
 
 << NOT >>
 <getgp0>
+NOT gp0
+<storegp0>
+
+<< ADD char >>
+<getgp0> 															#compiler will work out whether gp0 is loaded or Pushed
 <getgp1>
-NOT gp0 gp1
+ADD gp0 gp1
+AND gp0 @255
+<storegp0>
+
+<< SUB char >>
+<getgp0>
+<getgp1>
+AND gp0 @255
+AND gp1 @255
+SUB gp0 gp1
+AND gp0 @255
+Load Flags_reset @4294967287  #resets the borrow flag
+<storegp0>
+
+<< MUL char >>
+<getgp0>
+<getgp1>
+MUL gp0 gp1
+AND gp0 @255
+<storegp0>
+
+<< DIV char >>
+<getgp0>
+<getgp1>
+AND gp0 @255
+AND gp1 @255
+DIV gp0 gp1
+AND gp0 @255
+if DivByZero then Load PC DIV_BY_ZERO
+<storegp0>
+
+<< MOD char >>
+<getgp0>
+<getgp1>
+AND gp0 @255
+AND gp0 @255
+MOD gp0 gp1
+AND gp0 @255
+if DivByZero then Load PC DIV_BY_ZERO
+<storegp0>
+
+<< AND char >>
+<getgp0>
+<getgp1>
+AND gp0 gp1
+AND gp0 @255
+<storegp0>
+
+<< OR char >>
+<getgp0>
+<getgp1>
+OR gp0 gp1
+AND gp0 @255
+<storegp0>
+
+<< XOR char >>
+<getgp0>
+<getgp1>
+XOR gp0 gp1
+AND gp0 @255
+<storegp0>
+
+<< NOT char >>
+<getgp0>
+NOT gp0
+AND gp0 @255
 <storegp0>
 
 #_________________________ Comparison operations _________________________
@@ -242,6 +312,13 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
+########################################
+#byte map of stack frame
+# 0,1,2,3,4,5,6,7,8,9,A,B,
+# R|R|R|R|L|L|L|L|P|P|P|P|D.....D|
+
+# R = Return address - place to return to at end of function
+# L = Length of frame - allows allocation of more frames when called
 
 
 Load length 4 [Stack_pointer]				%<function_name> 	#gets length of current top stack_frame
@@ -255,19 +332,10 @@ Store gp0 4 [Stack_pointer] 									#gives new length
 Store previous_stack_ptr 8 [Stack_pointer]						#gives pointer to pop off of stack
 <get_parameters>												#get passed in parameters, repeated as many times as needed 
 
-<< get parameters >>
-<Popgp0>
-Store gp1 <index> [Stack_pointer]
-
-<< push args >>
-
-
-
-
 << return routine >>
- Load previous_stack_ptr 8 [Stack_pointer] 					#reads new top of stack from the stack
- Load return_addr 0 [Stack_pointer] 						#gets address to jump back to
  <generate value to return> 								#calculates retun value, leaves on stack
+ Load previous_stack_ptr 8 [Stack_pointer] 					#reads new top of stack from the stack frame
+ Load return_addr 0 [Stack_pointer] 						#gets address to jump back to
  Move previous_stack_ptr Stack_pointer 						#sets new stack pointer
  Move return_addr PC 										#returns
 

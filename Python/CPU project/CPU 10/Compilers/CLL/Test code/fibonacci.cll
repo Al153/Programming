@@ -17,4 +17,3 @@ int i;
 int j;
 print(i+j-5);
 return 0;
-import z;

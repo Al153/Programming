@@ -1,0 +1,65 @@
+int check_if_equal(@char word1, @char word2, int len)
+	int i;
+	for(i = 0, i<len,i = i + 1)
+		if (not(word1[i] == word2[i])) then
+			return 0;
+		@int p; //testing declaring variables
+		endif;
+	loop;
+	return 1;
+end;
+
+void int_to_string(int number, @char string_buffer)
+	int i;
+	int reduced;
+	@char 10 digit_stack;
+	int digit_stack_pointer = 0;
+	for(number = number, number>0,number = number/10)  //utilising for loop functionality to reduce number
+		reduced = number/10;
+		digit_stack[digit_stack_pointer] = reduced; //puts decimal digits into stack
+		digit_stack_pointer = digit_stack_pointer + 1;
+	loop;
+
+	while (digit_stack_pointer >0) do
+		digit_stack_pointer = digit_stack_pointer-1;
+		//need to add in a lot of if - elses
+		if (digit_stack[digit_stack_pointer]<5) then
+			if (digit_stack[digit_stack_pointer]<2) then
+				if (digit_stack[digit_stack_pointer]==0) then
+					string_buffer[i]= '0';
+				else
+					string_buffer[i]= '1';
+				endif;			
+			else
+				if (digit_stack[digit_stack_pointer]==2) then
+					string_buffer[i]= '2';			
+				else
+					if (digit_stack[digit_stack_pointer]==3) then
+						string_buffer[i]= '3';
+					else
+						string_buffer[i]= '4';
+					endif;	
+				endif;	
+			endif;	
+		else
+			if (digit_stack[digit_stack_pointer]<7) then
+				if (digit_stack[digit_stack_pointer]==5) then
+					string_buffer[i]= '5';
+				else
+					string_buffer[i]= '6';
+				endif;			
+			else
+				if (digit_stack[digit_stack_pointer]==7) then
+					string_buffer[i]= '7';
+				else
+					if (digit_stack[digit_stack_pointer]==8) then
+						string_buffer[i]= '8';
+					else
+						string_buffer[i]= '9';
+					endif;	
+				endif;				
+			endif;
+		endif;
+		i = i + 1;
+	loop;
+end;
