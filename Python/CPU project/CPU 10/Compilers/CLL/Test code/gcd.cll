@@ -1,12 +1,11 @@
-print(gcd(34,56));
+void main()
+	print_i(gcd(36,120));
+end;
 
-
-int gcd(int a,int b)
-	while (a>0) do
-		int c;
-		c = b % a;
-		b = a;
-		a = c;
-	loop;
-	return b;
+int gcd(int a, int b)
+	if (a == 0) then
+		return b;
+	else
+		return gcd(b%a,a);
+	endif;
 end;

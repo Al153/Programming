@@ -15,7 +15,8 @@ def bytify(integer):
 
 def main():
 	source_name = sys.argv[1]
-	destination_name = "C machine code\\"+source_name.split("\\")[1][:-2]+"cml"
+	destination_name = "C machine code\\"+source_name.split("\\")[-1][:-2]+"cml"
+#	print destination_name
 	json_file = open(source_name).read()
 	json_dict = json.loads(json_file)
 	binary_string = ''

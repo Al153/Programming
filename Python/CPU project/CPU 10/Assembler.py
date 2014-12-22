@@ -1232,8 +1232,11 @@ def store(machine_code):
 		elif sys.argv[1][:13] == 'Compiled code':
 			file_name = 'Machine code'+sys.argv[1][13:]
 
-		else:
-			file_name = '"Machine code\\'+sys.argv[1]+'"'
+		else: #default sends to machine code
+			CURRENT_DIR = os.path.dirname(__file__)
+			source_file_name = sys.argv[1].split("\\")[-1]
+			file_name = os.path.join(CURRENT_DIR, 'Machine code\\'+source_file_name)
+
 	if file_name[-3:] == ".al":
 		file_name = file_name[:-3]+".ml"
 	elif file_name[-3:] != ".ml":

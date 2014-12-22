@@ -1,5 +1,7 @@
 import LR1_parser
 import sys
+import code_generator
+import os
 
 
 ###________________________ Compiling Strategy ____________________________
@@ -12,7 +14,7 @@ import sys
 #- for each function, generate a name_space object, containing the code of that function
 #- for each function namespace: linearise the code: create a single list containing the parse trees for each line
 #- run type and parameter checking (for each function call, make sure the types and number of parameters passed to it is correct)
-#begin code generation
+#begin code generation - lots of mutually recursive functions
 
 
 
@@ -22,52 +24,74 @@ class Program:
 		self.parse_tree = get_parse_tree(self.source)
 
 	def compile(self):
-		#########################################
-		#	Code to get inbuilt functions 		#
-		#########################################
+		CURRENT_DIR = os.path.dirname(__file__)
+		self.built_in_functions = [
+			built_in_function([("@char","word")],"void","printf", open(os.path.join(CURRENT_DIR, 'printf.al'),"r").read()),
+			built_in_function([("int","number")],"void","print_i",open(os.path.join(CURRENT_DIR, 'print_i.al'),"r").read()),
+			built_in_function([("int","number")],"char","char",open(os.path.join(CURRENT_DIR, 'char.al'),"r").read())
+		]
+		
 
-		self.functions = [function(tree) for tree in find_functions(self.parse_tree)]#+self.inbuilt_functions
+
+		self.functions = [function(tree) for tree in find_functions(self.parse_tree)] +self.built_in_functions
 		self.functions = {function.name:function for function in self.functions}
 		self.header_code = Non_terminal_parse_tree_node("<block>",linearise_code(self.parse_tree))
+
+		#print_parse_tree(self.header_code)
 
 		self.global_var_types = {}
 		self.global_array_values = {}
 		self.global_var_values = [] #for simple type global vars
 		self.global_var_sizes = {}
 		for line in self.header_code.children:
+			#print line.type
 			if line.type == "<var_dec>":
 				self.get_var(line)
 			else:
 				print "ERROR: not expecting line of type "+line.type+" outside of function definitions"
 
 
+		#print self.global_var_types
 
 		self.functions["main"].parse_tree.children = self.global_var_values + self.functions["main"].parse_tree.children #inserts assignments for global variables
 
 		for function_name in self.functions:
-			#if function_name == "main":
-			#	print_parse_tree(self.functions["main"].parse_tree)
-			self.functions[function_name].process()
-			self.functions[function_name].check_function_typing(self.functions[function_name].parse_tree)
-		print_parse_tree(self.functions["arithmetic_test"].parse_tree)
+			if not self.functions[function_name].built_in:
+				#if function_name == "main":
+				#	print_parse_tree(self.functions["main"].parse_tree)
+				self.functions[function_name].process()
+				self.functions[function_name].check_function_typing(self.functions[function_name].parse_tree)
+		#print_parse_tree(self.functions["main"].parse_tree)
 
-		#################################
-		#	Code generation step 		#
-		#################################
+		global_var_addresses = {var:"CLL."+var for var in self.global_var_types}
+		assembly_code = code_generator.snippets[" setup routines "].generate_code({})
+		assembly_code += self.generate_global_vars()
+		#print assembly_code
+		#raw_input('')
+		for function_name in self.functions:
+			if self.functions[function_name].built_in:
+				assembly_code += self.functions[function_name].assembly #could do with only including code if built in function is used
+			else:
+				assembly_code += code_generator.code_generator(self.functions[function_name],global_var_addresses,self.global_var_types).assembly
+		write_to_file(assembly_code)
+
+
+
+
 
 	def get_var(self,var_line): 				#gets a global variable
 		var_name = var_line.children[1].string 	
 		var_type_tree = var_line.children[0]
 		var_type = self.get_type(var_type_tree)
-		if len(var_type)>4: #if an array:
-			var_length = var_type[4:]
-			var_type = var_type[:4]
-		else:
-			var_length = 1
+		try:
+			array_size = int(var_type.split(";")[1])
+			var_type = var_type.split(";")[0]
+		except IndexError:
+			array_size = 0
 		if len(var_line.children) == 4: #if there is a preset value for the variable
 			self.get_value(var_line.children[3],var_name)
 		self.global_var_types[var_name] = var_type
-		self.global_var_sizes[var_name] = var_length
+		self.global_var_sizes[var_name] = array_size
 
 
 	def get_value(self,expression_tree,name):
@@ -82,15 +106,44 @@ class Program:
 	def get_type(self,type_tree):
 		type_string = ''
 		for node in type_tree.children:
-			type_string += node.string
+			try:
+				int(node.string)
+				type_string += ";"+node.string #if an array with a length, add a semicolon to split type and  length
+			except ValueError:
+				type_string += node.string
 		return type_string
-
 	def parse_array(self,array_tree):
 		#print array_tree.type
 		if len(array_tree.children) == 1:
 			return [int(array_tree.children[0].string)]
 		else:
-			return [int(array_tree.children[2].string)]+self.parse_array(array_tree.children[0])
+			return self.parse_array(array_tree.children[0]) + [int(array_tree.children[2].string)]
+
+	def generate_global_vars(self):
+		#creates assembly level variable definitions
+		return_string = ''
+		for var_name in self.global_var_types:
+			#print self.global_var_types[var_name]
+			#cont = raw_input('')
+			self.global_var_types[var_name]
+			if self.global_var_types[var_name] in ["int","char"]:     #plain variables
+				return_string += self.global_var_types[var_name] +" CLL."+var_name+"0\n"
+			elif self.global_var_types[var_name] in ["@int","@char"]: #pointers
+				if self.global_var_sizes[var_name] == 0: 				#array less pointers
+					return_string += "int CLL."+var_name+" 0\n"
+				else:
+					array_length = str(self.global_var_sizes[var_name]) #gets length
+					array_name = "CLL.array_of_"+var_name
+					array_values = "["+ ', '.join([str(value) for value in self.global_array_values[var_name]])+"]\n"	
+					if self.global_var_types[var_name] == "@int":
+						return_string += "array "+array_name+" "+array_length+" "+array_values #creates array
+						return_string += "int CLL."+var_name+" "+array_name+"\n"
+					elif self.global_var_types[var_name][:5] == "@char":
+						return_string += "byteArray "+array_name+" "+array_length+" "+array_values #creates array
+						return_string += "int CLL."+var_name+" "+array_name	+"\n"			
+
+		return return_string
+
 
 
 
@@ -103,82 +156,14 @@ class Program:
 
 
 
-def get_source_file():
-	'''gets source text from the requested file'''
-	file_name = sys.argv[1]
-	return open(file_name,"r").read()
 
-def get_parse_tree(source_text):
-	'''uses parser file to get a parse tree of the program'''
-	local_parser = LR1_parser.Parser("CLL.parse",tokenise) #replace built in function in parser
-	parse_tree = local_parser.parse(source_text)
-	return parse_tree
-
-def find_functions(parse_tree,parent = []):
-	'''recursively searches parse tree to find functions'''
-	#print parse_tree.type
-	if parse_tree.type == "<PROGRAM>":						#program is the top node of the tree
-		return find_functions(parse_tree.children[0],parse_tree) #need to get functions lower down in the tree
-	elif parse_tree.type == "<block>": 						#blocks contain another block and a line or just a line
-		if len(parse_tree.children)>1:						#if the block has children
-			if parse_tree.children[1].children[0].children[0].type == "<fun_dec>": 	#if the line child derives to a function declaration
-	#			print "FOUND FUNCTION!"
-				return_list =  [parse_tree.children[1].children[0].children[0]] + find_functions(parse_tree.children[0],parse_tree) #copies out a list to return
-				parse_tree.children = parse_tree.children[:1] 									#chops out function definition
-				return return_list
-			else:
-				return find_functions(parse_tree.children[0],parse_tree)
-		elif len(parse_tree.children) == 1:											#if the end block:
-			if parse_tree.children[0].children[0].children[0].type == "<fun_dec>":
-	#			print "FOUND FUNCTION!"
-				return_list =  [parse_tree.children[0].children[0].children[0]]
-				parent.children = [] if parent.type == "<block>" else []
-				return return_list
-			elif parse_tree.children[0].type == "<block>":
-				return find_functions(parse_tree.children[0],parse_tree)
-		else:
-			return []
-	else:
-		return []
-
-
-def linearise_code(parse_tree):
-	'''searches parse tree for line expressions and then adds them to a list'''
-	if parse_tree.type == "<PROGRAM>":
-		return linearise_code(parse_tree.children[0])
-	elif parse_tree.type == "<block>":
-		code_to_return = []
-		for child in parse_tree.children:
-			if child.type == "<line>":
-				code_to_return += [child.children[0].children[0]]
-			elif child.type == "<block>":
-				code_to_return += linearise_code(child)
-		return code_to_return
-
-
-def print_parse_tree(parse_tree_node,offset = ''):
-	if parse_tree_node.terminal:
-		print offset+parse_tree_node.type+"("+parse_tree_node.string+")"
-		return
-	else:
-		print offset+parse_tree_node.type+"("
-		for child in parse_tree_node.children:
-			print_parse_tree(child,offset+"  ")
-		print offset+")"
-
-def get_type(type_tree):
-	if len(type_tree.children) == 1: #int or char
-		return type_tree.children[0].string
-	elif len(type_tree.children) >= 2: #@int or @char
-		return type_tree.children[0].string+type_tree.children[1].string
-	print type_tree.type
-	quit()
 
 
 class function:
 	#class to deal with function definitions
 	#extracts all information needed to compile a function
 	def __init__(self,parse_tree):
+		self.built_in = 0
 		self.type = "defined_function"
 		self.return_type = get_type(parse_tree.children[0])
 		self.name = parse_tree.children[1].string
@@ -191,7 +176,11 @@ class function:
 
 	def process(self):
 		if self.return_type != "void": #adds a default return statement
-			self.parse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return"),Terminal_parse_tree_node("num","0")]))
+			return_expression = Terminal_parse_tree_node("num","0") #builds up a return 0
+			return_expression = Non_terminal_parse_tree_node("<const>",[return_expression])
+			return_expression = Non_terminal_parse_tree_node("<expr>",[return_expression])
+
+			self.parse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return"),return_expression]))
 		else:
 			self.parse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return")]))
 		#if self.name == "main":
@@ -204,7 +193,6 @@ class function:
 		
 		self.variables.update({pair[1]:pair[0] for pair in self.input_parameters}) #adds input parameters
 		self.variable_sizes.update({pair[1]:self.get_var_width(pair[0]) for pair in self.input_parameters})
-
 		#for var_name in self.variables:
 		#	print var_name, ":",self.variables[var_name]
 
@@ -214,7 +202,7 @@ class function:
 		if len(args.children) == 2:
 			return [(get_type(args.children[0]),args.children[1].string)]
 		else:
-			return [(get_type(args.children[2]),args.children[3].string)]+self.linearise_arguments(args.children[0])
+			return self.linearise_arguments(args.children[0]) + [(get_type(args.children[2]),args.children[3].string)]
 
 	def blockify_code(self,parse_tree):
 		'''linearises blocks of code, but also searches control structures in order to linearise the lines stored within them'''
@@ -260,6 +248,7 @@ class function:
 		i = 0
 		while i < len(parse_tree.children):
 			#print i, len(parse_tree.children)
+			array = 0
 			assignment_present = 0
 			child = parse_tree.children[i]
 
@@ -290,30 +279,45 @@ class function:
 				else:
 					print "ERROR: non control flow parse tree: "+child.children[0].type
 			elif child.type == "<var_dec>":
+				#print "VAR DEC!"
 				#print "VAR DEC"
 				#print_parse_tree(parse_tree)
 				#print get_type(child.children[0])
 				return_variables[child.children[1].string] = get_type(child.children[0])			#adds an entry for the new variable
 				widths[child.children[1].string] = widths_lookup[get_type(child.children[0])]
 				
-				if len(child.children[0].children)==3: #if there is an array type 	
+				if len(child.children[0].children)==3: #if there is an array type 
+					#print "ARRAY TYPE !"
 					array_type = get_type(child.children[0])[1:] 			#type of variables in array
 					array_length =int(child.children[0].children[2].string)*widths_lookup[array_type] #adds the length of the array to lengths
-					widths["Array_of_"+child.children[1].string] = array_length
-					return_variables["Array_of_"+child.children[1].string] 	= return_variables[child.children[1].string] + "array" #adds @intarray and @chararray types internally
+					widths["Array_of"+child.children[1].string] = array_length
+					return_variables["Array_of"+child.children[1].string] 	= return_variables[child.children[1].string] + "array" #adds @intarray and @chararray types internally
+
+					#needs to link up pointer to array
+					pointer_const_tree = Non_terminal_parse_tree_node("<const>",[Terminal_parse_tree_node('"@"',"@"),Terminal_parse_tree_node("id","Array_of"+child.children[1].string)])
+					factor_tree = Non_terminal_parse_tree_node("<factor>",[pointer_const_tree])
+					term_tree = Non_terminal_parse_tree_node("<term>",[factor_tree])
+					expression_tree = Non_terminal_parse_tree_node("<expr>",[term_tree])
+					lhs = Non_terminal_parse_tree_node("<variable>",[Terminal_parse_tree_node("id",child.children[1].string)])
+					assignment_tree = Non_terminal_parse_tree_node("<assignment>",[lhs,expression_tree])
+
+
+					parse_tree.children[i] = assignment_tree
+					#print_parse_tree(assignment_tree)
+					assignment_present = 1
 
 				if len(child.children) > 2: #if there is an assignment
-
+					#print "assignment"
 					assignment_present = 1
-														#^if is an expression 															^if is an array
 					if len(child.children[3].children)==1: #if a simple expression
+
 						assign_expression = child.children[3].children[0] #gets the assignment trees	
 						var_name = Non_terminal_parse_tree_node("<variable>",[child.children[1]]) 
 						assignment = Non_terminal_parse_tree_node("<assignment>",[var_name,assign_expression]) #generate tree
 						parse_tree.children[i] = assignment #place back into code
 					elif child.children[3].children[1].type == "<array>":
 						array_vars = self.parse_array(child.children[3].children[1])
-						parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:] #deletes variable declaration	
+						#parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:] #deletes variable declaration	
 						for j in xrange(len(array_vars)):
 							index_parse_tree = Terminal_parse_tree_node("num",str(j)) #build up the  indexing expression
 							index_parse_tree = Non_terminal_parse_tree_node("<const>",[index_parse_tree]) #constant layer
@@ -330,7 +334,7 @@ class function:
 							rhs_parse_tree = Non_terminal_parse_tree_node("<expr>",[rhs_parse_tree])
 
 							assignment_tree =Non_terminal_parse_tree_node("<assignment>",[lhs_parse_tree,rhs_parse_tree]) #generates an assignment
-							parse_tree.children.insert(i+j,assignment_tree)
+							parse_tree.children.insert(i+j+1,assignment_tree)
 
 
 				if not assignment_present:
@@ -357,7 +361,7 @@ class function:
 		if len(array_tree.children) == 1:
 			return [int(array_tree.children[0].string)]
 		else:
-			return [int(array_tree.children[2].string)]+self.parse_array(array_tree.children[0])
+			return self.parse_array(array_tree.children[0]) + [int(array_tree.children[2].string)]
 
 	def get_overall_type(self,specific_type):
 		#reduces ints, chars, pointers etc to what they can be treated as, ie an @int is basically an int in terms of arithmetic
@@ -510,17 +514,16 @@ class function:
 		if len(parameters_parse_tree.children) == 1:
 			return parameters_parse_tree.children
 		else:
-			return [parameters_parse_tree.children[2]]+self.get_given_parameters(parameters_parse_tree.children[0])
+			return self.get_given_parameters(parameters_parse_tree.children[0]) + [parameters_parse_tree.children[2]]
 
 
-class built_in_function(function):
+class built_in_function:
 	def __init__(self,arguments,return_type,name,assembly_equivalent):
+		self.built_in = 1
 		self.return_type = return_type
-		self.parameters = arguments
+		self.input_parameters = arguments
 		self.name = name
-		##########################
-		#    Add assembly code 	 #
-		##########################
+		self.assembly = assembly_equivalent
 
 class Non_terminal_parse_tree_node:                                                                 #class for non terminals (ie have children)
 	def __init__(self,node_type,children):
@@ -535,15 +538,11 @@ class Terminal_parse_tree_node:                                                 
 		self.string = token_string
 
 
-def error(error_type,reason_string):
-	print error_type+" ERROR: ",reason_string
-	quit()
-
 def tokenise(self,source_text):
 	#tokeniser which handles strings and comments, deals with import directives etc
 	#source_text = fix_strings_and_comments(source_text)
 	#print "tokenising"
-	source_text = pretokenise(source_text)
+	source_text = pretokenise(source_text,sys.argv[1].split("\\")[:-1])
 
 	#standard tokenizing routine
 	string_token_list = main_tokenise(self,source_text)
@@ -555,9 +554,12 @@ def tokenise(self,source_text):
 		#print current_token
 		if current_token[0] == current_token[-1] == '"': #if a string
 			name  = "string"+str(string_counter)
-			values_list = zip([str(ord(char)) for char in current_token[1:-1]]+["0"],["," for char in current_token[1:]]) #adds 0 as an end of string
-			values_list = [elem for pair in values_list for elem in pair][:-1] #flatten list of tuples,remove last comma
-			string_token_list += ["@","char",str(len(current_token)-2),name,"=","["]+values_list + ["]",";"]
+			values_list = []
+			for char in current_token[1:-1]:
+				values_list.append(str(ord(char)))
+				values_list.append(",")
+			values_list.append('0')
+			string_token_list += ["@","char",str(len(current_token)-1),name,"=","["]+values_list + ["]",";"]
 			string_token_list[i] = name
 			#if string_token_list[i] == name:
 			#	print "String found: ",name,current_token
@@ -575,7 +577,7 @@ def tokenise(self,source_text):
 def main_tokenise(self,text_file):
 	'''
 	Monolithic tokenizer
-	'''
+	''' #replaces parser tokeniser
 	text_file = [line for line in text_file.split("\n")]
 	token_list = []
 	string = 0
@@ -595,7 +597,7 @@ def main_tokenise(self,text_file):
 				if character == '"' and current_token == '': #if a string
 					current_token = '"'
 					string = 1
-				elif character == "/" and line_tokens[-1] == '/': #comment
+				elif character == "/" and len(line_tokens) and line_tokens[-1] == '/': #comment
 					line_tokens = line_tokens[:-1]
 					break
 				elif not character in token_separators:
@@ -628,7 +630,7 @@ def main_tokenise(self,text_file):
 		line_tokens.append("\n")
 	return token_list
 
-def pretokenise(source_text):
+def pretokenise(source_text,path):
 	#deals with import directives
 	lines = source_text.split("\n")
 	for i in xrange(len(lines)):
@@ -636,11 +638,116 @@ def pretokenise(source_text):
 		#print line
 		if line[:9] == "#include ":
 			#print line
-			lines[i] = pretokenise(open(line[9:],"r").read())
+			file_path = path+[line[9:]]
+			lines[i] = pretokenise(open("\\".join(file_path),"r").read(),file_path[-1])
 	return "\n".join(lines)
 
+def write_to_file(assembly_code):
+	file_name = ".".join(sys.argv[1].split(".")[:-1]+["al"])
+	open(file_name,"w").write(assembly_code)
+
+def get_source_file():
+	'''gets source text from the requested file'''
+	file_name = sys.argv[1]
+	return open(file_name,"r").read()
+
+def get_parse_tree(source_text):
+	'''uses parser file to get a parse tree of the program'''
+	CURRENT_DIR = os.path.dirname(__file__)
+	file_path = os.path.join(CURRENT_DIR, 'CLL.parse')
+	local_parser = LR1_parser.Parser(file_path,tokenise) #replace built in function in parser
+	parse_tree = local_parser.parse(source_text)
+	return parse_tree
+
+def find_functions(parse_tree):
+	function_list = []
+	i = 0
+	while i < len(parse_tree.children):
+		child = parse_tree.children[i]
+		if child.type == "<block>":
+			function_list += find_functions(child)
+		elif child.children[0].children[0].type == "<fun_dec>":
+			#found a function
+			function_list.append(child.children[0].children[0]) #function found
+			parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:]
+			i -=1
+		i +=1
+	return function_list
 
 
+#def find_functions(parse_tree,parent = None):
+#	'''recursively searches parse tree to find functions'''
+#	#print parse_tree.type
+#	if parse_tree.type == "<PROGRAM>":						#program is the top node of the tree
+#		return find_functions(parse_tree.children[0],parse_tree) #need to get functions lower down in the tree
+#	elif parse_tree.type == "<block>": 						#blocks contain another block and a line or just a line
+#		if len(parse_tree.children)>1:						#if the block has children
+#			if parse_tree.children[1].children[0].children[0].type == "<fun_dec>": 	#if the line child derives to a function declaration
+#	#			print "FOUND FUNCTION!"
+#				return_list =  [parse_tree.children[1].children[0].children[0]] + find_functions(parse_tree.children[0],parse_tree) #copies out a list to return
+#				parse_tree.children = parse_tree.children[:1] 									#chops out function definition
+#				return return_list
+#			else:
+#				return find_functions(parse_tree.children[0],parse_tree)
+#		elif len(parse_tree.children) == 1:											#if the end block:
+#			if parse_tree.children[0].children[0].children[0].type == "<fun_dec>":
+#	#			print "FOUND FUNCTION!"
+#				return_list =  [parse_tree.children[0].children[0].children[0]]
+#				parent.children = [] if parent.type == "<block>" else []
+#				return return_list
+#			elif parse_tree.children[0].type == "<block>":
+#				return find_functions(parse_tree.children[0],parse_tree)
+#			else:
+#				return []
+#			#print parse_tree.children[0].type
+#			quit()
+#		else:
+#			return []
+#	else:
+#		return []
+
+
+def linearise_code(parse_tree):
+	'''searches parse tree for line expressions and then adds them to a list'''
+	if parse_tree.type == "<PROGRAM>":
+		return linearise_code(parse_tree.children[0]) if len(parse_tree.children) else []
+	elif parse_tree.type == "<block>":
+		code_to_return = []
+		for child in parse_tree.children:
+			if child.type == "<line>":
+				code_to_return += [child.children[0].children[0]]
+			elif child.type == "<block>":
+				code_to_return += linearise_code(child)
+		return code_to_return
+
+
+def print_parse_tree(parse_tree_node,offset = ''):
+	if parse_tree_node.terminal:
+		print offset+parse_tree_node.type+"("+parse_tree_node.string+")"
+		return
+	else:
+		print offset+parse_tree_node.type+"("
+		for child in parse_tree_node.children:
+			print_parse_tree(child,offset+"  ")
+		print offset+")"
+
+def store_parse_tree(parse_tree_node,offset = ''):
+	if parse_tree_node.terminal:
+		return offset+parse_tree_node.type+"("+parse_tree_node.string+")"
+	else:
+		return_string = offset+parse_tree_node.type+"(" + "\n"
+		for child in parse_tree_node.children:
+			return_string += store_parse_tree(child,offset+"  ") +"\n"
+		return_string +=  offset+")"
+		return return_string
+
+def get_type(type_tree):
+	if len(type_tree.children) == 1: #int or char
+		return type_tree.children[0].string
+	elif len(type_tree.children) >= 2: #@int or @char
+		return type_tree.children[0].string+type_tree.children[1].string
+	#print type_tree.type
+	quit()
 
 program = Program()
 program.compile()

@@ -28,7 +28,7 @@
 <fun_call> ::= id "(" <args> ")" | id "(" ")"
 <args> ::= <args> "," <expr> | <expr>
 
-<addop> ::= "+" | "-"
+<addop> ::= "+" | "-" | ">" ">" | "<" "<"
 <mulop> ::= "*" | "/" | "%" | "^" | "|" | "&"
 <unary_op> ::= "~" | "-"
 
@@ -55,5 +55,5 @@
 <while_loop> ::= "while" <bool_expr> "do" <block> "loop"
 <for_loop> ::= "for" "(" <assignment> "," <for_bool_expr> "," <assignment> ")" <block> "loop"
 
-<type> ::= "int" | "char" | "@" "int" | "@" "int" num | "@" "int" num  | "@" "char" | "@" "char" num | "void"
+<type> ::= "int" | "char" | "@" "int" | "@" "int" num |  "@" "char" | "@" "char" num | "void"
 <array> ::= <array> "," num | num
