@@ -1,3 +1,5 @@
+////////////////////////////////////////// GENERAL STRING TOOLS /////////////////////////////////////////////////
+
 int check_if_equal(@char word1, @char word2, int len)
 	int i;
 	for(i = 0, i<len,i = i + 1)
@@ -37,7 +39,7 @@ int string_to_int(@char number)
 	return dec;
 end;
 
-
+////////////////////////////// IO /////////////////////////////////////////////
 void print_hex(@char string, int size)
 
 
@@ -56,3 +58,59 @@ void print_hex(@char string, int size)
 		printf(buf);
 	loop;
 end;
+/////////////////////////////// IO ////////////////////////////////////////////
+void in(@char buf)
+	int i = 0;
+	int character;
+	int continue = 1;
+	while (continue) do
+		character = getw();
+		if (character == 10) then
+			buf[i] = 0; //nullifies string
+			continue = 0; //breaks
+		else
+			buf[i] = character;
+			i = i+1;
+		endif;
+	loop;
+end;
+
+void in_echo(@char buf)
+	int i = 0;
+	int character;
+	int continue = 1;
+	while (continue) do
+		character = getw();
+		putc(character);
+		if (character == 10) then
+			buf[i] = 0; //nullifies string
+			continue = 0; //breaks
+		else
+			buf[i] = character;
+			i = i+1;
+		endif;
+	loop;
+end;
+
+//CLL printf (implemented in assembly as a built_in)
+void printf_CLL(@char buf)
+	int i = 0;
+	int character;
+	int continue = 1;
+	while (continue) do
+		character = buf[i];
+		putc(character);
+		if (character == 0) then
+			continue = 0; //breaks
+		endif;
+		i = i+1;
+	loop;
+end;
+
+void get_response(@char prompt,@char response)
+	printf(prompt);
+	in_echo(buf);
+end;
+
+
+//////////////////////////////////////////////////////////////////////////////
