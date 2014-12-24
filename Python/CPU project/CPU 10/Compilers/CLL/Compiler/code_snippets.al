@@ -300,6 +300,16 @@ if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 <Push args>
 Goto <Call_address> 												#CALLING <Call_address>
 << function startup routine >>
+
+
+
+
+
+
+
+
+
+
 																	Scope <function_name>
 def length gp4
 def expression_stack_ptr gp7

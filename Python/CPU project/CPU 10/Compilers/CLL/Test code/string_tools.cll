@@ -9,6 +9,7 @@ int check_if_equal(@char word1, @char word2, int len)
 end;
 
 void int_to_string(int number, @char string_buffer)
+//doesnt seem to work
 	@char lookup = "0123456789";
 	int i;
 	int reduced;
