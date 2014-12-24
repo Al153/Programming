@@ -1,5 +1,5 @@
 <PROGRAM> ::= <block>
-<ELEMENTARY_TOKENS> ::= " " | "\t" | "\n" | "(" | ")" | "@" | "$" | "+" | "-" | "*" | "/" | "%" | "|" | "^" | "& " | "~" | "<" | "=" | ">" | ";" | "," | "[" | "]" 
+<ELEMENTARY_TOKENS> ::= " " | "\t" | "\n" | "(" | ")" | "@" | "$" | "+" | "-" | "*" | "/" | "%" | "|" | "^" | "&" | "~" | "<" | "=" | ">" | ";" | "," | "[" | "]" 
 <IGNORE> ::= " " | "\t" | "\n"
 
 <block> ::= <line> | <block> <line>
@@ -35,9 +35,9 @@
 
 
 
+<for_bool_expr> ::= <bool_factor> | <comparison>
 
 <bool_expr> ::= "(" <bool_factor> ")" | "(" <comparison> ")"
-<for_bool_expr> ::= <bool_factor> | <comparison>
 <bool_factor> ::= <bool_expr> | <bool_factor> <boolop> <bool_expr> | <unary_boolop> <bool_expr>
 
 <comparison> ::= <expr> <comp_op> <expr> | <expr>

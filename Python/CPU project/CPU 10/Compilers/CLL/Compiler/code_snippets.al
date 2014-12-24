@@ -8,52 +8,29 @@
 
 
 
-
+For detailed explanations of the run time see "code_snippets - commented.al"
 << setup routines >>
 
-#is run before main program, sets up stacks and global variables
+############################################################################
+# 						SET UP ROUTINE
+############################################################################
+def STACK_SIZE 65536   						#makes stack sizes easy to change
 
-def STACK_SIZE 65536   #makes stack sizes easy to change
-
-#register reservations:
-
-#Hardware register:	|				New Purpose
-#Zero 				| 				Same
-#One				|				Same
-#Accumulator 		|				Same
-#Jump 				|				Same - mostly for calling functions
-#PC 				|				Same
-#Flags_set 			|				Same
-#Flags_reset 		| 				Same
-#Stack_pointer 		| 				Same
-#gp0 				|				Primary operations register
-#gp1 				|				Secondary operations register
-#gp2 				|		
-#gp3				|
-#gp4				|				Call-auxilary - holds important call information eg stack frame size
-#gp5 				|				stack_pointer manipulation
-#gp6				|				indexing register  for relative addressing whilst using stack frames
-#gp7 				|				expression_stack_pointer								
-
-
-
-
-array Callstack	STACK_SIZE []  				#initialise stacks
+array Callstack	STACK_SIZE []  				#initialise runtime variables
 array Expression_stack STACK_SIZE []
-int stack_length STACK_SIZE 				#creates a variable of size stack size
+int stack_length STACK_SIZE 				
+int Callstack_ptr Callstack 				
 
-int Callstack_ptr Callstack 				#pointer to the Callstack
-
-Load Stack_pointer Callstack_ptr 				#creates a pointer to the start of the call stack
-Load gp0 stack_length 						#modifies pointer to point to end of call stack - call stack  advances downwards						
+Load Stack_pointer Callstack_ptr 				
+Load gp0 stack_length 						
 MUL gp0 @4
-SUB gp0 @12 								#pointer cannot point to last value in the call stack, since then the first stack frame will spill over into the rest of the data
-ADD Stack_pointer gp0
+SUB gp0 @12 
+ADD Stack_pointer gp0							
 
-Goto main 										#starts main program
+Goto main 										
 Halt
 	
-Out @'E'	%Stack_overflow_error 					#deal with an Expression_stack overflow  
+Out @'E'	%Stack_overflow_error 					#Define error handling 
 Out @'R'
 Out @'R'
 Out @'O'
@@ -75,7 +52,6 @@ Out @'L'
 Out @'O'
 Out @'W'
 Halt
-
 	
 Out @'E' %Recursion_limit_reached 				#deal with a recursion error
 Out @'R'
@@ -116,7 +92,6 @@ Out @'E'
 Out @'D'
 Halt
 
-
 Out @'E' %DIV_BY_ZERO
 Out @'R'
 Out @'R'
@@ -146,431 +121,337 @@ Halt
 # ________________________ Binary operations ________________________
 #________________________ Additive ________________________
 << ADD >>
-<getgp0> 															#compiler will work out whether gp0 is loaded or Pushed
-<getgp1>
-ADD gp0 gp1
+<getgp0><getgp1>
+ADD gp0 gp1 														#ADD
 <storegp0>
-
 << SUB >>
-<getgp1> 															#assymetric operations need to take stack  into account
-<getgp0>
-SUB gp0 gp1
-Load Flags_reset @4294967287  #resets the borrow flag
+<getgp1><getgp0>
+SUB gp0 gp1 														#SUBTRACT
+Load Flags_reset @4294967287 
 <storegp0>
-
 << SHR >>
-<getgp1>
-<getgp0>
-SHR gp0 gp1
+<getgp1><getgp0>
+SHR gp0 gp1 														#SHIFT RIGHT
 <storegp0>
-
-<< SHL >>
-<getgp1>
-<getgp0>
-SHL gp0 gp1
+<< SHL >> 	
+<getgp1><getgp0> 
+SHL gp0 gp1 														#SHIFT LEFT
 <storegp0>
-
 << ADD char >>
-<getgp0> 															#compiler will work out whether gp0 is loaded or Pushed
-<getgp1>
-ADD gp0 gp1
+<getgp0><getgp1>
+ADD gp0 gp1 														#ADD (CHARS)
 AND gp0 @255
 <storegp0>
-
 << SUB char >>
-<getgp1>
-<getgp0>
-AND gp0 @255
+<getgp1><getgp0>
+AND gp0 @255 														#SUBTRACT (CHARS)
 AND gp1 @255
 SUB gp0 gp1
 AND gp0 @255
-Load Flags_reset @4294967287  #resets the borrow flag
+Load Flags_reset @4294967287  
 <storegp0>
-
 << SHR char >>
-<getgp1>
-<getgp0>
-AND gp0 @255
+<getgp1><getgp0>
+AND gp0 @255 														#SHIFT RIGHT (CHARS)
 SHR gp0 gp1
 <storegp0>
-
 << SHL char >>
-<getgp1>
-<getgp0>
-SHL gp0 gp1
+<getgp1><getgp0>
+SHL gp0 gp1 														#SHIFT LEFT (CHARS)
 AND gp0 @255
 <storegp0>
-
 <<junk>>
 # ________________________ Multiplicative ________________________
-
 << MUL >>
-<getgp0>
-<getgp1>
-MUL gp0 gp1
+<getgp0><getgp1>
+MUL gp0 gp1 														#MULTIPLY
 <storegp0>
-
 << DIV >>
-<getgp1>
-<getgp0>
-DIV gp0 gp1
+<getgp1><getgp0>
+DIV gp0 gp1 														#DIVIDE
 if DivByZero then Load PC DIV_BY_ZERO
 <storegp0>
-
 << MOD >>
-<getgp1>
-<getgp0>
-MOD gp0 gp1
+<getgp1><getgp0>
+MOD gp0 gp1 														#MODULO
 if DivByZero then Load PC DIV_BY_ZERO
 <storegp0>
-
 << AND >>
-<getgp0>
-<getgp1>
-AND gp0 gp1
+<getgp0><getgp1>
+AND gp0 gp1 														#AND
 <storegp0>
-
 << OR >>
-<getgp0>
-<getgp1>
-OR gp0 gp1
+<getgp0><getgp1>
+OR gp0 gp1 															#OR
 <storegp0>
-
 << XOR >>
-<getgp0>
-<getgp1>
-XOR gp0 gp1
+<getgp0><getgp1>
+XOR gp0 gp1 														#XOR
 <storegp0>
-
 << MUL char >>
-<getgp0>
-<getgp1>
-MUL gp0 gp1
+<getgp0><getgp1>
+MUL gp0 gp1 														#MULTIPLY (CHARS)
 AND gp0 @255
 <storegp0>
-
 << DIV char >>
-<getgp1>
-<getgp0>
-AND gp0 @255
+<getgp1><getgp0>
+AND gp0 @255 														#DIVIDE (CHARS)
 AND gp1 @255
 DIV gp0 gp1
 AND gp0 @255
 if DivByZero then Load PC DIV_BY_ZERO
 <storegp0>
-
 << MOD char >>
-<getgp1>
-<getgp0>
-AND gp0 @255
+<getgp1><getgp0>
+AND gp0 @255 														#MODULO (CHARS)
 AND gp0 @255
 MOD gp0 gp1
 AND gp0 @255
 if DivByZero then Load PC DIV_BY_ZERO
 <storegp0>
-
 << AND char >>
-<getgp0>
-<getgp1>
-AND gp0 gp1
+<getgp0><getgp1>
+AND gp0 gp1 														#AND (CHARS)
 AND gp0 @255
 <storegp0>
-
 << OR char >>
-<getgp0>
-<getgp1>
-OR gp0 gp1
+<getgp0><getgp1>
+OR gp0 gp1 															#OR (CHARS)
 AND gp0 @255
 <storegp0>
-
 << XOR char >>
-<getgp0>
-<getgp1>
-XOR gp0 gp1
+<getgp0><getgp1>
+XOR gp0 gp1 														#XOR (CHARS)
 AND gp0 @255
 <storegp0>
-
 <<junk>>
 
 #_________________________ unary operators _________________________
 
 << NOT >>
 <getgp0>
-NOT gp0
+NOT gp0 															#NOT
 <storegp0>
-
 << NOT char >>
 <getgp0>
-NOT gp0
+NOT gp0 															#NOT (CHAR)
 AND gp0 @255
 <storegp0>
-
-<< unary SUB >>												#assymetric operations need to take stack  into account
+<< unary SUB >>													
 <getgp0>
-Move Zero gp1
+Move Zero gp1 														#UNARY SUBTRACT
 SUB gp1 gp0 
 Move gp1 gp0
-Load Flags_reset @4294967287  #resets the borrow flag
+Load Flags_reset @4294967287  
 <storegp0>
-
-<< unary SUB char >>														#assymetric operations need to take stack  into account
+<< unary SUB char >>														
 <getgp0>
-Move Zero gp1
+Move Zero gp1 														#UNARY SUBTRACT (CHAR)
 SUB gp1 gp0 
 Move gp1 gp0
 AND gp1 @255
-Load Flags_reset @4294967287  #resets the borrow flag
+Load Flags_reset @4294967287  
 <storegp0>
-
 <<junk>>
 #_________________________ Comparison operations _________________________
 <<is equal>>
-<getgp0>
-<getgp1>
-Move Zero gp2
+<getgp0><getgp1>
+Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
 if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 <Push gp0>
-
 <<is greater>>
-<getgp0>
-<getgp1>
-Move Zero gp2
+<getgp0><getgp1>
+Move Zero gp2 														#COMPARE (IS GREATER)
 Compare gp1 gp0
 if Greater then Load gp2 @4294967295
 Move gp2 gp0
 <Push gp0>
-
 <<is less>>
-<getgp0>
-<getgp1>
-Move Zero gp2
+<getgp0><getgp1>
+Move Zero gp2 														#COMPARE (IS LESS)
 Compare gp1 gp0
 if Less then Load gp2 @4294967295
 Move gp2 gp0
 <Push gp0>
-
 <<not greater>>
-<getgp0>
-<getgp1>
-Load gp2 @4294967295
+<getgp0><getgp1>
+Load gp2 @4294967295 												#COMPARE (NOT GREATER)
 Compare gp1 gp0
 if Greater then Move Zero gp2
 Move gp2 gp0
 <Push gp0>
-
 <<not less>>
-<getgp0>
-<getgp1>
-Load gp2 @4294967295
+<getgp0><getgp1>
+Load gp2 @4294967295  												#COMPARE (NOT LESS)
 Compare gp1 gp0
 if Less then Move Zero gp2
 Move gp2 gp0
 <Push gp0>
-
 <<is true>>
 <getgp0>
-if gp0 then Load gp0 @4294967295
+if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 <Push gp0>
-
 <<junk>>
 #________________________________ Function usage routines ________________________________
 
 << function call routine >>
-<Push args> 				#compiled part
-Goto <Call_address> 		#needs to sub in call address
-
-
-
+<Push args>
+Goto <Call_address> 												#CALLING <Call_address>
 << function startup routine >>
-#creates a stack frame and loads it with correct  values 
-
-Scope <function_name>
-
+																	Scope <function_name>
 def length gp4
 def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-########################################
-#byte map of stack frame
-# 0,1,2,3,4,5,6,7,8,9,A,B,
-# R|R|R|R|P|P|P|P|D.....D|
-
-# R = Return address - place to return to at end of function
-# P = previous ToS
-
-		
-Move Stack_pointer previous_stack_ptr				%<function_name> 		 	#gets a copy of the current stack pointer
-SUB Stack_pointer @<new_length> 										#shift stack pointer on
-Compare Stack_pointer Callstack_ptr  								#checks for a stack overflow
+Move Stack_pointer previous_stack_ptr								%<function_name>
+SUB Stack_pointer @<new_length> 									#OVERHEAD FOR FUNCTION <function_name>
+Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
-Store ret_addr 0 [Stack_pointer] 								#stores address to return to
-Store previous_stack_ptr 4 [Stack_pointer]						#gives pointer to pop off of stack
-<get_parameters>												#get passed in parameters, repeated as many times as needed 
-
+Store ret_addr 0 [Stack_pointer]
+Store previous_stack_ptr 4 [Stack_pointer]
+<get_parameters>
 << return routine >>
- <generate value to return> 								#calculates retun value, leaves on stack
- Load previous_stack_ptr 4 [Stack_pointer] 					#reads new top of stack from the stack frame
- Load ret_addr 0 [Stack_pointer] 						#gets address to jump back to
- Move previous_stack_ptr Stack_pointer 						#sets new stack pointer
- Move ret_addr PC 										#returns
-
-
- << while loop code >>
- Pass %loop<number>entry 									#placeholder to allow label to be placed easily
- <Calculate_condition> 										#calculates if condtion true or false 										
- <Popgp0> 													#inline POP
- NOT gp0 													#easier to test if condition not true ie inverted
- if gp0 then Load PC loop<number>exit 						#if condtion false then end loop
- 	<looped_code>
- Load PC loop<number>entry 									#loop
- Pass %loop<number>exit 									#placeholder exit label
-
- << for loop code >>
-<assignment1> 												#initialisation assignment
-Pass %loop<number>entry 									#placeholder label
-<Calculate_condition> 										#checks condition and inverts it
+<generate value to return>
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+<< while loop code >>
+Pass %loop<number>entry
+<Calculate_condition>									
 <Popgp0>
 NOT gp0
-if gp0 then Load PC loop<number>exit 						#if condition violatedthen exits loop
-	<looped_code> 											#runs looped code
-<assignment2> 												and of loop assignement and loops back
+if gp0 then Load PC loop<number>exit 								#WHILE LOOP
+<looped_code>
 Load PC loop<number>entry
-Pass %loop<number>exit 										#another placeholder
-
-
-<< if statement code >> 									
-<Calculate_condition> 										#boolean calculation
-<Popgp0> 													#gets result of boolean calculation into gp0
-NOT gp0 													#inverts result of boolean calculation since next step is easier to calculate this way
-if gp0 then Load PC if<number>endif 						#jumps to the the endif if condition is false
-	<conditional code> 										#code to execute otherwise
-Pass %if<number>endif 										#placeholder for label (endif)
-
-<< if-else statement code >>
-<Calculate_condition> 										#same set up as nefore
+Pass %loop<number>exit
+<< for loop code >>
+<assignment1>
+Pass %loop<number>entry 											#FOR LOOP
+<Calculate_condition>
 <Popgp0>
-if gp0 then Load PC if<number>true 							#if true then jump to true code
-	<false_code> 											#false code runs by default
-	Load PC if<number>endif									#goto endif
-Pass %if<number>true  										#placeholder for label
-	<true_code> 
+NOT gp0
+if gp0 then Load PC loop<number>exit
+<looped_code>
+<assignment2>
+Load PC loop<number>entry
+Pass %loop<number>exit
+<< if statement code >> 									
+<Calculate_condition>
+<Popgp0>
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC if<number>endif
+<conditional code>
+Pass %if<number>endif
+<< if-else statement code >>
+<Calculate_condition>
+<Popgp0>
+if gp0 then Load PC if<number>true 									#IF ELSE STATEMENT
+<false_code>
+Load PC if<number>endif
+Pass %if<number>true
+<true_code> 
 Pass %if<number>endif           
-
 <<junk>>
 
 
 #______________________________________ Snippets to load and store registers ______________________________________
 
 <<Popgp0>>				
-SUB gp7 @4 															#decrement stack pointer to point to top of stack
-Load gp0  Expression_stack [gp7] 									#pop into gp0
-<<Popgp1>>				 											#same for gp1 and index
-SUB gp7 @4
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+<<Popgp1>>
+SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
 <<Popindex>>				
-SUB gp7 @4
+SUB gp7 @4 															#POP TO INDEX REGISTER
 Load gp6 Expression_stack [gp7]
-<<Pushgp0>> 														#Push routine
-Store gp0 Expression_stack [gp7] 									#stores gp0 to top of stack
-ADD gp7 @4 															#increment stack pointer
-Compare gp7 stack_length 											#check for stack overflow
+<<Pushgp0>> 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-
 <<junk>>
 #______________________________________ Local vars ______________________________________
 #__________________________ Load-store integers __________________________
 
 
 << load >>
-Load gp0 <absolute_address> [Stack_pointer] 						#Recursion stack increments downwards
+Load gp0 <absolute_address> [Stack_pointer] 						#LOAD GP0
 <Pushgp0>
-
 << load relative >>
 <get_index>
-ADD gp6 <absolute_address> [Stack_pointer] 												#relative addressing always occurs outside of the stack frame
-Load gp0 0 [gp6] 									#Loads
+ADD gp6 <absolute_address> [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
 <Pushgp0>
-
-<< store >> 													#same functions but for Storing
+<< store >>
 <Popgp0>
-Store gp0 <absolute_address> [Stack_pointer]
-
+Store gp0 <absolute_address> [Stack_pointer] 						#STORE GP0
 << store relative >> 
 <get_index>
 <Popgp0>
-ADD gp6 <absolute_address> [Stack_pointer]
+ADD gp6 <absolute_address> [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
 <<junk>>
 #_________________________ Load store char _________________________
 
 << load char >>
-LoadByte gp0 <absolute_address> [Stack_pointer] 						#Recursion stack increments downwards
+LoadByte gp0 <absolute_address> [Stack_pointer] 					#LOAD GP0 (CHAR)
 <Pushgp0>
-
 << load relative char >>
 <get_index>
-ADD gp6 <absolute_address> [Stack_pointer] 												#combines index and stackpointer
-LoadByte gp0 0 [gp6]		 									#Loads
+ADD gp6 <absolute_address> [Stack_pointer]							#LOAD GP0 RELATIVE (CHAR)
+LoadByte gp0 0 [gp6]
 <Pushgp0>
-
 << store char >>
 <Popgp0>
-StoreByte gp0 <absolute_address> [Stack_pointer]
-
+StoreByte gp0 <absolute_address> [Stack_pointer] 					#STORE GP0 (CHAR)
 << store relative char >>
 <get_index>
 <Popgp0>
-ADD gp6 <absolute_address> [Stack_pointer]
-Store gp0 0 [gp6]
-
+ADD gp6 <absolute_address> [Stack_pointer] 							#STORE GP0 RELATIVE (CHAR)
+StoreByte gp0 0 [gp6]
 <<junk>>
 
 #______________________________________ global vars ______________________________________
 
 << load global >>
-Load gp0 <absolute_address>  						#Recursion stack increments downwards
+Load gp0 <absolute_address> 										#LOAD GP0 GLOBAL
 <Pushgp0>
-
 << load relative global >>
 <get_index>
-ADD gp6 <absolute_address>
-Load gp0 0 [gp6]									#Loads
+ADD gp6 <absolute_address> 											#LOAD GP0 GLOBAL RELATIVE
+Load gp0 0 [gp6]									
 <Pushgp0>
-
-<< store global >> 													#same functions but for Storing
+<< store global >>
 <Popgp0>
-Store gp0 <absolute_address>
-
+Store gp0 <absolute_address> 										#STORE GP0 GLOBAL
 << store relative global >> 
 <get_index>
 <Popgp0>
-ADD gp6 <absolute_address>
+ADD gp6 <absolute_address> 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-
 <<junk>>
 #_________________________ Load store char _________________________
 
 << load char global >>
-LoadByte gp0 <absolute_address> 									#Recursion stack increments downwards
+LoadByte gp0 <absolute_address> 									#LOAD GP0 GLOBAL (CHAR)
 <Pushgp0>
-
 << load relative char global >>
 <get_index>
-ADD gp6 <absolute_address>
-LoadByte gp0 0 [gp6]							#Loads
+ADD gp6 <absolute_address> 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
+LoadByte gp0 0 [gp6]
 <Pushgp0>
-
 << store char global >>
 <Popgp0>
-StoreByte gp0 <absolute_address>
-
+StoreByte gp0 <absolute_address> 									#STORE GP0 GLOBAL (CHAR)
 << store relative char global >>
 <get_index>
 <Popgp0>
-ADD gp6 <absolute_address>
+ADD gp6 <absolute_address> 											#STORE GP0 GLOBAL RELATIVE (CHAR)
 StoreByte gp0 0 [gp6]
 <<junk>>
 
@@ -581,8 +462,7 @@ StoreByte gp0 0 [gp6]
 << get index integer >>
 <index expr>
 <pop index>
-MUL gp6 @4
-
+MUL gp6 @4 														   #INDEXING FOR @INT
 << get index char >>
 <index expr>
 <pop index>
@@ -591,22 +471,19 @@ MUL gp6 @4
 #____________ type casting operations ____________
 << cast int to char >>
 <Popgp0>
-AND gp0 @255
+AND gp0 @255 													  #CASTING INT TO CHAR
 <Push gp0>
-
 << cast char to int >>
-# do nothing to cast
-
+Pass 															  #CASTING CHAR TO INT
 <<junk>>
 #____________ ptr operations _________________________
 
 << get ptr >>
-Move Stack_pointer gp0
+Move Stack_pointer gp0 											#GETTING POINTER
 ADD gp0 @<absolute_address>
 <Push gp0>
-
 << get ptr global >>
-int CLLPTR.<absolute_address> <absolute_address>
+int CLLPTR.<absolute_address> <absolute_address> 				#GETTING POINTER GLOBAl
 Load gp0 CLLPTR.<absolute_address>
 <Push gp0>
 <<junk>>

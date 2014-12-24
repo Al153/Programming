@@ -48,7 +48,7 @@ class Program:
 			if line.type == "<var_dec>":
 				self.get_var(line)
 			else:
-				print "ERROR: not expecting line of type "+line.type+" outside of function definitions"
+				print "ERROR(7): not expecting line of type "+line.type+" outside of function definitions"
 
 
 		#print self.global_var_types
@@ -183,8 +183,7 @@ class function:
 			self.parse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return"),return_expression]))
 		else:
 			self.parse_tree.children.append(Non_terminal_parse_tree_node("<other>",[Terminal_parse_tree_node('"return"',"return")]))
-		#if self.name == "main":
-		#	print_parse_tree(self.parse_tree)
+		
 		self.variables = self.get_variables(self.parse_tree)
 
 		#self.variable_preset_values = self.variables[1]
@@ -277,7 +276,7 @@ class function:
 					values += new_variables[1]
 					widths.update(new_variables[2])
 				else:
-					print "ERROR: non control flow parse tree: "+child.children[0].type
+					print "ERROR(8): non control flow parse tree: "+child.children[0].type
 			elif child.type == "<var_dec>":
 				#print "VAR DEC!"
 				#print "VAR DEC"
@@ -310,15 +309,18 @@ class function:
 					#print "assignment"
 					assignment_present = 1
 					if len(child.children[3].children)==1: #if a simple expression
-
 						assign_expression = child.children[3].children[0] #gets the assignment trees	
 						var_name = Non_terminal_parse_tree_node("<variable>",[child.children[1]]) 
 						assignment = Non_terminal_parse_tree_node("<assignment>",[var_name,assign_expression]) #generate tree
 						parse_tree.children[i] = assignment #place back into code
 					elif child.children[3].children[1].type == "<array>":
+						if not len(child.children[0].children)==3: #if no array type, raise error
+							print "ERROR(42): Array assigned to non array type variable "+child.children[1].string
+							quit()
 						array_vars = self.parse_array(child.children[3].children[1])
 						#parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:] #deletes variable declaration	
 						for j in xrange(len(array_vars)):
+							#print j
 							index_parse_tree = Terminal_parse_tree_node("num",str(j)) #build up the  indexing expression
 							index_parse_tree = Non_terminal_parse_tree_node("<const>",[index_parse_tree]) #constant layer
 							index_parse_tree = Non_terminal_parse_tree_node("<factor>",[index_parse_tree]) #factor layer
@@ -365,7 +367,7 @@ class function:
 
 	def get_overall_type(self,specific_type):
 		#reduces ints, chars, pointers etc to what they can be treated as, ie an @int is basically an int in terms of arithmetic
-		return "char" if specific_type == "char" else "int"
+		return "char" if specific_type == "char" else "void" if specific_type == "void" else "int"
 
 	def check_function_typing(self,parse_tree):
 		#searches whole parse tree looking for expressions to check
@@ -376,6 +378,13 @@ class function:
 					self.check_typing(child)
 				elif child.type == "<assignment>":
 					self.check_assignment_typing(child)
+				elif child.type == "<fun_call>" and parse_tree.type == "<other>": #function call on its own in a line
+					function_name = parse_tree.children[0].children[0].string
+					function_type = self.get_overall_type(program.functions[function_name].return_type)
+					self.check_function_call(parse_tree.children[0])
+					if function_type != "void": #needs to be void to be called on a line on its own
+						print "ERROR(41): function called outside of an assignment must return void, "+function_name+" returns "+function_type
+						quit()
 				else:
 					self.check_function_typing(child)
 
@@ -394,9 +403,8 @@ class function:
 	def check_typing(self,parse_tree):
 		#takes a parse tree and checks typing (fixes it if possible), and returns the type of the expression at the aend of evalutation of this part of the tree,
 		#to the extent of checking overall type - ie @int =~= @char =~= int
-		#print parse_tree.type
 		if len(parse_tree.children) == 3:
-			if parse_tree.children[0].type == "(": #( expression )
+			if parse_tree.children[0].type == '"("': #( expression )
 				input_type =  self.check_typing(parse_tree.children[1])
 				return input_type
 			else: 									# expr + term or equivalent
@@ -439,7 +447,7 @@ class function:
 						#print self.get_overall_type(program.global_var_types[variable_parse_tree.children[0].string])
 						return self.get_overall_type(program.global_var_types[variable_parse_tree.children[0].string])
 					else:
-						print "ERROR: Unrecognised variable: "+ variable_parse_tree.children[0].string
+						print "ERROR(0): Unrecognised variable: "+ variable_parse_tree.children[0].string
 						quit()
 				else: #indirect addressing
 					#needs to be a pointer
@@ -453,7 +461,7 @@ class function:
 							return type_to_return
 						else:
 							#raise an error
-							print "ERROR: variable "+variable_parse_tree.children[0].string+" of type "+self.variables[variable_parse_tree.children[0]].string+" cannot be used as a pointer"
+							print "ERROR(1): variable "+variable_parse_tree.children[0].string+" of type "+self.variables[variable_parse_tree.children[0]].string+" cannot be used as a pointer"
 							quit()
 					elif variable_parse_tree.children[0].string in program.global_var_types:
 						if program.global_var_types[variable_parse_tree.children[0].string][0] == "@":
@@ -464,16 +472,21 @@ class function:
 							return type_to_return
 						else:
 							#raise an error
-							print "ERROR: variable "+variable_parse_tree.children[0].string+" of type "+program.global_var_types[variable_parse_tree.children[0]].string+" cannot be used as a pointer"
+							print "ERROR(2): variable "+variable_parse_tree.children[0].string+" of type "+program.global_var_types[variable_parse_tree.children[0]].string+" cannot be used as a pointer"
 							quit()
 					else:
-						print "ERROR: Unrecognised variable: \""+variable_parse_tree.children[0].string + "\""
+						print "ERROR(3): Unrecognised variable: \""+variable_parse_tree.children[0].string + "\""
 						quit()
 
 			elif parse_tree.children[0].type == "<const>":
 				#print "CONSTANT"
 				return "int"  #constants are either numbers or pointers (ints)
-
+			else:
+				print "ERROR(39): incorrect node passed: "+ parse_tree.children[0].type
+				quit()
+		else:
+			print "ERROR(40): incorrect node passed: "+pass_tree.type
+			quit()
 	def cast_type(self,start_type,end_type,parse_tree):
 		return Non_terminal_parse_tree_node(
 			"<cast>",[
@@ -492,7 +505,7 @@ class function:
 			if len(function_parameters) == 0:
 				return
 			else:
-				print "ERROR: Function "+function_name+" takes "+str(len(function_parameters))+ "arguments, none given"
+				print "ERROR(4): Function "+function_name+" takes "+str(len(function_parameters))+ "arguments, none given"
 				quit()
 		else:
 			#has input parameters
@@ -503,10 +516,10 @@ class function:
 				for parameter in parameters:
 					parameter_type = self.check_typing(parameter)
 					if parameter_type != self.get_overall_type(function_parameters[i][0]):
-						print "ERROR: parameter of type "+parameter_type+" passed to function "+function_name+", expected "+ get_type(function_parameters[i][1])+" of type" + get_type(function_parameters[i][0])
+						print "ERROR(5): parameter of type "+parameter_type+" passed to function "+function_name.string+", expected "+ function_parameters[i][1]+" of type " + function_parameters[i][0]
 						quit()
 			else:
-				print "ERROR: Function "+function_name+" takes "+str(len(function_parameters))+ "arguments, "+ str(len(parameters)) + " given"
+				print "ERROR(6): Function "+function_name.string+" takes "+str(len(function_parameters))+ " argument(s), "+ str(len(parameters)) + " given"
 				quit()
 	
 	def get_given_parameters(self,parameters_parse_tree):

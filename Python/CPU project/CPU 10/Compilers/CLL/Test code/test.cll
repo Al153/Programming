@@ -1,11 +1,14 @@
-
+#include string_tools.cll
 void main()
-	@int 5 a;
-	int b = 3;
-	a[b] = 4;
-	c(a);
+	@char lookup = "12";
+	print_i(string_to_int(lookup));
+	@char 10 buf;
+	int_to_string(123,buf);
+	printf(buf);
 end;
 
-void c(@int in)
-	print_i(in[3]);
-end;
+
+
+
+
+	

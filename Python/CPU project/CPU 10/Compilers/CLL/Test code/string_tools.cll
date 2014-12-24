@@ -3,13 +3,13 @@ int check_if_equal(@char word1, @char word2, int len)
 	for(i = 0, i<len,i = i + 1)
 		if (not(word1[i] == word2[i])) then
 			return 0;
-		@int p; //testing declaring variables
 		endif;
 	loop;
 	return 1;
 end;
 
 void int_to_string(int number, @char string_buffer)
+	@char lookup = "0123456789";
 	int i;
 	int reduced;
 	@char 10 digit_stack;
@@ -22,44 +22,36 @@ void int_to_string(int number, @char string_buffer)
 
 	while (digit_stack_pointer >0) do
 		digit_stack_pointer = digit_stack_pointer-1;
-		//need to add in a lot of if - elses
-		if (digit_stack[digit_stack_pointer]<5) then
-			if (digit_stack[digit_stack_pointer]<2) then
-				if (digit_stack[digit_stack_pointer]==0) then
-					string_buffer[i]= '0';
-				else
-					string_buffer[i]= '1';
-				endif;			
-			else
-				if (digit_stack[digit_stack_pointer]==2) then
-					string_buffer[i]= '2';			
-				else
-					if (digit_stack[digit_stack_pointer]==3) then
-						string_buffer[i]= '3';
-					else
-						string_buffer[i]= '4';
-					endif;	
-				endif;	
-			endif;	
-		else
-			if (digit_stack[digit_stack_pointer]<7) then
-				if (digit_stack[digit_stack_pointer]==5) then
-					string_buffer[i]= '5';
-				else
-					string_buffer[i]= '6';
-				endif;			
-			else
-				if (digit_stack[digit_stack_pointer]==7) then
-					string_buffer[i]= '7';
-				else
-					if (digit_stack[digit_stack_pointer]==8) then
-						string_buffer[i]= '8';
-					else
-						string_buffer[i]= '9';
-					endif;	
-				endif;				
-			endif;
-		endif;
+		string_buffer[i] = lookup[digit_stack[digit_stack_pointer]];
 		i = i + 1;
+	loop;
+end;
+
+int string_to_int(@char number)
+	int dec = 0;
+	int i;
+	for(i=0, number[i] ,i = i+1)
+		dec = dec * 10 + ( number[i] - '0' );
+	loop;
+	return dec;
+end;
+
+
+void print_hex(@char string, int size)
+
+
+	@char lookup = "0123456789ABCDEF"; //prints the hex of a string 
+	@char 3 buf = [0,0,0];
+	int i;
+	char high;
+	char low;
+
+
+	for (i = 0, i<size, i = i + 1)
+		high = string[i]>>4;
+		low = string[i]&15;
+		buf[0] = lookup[high];
+		buf[1] = lookup[low];
+		printf(buf);
 	loop;
 end;

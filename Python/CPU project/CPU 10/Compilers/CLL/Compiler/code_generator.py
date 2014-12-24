@@ -185,7 +185,7 @@ class code_generator:
 			elif var_types[var] == "char":
  				pop_code = self.snippets[" store char "].generate_code({"absolute_address":self.variable_address_dict[var],"Popgp0":self.snippets["Popgp0"].generate_code({})})
 			else:
-				 print "ERROR: incorrect type passed to code generator: ", var_types[var]
+				 print "ERROR(9): incorrect type passed to code generator: ", var_types[var]
 				 quit()
 			code_to_get_parameters = pop_code +"\n" + code_to_get_parameters #inverts code to match stack
 		assembly_code = self.snippets[" function startup routine "].generate_code(
@@ -240,7 +240,7 @@ class code_generator:
 			elif line.children[0].type == "<for_loop>":
 				return self.generate_for_loop(line.children[0])
 			else:
-				print "ERROR: did not expect tree of type "+line.children[0].type + " as control flow"
+				print "ERROR(10): did not expect tree of type "+line.children[0].type + " as control flow"
 		elif line.type == "<other>":
 			if len(line.children) == 1:
 				if line.children[0].type == '"return"': #nothing to return
@@ -248,7 +248,7 @@ class code_generator:
 				elif line.children[0].type == "<fun_call>":
 					return self.generate_function_call(line.children[0])
 				else:
-					print "ERROR: not expecting tree of type: "+line.children[0].type+" as an \"<other>\" line"
+					print "ERROR(11): not expecting tree of type: "+line.children[0].type+" as an \"<other>\" line"
 					quit()
 			elif len(line.children) == 2:
 				if line.children[0].type == '"return"':
@@ -256,14 +256,14 @@ class code_generator:
 					#raw_input('')
 					return self.snippets[" return routine "].generate_code({"generate value to return":self.generate_expression_code(line.children[1])})
 				else:
-					print "ERROR: not expecting type: "+line.children[0].type+" in other tree"	
+					print "ERROR(12): not expecting type: "+line.children[0].type+" in other tree"	
 					quit()
 			else:
-				print "ERROR: line too long to be an \"<other>\""
+				print "ERROR(13): line too long to be an \"<other>\""
 				quit()
 
 		else:
-			print "ERROR: invalid line: ",line
+			print "ERROR(14): invalid line: ",line
 			quit()
 	#__________________________________________________ control flow _____________________________________
 	
@@ -280,7 +280,7 @@ class code_generator:
 		return_code =  self.snippets[" if statement code "].generate_code({ 			#generates if code using a snippet
 			"Calculate_condition":condition_code,
 			"Popgp0":pop_gp0,
-			"number":str(self.IF_COUNT), 	#if count used to make labels distinct
+			"number":self.function_name+str(self.IF_COUNT), 	#if count used to make labels distinct
 			"conditional code":block_code,
 			})
 		self.IF_COUNT += 1 															#increments if count to make it distinct
@@ -294,7 +294,7 @@ class code_generator:
 		return_code =  self.snippets[" if-else statement code "].generate_code({ 					#uses snippet
 			"Calculate_condition":condition_code,
 			"Popgp0":pop_gp0,
-			"number":str(self.IF_COUNT),
+			"number":self.function_name+str(self.IF_COUNT),
 			"true_code":true_code,
 			"false_code":false_code
 			})
@@ -307,7 +307,7 @@ class code_generator:
 		pop_gp0 = self.snippets["Popgp0"].generate_code({})
 		looped_code = self.generate_block_code(while_parse_tree.children[1])
 		return_code = self.snippets[" while loop code "].generate_code({ 					#snippet used to generate code
-			"number":str(self.LOOP_COUNT),
+			"number":self.function_name+str(self.LOOP_COUNT),
 			"Popgp0":pop_gp0,
 			"Calculate_condition":condition_code,
 			"looped_code":looped_code
@@ -329,7 +329,7 @@ class code_generator:
 				"Calculate_condition":condition,
 				"Popgp0":pop_gp0,
 				"assignment2":assign_2,
-				"number": str(self.LOOP_COUNT),
+				"number": self.function_name+str(self.LOOP_COUNT),
 				"looped_code":block
 			})
 		self.LOOP_COUNT += 1
@@ -346,7 +346,7 @@ class code_generator:
 		elif value_parse_tree.type  == "<variable>":
 			return self.generate_get_variable(value_parse_tree)
 		else:
-			print "ERROR: incorrect value node type: ",
+			print "ERROR(15): incorrect value node type: ",
 			print value_parse_tree.type
 			quit()
 
@@ -359,7 +359,7 @@ class code_generator:
 			#print "global variable"
 			return self.generate_get_global_variable(variable_parse_tree)
 		else:
-			"ERROR: unrecognised variable: ", variable_name
+			"ERROR(16): unrecognised variable: ", variable_name
 			quit()
 
 	def generate_get_constant(self,constant_parse_tree):
@@ -375,10 +375,10 @@ class code_generator:
 			elif variable_name in self.global_variable_address_dict: #if a global variable
 				return self.snippets[" get ptr global "].generate_code({"absolute_address":self.global_variable_address_dict[variable_name],"Push gp0":push_gp0})
 			else:
-				print "ERROR: unrecognised variable name: ",constant_parse_tree.children[1].string
+				print "ERROR(17): unrecognised variable name: ",constant_parse_tree.children[1].string
 				quit()
 		else:
-			print "ERROR: incorrect constant: ",
+			print "ERROR(18): incorrect constant: ",
 			print constant_parse_tree.children
 			quit()
 	def generate_store_value(self,variable_parse_tree):
@@ -388,7 +388,7 @@ class code_generator:
 		elif variable_name in self.global_variable_address_dict:
 			return generate_store_global_variable(variable_parse_tree)
 		else:
-			print "ERROR: does not recognise variable name: "+variable_name
+			print "ERROR(19): does not recognise variable name: "+variable_name
 
 	def generate_get_local_variable(self,variable_parse_tree):
 		#gets a variable's value onto the stack
@@ -404,7 +404,7 @@ class code_generator:
 				return self.snippets[" load "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
 			elif variable_type == "@char":
 				return self.snippets[" load "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})			
-			print "ERROR: uncrecognised type: "+variable_type
+			print "ERROR(20): uncrecognised type: "+variable_type
 			quit()
 		else:
 			if variable_type == "@int":
@@ -418,7 +418,7 @@ class code_generator:
 				get_index = self.snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" load relative char "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
 			else:
-				print "ERROR: unexpected variable type for relative addressing: "+variable_type
+				print "ERROR(21): unexpected variable type for relative addressing: "+variable_type
 				quit()
 	
 	
@@ -436,7 +436,7 @@ class code_generator:
 			elif variable_type == "@char":
 				return self.snippets[" store "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})}) 
 			else:
-				print "ERROR: unexpected variable type for relative addressing: "+variable_type
+				print "ERROR(22): unexpected variable type for relative addressing: "+variable_type
 				quit()	
 	
 		else:
@@ -451,7 +451,7 @@ class code_generator:
 				get_index = self.snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" store relative char "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
 			else:
-				print "ERROR: unexpected variable type for relative addressing: "+variable_type
+				print "ERROR(23): unexpected variable type for relative addressing: "+variable_type
 				quit()	
 	
 	def generate_get_global_variable(self,variable_parse_tree):
@@ -469,7 +469,7 @@ class code_generator:
 			elif variable_type == "@char":
 				return self.snippets[" load global "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})			
 			else:
-				print "ERROR: unexpected variable type for relative addressing: "+variable_type
+				print "ERROR(24): unexpected variable type for relative addressing: "+variable_type
 				quit()	
 		
 		else:
@@ -484,7 +484,7 @@ class code_generator:
 				get_index = self.snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" load relative char global "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
 			else:
-				print "ERROR: unexpected variable type for relative addressing: "+variable_type
+				print "ERROR(25): unexpected variable type for relative addressing: "+variable_type
 				quit()
 	
 	def generate_store_global_variable(self,variable_parse_tree):
@@ -501,7 +501,7 @@ class code_generator:
 			elif variable_type == "@char":
 				return self.snippets[" store global "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
 			else:
-				print "ERROR: unexpected variable type: "+variable_type
+				print "ERROR(26): unexpected variable type: "+variable_type
 				quit()
 		else:
 			if variable_type == "@int":
@@ -515,7 +515,7 @@ class code_generator:
 				get_index = self.snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" store relative char global "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
 			else:
-				print "ERROR: unexpected variable type for relative addressing: "+variable_type
+				print "ERROR(27): unexpected variable type for relative addressing: "+variable_type
 				quit()	
 	
 	#______________________________________________ Line types _________________________________
@@ -545,7 +545,7 @@ class code_generator:
 				#print return_code
 				return return_code
 			else:
-				print "ERROR: code generator cannot handle expressions of type: "+expression_parse_tree.type+" with length 1"
+				print "ERROR(28): code generator cannot handle expressions of type: "+expression_parse_tree.type+" with length 1"
 				quit()
 
 		elif len(expression_parse_tree.children) == 2: #unary ops only: handled by unary ops generator
@@ -564,7 +564,7 @@ class code_generator:
 				expr2_code = self.generate_expression_code(expression_parse_tree.children[2])
 				operation_code = self.generate_binary_op(expression_parse_tree.children[1])
 				return expr1_code + expr2_code+operation_code
-			elif expression_parse_tree.children[0].type in ["("]: #if ( expr ), simply return the code from expr
+			elif expression_parse_tree.children[0].type in ['"("']: #if ( expr ), simply return the code from expr
 				#print "bracketed"
 				return self.generate_expression_code(expression_parse_tree.children[1])
 			elif expression_parse_tree.type == "<cast>": #does the casting
@@ -574,10 +574,10 @@ class code_generator:
 				expression_code = self.generate_expression_code(expression_parse_tree.children[0])
 				return expression_code + self.cast(start_type,destination_type)
 			else:
-				print "ERROR: cannot handle node of type: "+expression_parse_tree.type
+				print "ERROR(29): cannot handle node of type: "+expression_parse_tree.type
 				quit()
 		
-		print "ERROR: unrecognised tree handled by code generator: "+parse_tree.type
+		print "ERROR(30): unrecognised tree handled by code generator: "+parse_tree.type
 		quit()
 
 #______________________________________________ Bolean code ________________________________________
@@ -588,7 +588,7 @@ class code_generator:
 		elif bool_parse_tree.children[1].type == "<comparison>":
 			return self.generate_comparison(bool_parse_tree.children[1])
 		else:
-			print "ERROR: incorrect type passed to boolean generator: "+bool_parse_tree.children[1].type
+			print "ERROR(31): incorrect type passed to boolean generator: "+bool_parse_tree.children[1].type
 			quit()
 	
 	
@@ -613,7 +613,7 @@ class code_generator:
 		elif bool_parse_tree.children[0].string == "xor":
 			return '\n'.join([pop_gp0,pop_gp1,"XOR gp0 gp1",push_gp0])
 		else:
-			print "ERROR: unexpected boolean operation: ",bool_parse_tree.string
+			print "ERROR(32): unexpected boolean operation: ",bool_parse_tree.string
 			quit()
 	
 	def generate_bool_unary_op(self,bool_parse_tree):
@@ -622,7 +622,7 @@ class code_generator:
 		if bool_parse_tree.children[0].string == "not":
 			return ''.join([pop_gp0,"NOT gp0",push_gp0])
 		else:
-			print "ERROR: incorrect boolean operation type: "+bool_parse_tree.children[0].type
+			print "ERROR(33): incorrect boolean operation type: "+bool_parse_tree.children[0].type
 	def generate_comparison(self,bool_parse_tree):
 		if len(bool_parse_tree.children) == 1: #just an if true comparison
 			pop_gp0 = self.snippets["Popgp0"].generate_code({})
@@ -644,7 +644,7 @@ class code_generator:
 					elif comparison_operation.children[0].string == ">":
 						return expr0 + expr1 +self.snippets["is greater"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"Push gp0":push_gp0})
 					else:
-						print "ERROR: not expecting comparison operator: "+comparison_operation.children[0].string
+						print "ERROR(34): not expecting comparison operator: "+comparison_operation.children[0].string
 						quit()
 				else:
 					if comparison_operation.children[0].type == "<not_less>": 			#deal with non terminals
@@ -652,7 +652,7 @@ class code_generator:
 					elif comparison_operation.children.type == "<not_greater>":
 						return expr0 + expr1 +self.snippets["is greater"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"Push gp0":push_gp0})
 					else:
-						print "ERROR: not expecting comparison operator: "+comparison_operation.children[0].type
+						print "ERROR(35): not expecting comparison operator: "+comparison_operation.children[0].type
 						quit()
 	
 	
@@ -676,7 +676,7 @@ class code_generator:
 		elif unary_op_tree.type == "<unary_opchar>":
 			return self.snippets[unop_char_dict[unary_op_tree.children[0].string]].generate_code({"getgp0":get_gp0,"storegp0":store_gp0})
 		else:
-			print "ERROR: unrecognised operation passed to code generator: "+unary_op_tree.type
+			print "ERROR(36): unrecognised operation passed to code generator: "+unary_op_tree.type
 			quit()
 
 	def generate_binary_op(self,binary_op_tree):
@@ -723,7 +723,7 @@ class code_generator:
 		elif binary_op_tree.type == "<mulopchar>":
 			return self.snippets[mulop_char_dict[binary_op_tree.children[0].string]].generate_code({"getgp0":get_gp0,"getgp1":get_gp1,"storegp0":store_gp0})
 		else:
-			print "ERROR: unrecognised operation passed to code generator: "+binary_op_tree.type
+			print "ERROR(37): unrecognised operation passed to code generator: "+binary_op_tree.type
 			quit()
 
 
@@ -737,7 +737,7 @@ class code_generator:
 		elif start_type == "char" and destination_type == "int":
 			return ''
 		else:
-			print "ERROR: unhandled type casting: "+start_type+" and "+destination_type
+			print "ERROR(38): unhandled type casting: "+start_type+" and "+destination_type
 			quit()
 import os
 CURRENT_DIR = os.path.dirname(__file__)
