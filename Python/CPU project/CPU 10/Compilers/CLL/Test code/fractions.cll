@@ -1,0 +1,34 @@
+//mimicking forth equivalent of this prgram to compare speeds
+
+void add_fractions(@int fraction1, @int fraction2)
+	int num = fraction1[0]*fraction2[1] + fraction2[0]*fraction1[1];
+	int den = fraction1[1]*fraction2[1];
+
+	fraction1[0] = num;
+	fraction1[1] = den;
+	simplify(fraction1);
+end;
+
+void simplify(@int fraction)
+	int factor = gcd(fraction[0],fraction[1]);
+	fraction[0] = fraction[0]/factor;
+	fraction[1] = fraction[1]/factor;
+end;
+
+int gcd(int a, int b)
+	if (a == 0) then
+		return b;
+	else
+		return gcd(b%a,a);
+	endif;
+end;
+
+void main()
+	@int 2 a = [17,18];
+	@int 2 b = [3,4];	
+	add_fractions(a,b);
+	print_i(a[0]);
+	printf("\n");
+	print_i(a[1]);
+
+end;
