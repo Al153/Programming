@@ -61,7 +61,7 @@ end;
 /////////////////////////////// IO ////////////////////////////////////////////
 void in(@char buf)
 	int i = 0;
-	int character;
+	char character;
 	int continue = 1;
 	while (continue) do
 		character = getw();
@@ -77,12 +77,12 @@ end;
 
 void in_echo(@char buf)
 	int i = 0;
-	int character;
+	char character;
 	int continue = 1;
 	while (continue) do
 		character = getw();
 		putc(character);
-		if (character == 10) then
+		if (character == 13) then
 			buf[i] = 0; //nullifies string
 			continue = 0; //breaks
 		else
@@ -95,7 +95,7 @@ end;
 //CLL printf (implemented in assembly as a built_in)
 void printf_CLL(@char buf)
 	int i = 0;
-	int character;
+	char character;
 	int continue = 1;
 	while (continue) do
 		character = buf[i];
@@ -109,7 +109,7 @@ end;
 
 void get_response(@char prompt,@char response)
 	printf(prompt);
-	in_echo(buf);
+	in_echo(response);
 end;
 
 

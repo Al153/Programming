@@ -1,0 +1,171 @@
+// a binary tree node consists of 6 ints:
+//when acting as a binary tree node:
+	// 0: parent link - address of parent node
+	// 1: Allocated? - 1 if allocated else not. if acting as a node with children ALLOCATED = childo.allocated&child[1].allocated
+	// 2: address 	 - address of memory pointed to by that node
+	// 3: size       - size of block pointed to
+	// 4: child0	 -
+    // 5: child1 
+#define MALLOC_HEAP_SIZE 64 //should be length 2**n
+#define MALLOC_TREE_LENGTH 56 //8 nodes
+@int MALLOC_TREE_LENGTH  MALLOC_TREE_PARTITION;   //section of memory to be turned into tree nodes for the tree partition
+@int MALLOC_HEAP_SIZE MALLOC_HEAP; 			//the area of memory that is chunked
+
+@int MALLOC_TREE;
+int MALLOC_POOL = MALLOC_TREE_PARTITION; //top of the pool
+
+
+void malloc_init()
+	//formats tree partition into a long linked list
+
+	// the [0] member of each node in the linked list is the next list
+	int i;
+	int next_address;
+	for (i = 0, i< MALLOC_TREE_LENGTH, i = i + 6)
+		if (i+6 < MALLOC_TREE_LENGTH) then
+			next_address = MALLOC_TREE_PARTITION + (i+6)*4;
+		else
+			next_address = 0; //nullifies link (end of linked list)
+		endif;
+		MALLOC_TREE_PARTITION[i] = next_address;
+	loop;
+
+	//set_up_top_node
+	MALLOC_TREE = create_tree_node(MALLOC_HEAP_SIZE,MALLOC_HEAP,0); //creates tree node, with no parent
+end;
+
+int malloc(int size)
+	//needs to call hidden recursive function
+	if (not(size)) then return 0; endif; //if an allocation is called, return 0
+	int return_value = __malloc(MALLOC_TREE,size);
+	if (not(return_value)) then
+		printf("RUNTIME ERROR: unable to allocate memory \n");
+		quit();
+	endif;
+	return return_value;
+end;
+
+void dalloc(@int address)
+	//deallocates memory
+	int success = __dalloc(address,MALLOC_TREE);
+	if (not(success)) then //raise error
+		printf("RUNTIME ERROR: could not deallocate memory\n");
+		quit();
+	endif;
+end;
+
+int __dalloc(int address, @int parent_node)
+	int parent_size = parent_node[3];
+	int parent_allocate = parent_node[1];
+	int child_size = parent_size/2;
+	@int left_child = parent_node[4]; 
+	@int right_child = parent_node[5];
+	int return_value;
+
+	if ((address =< parent_node[2])and(address<parent_node[2]+parent_size)) then //if valid address
+		if ((left_child == 0) and (address == parent_node[2])) then //if correct address and node has no children then deallocate and return 1 (success)
+			parent_node[1] = 0; //no longer allocated
+			return 1;
+		endif;
+
+		if ((left_child == 0) and (not(address == parent_node[2]))) then //if incorrect and node has no children then deallocate and return 0 (failure)
+			return 0;
+		endif;
+
+		if (address < parent_node[2]+child_size) then //if in left hand child, try to deallocate left hand child
+			return_value = __dalloc(address,left_child);
+		else 										  //try to deallocate right hand side
+			return_value = __dalloc(address,left_child);
+		endif;
+		
+		if (not((left_child[1]) or (right_child[1]))) then //if neither right or left child is allocated, combine two nodes and delete the children
+			delete_tree_node(left_child);
+			delete_tree_node(right_child);
+			parent_node[4] = 0;
+			parent_node[5] = 5;
+  		endif;
+  		return return_value;
+	else
+		printf("RUNTIME ERROR: Tried to deallocate invalid address\n"); //raise an erro
+		quit();
+	endif;
+end;
+
+
+int __malloc(@int node,int size)
+	//search through the malloc tree. If a spare partition of the right size is found, fill it, else split the partition and check that. If the size is too small then dont't split
+	int node_size = node[3];
+	if (size>node_size) then //error, should only happen if the allocated size is bigger than the heap
+		printf("RUNTIME ERROR: allocation size too big for malloc\n");
+		quit();
+	else //check if node correct size for allocation
+		if (node_size>1) then  //if the node can be split
+			if (size>node_size/2)  then
+				node[1] = 1; //marks as allocated
+				return node[2]; //returns address
+			endif;
+			//needs to search node's children to see if allocation can take place
+			@int left_child = node[4];
+			if (not(left_child)) then  //if node has no children, create children
+				split_tree_node(node);
+				left_child = node[4];
+			endif;
+
+			@int right_child = node[5];
+
+			if (not(left_child[1])) then //if the left child isn't allocated, then try to place in left child
+				int return_value = __malloc(left_child,size);
+				if (return_value) then
+					if (left_child[1]&right_child[1]) then node[1] = 1; endif;  //if both left and right nnodes are allocated, then self.allocated is true
+					return return_value; //if success then return
+				endif;  
+			endif;
+
+			if (not(right_child[1])) then //if the right child isn't allocated, then try to place in right child
+				return_value = __malloc(right_child,size);
+				if (return_value) then
+					if (left_child[1]&right_child[1]) then node[1] = 1; endif;	//if both left and right nnodes are allocated, then self.allocated is true
+					return return_value; //if success then return
+				endif;  
+			endif;
+			return 0; //if both left and right mallocs fail then return fail
+		endif;
+		return 0; 			//return a fail if node cannot be split
+	endif;
+end;
+
+void split_tree_node(@int parent_node)
+	
+	int parent_size = parent_node[3];
+	int parent_address = parent_node[2];
+	int child_size = parent_size/2;
+	int right_address = parent_address + child_size; //right address is the address pointed to by the right block   
+
+	parent_node[4] = create_tree_node(child_size,parent_address,parent_node);
+	parent_node[5] = create_tree_node(child_size,right_address,parent_node);
+end;
+
+
+@int create_tree_node(int size, int address, @int parent_link)
+	//allocate tree node
+	@int new_pointer = MALLOC_POOL;  //gets the top link of the list
+	if (new_pointer) then 			//if the pointer is valid
+		MALLOC_POOL = new_pointer[0]; 	 //makes the pool point to the next in the linked list
+		new_pointer[0] = parent_link; 	 //links into tree
+		new_pointer[1] = 0; 			 //not allocated
+		new_pointer[2] = address;   	
+		new_pointer[3] = size;
+		new_pointer[4] = 0; 			 //no children
+		new_pointer[5] = 0;
+		return new_pointer;
+	else 							//if the pointer == 0 then no more nodes left to allocate 
+		printf("RUNTIME ERROR: ran out of malloc tree nodes\n");
+		quit();
+	endif;
+end;
+
+void delete_tree_node(@int node)
+	node[0] = MALLOC_POOL; //inserts node back into the pool
+	MALLOC_POOL = node;
+end;
+

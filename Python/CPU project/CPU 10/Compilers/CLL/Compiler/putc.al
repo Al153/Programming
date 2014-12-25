@@ -2,4 +2,5 @@
 SUB gp7 @4 															%putc
 Load gp0  Expression_stack [gp7]
 Out gp0
+Move Jump PC
 ################################################################################

@@ -1,4 +1,4 @@
-#an implementation of the heapsort algorithm in my own stack based progrmming language.
+#an implementation of the heapsort algorithm in my own stack based programming language.
 #I recommend setting a text editor to recognise the file as python for syntax highlighting.
 
 #I have included it as an example of my programming language
@@ -20,7 +20,7 @@
 
 #This is a very low level language, functioning more as an extension for interfacing with assembly language than as a language in its own right.
 #For example it does not use stack frames, so local variables are not unique for each function call
-#It ignores types,the only datatype on the stack is 32bit int, ie anything which isnt operable using integers, (strings, arrays etc) must be manipulated using pointers
+#It ignores types,the only datatype on the stack is 32bit int, ie anything which isn't operable using integers, (strings, arrays etc) must be manipulated using pointers
 #The core language itself is extremely basic and can do virtually nothing. It consists of: variable and word definitions, pushing variables and word addresses onto the stack,
 #and the primitives: if else endif, while loop, call return. Any other functionality, such as arithmetic, storing to variables and io are handled by assembly language files which are
 #interfaced by .hlib (header library) files.

@@ -386,7 +386,7 @@ class code_generator:
 		if variable_name in self.variable_address_dict:
 			return self.generate_store_local_variable(variable_parse_tree)
 		elif variable_name in self.global_variable_address_dict:
-			return generate_store_global_variable(variable_parse_tree)
+			return self.generate_store_global_variable(variable_parse_tree)
 		else:
 			print "ERROR(19): does not recognise variable name: "+variable_name
 
@@ -489,8 +489,8 @@ class code_generator:
 	
 	def generate_store_global_variable(self,variable_parse_tree):
 		variable_name = variable_parse_tree.children[0].string
-		variable_type = self.variable_types[variable_name]
-		variable_address = str(self.variable_address_dict[variable_name])
+		variable_type = self.global_variable_type_dict[variable_name]
+		variable_address = str(self.global_variable_address_dict[variable_name])
 		if len(variable_parse_tree.children) == 1:
 			if variable_type == "int":
 				return self.snippets[" store global "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
@@ -583,6 +583,7 @@ class code_generator:
 #______________________________________________ Bolean code ________________________________________
 	
 	def generate_boolean_expression(self,bool_parse_tree):  			#set of mutually recursive functions
+		#print_parse_tree(bool_parse_tree)
 		if bool_parse_tree.children[1].type == "<bool_factor>":  	#follows grammar parse tree
 			return self.generate_boolean_factor(bool_parse_tree.children[1])   
 		elif bool_parse_tree.children[1].type == "<comparison>":
@@ -598,7 +599,7 @@ class code_generator:
 		elif len(bool_parse_tree.children) == 2:
 			return_code = self.generate_boolean_expression(bool_parse_tree.children[1]) + self.generate_bool_unary_op(bool_parse_tree.children[0])
 		elif len(bool_parse_tree.children) == 3:
-			return_code = self.generate_boolean_expression(bool_parse_tree.children[0])+self.generate_boolean_expression(bool_parse_tree.children[2])+self.generate_boolean_operation(bool_parse_tree.children[1])
+			return_code = self.generate_boolean_factor(bool_parse_tree.children[0])+self.generate_boolean_expression(bool_parse_tree.children[2])+self.generate_boolean_operation(bool_parse_tree.children[1])
 		return return_code
 		
 	def generate_boolean_operation(self,bool_parse_tree):
@@ -649,7 +650,7 @@ class code_generator:
 				else:
 					if comparison_operation.children[0].type == "<not_less>": 			#deal with non terminals
 						return expr0 + expr1 +self.snippets["not less"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"Push gp0":push_gp0})
-					elif comparison_operation.children.type == "<not_greater>":
+					elif comparison_operation.children[0].type == "<not_greater>":
 						return expr0 + expr1 +self.snippets["is greater"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"Push gp0":push_gp0})
 					else:
 						print "ERROR(35): not expecting comparison operator: "+comparison_operation.children[0].type
@@ -739,6 +740,17 @@ class code_generator:
 		else:
 			print "ERROR(38): unhandled type casting: "+start_type+" and "+destination_type
 			quit()
+
+def print_parse_tree(parse_tree_node,offset = ''):
+	if parse_tree_node.terminal:
+		print offset+parse_tree_node.type+"("+parse_tree_node.string+")"
+		return
+	else:
+		print offset+parse_tree_node.type+"("
+		for child in parse_tree_node.children:
+			print_parse_tree(child,offset+"  ")
+		print offset+")"
+
 import os
 CURRENT_DIR = os.path.dirname(__file__)
 file_path = os.path.join(CURRENT_DIR, "code_snippets.al")

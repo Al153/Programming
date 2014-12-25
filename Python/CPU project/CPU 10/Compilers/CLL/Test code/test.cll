@@ -1,10 +1,13 @@
 #include string_tools.cll
+#include allocation.cll
 void main()
-	@char lookup = "12";
-	print_i(string_to_int(lookup));
-	@char 10 buf;
-	int_to_string(123,buf);
-	printf(buf);
+	malloc_init(); //initiallises malloc
+	int a = malloc(10); //allocate 10*4 bytes
+	print_i(a);
+	printf("\n");
+	int b = malloc(32);
+	print_i(b);
+	int c = malloc(32); //should crash
 end;
 
 
