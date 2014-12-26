@@ -1,0 +1,172 @@
+//expression_tree_style 
+//int: 			0|		1|		2
+
+//constant: 	0| const |
+//polynomial: 	1| Exp 	 |
+//exponent:		2| base	 | 				base^x
+//trig:			3|trigTyp|
+//log:			4| 						//always ln(x)
+//constLog: 	5| const | 				//ln(a)
+
+//sum:			6| A Tree| B Tree		 
+//subtraction	7| A Tree| B Tree
+//Product		8| A Tree| B Tree
+//quotient		9| A Tree| B Tree
+//chain		   10| f Tree| g Tree
+
+
+#include allocation.cll
+
+int copy(@int tree)
+	if (tree[0]<=5) then
+		@int new_tree = malloc(2);
+		new_tree[0] = tree[0];
+		new_tree[1] = tree[1];
+	else
+		//need to replicate children too
+		new_tree = malloc(3);
+		new_tree[0] = tree[0];
+		new_tree[1] = copy(tree[1]);
+		new_tree[2] = copy(tree[2]);
+	endif;
+	return new_tree;
+end;
+
+void delete(@int tree)
+	if (tree[0]<=5) then
+		dalloc(tree);
+	else
+		//delete children first
+		delete(tree[1]);
+		delete(tree[2]);
+		dalloc(tree);
+	endif;
+end;
+
+int differentiate(@int tree)
+	int tree_type = tree[0]; 		//gets tree type
+
+	if (tree_type == 0) then 		//constant ==> 0
+		return constant(0); 
+	endif;
+	if (tree_type == 1) then 		//polynomial x^n ==> nx^(n-1)
+		int n = tree[1]; 			//exponent
+		return product(constant(n),polynomial(n-1));
+	endif;
+	if (tree_type == 2) then 		//exponential a^x ==> ln(a)*a^x
+		n = tree[1];
+		return product(log_constant(n),exponent(n));
+	endif;
+	if (tree_type == 3) then 		//trig
+		int type = tree[1];
+		if (type == 1) then 		//cos ==> -sin
+			return subtraction(constant(0),trigonometric(0));
+		else 						//sin ==> cos
+			return trigonometric(1);
+		endif;
+	endif;
+	if (tree_type == 4) then 		//ln(x) ==> 1/x
+		return quotient(constant(1),polynomial(1)); 	
+	endif;
+	if (tree_type == 5) then 		//ln(constant) ==>
+		return constant(0);
+	endif;
+	if (tree_type == 6) then 		//A+B ==> A' + B'
+		return sum(differentiate(tree[1]),differentiate(tree[2]));  
+	endif;
+	if (tree_type == 7) then 		//A-B ==> A' - B'
+		return subtraction(differentiate(tree[1]),differentiate(tree[2]));
+	endif;
+	if (tree_type == 8) then // AB ==> A'B + AB'
+		return sum(product(differentiate(tree[1]),copy(tree[2])),product(differentiate(tree[2]),copy(tree[1])));
+	endif;
+	if (tree_type == 9) then //   A/B ==> (A'B-AB')/(B^2)
+		int numerator = subtraction(product(differentiate(tree[1]),copy(tree[2])),product(differentiate(tree[2]),copy(tree[1])));
+		int denominator = chain(polynomial(2),copy(tree[2]));
+		return quotient(numerator,denominator);
+	endif;
+	if (tree_type == 10) then //fg(x) ==> f'g(x)*g'(x)
+		return product(chain(differentiate(tree[1]),copy(tree[2])),copy(tree[2]));
+	endif;
+end;
+
+
+//classes for each node type
+
+int constant(int value)
+	@int tree_node = malloc(2); 			//8 bytes (2 ints), node using malloc
+	tree_node[0] = 0;
+	tree_node[1]] = value;
+	return tree_node;
+end;
+
+int polynomial(int exponent)
+	@int tree_node = malloc(2); 			//8 bytes (2 ints), node using malloc
+	tree_node[0] = 1;
+	tree_node[1]] = exponent;
+	return tree_node;
+end;
+
+int exponential(int base)
+	@int tree_node = malloc(2); 			//8 bytes (2 ints), node using malloc
+	tree_node[0] = 2;
+	tree_node[1]] = base;
+	return tree_node;
+end;
+
+int trigonometric(int trig_type)
+	//0 for sin
+	//1 for cos
+	@int tree_node = malloc(2); 			//8 bytes (2 ints), node using malloc
+	tree_node[0] = 3;
+	tree_node[1]] = trig_type;
+	return tree_node;
+end;
+
+int log()
+	@char tree_node = malloc(1); 			//4 bytes (1 ints), node using malloc
+	tree_node[0] = 4;
+end;
+
+int log_constant(int value) 				//ln(value) used in differentiating exponents
+	@int tree_node = malloc(2); 			//8 bytes (2 ints)
+	tree_node[0] = 5;
+	tree_node[1]] = value;
+	return tree_node;
+end;
+
+int sum(@int tree_A, @int tree_B)
+	@int tree_node = malloc(3);
+	tree_node[0] = 6;
+	tree_node[1] = tree_A;
+	tree_node[2] = tree_B;
+end;
+
+int product(@int tree_A, @int tree_B)
+	@int tree_node = malloc(3);
+	tree_node[0] = 7;
+	tree_node[1] = tree_A;
+	tree_node[2] = tree_B;
+end;
+
+int quotient(@int tree_A, @int tree_B)
+	@int tree_node = malloc(3);
+	tree_node[0] = 8;
+	tree_node[1] = tree_A;
+	tree_node[2] = tree_B;
+end;
+
+int subtraction(@int tree_A, @int tree_B)
+	@int tree_node = malloc(3);
+	tree_node[0] = 9;
+	tree_node[1] = tree_A;
+	tree_node[2] = tree_B;
+end;
+
+int chain(@int tree_A, @int tree_B)
+	@int tree_node = malloc(3);
+	tree_node[0] = 10;
+	tree_node[1] = tree_A;
+	tree_node[2] = tree_B;
+end;
+

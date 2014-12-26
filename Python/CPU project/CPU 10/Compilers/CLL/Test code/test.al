@@ -109,13 +109,21 @@ Halt
 int CLL.MALLOC_TREE 0
 array CLL.array_of_MALLOC_TREE_PARTITION 56 []
 int CLL.MALLOC_TREE_PARTITION CLL.array_of_MALLOC_TREE_PARTITION
+byteArray CLL.array_of_string10 2 [10, 0]
+int CLL.string10 CLL.array_of_string10
+byteArray CLL.array_of_string11 2 [10, 0]
+int CLL.string11 CLL.array_of_string11
 array CLL.array_of_MALLOC_HEAP 64 []
 int CLL.MALLOC_HEAP CLL.array_of_MALLOC_HEAP
 byteArray CLL.array_of_string0 11 [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0]
 int CLL.string0 CLL.array_of_string0
+byteArray CLL.array_of_string8 2 [10, 0]
+int CLL.string8 CLL.array_of_string8
+byteArray CLL.array_of_string9 2 [10, 0]
+int CLL.string9 CLL.array_of_string9
 byteArray CLL.array_of_string6 45 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 114, 97, 110, 32, 111, 117, 116, 32, 111, 102, 32, 109, 97, 108, 108, 111, 99, 32, 116, 114, 101, 101, 32, 110, 111, 100, 101, 115, 10, 0]
 int CLL.string6 CLL.array_of_string6
-byteArray CLL.array_of_string7 2 [10, 0]
+byteArray CLL.array_of_string7 2 [32, 0]
 int CLL.string7 CLL.array_of_string7
 byteArray CLL.array_of_string4 52 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 84, 114, 105, 101, 100, 32, 116, 111, 32, 100, 101, 97, 108, 108, 111, 99, 97, 116, 101, 32, 105, 110, 118, 97, 108, 105, 100, 32, 97, 100, 100, 114, 101, 115, 115, 10, 0]
 int CLL.string4 CLL.array_of_string4
@@ -1344,9 +1352,9 @@ Load gp0  Expression_stack [gp7]
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
 
-Move Zero gp2 														#COMPARE (IS GREATER)
+Load gp2 @4294967295  												#COMPARE (NOT LESS)
 Compare gp1 gp0
-if Greater then Load gp2 @4294967295
+if Less then Move Zero gp2
 Move gp2 gp0
  														
 Store gp0 Expression_stack [gp7]									#PUSH GP0
@@ -1387,6 +1395,27 @@ if Greater then Load PC Stack_overflow_error
 
 
 Load gp0 24 [Stack_pointer] 						#LOAD GP0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+Load gp0 @4
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+
+MUL gp0 gp1 														#MULTIPLY
  														
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -1770,6 +1799,27 @@ if Greater then Load PC Stack_overflow_error
 
 
 Load gp0 28 [Stack_pointer] 						#LOAD GP0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+Load gp0 @4
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+
+MUL gp0 gp1 														#MULTIPLY
  														
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -3067,6 +3117,163 @@ Move Jump PC
 
 
 
+																	Scope print_pool
+def length gp4
+def expression_stack_ptr gp7
+def ret_addr Jump
+def previous_stack_ptr gp5
+
+Move Stack_pointer previous_stack_ptr								%print_pool
+SUB Stack_pointer @12 									#OVERHEAD FOR FUNCTION print_pool
+Compare Stack_pointer Callstack_ptr
+if Less then Load PC Recursion_limit_reached
+Store ret_addr 0 [Stack_pointer]
+Store previous_stack_ptr 4 [Stack_pointer]
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+Store gp0 8 [Stack_pointer] 						#STORE GP0
+
+
+ 									
+
+Load gp0 8 [Stack_pointer] 						#LOAD GP0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifprint_pool0endif
+
+
+Load gp0 8 [Stack_pointer] 						#LOAD GP0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto print_i 												#CALLING print_i
+
+
+
+Load gp0 CLL.string7 										#LOAD GP0 GLOBAL
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto printf 												#CALLING printf
+
+
+
+
+Load gp0 @0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP TO INDEX REGISTER
+Load gp6 Expression_stack [gp7]
+
+MUL gp6 @4 														   #INDEXING FOR @INT
+
+ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto print_i 												#CALLING print_i
+
+
+
+Load gp0 CLL.string8 										#LOAD GP0 GLOBAL
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto printf 												#CALLING printf
+
+
+
+
+Load gp0 @0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP TO INDEX REGISTER
+Load gp6 Expression_stack [gp7]
+
+MUL gp6 @4 														   #INDEXING FOR @INT
+
+ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto print_pool 												#CALLING print_pool
+
+Pass %ifprint_pool0endif
+
+
+
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+
+
+
+
+
+
+
+
+
+
+
 																	Scope main
 def length gp4
 def expression_stack_ptr gp7
@@ -3074,7 +3281,7 @@ def ret_addr Jump
 def previous_stack_ptr gp5
 
 Move Stack_pointer previous_stack_ptr								%main
-SUB Stack_pointer @20 									#OVERHEAD FOR FUNCTION main
+SUB Stack_pointer @24 									#OVERHEAD FOR FUNCTION main
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
@@ -3129,7 +3336,7 @@ Goto print_i 												#CALLING print_i
 
 
 
-Load gp0 CLL.string7 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string9 										#LOAD GP0 GLOBAL
  														
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -3168,7 +3375,71 @@ if Greater then Load PC Stack_overflow_error
 Goto print_i 												#CALLING print_i
 
 
-Load gp0 @32
+
+Load gp0 CLL.string10 										#LOAD GP0 GLOBAL
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto printf 												#CALLING printf
+
+
+
+Load gp0 8 [Stack_pointer] 						#LOAD GP0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto dalloc 												#CALLING dalloc
+
+
+Load gp0 @10
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+Goto malloc 												#CALLING malloc
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+Store gp0 20 [Stack_pointer] 						#STORE GP0
+
+
+
+Load gp0 20 [Stack_pointer] 						#LOAD GP0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto print_i 												#CALLING print_i
+
+
+
+Load gp0 CLL.string11 										#LOAD GP0 GLOBAL
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto printf 												#CALLING printf
+
+
+Load gp0 @100
  														
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -3425,15 +3696,9 @@ if Greater then Load PC Stack_overflow_error
 SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
-if gp0 then Load PC if__malloc9true 									#IF ELSE STATEMENT
+if gp0 then Load PC if__malloc11true 									#IF ELSE STATEMENT
  									
 
-Load gp0 12 [Stack_pointer] 						#LOAD GP0
- 														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
 
 Load gp0 @1
  														
@@ -3443,16 +3708,25 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 				
+SUB gp7 @4 															#POP TO INDEX REGISTER
+Load gp6 Expression_stack [gp7]
+
+MUL gp6 @4 														   #INDEXING FOR @INT
+
+ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+				
 SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
-
-Move Zero gp2 														#COMPARE (IS GREATER)
-Compare gp1 gp0
-if Greater then Load gp2 @4294967295
-Move gp2 gp0
+if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
  														
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -3465,7 +3739,22 @@ SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC if__malloc8endif
+if gp0 then Load PC if__malloc0endif
+
+Load gp0 @0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+
+Pass %if__malloc0endif
+
  									
 
 Load gp0 28 [Stack_pointer] 						#LOAD GP0
@@ -3529,7 +3818,58 @@ SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC if__malloc0endif
+if gp0 then Load PC if__malloc2endif
+ 									
+
+
+Load gp0 @4
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP TO INDEX REGISTER
+Load gp6 Expression_stack [gp7]
+
+MUL gp6 @4 														   #INDEXING FOR @INT
+
+ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+NOT gp0 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC if__malloc1endif
 Load gp0 @1
  														
 Store gp0 Expression_stack [gp7]									#PUSH GP0
@@ -3588,8 +3928,63 @@ Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 
-Pass %if__malloc0endif
+Pass %if__malloc1endif
 
+
+Load gp0 @0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+
+Pass %if__malloc2endif
+
+ 									
+
+Load gp0 12 [Stack_pointer] 						#LOAD GP0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+Load gp0 @1
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+
+Move Zero gp2 														#COMPARE (IS GREATER)
+Compare gp1 gp0
+if Greater then Load gp2 @4294967295
+Move gp2 gp0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC if__malloc10endif
 
 
 Load gp0 @4
@@ -3655,7 +4050,7 @@ SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC if__malloc1endif
+if gp0 then Load PC if__malloc3endif
 
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
@@ -3698,7 +4093,7 @@ Load gp0  Expression_stack [gp7]
 
 Store gp0 24 [Stack_pointer] 						#STORE GP0
 
-Pass %if__malloc1endif
+Pass %if__malloc3endif
 
 
 
@@ -3780,7 +4175,7 @@ SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC if__malloc4endif
+if gp0 then Load PC if__malloc6endif
 
 
 Load gp0 24 [Stack_pointer] 						#LOAD GP0
@@ -3834,7 +4229,7 @@ SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC if__malloc3endif
+if gp0 then Load PC if__malloc5endif
  									
 
 
@@ -3915,7 +4310,7 @@ SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC if__malloc2endif
+if gp0 then Load PC if__malloc4endif
 Load gp0 @1
  														
 Store gp0 Expression_stack [gp7]									#PUSH GP0
@@ -3944,7 +4339,7 @@ Load gp0  Expression_stack [gp7]
 ADD gp6 8 [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
 
-Pass %if__malloc2endif
+Pass %if__malloc4endif
 
 
 
@@ -3961,9 +4356,9 @@ Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 
-Pass %if__malloc3endif
+Pass %if__malloc5endif
 
-Pass %if__malloc4endif
+Pass %if__malloc6endif
 
  									
 
@@ -4015,7 +4410,7 @@ SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC if__malloc7endif
+if gp0 then Load PC if__malloc9endif
 
 
 Load gp0 20 [Stack_pointer] 						#LOAD GP0
@@ -4069,7 +4464,7 @@ SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC if__malloc6endif
+if gp0 then Load PC if__malloc8endif
  									
 
 
@@ -4150,7 +4545,7 @@ SUB gp7 @4 															#POP GP0
 Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC if__malloc5endif
+if gp0 then Load PC if__malloc7endif
 Load gp0 @1
  														
 Store gp0 Expression_stack [gp7]									#PUSH GP0
@@ -4179,7 +4574,7 @@ Load gp0  Expression_stack [gp7]
 ADD gp6 8 [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
 
-Pass %if__malloc5endif
+Pass %if__malloc7endif
 
 
 
@@ -4196,25 +4591,10 @@ Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 
-Pass %if__malloc6endif
-
-Pass %if__malloc7endif
-
-
-Load gp0 @0
- 														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
-Move ret_addr PC
-
 Pass %if__malloc8endif
 
+Pass %if__malloc9endif
+
 
 Load gp0 @0
  														
@@ -4228,8 +4608,23 @@ Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 
-Load PC if__malloc9endif
-Pass %if__malloc9true
+Pass %if__malloc10endif
+
+
+Load gp0 @0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+
+Load PC if__malloc11endif
+Pass %if__malloc11true
 
 
 Load gp0 CLL.string5 										#LOAD GP0 GLOBAL
@@ -4246,7 +4641,7 @@ Goto printf 												#CALLING printf
 
 Goto quit 												#CALLING quit
  
-Pass %if__malloc9endif           
+Pass %if__malloc11endif           
 
 
 Load gp0 @0
@@ -4940,6 +5335,294 @@ Move ret_addr PC
 
 
 
+																	Scope check_allocation
+def length gp4
+def expression_stack_ptr gp7
+def ret_addr Jump
+def previous_stack_ptr gp5
+
+Move Stack_pointer previous_stack_ptr								%check_allocation
+SUB Stack_pointer @20 									#OVERHEAD FOR FUNCTION check_allocation
+Compare Stack_pointer Callstack_ptr
+if Less then Load PC Recursion_limit_reached
+Store ret_addr 0 [Stack_pointer]
+Store previous_stack_ptr 4 [Stack_pointer]
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+Store gp0 8 [Stack_pointer] 						#STORE GP0
+
+
+ 									
+
+
+Load gp0 @4
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP TO INDEX REGISTER
+Load gp6 Expression_stack [gp7]
+
+MUL gp6 @4 														   #INDEXING FOR @INT
+
+ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+NOT gp0 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifcheck_allocation0endif
+
+
+
+Load gp0 @1
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP TO INDEX REGISTER
+Load gp6 Expression_stack [gp7]
+
+MUL gp6 @4 														   #INDEXING FOR @INT
+
+ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+
+Pass %ifcheck_allocation0endif
+
+ 									
+
+
+Load gp0 @1
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP TO INDEX REGISTER
+Load gp6 Expression_stack [gp7]
+
+MUL gp6 @4 														   #INDEXING FOR @INT
+
+ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifcheck_allocation1endif
+
+Load gp0 @1
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+
+Pass %ifcheck_allocation1endif
+
+
+
+Load gp0 @4
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP TO INDEX REGISTER
+Load gp6 Expression_stack [gp7]
+
+MUL gp6 @4 														   #INDEXING FOR @INT
+
+ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+Store gp0 12 [Stack_pointer] 						#STORE GP0
+
+
+
+Load gp0 @5
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP TO INDEX REGISTER
+Load gp6 Expression_stack [gp7]
+
+MUL gp6 @4 														   #INDEXING FOR @INT
+
+ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+Store gp0 16 [Stack_pointer] 						#STORE GP0
+
+
+
+
+Load gp0 12 [Stack_pointer] 						#LOAD GP0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto check_allocation 												#CALLING check_allocation
+
+
+Load gp0 16 [Stack_pointer] 						#LOAD GP0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Goto check_allocation 												#CALLING check_allocation
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+
+OR gp0 gp1 															#OR
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+
+
+Load gp0 @0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+
+
+
+
+
+
+
+
+
+
+
 																	Scope string_to_int
 def length gp4
 def expression_stack_ptr gp7
@@ -5347,6 +6030,27 @@ if Greater then Load PC Stack_overflow_error
 
 
 Load gp0 20 [Stack_pointer] 						#LOAD GP0
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+Load gp0 @4
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+
+MUL gp0 gp1 														#MULTIPLY
  														
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4

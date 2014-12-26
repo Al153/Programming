@@ -2,12 +2,20 @@
 #include allocation.cll
 void main()
 	malloc_init(); //initiallises malloc
+	//print_pool(MALLOC_POOL);
 	int a = malloc(10); //allocate 10*4 bytes
 	print_i(a);
 	printf("\n");
 	int b = malloc(32);
 	print_i(b);
-	int c = malloc(32); //should crash
+	printf("\n");
+
+	dalloc(a);
+
+	int d = malloc(10);
+	print_i(d);
+	printf("\n");
+	int c = malloc(100); //should crash
 end;
 
 
