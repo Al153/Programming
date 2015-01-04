@@ -330,41 +330,42 @@ Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 << while loop code >>
-Pass %loop<number>entry
+Pass 										%loop<number>entry
 <Calculate_condition>									
 <Popgp0>
 NOT gp0
 if gp0 then Load PC loop<number>exit 								#WHILE LOOP
 <looped_code>
-Load PC loop<number>entry
-Pass %loop<number>exit
+Load PC loop<number>entry					%loop<number>continue
+Pass 										%loop<number>exit
 << for loop code >>
 <assignment1>
-Pass %loop<number>entry 											#FOR LOOP
+Pass 										%loop<number>entry 		#FOR LOOP
 <Calculate_condition>
 <Popgp0>
 NOT gp0
 if gp0 then Load PC loop<number>exit
 <looped_code>
-<assignment2>
+Pass 										%loop<number>continue
+<assignment2>								
 Load PC loop<number>entry
-Pass %loop<number>exit
+Pass 										%loop<number>exit
 << if statement code >> 									
 <Calculate_condition>
 <Popgp0>
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC if<number>endif
 <conditional code>
-Pass %if<number>endif
+Pass										%if<number>endif
 << if-else statement code >>
 <Calculate_condition>
 <Popgp0>
 if gp0 then Load PC if<number>true 									#IF ELSE STATEMENT
 <false_code>
 Load PC if<number>endif
-Pass %if<number>true
+Pass 										%if<number>true
 <true_code> 
-Pass %if<number>endif           
+Pass 										%if<number>endif           
 <<junk>>
 
 

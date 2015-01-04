@@ -12,7 +12,7 @@
 <var_dec> ::= <type> id | <type> id "=" <var_value>
 <var_value> ::= "[" <array> "]" | <expr> 
 <fun_dec> ::= <type> id "(" <inargs> ")" <block> "end" | <type> id "(" ")" <block> "end"
-<other> ::= "return" <expr> | "return" | <fun_call>
+<other> ::= "return" <expr> | "return" | <fun_call> | "break" | "continue"
 
 <inargs> ::= <type> id | <inargs> "," <type> id
 

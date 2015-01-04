@@ -1,7 +1,14 @@
 Heapsort:
+	-	same starting array
+
 
 Size of CLL assembly: 9179 Lines + 0 Overhead
 Size of Forth assembly: 487 Lines + 311 Overhead
 
+Size of CLL optimised assembly 6677 Lines + 0 overhead
+
+
 instructions processed by CLL: 725409
 Instructions processed by Forth: 4729359
+
+instructions processed by CLL optimised: 491420
