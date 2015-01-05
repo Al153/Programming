@@ -253,6 +253,8 @@ class code_generator:
 					return self.generate_break_code()
 				elif line.children[0].type == '"continue"':
 					return self.generate_continue_code()
+				elif line.children[0].type == '"pass"':
+					return '' #placeholder
 				else:
 					print "ERROR(11): not expecting tree of type: "+line.children[0].type+" as an \"<other>\" line"
 					quit()
@@ -286,7 +288,7 @@ class code_generator:
 		return_code =  self.snippets[" if statement code "].generate_code({ 			#generates if code using a snippet
 			"Calculate_condition":condition_code,
 			"Popgp0":pop_gp0,
-			"number":self.function_name+str(self.IF_COUNT), 	#if count used to make labels distinct
+			"number":self.function_name+"-"+str(self.IF_COUNT), 	#if count used to make labels distinct
 			"conditional code":block_code,
 			})
 		self.IF_COUNT += 1 															#increments if count to make it distinct
@@ -300,7 +302,7 @@ class code_generator:
 		return_code =  self.snippets[" if-else statement code "].generate_code({ 					#uses snippet
 			"Calculate_condition":condition_code,
 			"Popgp0":pop_gp0,
-			"number":self.function_name+str(self.IF_COUNT),
+			"number":self.function_name+"-"+str(self.IF_COUNT),
 			"true_code":true_code,
 			"false_code":false_code
 			})
@@ -316,7 +318,7 @@ class code_generator:
 		looped_code = self.generate_block_code(while_parse_tree.children[1])
 		self.in_loop = previous_in_loop
 		return_code = self.snippets[" while loop code "].generate_code({ 					#snippet used to generate code
-			"number":self.function_name+str(self.LOOP_COUNT),
+			"number":self.function_name+"-"+str(self.LOOP_COUNT),
 			"Popgp0":pop_gp0,
 			"Calculate_condition":condition_code,
 			"looped_code":looped_code
@@ -345,7 +347,7 @@ class code_generator:
 				"Calculate_condition":condition,
 				"Popgp0":pop_gp0,
 				"assignment2":assign_2,
-				"number": self.function_name+str(self.LOOP_COUNT),
+				"number": self.function_name+"-"+str(self.LOOP_COUNT),
 				"looped_code":block
 			})
 		self.LOOP_COUNT += 1
@@ -354,7 +356,7 @@ class code_generator:
 	def generate_break_code(self):
 		#goes to exit of the loop
 		if self.in_loop:
-			return "Load PC loop"+self.function_name+str(self.LOOP_COUNT)+"exit\n" #most recent loop generated
+			return "Load PC loop"+self.function_name+"-"+str(self.LOOP_COUNT)+"exit\n" #most recent loop generated
 		else:
 			print "ERROR(44): Break called outside of a loop"
 			quit()
@@ -362,7 +364,7 @@ class code_generator:
 	def generate_continue_code(self):
 		#skips to next iteration of the loop
 		if self.in_loop:
-			return "Load PC loop"+self.function_name+str(self.LOOP_COUNT)+"continue\n" #most recent loop generated
+			return "Load PC loop"+self.function_name+"-"+str(self.LOOP_COUNT)+"continue\n" #most recent loop generated
 		else:
 			print "ERROR(44): Continue called outside of a loop"
 			quit()	
@@ -667,8 +669,8 @@ class code_generator:
 			expr1 = self.generate_expression_code(bool_parse_tree.children[2]) 
 			push_gp0 = self.snippets["Pushgp0"].generate_code({})
 			comparison_operation = bool_parse_tree.children[1]
-			if len(comparison_operation.children) == 2: 						#is equal
-				return expr0 + expr1 + self.snippets["is equal"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"Push gp0":push_gp0})
+			if len(comparison_operation.children) == 2: 						#is equal/not equal
+				return expr0 + expr1 + self.snippets[("is equal" if comparison_operation.children[0].string == "=" else "not equal")].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"Push gp0":push_gp0})
 			elif len(comparison_operation.children) == 1: 						#other operations
 				if comparison_operation.children[0].terminal:  					#if a < or >
 					if comparison_operation.children[0].string == "<":

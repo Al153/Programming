@@ -2,7 +2,7 @@
 
 #heavily optimised printf loop, avoids call stack use entirely
 
-SUB gp7 @4 		 		 %printf										#Pops into gp0
+SUB gp7 @4 		 		 %function:printf										#Pops into gp0
 Load gp0 Expression_stack [gp7]
 						
 					

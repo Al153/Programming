@@ -1,0 +1,35 @@
+//stack based virtual machine
+
+virtual machine instructions
+
+
+Pus
+Pop
+
+Cal
+Ret
+
+DBG
+
+
+ADD
+SUB
+MUL
+DIV
+MOD
+AND
+OR
+XOR
+NOT
+NAND
+NOR
+XNOR
+
+SHR
+SHL
+SRC
+SLC
+
+DUP
+SWP
+DRP

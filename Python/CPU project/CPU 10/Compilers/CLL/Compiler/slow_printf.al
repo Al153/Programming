@@ -14,7 +14,7 @@ def previous_stack_ptr gp5
 # P = Previous top of stack - when returning from a function, the stack pointer is loaded from the PToS
 # a lot of this start-up could be removed
 
-Load length 4 [Stack_pointer]				%printf			 	#gets length of current top stack_frame
+Load length 4 [Stack_pointer]				%function:printf			 	#gets length of current top stack_frame
 Move Stack_pointer previous_stack_ptr						 	#gets a copy of the current stack pointer
 SUB Stack_pointer length 										#shift stack pointer on
 Compare Stack_pointer $Callstack  								#checks for a stack overflow

@@ -1,0 +1,60 @@
+//Trying to produce forth in CLL - may end up in assembly instead
+
+
+
+//defnitions within forth
+
+//word dctionary format:
+//
+//8 bytes of name, an int of code pointer, an int of next entry pointer
+//  ADDR 	CONTENTS 			Remarks
+//			-----------------
+//	x  :x+3	| E | X | A | M |   8 byte character name, other bytes = 0
+//			-----------------
+//	x+4:x+7	| P | L | E | 0 |   ditto
+//			-----------------
+//	x+8:x+B	|    ABCD0123   |   code pointer, 4 bytes, points to the byte code of the particular instruction
+//			-----------------
+//	x+c:x+f	|    0123ABCD   | 	next entry pointer, points to the next dictionary entry
+//			-----------------
+
+
+// functions needed relating to dictionary entries:
+	// compare name (name, reference) ==> true or false - compares a string against the name of and entry
+	// search dictionary (name) ==> reference 		 	- searches the dictionary for the matching entry - makes use of compare_name  
+	// execute dictionary entry (reference) ==> none 	- executes the bytecode from a dictionary reference
+	// outer interpreter 								- executes bytecode 
+
+
+
+//Bytecode format:
+//bytecode for and instruction constists of a linked list of bytecode instructions
+
+//bytecode instructions can be different lengths depending on the type of instructions.
+
+//			word call 							  			push literal			Push variable		Pop variable					control flow  										primitive (executable machine code)
+//
+// int0		type:word call      							type: PushLit			type:PushVar		type: PopVar					type: control flow 						 			type: primitive
+// int1     dictionary entry of word to be called   		literal to push			Var address			Var address						Next Bytecode0		 								machine code pointer - performs a goto to the pointer,stores return value
+// int2		next Bytecode  		                     		Next Bytecode			Next Bytecode		Next Bytecode 					Next Bytecode1 										Next Bytecode
+//
+//
+
+// notes:
+	// the type field consists of some identifying number
+	// the last link to Next Bytecode in a chain will be 0, indicating to return 
+
+// Functions relating to Bytecodes:
+
+	// Bytecode interpeter: proceeds through bytecode list executing instructions, can execute any bytecode instruction and when it hits a primitive, performs a Goto to the machine code
+	//						and executes it, storing the current instruction before hand
+	
+	// A  set of primitives: primitives will allow forth to modify its own state. I plan on making "addToDictionary", "outerInterpreter" and parts of "Compile" primitives
+
+
+
+// requires an "inline" function of compiler for full work
+
+// if I use inline then I can implement the inner interpreter in CLL
+// the inner interpreter could also work in CLL, but may require hackery
+void bytecode_interp()

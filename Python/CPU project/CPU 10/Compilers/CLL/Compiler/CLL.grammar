@@ -1,5 +1,5 @@
 <PROGRAM> ::= <block>
-<ELEMENTARY_TOKENS> ::= " " | "\t" | "\n" | "(" | ")" | "@" | "$" | "+" | "-" | "*" | "/" | "%" | "|" | "^" | "&" | "~" | "<" | "=" | ">" | ";" | "," | "[" | "]" 
+<ELEMENTARY_TOKENS> ::= " " | "\t" | "\n" | "(" | ")" | "@" | "$" | "+" | "-" | "*" | "/" | "%" | "|" | "^" | "&" | "~" | "<" | "=" | ">" | ";" | "," | "[" | "]" | "!"
 <IGNORE> ::= " " | "\t" | "\n"
 
 <block> ::= <line> | <block> <line>
@@ -12,7 +12,7 @@
 <var_dec> ::= <type> id | <type> id "=" <var_value>
 <var_value> ::= "[" <array> "]" | <expr> 
 <fun_dec> ::= <type> id "(" <inargs> ")" <block> "end" | <type> id "(" ")" <block> "end"
-<other> ::= "return" <expr> | "return" | <fun_call> | "break" | "continue"
+<other> ::= "return" <expr> | "return" | <fun_call> | "break" | "continue" | "pass"
 
 <inargs> ::= <type> id | <inargs> "," <type> id
 
@@ -45,7 +45,7 @@
 <boolop> ::= "and" | "or" | "xor"
 <unary_boolop> ::= "not"
 
-<comp_op> ::= "=" "=" | "<" | ">" | <not_less> | <not_greater>
+<comp_op> ::= "!" "=" | "=" "=" | "<" | ">" | <not_less> | <not_greater>
 <not_less> ::= ">" "=" | "=" ">"
 <not_greater> ::= "<" "=" | "=" "<"
 

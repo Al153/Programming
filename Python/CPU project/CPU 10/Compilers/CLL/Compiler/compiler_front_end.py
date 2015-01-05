@@ -607,9 +607,10 @@ def main_tokenise(self,text_file):
 	escaped = 0
 	array = 0
 	i = 0
+	char_literal = 0
 	token_separators = self.elementary_tokens
 	to_ignore = self.to_ignore
-	escaped_replace_dict = {"n":"\n",'"':'"',"\\":"\\"} #converts escaped n to \n etc
+	escaped_replace_dict = {"n":"\n",'"':'"',"\\":"\\","'":"'"} #converts escaped n to \n etc
 	while i < len(text_file):
 		line = text_file[i]
 		if not string:
@@ -617,19 +618,26 @@ def main_tokenise(self,text_file):
 			current_token = ''
 		for character in line:
 			if not string:
-				if character == '"' and current_token == '': #if a string
-					current_token = '"'
-					string = 1
-				elif character == "/" and len(line_tokens) and line_tokens[-1] == '/': #comment
-					line_tokens = line_tokens[:-1]
-					break
-				elif not character in token_separators:
-					current_token += character
+				if not char_literal:
+					if character == "'":
+						char_literal = 2
+						current_token = "'"
+					elif character == '"' and current_token == '': #if a string
+						current_token = '"'
+						string = 1
+					elif character == "/" and len(line_tokens) and line_tokens[-1] == '/': #comment
+						line_tokens = line_tokens[:-1]
+						break
+					elif not character in token_separators:
+						current_token += character
+					else:
+						if current_token != "":
+							line_tokens.append(current_token)
+							current_token = ""
+						line_tokens.append(character)
 				else:
-					if current_token != "":
-						line_tokens.append(current_token)
-						current_token = ""
-					line_tokens.append(character)
+					char_literal -= 1
+					current_token+=(character)
 			elif string:
 				if not escaped:
 					if character == '"':

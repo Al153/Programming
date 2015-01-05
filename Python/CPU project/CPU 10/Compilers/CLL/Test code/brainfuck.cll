@@ -1,0 +1,112 @@
+//brainfuck interpreter
+#include string_tools.cll
+
+@char 65536 data_array;
+@char 65536 program_array;
+@int 65536 jump_lookup;
+
+void main()
+	printf("Please enter your brainf*** program\n");
+	get_bf_input(program_array);
+	init_jump_lookup(program_array,jump_lookup);
+	printf("\n\ncreated jump lookup\n\n");
+	interp(program_array,data_array, jump_lookup);
+end;
+
+void interp (@char program, @char data, @int jump_lookup)
+	int PC = 0;
+	int data_pointer = 0;
+	char op_symbol = 0;
+	while(1)do
+		op_symbol = program[PC];
+		//putc(op_symbol);
+		if (op_symbol) then
+			if (op_symbol == '+') then
+				data[data_pointer] = data[data_pointer]+1;
+			else if (op_symbol == '-') then
+				data[data_pointer] = data[data_pointer]-1;
+			else if (op_symbol == '<') then
+				data_pointer = (data_pointer - 1)&65535;
+			else if (op_symbol == '>') then
+				data_pointer = (data_pointer + 1)&65535;				
+			else if (op_symbol == '[') then
+				if (data[data_pointer]) then
+					pass;
+				else
+					PC = jump_lookup[PC];
+				endif;
+			else if (op_symbol == ']') then
+				if (data[data_pointer]) then
+					PC = jump_lookup[PC];
+				endif;
+			else if (op_symbol == '.') then
+				putc(data[data_pointer]);
+			else if (op_symbol == ',') then
+				data[data_pointer] = getw();
+		endif;endif;endif;endif;endif;endif;endif;endif;
+		//char cont = getw();
+
+
+		else break; endif; //if end of string end
+		PC = (PC + 1)&65535; //increment instruction pointer
+	loop;
+end;
+
+void init_jump_lookup(@char program, @int jump_lookup)
+//creates a jump lookp table
+	int i = 0;
+	int jump_stack_pointer = 0;
+	@int 10000 jump_stack; //estimating that there will be no more than 10000 loops
+	while(1)do
+		if (program[i]) then
+			if (program[i] == '[') then
+				jump_stack[jump_stack_pointer] = i;
+				jump_stack_pointer = jump_stack_pointer + 1;
+				if (jump_stack_pointer == 10000) then
+					printf("ERROR: jump stack overflow\n");
+					break;
+				endif;
+			else if (program[i] == ']') then
+					jump_stack_pointer = jump_stack_pointer-1; //other side then pop
+					if (jump_stack_pointer>10000) then printf("ERROR: unmatched ] \n"); quit(); endif; //if underflow
+					jump_lookup[i] = jump_stack[jump_stack_pointer];  //exchange pointers
+					jump_lookup[jump_lookup[i]] = i; 
+				endif;
+			endif;
+			i = i + 1;
+		else break; endif;
+	loop;
+	if (jump_stack_pointer) then printf("ERROR: unmatched [ \n"); quit(); endif; //if overflow
+end;
+
+void get_bf_input(@char buffer)
+	int state = 0; //state keeps track of how many chars have been inserted
+	int i = 0;
+	char input;
+	//as successive characters of "END" are input, state increases
+	while(1)do
+		input = getw();
+		putc(input);
+		buffer[i] = input;
+		i = i + 1;
+		if (state == 0) then
+			if (input == 'E') then
+				state = 1;
+			endif;
+		else
+			if (state == 1) then
+				if (input == 'N') then
+					state = 2;
+				else
+					state = 0;
+				endif;
+			else //if state = 2
+				if (input == 'D') then
+					break;
+				else
+					state = 0;
+				endif;
+			endif;
+		endif;
+	loop;
+end;

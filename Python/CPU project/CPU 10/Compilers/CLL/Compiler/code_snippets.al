@@ -27,7 +27,7 @@ MUL gp0 @4
 SUB gp0 @12 
 ADD Stack_pointer gp0							
 
-Goto main 										
+Goto function:main 										
 Halt
 	
 Out @'E'	%Stack_overflow_error 					#Define error handling 
@@ -275,6 +275,14 @@ Compare gp1 gp0
 if Less then Load gp2 @4294967295
 Move gp2 gp0
 <Push gp0>
+
+<<not equal>>
+<getgp0><getgp1>
+Load  gp2 @4294967295 												#COMPARE (NOT EQUAL)
+Compare gp1 gp0 
+if Equal then Move Zero gp2
+Move gp2 gp0
+<Push gp0>
 <<not greater>>
 <getgp0><getgp1>
 Load gp2 @4294967295 												#COMPARE (NOT GREATER)
@@ -298,7 +306,7 @@ if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 
 << function call routine >>
 <Push args>
-Goto <Call_address> 												#CALLING <Call_address>
+Goto function:<Call_address> 												#CALLING <Call_address>
 << function startup routine >>
 
 
@@ -316,7 +324,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-Move Stack_pointer previous_stack_ptr								%<function_name>
+Move Stack_pointer previous_stack_ptr								%function:<function_name>
 SUB Stack_pointer @<new_length> 									#OVERHEAD FOR FUNCTION <function_name>
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached

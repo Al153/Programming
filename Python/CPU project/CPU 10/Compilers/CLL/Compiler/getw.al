@@ -1,8 +1,8 @@
 ############################## GETW ################################
 #returns a char
-In gp0 %getw 				#waits for a user to press a key
+In gp0 %function:getw 				#waits for a user to press a key
 Compare gp0 Zero
-if Equal then Load PC getw
+if Equal then Load PC function:getw
 Store gp0 Expression_stack [gp7]
 
 ADD gp7 @4

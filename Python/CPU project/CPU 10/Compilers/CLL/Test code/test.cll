@@ -3,6 +3,8 @@
 void main()
 	malloc_init(); //initiallises malloc
 	//print_pool(MALLOC_POOL);
+	if (1 != 2) then printf("YAY\n"); endif;
+	if (1 == 2) then printf("NAY!\n"); endif;
 	int a = malloc(10); //allocate 10*4 bytes
 	print_i(a);
 	printf("\n");

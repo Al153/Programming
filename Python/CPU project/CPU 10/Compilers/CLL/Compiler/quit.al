@@ -1,1 +1,1 @@
-Halt %quit
+Halt %function:quit

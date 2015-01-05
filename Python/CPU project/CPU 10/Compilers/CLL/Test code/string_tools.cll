@@ -39,6 +39,28 @@ int string_to_int(@char number)
 	return dec;
 end;
 
+void strcpy(@char string1, @char string2)
+	//copies string 2 into string 1
+	int i = 0;
+	while (1) do
+		string1[i] = string2[i];
+		if (not(string2[i])) then break; endif; //if end of string, stop
+		i = i + 1;
+	loop;
+end;
+
+void strcat(@char string1, @char string2)
+	//appends string 2 to string 1
+	int i = 0;
+	int copying = 0;
+	while(1)do
+		if (string1[i]) then pass; //scans through string1 until the null terminal is found. then string2 is copied into string 1 at that point
+		else strcpy(string1+i,string2); break; 
+		endif;
+		i = i + 1;
+	loop;
+end;
+
 ////////////////////////////// IO /////////////////////////////////////////////
 void print_hex(@char string, int size)
 
@@ -62,12 +84,11 @@ end;
 void in(@char buf)
 	int i = 0;
 	char character;
-	int continue = 1;
-	while (continue) do
+	while (1) do
 		character = getw();
 		if (character == 10) then
 			buf[i] = 0; //nullifies string
-			continue = 0; //breaks
+			break;
 		else
 			buf[i] = character;
 			i = i+1;
@@ -78,13 +99,12 @@ end;
 void in_echo(@char buf)
 	int i = 0;
 	char character;
-	int continue = 1;
-	while (continue) do
+	while (1) do
 		character = getw();
 		putc(character);
 		if (character == 13) then
 			buf[i] = 0; //nullifies string
-			continue = 0; //breaks
+			break;
 		else
 			buf[i] = character;
 			i = i+1;
@@ -96,12 +116,11 @@ end;
 void printf_CLL(@char buf)
 	int i = 0;
 	char character;
-	int continue = 1;
-	while (continue) do
+	while (1) do
 		character = buf[i];
 		putc(character);
 		if (character == 0) then
-			continue = 0; //breaks
+			break; //breaks
 		endif;
 		i = i+1;
 	loop;
