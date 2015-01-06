@@ -32,10 +32,10 @@
 
 //bytecode instructions can be different lengths depending on the type of instructions.
 
-//			word call 							  			push literal			Push variable		Pop variable					control flow  										primitive (executable machine code)
+//			word call 							  			push literal			Push variable		Pop variable					branch  										primitive (CLL code)
 //
 // int0		type:word call      							type: PushLit			type:PushVar		type: PopVar					type: control flow 						 			type: primitive
-// int1     dictionary entry of word to be called   		literal to push			Var address			Var address						Next Bytecode0		 								machine code pointer - performs a goto to the pointer,stores return value
+// int1     dictionary entry of word to be called   		literal to push			Var address			Var address						Next Bytecode0		 								primitive identifier
 // int2		next Bytecode  		                     		Next Bytecode			Next Bytecode		Next Bytecode 					Next Bytecode1 										Next Bytecode
 //
 //
@@ -52,9 +52,160 @@
 	// A  set of primitives: primitives will allow forth to modify its own state. I plan on making "addToDictionary", "outerInterpreter" and parts of "Compile" primitives
 
 
+#define WORDCALL 1
+#define PUSHLIT 2
+#define PUSHVAR 3
+#define POPVAR 4
+#define BRANCH 5
+#define PRIMITIVE 6
+/////////////////////////////////  Main bytecode interpeter //////////////////////////////////////
 
-// requires an "inline" function of compiler for full work
+void bytecode_interp(@int reference)
+	while((reference)and(dontBreak))do
+		int opType = reference[0];
+		if (opType == WORDCALL) then
+			reference = reference[1];
+			bytecode_interp(reference[2]); //reference points to the dictionary entry
+			reference = reference[2];
+		else if(opType == PUSHLIT) then
+			PushLit(reference[1]);
+			reference = reference[2];
+		else if(opType == PUSHVAR) then
+			PushVar(reference[1]);
+			reference = reference[2];			
+		else if(opType == POPVAR) then
+			PopVar(reference[1]);
+			reference = reference[2];
+		else if (opType == BRANCH) then
+			int branch = Pop();
+			if (branch) then reference = reference[1]; else reference = reference[2]; endif;
+		else if (opType == PRIMITIVE) then
+			executePrimitive(reference[1]);
+			 reference = reference[2];
+		else
+			printf("ERROR: unrecognised bytecode: "); print_i(opType);
+			quit();
 
-// if I use inline then I can implement the inner interpreter in CLL
-// the inner interpreter could also work in CLL, but may require hackery
-void bytecode_interp()
+		endif;
+		endif;
+		endif;
+		endif;
+		endif;
+		endif;
+	loop;
+end;
+
+/////////////////////////////// Stack tools for bytecode interpeter /////////////////////////////////
+#define FORTHSTACKSIZE 65536
+@int FORTHSTACKSIZE ForthStack;
+int ForthStackPointer = 0;
+
+
+
+void PushLit(int number)
+	ForthStack[ForthStackPointer] = number;
+	ForthStackPointer = ForthStackPointer + 1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack Overflow.\n");
+		dontBreak = 0; //breaks to the REPL 
+	endif;
+end;
+
+void PushVar(@int address)
+	ForthStack[ForthStackPointer] = address[0];
+	ForthStackPointer = ForthStackPointer + 1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack Overflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+end;
+
+void PopVar(@int address)
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	address[0] = ForthStackPointer[ForthStackPointer];
+end;
+
+int Pop()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	return ForthStackPointer[ForthStackPointer];	
+end;
+
+
+////////////////////////// primitives /////////////////////////////////////
+char dontBreak = 1;
+
+#include allocation.cll
+void init_primitives()
+	//sets up dictionary etc
+	malloc_init();
+end;
+
+void executePrimitive(int primitive_reference)
+	//picks primitive to run and runs it
+end;
+
+//////////////////////// Arithmetic /////////////////////////////////
+
+//////////////////////// Dictionary management //////////////////////
+
+@int ForthDictHead = 0;
+@int ForthDictTail = 0;
+
+void editDictEntry(@char name, @int codePtr)
+	//tries to edit the code pointer of a word in the dictionary, if word doesnt already exist, then adda new one
+	int dict = ForthDictHead;
+	int address = isInDict(name,dict);
+	if (address) then  
+		address[2] = codePtr;
+	else
+		//add to dictionary
+		@int newEntry = newDictInst(name,codePtr);
+		ForthDictTail[2] = newEntry;
+		ForthDictTail = newEntry;
+	endif;
+end;
+
+int checkDictName(@char name, @char reference)
+//returns 1 for match, 0 for fail
+	int i;
+	for (i = 0, i<8, i = i + 1)
+		if (name[i] != reference[i]) then return 0; endif; //fail
+		if (name[i] == 0) then return 1; endif; //end of string, success
+	loop;
+end;
+
+@int isInDict(@char name,@int dict)
+	while(dict)do
+		if(checkDictName(name,dict))then return dict; endif;
+		dict = dict[3];
+	loop;
+	return 0; //failure 
+end;
+
+
+@int newDictInst(@char name, @int codePtr)
+	@int returnPTR = malloc(4);
+	// set up name
+	@char name_pointer;
+	int i = 0;
+	while (i<8) do
+		if (name[i]) then
+			name_pointer[i] = name[i];
+		else
+			break;
+		endif;
+		i = i + 1;
+	loop;
+	while (i<8) do name_pointer[i] = 0; i = i + 1; loop; //initialise rest with zeros
+	returnPTR[2] = codePtr;
+	returnPTR[3] = 0;
+	return returnPTR;
+end;
