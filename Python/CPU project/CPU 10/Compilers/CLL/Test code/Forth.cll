@@ -32,17 +32,18 @@
 
 //bytecode instructions can be different lengths depending on the type of instructions.
 
-//			word call 							  			push literal			Push variable		Pop variable					branch  										primitive (CLL code)
+//			word call 							  			push literal					branch  										primitive (CLL code)
 //
-// int0		type:word call      							type: PushLit			type:PushVar		type: PopVar					type: control flow 						 			type: primitive
-// int1     dictionary entry of word to be called   		literal to push			Var address			Var address						Next Bytecode0		 								primitive identifier
-// int2		next Bytecode  		                     		Next Bytecode			Next Bytecode		Next Bytecode 					Next Bytecode1 										Next Bytecode
-//
+// int0		type:word call      							type: PushLit					type: control flow 						 		type: primitive
+// int1     dictionary entry of word to be called   		literal to push					Next Bytecode0		 							primitive identifier
+// int2		next Bytecode  		                     		Next Bytecode			 		Next Bytecode1 									Next Bytecode
+// int3 	flags 											flags 							flags 											flags
 //
 
 // notes:
 	// the type field consists of some identifying number
 	// the last link to Next Bytecode in a chain will be 0, indicating to return 
+	// the flags int is used during compiliation to check whether a node has been touched
 
 // Functions relating to Bytecodes:
 
@@ -54,8 +55,6 @@
 
 #define WORDCALL 1
 #define PUSHLIT 2
-#define PUSHVAR 3
-#define POPVAR 4
 #define BRANCH 5
 #define PRIMITIVE 6
 /////////////////////////////////  Main bytecode interpeter //////////////////////////////////////
@@ -69,12 +68,6 @@ void bytecode_interp(@int reference)
 			reference = reference[2];
 		else if(opType == PUSHLIT) then
 			PushLit(reference[1]);
-			reference = reference[2];
-		else if(opType == PUSHVAR) then
-			PushVar(reference[1]);
-			reference = reference[2];			
-		else if(opType == POPVAR) then
-			PopVar(reference[1]);
 			reference = reference[2];
 		else if (opType == BRANCH) then
 			int branch = Pop();
@@ -111,6 +104,33 @@ void PushLit(int number)
 	endif;
 end;
 
+char dontBreak = 1;
+
+#include allocation.cll
+void init_primitives()
+	//sets up dictionary etc
+	malloc_init();
+end;
+
+void executePrimitive(int primitive_reference)
+	//picks primitive to run and runs it
+
+	////////////////  PRIMITIVE OPCODES ////////////////////////////
+	// @     00   	| +  08 	| ~  		10 | == 		18 |
+	// !     01 	| -  09 	| ~&        11 | VARIABLE 	19 |
+	// .     02 	| *  0A 	| ~|  		12 | CONST   	1A |
+	// DUP   03 	| /  0B 	| ~^ 	  	13 | TABLE      1B |
+	// SWAP  04 	| %  0C 	| << 		14 | COMPILE 	1C |
+	// ROT   05 	| &  0D 	| >> 	    15 | READ 		1D |
+	// OVER  06 	| |  0E 	| < 		16 | EVAL 		1E |
+	// DROP  07 	| ^  0F 	| >         17 |
+	////////////////////////////////////////////////////////////////
+
+	//READ, EVAL, COMPILE, CONST, VARIABLE, TABLE are technical interpreted words, and probably wont be linked to user generated words
+end;
+
+////////////////////////  STACK primitives //////////////////////////
+
 void PushVar(@int address)
 	ForthStack[ForthStackPointer] = address[0];
 	ForthStackPointer = ForthStackPointer + 1;
@@ -138,6 +158,67 @@ int Pop()
 	return ForthStackPointer[ForthStackPointer];	
 end;
 
+void Dup()
+	if (ForthStackPointer>0) then //if stack has a value on it then
+		ForthStack[ForthStackPointer+1] = ForthStack[ForthStackPointer];
+		ForthStackPointer = ForthStackPointer + 1;
+		if (ForthStackPointer>FORTHSTACKSIZE) then
+			printf("ERROR: Forth Stack Overflow.\n");
+			dontBreak = 0; //breaks to the REPL 
+		endif;
+	else
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL	
+	endif;
+end;
+
+void Drop()
+	if (ForthStackPointer>0) then //if stack has a value on it then
+		ForthStackPointer = ForthStackPointer -1 ;
+	else
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL	
+	endif;
+end;
+
+
+void Swap()
+	if (ForthStackPointer>1) then //if stack has a value on it then
+		int temp = ForthStack[ForthStackPointer-1];
+		ForthStack[ForthStackPointer-1] = ForthStack[ForthStackPointer];
+		ForthStack[ForthStackPointer] = temp;
+	else
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL	
+	endif;
+end;
+
+void Rot()
+	if (ForthStackPointer>2) then //if stack has a value on it then
+		int temp = ForthStack[ForthStackPointer];
+		ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer-1];
+		ForthStack[ForthStackPointer-1] = ForthStack[ForthStackPointer-2];
+		ForthStack[ForthStackPointer-2] = temp;
+	else
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL	
+	endif;
+end;
+
+void Over()
+	if (ForthStackPointer>1) then //if stack has a value on it then
+		ForthStack[ForthStackPointer+1] = ForthStack[ForthStackPointer-1];
+		ForthStackPointer = ForthStackPointer + 1;
+		if (ForthStackPointer>FORTHSTACKSIZE) then
+			printf("ERROR: Forth Stack Overflow.\n");
+			dontBreak = 0; //breaks to the REPL 
+		endif;
+	else
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL	
+	endif;
+end;
+
 
 ////////////////////////// primitives /////////////////////////////////////
 char dontBreak = 1;
@@ -146,6 +227,36 @@ char dontBreak = 1;
 void init_primitives()
 	//sets up dictionary etc
 	malloc_init();
+
+	//sets up operators
+	editDictEntry("@",newByteCodeNode(PRIMITIVE,0,0));
+	editDictEntry("!",newByteCodeNode(PRIMITIVE,1,0));
+	editDictEntry(".",newByteCodeNode(PRIMITIVE,2,0));
+	editDictEntry("DUP",newByteCodeNode(PRIMITIVE,3,0));
+	editDictEntry("SWAP",newByteCodeNode(PRIMITIVE,4,0));
+	editDictEntry("ROT",newByteCodeNode(PRIMITIVE,5,0));
+	editDictEntry("OVER",newByteCodeNode(PRIMITIVE,6,0));
+	editDictEntry("DROP",newByteCodeNode(PRIMITIVE,7,0));
+	editDictEntry("+",newByteCodeNode(PRIMITIVE,8,0));
+	editDictEntry("-",newByteCodeNode(PRIMITIVE,9,0));
+	editDictEntry("*",newByteCodeNode(PRIMITIVE,10,0));
+	editDictEntry("/",newByteCodeNode(PRIMITIVE,11,0));
+	editDictEntry("%",newByteCodeNode(PRIMITIVE,12,0));
+	editDictEntry("&",newByteCodeNode(PRIMITIVE,13,0));
+	editDictEntry("|",newByteCodeNode(PRIMITIVE,14,0));
+	editDictEntry("^",newByteCodeNode(PRIMITIVE,15,0));
+	editDictEntry("~",newByteCodeNode(PRIMITIVE,16,0));
+	editDictEntry("~&",newByteCodeNode(PRIMITIVE,17,0));
+	editDictEntry("~|",newByteCodeNode(PRIMITIVE,18,0));
+	editDictEntry("~^",newByteCodeNode(PRIMITIVE,19,0));
+	editDictEntry("<<",newByteCodeNode(PRIMITIVE,20,0));
+	editDictEntry(">>",newByteCodeNode(PRIMITIVE,21,0));
+	editDictEntry("<",newByteCodeNode(PRIMITIVE,22,0));
+	editDictEntry(">",newByteCodeNode(PRIMITIVE,23,0));
+	editDictEntry("==",newByteCodeNode(PRIMITIVE,24,0));
+	editDictEntry("VARIABLE",newByteCodeNode(PRIMITIVE,25,0));
+	editDictEntry("CONST",newByteCodeNode(PRIMITIVE,26,0));
+	editDictEntry("TABLE",newByteCodeNode(PRIMITIVE,27,0));
 end;
 
 void executePrimitive(int primitive_reference)
@@ -154,13 +265,198 @@ end;
 
 //////////////////////// Arithmetic /////////////////////////////////
 
+//arithmetic primitives for forth, arithmetic is 2s complement
+void ADD()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]+ForthStack[ForthStackPointer+1];
+end;
+void SUB()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer][ForthStack[ForthStackPointer+1];
+end;
+void MUL()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]*ForthStack[ForthStackPointer+1];
+end;
+void DIV()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]/ForthStack[ForthStackPointer+1];
+end;
+void MOD()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]%ForthStack[ForthStackPointer+1];
+end;
+void AND()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]&ForthStack[ForthStackPointer+1];
+end;
+void OR()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]|ForthStack[ForthStackPointer+1];
+end;
+void XOR()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]^ForthStack[ForthStackPointer+1];
+end;
+void NOT()
+	ForthStack[ForthStackPointer] = ~ForthStack[ForthStackPointer];
+end;
+
+void NAND()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ~(ForthStack[ForthStackPointer]&ForthStack[ForthStackPointer+1]);
+end;
+void NOR()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ~(ForthStack[ForthStackPointer]|ForthStack[ForthStackPointer+1]);
+end;
+void XNOR()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ~(ForthStack[ForthStackPointer]^ForthStack[ForthStackPointer+1]);
+end;
+
+//////// Variables and constants //////////
+void createConstant()
+	@char 9 name; //9 to pad a zero on the end
+	convertName(scanWord();,name);   //produces an acceptable name
+	int n = Pop(); 					 //n on stack
+	editDictEntry(name,newByteCodeNode(PUSHLIT,n,0)); //creates a word
+end;
+
+void createVariable()
+	@char 9 name; //9 to pad a zero on the end
+	convertName(scanWord();,name);   //produces an acceptable name
+	int address = malloc(1); 					 //allocates memory
+	editDictEntry(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
+end;
+
+void createTable()
+	@char 9 name; //9 to pad a zero on the end
+	convertName(scanWord();,name);   //produces an acceptable name
+	int address = malloc(Pop()); 					 //n on stack
+	editDictEntry(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
+end;
+
+void convertName(@char name_string,@char buffer)
+	//copies name into buffer, pads with zeroes
+	int pad =0;
+	int i;
+	for(i = 0, i<8,i = i + 1)
+		if (pad) then buffer[i] = 0;
+		else
+			if (isWhiteSpace(name_string[i])) then pad = 1; buffer[i] = 0;
+			else
+				buffer[i] = name_string[i];
+			endif;
+		endif;
+	loop;
+	name_string[8] = 0;
+end;
+
+void printTOS()
+	int TOS = Pop();
+	if (TOS&2147483648) then printf("-"); print_i(TOS&2147483647); return; endif;
+	print_i(TOS);
+end;
+
+//////// comparison //////////
+void greater()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	int a = ForthStack[ForthStackPointer];
+	int b = ForthStack[ForthStackPointer+1];
+	if ((a&2147483648) and (b&2147483648)) then  ForthStack[ForthStackPointer] = __less(a,b); //if both are negative then return (a<b)
+	else if (a&2147483648) then ForthStack[ForthStackPointer] = 0; 							  //else if a is negative then return 0;
+		else if (b&2147483648) then ForthStack[ForthStackPointer] = 1; 						  //else if b is negative then return 1;
+			else ForthStack[ForthStackPointer] = __greater(a,b);
+			endif;
+		endif;
+	endif;
+end;
+
+void less()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	int a = ForthStack[ForthStackPointer];
+	int b = ForthStack[ForthStackPointer+1];
+	if ((a&2147483648) and (b&2147483648)) then  ForthStack[ForthStackPointer] = __greater(a,b); //if both are negative then return (a>b)
+	else if (a&2147483648) then ForthStack[ForthStackPointer] = 1; 							  //else if a is negative then return 1;
+		else if (b&2147483648) then ForthStack[ForthStackPointer] = 0; 						  //else if b is negative then return 0;
+			else ForthStack[ForthStackPointer] = __less(a,b);
+			endif;
+		endif;
+	endif;
+end;
+void equal()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = 0; //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = __equal(ForthStack[ForthStackPointer],ForthStack[ForthStackPointer+1]); //if both are negative then return (a>b)
+end;
+void __greater(int a, int b) if (a>b) then return 1; else return 0; endif; end;
+void __less(int a, int b) if (a<b) then return 1; else return 0; endif; end;
+void __equal(int a, int b) if (a==b) then return 1; else return 0; endif; end;
+
+
 //////////////////////// Dictionary management //////////////////////
 
 @int ForthDictHead = 0;
 @int ForthDictTail = 0;
 
 void editDictEntry(@char name, @int codePtr)
-	//tries to edit the code pointer of a word in the dictionary, if word doesnt already exist, then adda new one
+	//tries to edit the code pointer of a word in the dictionary, if word doesnt already exist, then add a new one at the top of the dictionary
 	int dict = ForthDictHead;
 	int address = isInDict(name,dict);
 	if (address) then  
@@ -168,8 +464,8 @@ void editDictEntry(@char name, @int codePtr)
 	else
 		//add to dictionary
 		@int newEntry = newDictInst(name,codePtr);
-		ForthDictTail[2] = newEntry;
-		ForthDictTail = newEntry;
+		newEntry[2] = ForthDictHead;
+		ForthDictHead = newEntry;
 	endif;
 end;
 
@@ -209,3 +505,57 @@ end;
 	returnPTR[3] = 0;
 	return returnPTR;
 end;
+
+///////////////////////// Bytecode generation /////////////////////////
+@int newByteCodeNode(int type, int field1, int field2)
+	@int returnPTR = malloc(4); //requires 4 ints to represent a bytecode op
+	returnPTR[0] = type;
+	returnPTR[1] = field1;
+	returnPTR[2] = field2;
+	returnPTR[3] = 0; 					//sets flags to zero
+end;
+
+///////////////////////// IO //////////////////////////////
+@char lineBuff;
+int linePtr;
+
+void readIn(@char buf)
+	linePtr = 0;
+	int i = 0;
+	char character;
+	while (1) do
+		character = getw();
+		if (character == 13) then
+			buf[i] = 0; //nullifies string
+			break;
+		else
+			buf[i] = character;
+			i = i+1;
+		endif;
+	loop;
+end;
+
+@char scanWord()
+	//returns pointer to the next word on the input buffer, and leaves linePtr at the end of the word
+	while (isWhiteSpace(lineBuff[linePtr])) do linePtr = linePtr + 1; loop;
+	@char return_value = lineBuff+linePtr; //value to return points to teh start of the word
+	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop;
+end;
+
+int isWhiteSpace(char input)
+	//checks if a character is whitespace or not
+	if (input == ' ') then
+		return 1;
+	else
+		if (input == '\n') then
+			return 1;
+		else
+			if (input == '\t') then
+				return 1;
+	endif; endif; endif;
+	return 0;
+end;
+
+//////////////////  Compiler/interpreter ///////////////////////////
+
+// functions to run the interpreter and compiler

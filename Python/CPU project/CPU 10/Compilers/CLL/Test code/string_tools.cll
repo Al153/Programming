@@ -86,7 +86,7 @@ void in(@char buf)
 	char character;
 	while (1) do
 		character = getw();
-		if (character == 10) then
+		if (character == 13) then
 			buf[i] = 0; //nullifies string
 			break;
 		else
