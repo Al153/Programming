@@ -9,11 +9,11 @@ end;
 void main()
 	int i;
 	for (i=0,i<10,i=i+1)
-		print(fib(i));
+		print_i(fib(i));
 	loop;
 end;
 
 int i;
 int j;
-print(i+j-5);
+print_i(i+j-5);
 return 0;
