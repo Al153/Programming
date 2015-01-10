@@ -150,12 +150,25 @@ void PopVar(@int address)
 end;
 
 int Pop()
+	//pops off of stack
 	ForthStackPointer = ForthStackPointer-1;
 	if (ForthStackPointer>FORTHSTACKSIZE) then
 		printf("ERROR: Forth Stack underflow.\n");
 		dontBreak = 0; //breaks to REPL
 	endif;
 	return ForthStackPointer[ForthStackPointer];	
+end;
+
+void Push(int value)
+	//pushes onto stack
+		
+		ForthStackPointer = ForthStackPointer + 1;
+		if (ForthStackPointer>FORTHSTACKSIZE) then
+			printf("ERROR: Forth Stack Overflow.\n");
+			dontBreak = 0; //breaks to the REPL
+			return; 
+		endif;
+		ForthStack[ForthStackPointer] = value;
 end;
 
 void Dup()
@@ -540,6 +553,7 @@ end;
 	while (isWhiteSpace(lineBuff[linePtr])) do linePtr = linePtr + 1; loop;
 	@char return_value = lineBuff+linePtr; //value to return points to teh start of the word
 	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop;
+	return return_value;
 end;
 
 int isWhiteSpace(char input)
@@ -559,3 +573,43 @@ end;
 //////////////////  Compiler/interpreter ///////////////////////////
 
 // functions to run the interpreter and compiler
+
+
+void compileWord()
+	//compiles a word defintion
+end;
+
+@char 9 WORD_BUF; //global var containing the name of a word
+
+
+//////////// words to construct the interpreter
+void primRead()
+	convertName(scanWord(),WORD_BUF); //puts the word name into the global buffer
+end;
+
+void primIsInDict()
+	//primitive version of is in dict
+	Push(isInDict(WORD_BUF,ForthDictHead));
+end;
+
+void primExecute()
+	bytecode_interp(Pop());
+end;
+
+void isInt()
+	int i = 0;
+	while (WORD_BUF[i])do
+		if (not((WORD_BUF[i]>='0')and (WORD_BUF[i]<='9'))) then return 0; endif; //if not a digit then failed
+	loop;
+	retun 1; //if hasnt returned then is an int
+end;
+
+void convertInt()
+	//converts WORD_BUF to an int and pushes it
+	int dec = 0;
+	int i;
+	for(i=0, WORD_BUF[i] ,i = i+1)
+		dec = dec * 10 + ( WORD_BUF[i] - '0' );
+	loop;
+	Push(dec);
+end;
