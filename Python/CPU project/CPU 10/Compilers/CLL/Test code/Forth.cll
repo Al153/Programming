@@ -472,8 +472,12 @@ void editDictEntry(@char name, @int codePtr)
 	//tries to edit the code pointer of a word in the dictionary, if word doesnt already exist, then add a new one at the top of the dictionary
 	int dict = ForthDictHead;
 	int address = isInDict(name,dict);
-	if (address) then  
-		address[2] = codePtr;
+	if (address) then 
+		if ((address[2])and(address[2] != codePtr])) then
+			collectGarbage(address[2]);
+			address[2] = codePtr;
+
+		endif;
 	else
 		//add to dictionary
 		@int newEntry = newDictInst(name,codePtr);
@@ -528,9 +532,25 @@ end;
 	returnPTR[3] = 0; 					//sets flags to zero
 end;
 
+
+void collectGarbage(@int node)
+	//deallocates node and all its descendents, recursively
+	if (not(node[3])) then 		//if not marked
+		node[3] = 1; 			//marks
+		if (node[0] == BRANCH) then
+			collectGarbage(node[2]); //deallocates other node
+		endif;
+		collectGarbage(node[1]); //deallocates default pointed to node
+		dalloc(node); 			 //calls actual dalloc routine for deallocation
+	endif;
+end;
+
 ///////////////////////// IO //////////////////////////////
 @char lineBuff;
 int linePtr;
+int READ_IN_STATE = EMPTY;
+#define EMPTY 0
+#define FULL 1
 
 void readIn(@char buf)
 	linePtr = 0;
@@ -546,13 +566,17 @@ void readIn(@char buf)
 			i = i+1;
 		endif;
 	loop;
+	READ_IN_STATE = FULL;
 end;
 
+
 @char scanWord()
-	//returns pointer to the next word on the input buffer, and leaves linePtr at the end of the word
+	//returns pointer to the next word on the input buffer, and leaves linePtr at the end of the word. if the buffer is empty then reset and read in
+	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
 	while (isWhiteSpace(lineBuff[linePtr])) do linePtr = linePtr + 1; loop;
 	@char return_value = lineBuff+linePtr; //value to return points to teh start of the word
 	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop;
+	if (lineBuff[linePtr] == '\n') then READ_IN_STATE = EMPTY; endif;
 	return return_value;
 end;
 
@@ -577,6 +601,11 @@ end;
 
 void compileWord()
 	//compiles a word defintion
+end;
+
+@int compileSingleWord()
+	primRead(); // reads in a word to the buffer
+				//scans word against special words .. if, while etc
 end;
 
 @char 9 WORD_BUF; //global var containing the name of a word
@@ -613,3 +642,13 @@ void convertInt()
 	loop;
 	Push(dec);
 end;
+
+//self interpreting code: - I need to manually compile these
+//: INTERP 1 while READ EVAL PRINTRESULT 1 LOOP ;
+//: EVAl DUP isInDict DUP if EXECUTE else DROP TRYINT then ;
+// : TRYINT isInt if convertInt else INPUTERROR then ;
+
+//: READ [primREAD] ;
+//: EXECUTE [primEXECUTE] ;
+//: isInt [primInInt] ;
+//: convertInt [primConvertInt]
