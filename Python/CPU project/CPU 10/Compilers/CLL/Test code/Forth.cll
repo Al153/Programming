@@ -574,7 +574,7 @@ end;
 	//returns pointer to the next word on the input buffer, and leaves linePtr at the end of the word. if the buffer is empty then reset and read in
 	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
 	while (isWhiteSpace(lineBuff[linePtr])) do linePtr = linePtr + 1; loop;
-	@char return_value = lineBuff+linePtr; //value to return points to teh start of the word
+	@char return_value = lineBuff+linePtr; //value to return points to the start of the word
 	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop;
 	if (lineBuff[linePtr] == '\n') then READ_IN_STATE = EMPTY; endif;
 	return return_value;
@@ -605,8 +605,42 @@ end;
 
 @int compileSingleWord()
 	primRead(); // reads in a word to the buffer
-				//scans word against special words .. if, while etc
+	if (checkDictName(WORD_BUF,";")) then //scans word against special words .. if, while etc
+
+	else
+		if (checkDictName(WORD_BUF,"IF")) then
+	
+		else
+			if (checkDictName(WORD_BUF,"WHILE")) then
+	
+			else
+				if (checkDictName(WORD_BUF,"FOR")) then
+	
+				else
+					if (checkDictName(WORD_BUF,"VALUE")) then  //value table and constant chould be interpreted
+	
+					else 
+						if (checkDictName(WORD_BUF,"TABLE")) then
+	
+						else
+							if (checkDictName(WORD_BUF,"CONSTANT")) then
+	
+							else //if a normal word, then lookup reference
+								@int reference = isInDict(WORD_BUF,ForthDictHead);
+								if (reference) then  return newByteCodeNode(WORDCALL,reference,0); 
+								else printf("ERROR: unrecognised word compiled\n");				//maybe return an error in the future - go back to REPL
+								endif;
+							endif;
+						endif;
+					endif;
+				endif;
+			endif;
+		endif;
+	endif;
 end;
+
+
+
 
 @char 9 WORD_BUF; //global var containing the name of a word
 

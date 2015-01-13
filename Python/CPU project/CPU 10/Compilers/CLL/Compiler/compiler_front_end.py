@@ -610,7 +610,7 @@ def main_tokenise(self,text_file):
 	char_literal = 0
 	token_separators = self.elementary_tokens
 	to_ignore = self.to_ignore
-	escaped_replace_dict = {"n":"\n",'"':'"',"\\":"\\","'":"'"} #converts escaped n to \n etc
+	escaped_replace_dict = {"n":"\n",'"':'"',"\\":"\\","'":"'","t":"\t"} #converts escaped n to \n etc
 	while i < len(text_file):
 		line = text_file[i]
 		if not string:

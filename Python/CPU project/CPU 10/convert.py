@@ -21,7 +21,7 @@ def main():
 	json_dict = json.loads(json_file)
 	binary_string = ''
 	for key in json_dict:
-		binary_string += bytify(int(key)) + chr(int(json_dict[key])&255)+chr(0) #the last byte is to tell whether it'sthe end of file
+		binary_string += bytify(int(key)) + chr(int(json_dict[key])&255)+chr(0) #the last byte is to tell whether it's the end of file
 	binary_string = binary_string[:-1] + chr(1) #adds stop signal
 
 	destination_file = open(destination_name,'wb')

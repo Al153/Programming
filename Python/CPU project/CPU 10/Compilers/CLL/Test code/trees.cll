@@ -1,0 +1,68 @@
+#include allocation.cll
+#include heapsort.cll
+
+@int createBalancedTree(@int list, @int listPTR, int length)
+	//builds a balanced tree of a sorted list
+	if(length==0)then return 0; endif; //if length is zero then return an empty node
+
+	int Llength = length/2;
+	int Rlength = Llength;
+	if (2*Llength==length) then Llength = Llength-1;endif; //needs a number for this node
+	@int Lnode = createBalancedTree(list,listPTR,Llength);
+	int nodeValue = list[listPTR[0]]; 				//uses a pointer to the top of the list in order to cause side effects
+	listPTR[0] = listPTR[0] + 1; 					//increments list pointer - does infix tree traversal
+	@int Rnode = createBalancedTree(list,listPTR,Rlength);
+	return newTreeNode(nodeValue,Lnode,Rnode);
+end;
+
+
+@int newTreeNode(int value,@int Llink, @int Rlink)
+	@int return_ptr  = malloc(3);
+	return_ptr[0] = value;
+	return_ptr[1] = Llink;
+	return_ptr[2] = Rlink;
+	return return_ptr;
+end;
+
+void printTree(@int node)
+	print_i(node[0]); //prints value
+	printf("{");
+	if (node[1]) then
+		printf("\n");
+		printTree(node[1]);
+		printf(", ");
+	endif;
+	if (node[2]) then printTree(node[2]); printf("\n"); endif;
+	printf("}");
+end;
+
+
+
+
+
+
+void main()
+	malloc_init();
+	@int 256 trial = [
+0, 189, 211, 176, 88, 35, 8, 29, 191, 55, 235, 63, 227, 175, 157, 37, 19, 199,
+248, 167, 14, 27, 50, 25, 110, 12, 33, 30, 131, 249, 86, 121, 79, 22, 241, 64,
+5, 8, 233, 236, 160, 68, 130, 229, 13, 115, 188, 154, 246, 149, 206, 77, 203, 76,
+3, 162, 113, 184, 28, 18, 141, 180, 226, 207, 62, 85, 250, 190, 70, 230, 100, 231,
+67, 31, 90, 144, 170, 223, 216, 97, 179, 132, 143, 9, 243, 91, 222, 98, 80, 139, 
+92, 102, 173, 156, 145, 177, 87, 151, 237, 239, 56, 228, 134, 84, 210, 251, 127,
+103, 163, 126, 39, 153, 135, 150, 205, 142, 219, 152, 53, 17, 38, 74, 95, 220, 24,
+60, 137, 166, 66, 47, 75, 7, 174, 105, 140, 106, 169, 185, 161, 146, 234, 59, 197,
+116, 224, 254, 73, 214, 165, 253, 196, 10, 171, 61, 182, 57, 192, 208, 194, 218,
+48, 128, 159, 1, 6, 46, 247, 43, 118, 240, 5, 107, 212, 204, 181, 172, 238, 242,
+26, 200, 20, 96, 11, 112, 213, 120, 99, 71, 104, 201, 111, 2, 168, 148, 195, 209,
+4, 81, 16, 245, 108, 123, 41, 217, 232, 198, 34, 114, 21, 94, 255, 133, 89, 36, 117,
+225, 136, 78, 52, 252, 83, 65, 202, 147, 124, 49, 93, 82, 187, 101, 215, 186, 72, 109,
+122, 42, 51, 138, 193, 129, 69, 23, 178, 44, 158, 221, 40, 32, 183, 15, 155, 45, 244, 54,
+119, 125, 16];
+	heapsort(trial,256);
+	int i;
+	int test_ptr = 0;
+	int length = 255;
+	@int tree = createBalancedTree(trial,@test_ptr,length);
+	printTree(tree);
+end;

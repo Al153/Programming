@@ -145,9 +145,13 @@ void init_memory(unsigned char *MEMORY, char *name){
 	fclose(fp);
 }
 
+void dumpMemory(unsigned char *MEMORY){
+	int i;
+	for (i = 0; i < 32;i++){printf("%u\t", (unsigned int)MEMORY[i]);}
+}
 
 int main(int argc, char *argv[]){
-	static unsigned char MEMORY[1048576] = {0}; 					//setting up memory and registers
+	static unsigned char MEMORY[MEMORY_SIZE] = {0}; 					//setting up memory and registers
 	static unsigned int registers[16] = {0,1};
 	int halt = 0;
 	long count = 0;
@@ -162,7 +166,8 @@ int main(int argc, char *argv[]){
 
 	printf("initialising memory\n");
 	init_memory(MEMORY,argv[1]);
-	
+	//dumpMemory(MEMORY);
+
 	if (argc < 3){
 
 		printf("______________________ running ______________________\n");

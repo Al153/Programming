@@ -189,7 +189,7 @@ def assemble():
 
 	print "Okay"
 	print "Assembling machine code = ",
-	machine_code = low_level_assemble(tokens)   #need to modify low level assemble function to take a non string entry
+	machine_code = prune_machine_code(low_level_assemble(tokens))   #need to modify low level assemble function to take a non string entry
 	print "Okay"
 	print "Writing to machine code file = ",
 	file_name = store(machine_code)
@@ -1218,6 +1218,14 @@ def low_level_assemble(line_list):
 		for i in xrange(len(instr)):
 			machine_code_dict[line_no+i] = instr[i]
 	return machine_code_dict
+
+def prune_machine_code(machine_code_dict):
+	#removes zero bytes in machine code dict
+	new_dict = {}
+	for key in machine_code_dict:
+		if machine_code_dict[key]: 
+			new_dict[key] = machine_code_dict[key]
+	return new_dict
 
 def store(machine_code):
 	to_store = json.dumps(machine_code)

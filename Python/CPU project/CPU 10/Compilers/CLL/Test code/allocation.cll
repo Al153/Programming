@@ -6,9 +6,9 @@
 	// 3: size       - size of block pointed to
 	// 4: child0	 -
     // 5: child1 
-#define MALLOC_HEAP_SIZE 64 //should be length 2**n
-#define MALLOC_TREE_LENGTH 56 //8 nodes
-#define MALLOC_BLOCK_SIZE 4
+#define MALLOC_HEAP_SIZE 65536 //should be length 2**n
+#define MALLOC_TREE_LENGTH 61144 //n/6 nodes
+#define MALLOC_BLOCK_SIZE 4  		// 4byte words
 @int MALLOC_TREE_LENGTH  MALLOC_TREE_PARTITION;   //section of memory to be turned into tree nodes for the tree partition
 @int MALLOC_HEAP_SIZE MALLOC_HEAP; 			//the area of memory that is chunked
 

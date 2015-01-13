@@ -2603,7 +2603,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
-Load gp0 @10
+Load gp0 @13
  														
 
 SUB gp7 @4 															#POP GP1

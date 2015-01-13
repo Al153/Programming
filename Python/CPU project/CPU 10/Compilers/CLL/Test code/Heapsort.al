@@ -16,7 +16,7 @@ MUL gp0 @4
 SUB gp0 @12 
 ADD Stack_pointer gp0							
 
-Goto main 										
+Goto function:main 										
 Halt
 	
 Out @'E'	%Stack_overflow_error 					#Define error handling 
@@ -125,7 +125,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-Move Stack_pointer previous_stack_ptr								%lchild
+Move Stack_pointer previous_stack_ptr								%function:lchild
 SUB Stack_pointer @12 									#OVERHEAD FOR FUNCTION lchild
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
@@ -193,7 +193,7 @@ Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 ################## built in function char ##############################################
 
-SUB gp7 @4 		 		 %char									#Pops into gp0
+SUB gp7 @4 		 		 %function:char									#Pops into gp0
 Load gp0 Expression_stack [gp7]  				
 AND gp0 @255
 Store gp0 Expression_stack [gp7] 
@@ -201,7 +201,7 @@ ADD gp7 @4
 Move Jump PC  			#reads new top of stack from the stack frame
 #######################################################################################
 ########################## PUTC (char) ########################################
-SUB gp7 @4 															%putc
+SUB gp7 @4 															%function:putc
 Load gp0  Expression_stack [gp7]
 Out gp0
 Move Jump PC
@@ -222,7 +222,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-Move Stack_pointer previous_stack_ptr								%parent
+Move Stack_pointer previous_stack_ptr								%function:parent
 SUB Stack_pointer @12 									#OVERHEAD FOR FUNCTION parent
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
@@ -324,7 +324,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-Move Stack_pointer previous_stack_ptr								%build_heap
+Move Stack_pointer previous_stack_ptr								%function:build_heap
 SUB Stack_pointer @20 									#OVERHEAD FOR FUNCTION build_heap
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
@@ -351,7 +351,7 @@ Load gp0 @1
 
 Store gp0 8 [Stack_pointer] 						#STORE GP0
 
-Pass 										%loopbuild_heap0entry 		#FOR LOOP
+Pass 										%loopbuild_heap-0entry 		#FOR LOOP
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
@@ -372,9 +372,19 @@ Compare gp1 gp0
 if Less then Load gp2 @4294967295
 Move gp2 gp0
  														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
 
 NOT gp0
-if gp0 then Load PC loopbuild_heap0exit
+if gp0 then Load PC loopbuild_heap-0exit
 
 
 Load gp0 16 [Stack_pointer] 						#LOAD GP0
@@ -393,9 +403,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto sift_up 												#CALLING sift_up
+Goto function:sift_up 												#CALLING sift_up
 
-Pass 										%loopbuild_heap0continue
+Pass 										%loopbuild_heap-0continue
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
@@ -415,8 +425,8 @@ ADD gp0 gp1 														#ADD
 
 Store gp0 8 [Stack_pointer] 						#STORE GP0
 								
-Load PC loopbuild_heap0entry
-Pass 										%loopbuild_heap0exit
+Load PC loopbuild_heap-0entry
+Pass 										%loopbuild_heap-0exit
 
 
 
@@ -441,7 +451,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-Move Stack_pointer previous_stack_ptr								%heapsort
+Move Stack_pointer previous_stack_ptr								%function:heapsort
 SUB Stack_pointer @16 									#OVERHEAD FOR FUNCTION heapsort
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
@@ -480,7 +490,7 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto build_heap 												#CALLING build_heap
+Goto function:build_heap 												#CALLING build_heap
 
 
 
@@ -500,7 +510,7 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto sort_heap 												#CALLING sort_heap
+Goto function:sort_heap 												#CALLING sort_heap
 
 
 
@@ -510,13 +520,14 @@ Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 ##################### GETC ###############################################
 #returns a char
-In gp0 %getc #gets a char without waiting (state of keyboard)
+In gp0 function:getc #gets a char without waiting (state of keyboard)
 Store gp0 Expression_stack [gp7]
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Move Jump PC
-##########################################################################Halt %quit
+##########################################################################Halt %function:quit
+
 
 
 
@@ -533,7 +544,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-Move Stack_pointer previous_stack_ptr								%sort_heap
+Move Stack_pointer previous_stack_ptr								%function:sort_heap
 SUB Stack_pointer @24 									#OVERHEAD FOR FUNCTION sort_heap
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
@@ -583,7 +594,7 @@ Load Flags_reset @4294967287
 
 Store gp0 8 [Stack_pointer] 						#STORE GP0
 
-Pass 										%loopsort_heap0entry 		#FOR LOOP
+Pass 										%loopsort_heap-0entry 		#FOR LOOP
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
@@ -605,7 +616,7 @@ Move gp2 gp0
  														
 
 NOT gp0
-if gp0 then Load PC loopsort_heap0exit
+if gp0 then Load PC loopsort_heap-0exit
 
 
 Load gp0 @0
@@ -696,9 +707,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto sift_down 												#CALLING sift_down
+Goto function:sift_down 												#CALLING sift_down
 
-Pass 										%loopsort_heap0continue
+Pass 										%loopsort_heap-0continue
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
@@ -727,8 +738,8 @@ Load Flags_reset @4294967287
 
 Store gp0 8 [Stack_pointer] 						#STORE GP0
 								
-Load PC loopsort_heap0entry
-Pass 										%loopsort_heap0exit
+Load PC loopsort_heap-0entry
+Pass 										%loopsort_heap-0exit
 
 
 
@@ -753,7 +764,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-Move Stack_pointer previous_stack_ptr								%sift_up
+Move Stack_pointer previous_stack_ptr								%function:sift_up
 SUB Stack_pointer @28 									#OVERHEAD FOR FUNCTION sift_up
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
@@ -784,7 +795,7 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto parent 												#CALLING parent
+Goto function:parent 												#CALLING parent
 
 				
 SUB gp7 @4 															#POP GP0
@@ -843,7 +854,7 @@ Move gp2 gp0
  														
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC ifsift_up0endif
+if gp0 then Load PC ifsift_up-0endif
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
@@ -908,9 +919,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto sift_up 												#CALLING sift_up
+Goto function:sift_up 												#CALLING sift_up
 
-Pass										%ifsift_up0endif
+Pass										%ifsift_up-0endif
 
 
 
@@ -920,7 +931,7 @@ Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 
 #################################### Built in function print_al ####################################
-SUB gp7 @4 		 		 %print_i										#Pops into gp0
+SUB gp7 @4 		 		 %function:print_i										#Pops into gp0
 Load gp0 Expression_stack [gp7]  				
 Outd gp0
 Move Jump PC  			#reads new top of stack from the stack frame
@@ -930,7 +941,7 @@ Move Jump PC  			#reads new top of stack from the stack frame
 
 #heavily optimised printf loop, avoids call stack use entirely
 
-SUB gp7 @4 		 		 %printf										#Pops into gp0
+SUB gp7 @4 		 		 %function:printf										#Pops into gp0
 Load gp0 Expression_stack [gp7]
 						
 					
@@ -958,7 +969,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-Move Stack_pointer previous_stack_ptr								%sift_down
+Move Stack_pointer previous_stack_ptr								%function:sift_down
 SUB Stack_pointer @28 									#OVERHEAD FOR FUNCTION sift_down
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
@@ -1007,9 +1018,19 @@ Compare gp1 gp0
 if Less then Load gp2 @4294967295
 Move gp2 gp0
  														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC ifsift_down4endif
+if gp0 then Load PC ifsift_down-4endif
 
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
@@ -1020,7 +1041,7 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto lchild 												#CALLING lchild
+Goto function:lchild 												#CALLING lchild
 
 				
 SUB gp7 @4 															#POP GP0
@@ -1038,7 +1059,7 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto rchild 												#CALLING rchild
+Goto function:rchild 												#CALLING rchild
 
 				
 SUB gp7 @4 															#POP GP0
@@ -1067,8 +1088,18 @@ Compare gp1 gp0
 if Less then Load gp2 @4294967295
 Move gp2 gp0
  														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
 
-if gp0 then Load PC ifsift_down2true 									#IF ELSE STATEMENT
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
+
+if gp0 then Load PC ifsift_down-2true 									#IF ELSE STATEMENT
  									
 
 Load gp0 16 [Stack_pointer] 						#LOAD GP0
@@ -1093,7 +1124,7 @@ Move gp2 gp0
 NOT gp0 														
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC ifsift_down1endif
+if gp0 then Load PC ifsift_down-1endif
 
 
 Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
@@ -1101,10 +1132,10 @@ Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 
-Pass										%ifsift_down1endif
+Pass										%ifsift_down-1endif
 
-Load PC ifsift_down2endif
-Pass 										%ifsift_down2true
+Load PC ifsift_down-2endif
+Pass 										%ifsift_down-2true
  									
 
 
@@ -1142,18 +1173,28 @@ Compare gp1 gp0
 if Less then Load gp2 @4294967295
 Move gp2 gp0
  														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC ifsift_down0endif
+if gp0 then Load PC ifsift_down-0endif
 
 Load gp0 12 [Stack_pointer] 						#LOAD GP0
  														
 
 Store gp0 16 [Stack_pointer] 						#STORE GP0
 
-Pass										%ifsift_down0endif
+Pass										%ifsift_down-0endif
  
-Pass 										%ifsift_down2endif           
+Pass 										%ifsift_down-2endif           
 
  									
 
@@ -1194,7 +1235,7 @@ Move gp2 gp0
  														
 
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC ifsift_down3endif
+if gp0 then Load PC ifsift_down-3endif
 
 
 
@@ -1289,11 +1330,11 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto sift_down 												#CALLING sift_down
+Goto function:sift_down 												#CALLING sift_down
 
-Pass										%ifsift_down3endif
+Pass										%ifsift_down-3endif
 
-Pass										%ifsift_down4endif
+Pass										%ifsift_down-4endif
 
 
 
@@ -1318,7 +1359,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-Move Stack_pointer previous_stack_ptr								%rchild
+Move Stack_pointer previous_stack_ptr								%function:rchild
 SUB Stack_pointer @12 									#OVERHEAD FOR FUNCTION rchild
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
@@ -1401,7 +1442,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 
-Move Stack_pointer previous_stack_ptr								%main
+Move Stack_pointer previous_stack_ptr								%function:main
 SUB Stack_pointer @1040 									#OVERHEAD FOR FUNCTION main
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
@@ -6571,7 +6612,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
-Goto heapsort 												#CALLING heapsort
+Goto function:heapsort 												#CALLING heapsort
 
 
 Load gp0 @0
@@ -6579,7 +6620,7 @@ Load gp0 @0
 
 Store gp0 8 [Stack_pointer] 						#STORE GP0
 
-Pass 										%loopmain0entry 		#FOR LOOP
+Pass 										%loopmain-0entry 		#FOR LOOP
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
@@ -6599,9 +6640,19 @@ Compare gp1 gp0
 if Less then Load gp2 @4294967295
 Move gp2 gp0
  														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
+
+
+				
+SUB gp7 @4 															#POP GP0
+Load gp0  Expression_stack [gp7]
 
 NOT gp0
-if gp0 then Load PC loopmain0exit
+if gp0 then Load PC loopmain-0exit
 
 
 
@@ -6620,7 +6671,7 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto print_i 												#CALLING print_i
+Goto function:print_i 												#CALLING print_i
 
 
 
@@ -6632,9 +6683,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Goto printf 												#CALLING printf
+Goto function:printf 												#CALLING printf
 
-Pass 										%loopmain0continue
+Pass 										%loopmain-0continue
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
@@ -6654,8 +6705,8 @@ ADD gp0 gp1 														#ADD
 
 Store gp0 8 [Stack_pointer] 						#STORE GP0
 								
-Load PC loopmain0entry
-Pass 										%loopmain0exit
+Load PC loopmain-0entry
+Pass 										%loopmain-0exit
 
 
 
@@ -6665,9 +6716,9 @@ Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 ############################## GETW ################################
 #returns a char
-In gp0 %getw 				#waits for a user to press a key
+In gp0 %function:getw 				#waits for a user to press a key
 Compare gp0 Zero
-if Equal then Load PC getw
+if Equal then Load PC function:getw
 Store gp0 Expression_stack [gp7]
 
 ADD gp7 @4
