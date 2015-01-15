@@ -1,0 +1,111 @@
+// database entry format:
+
+
+//////////////////////
+// KEY (32bit) 		//	
+//////////////////////
+// Llink 			//
+//////////////////////
+// Rlink 			//
+//////////////////////
+// Data pointer     //
+//////////////////////
+
+#include allocation.cll
+
+
+void main()
+	malloc_init();
+end;
+
+void editDict(int key, @int dataPTR,@int dict)
+	if (key == dict[0]) then //needs to change dict
+		collectGarbage(dict[3]);
+		dict[3] = dataPTR;	
+	else
+		if (key>dict[0]) then
+			if (dict[2]) then editDict(key,dataPTR,dict[2]); //if there is a node to the right, try to add relative to it
+			else dict[2] = createNewTreeNode(key,0,0,dataPTR); //otherwise fit in the new node here
+			endif;
+		else
+			if (dict[1]) then editDict(key,dataPTR,dict[1]); //if there is a node to the left, try to add relative to it
+			else dict[1] = createNewTreeNode(key,0,0,dataPTR); //otherwise fit in the new node here
+			endif;
+		endif;	 
+	endif;
+end;
+
+void collectGarbage(@int ptr)
+	//cleans up an entry, will be more complex in future maybe
+	dalloc(ptr);
+end;
+
+@int findKey(int key, @int dict)
+	//binary searchon tree
+	if (not(dict)) then return 0; endif; //failure if no key of correct address
+	if (key == dict[0]) then return dict[3]; endif; 		//if correct key then return address of data
+	if (key>dict[0]) then return findKey(key,dict[2]); endif;
+	return findKey(key,dict[1]);
+end;
+
+@int createNewTreeNode(int key,@int Llink,@int Rlink,@int dataPTR)
+	@int return_value =  malloc(4);
+	//creates a tree node
+	return_value[0] = key;
+	return_value[1] = Llink;
+	return_value[2] = Rlink;
+	return_value[3] = dataPTR;
+	return return_value;
+end;
+
+
+
+void reBalanceDictTree(@int dict)
+	@int top = sortTree(dict);  //turns tree into a doubly linked circular list with a pointer to the top element
+	int length = getListLength(top);
+	pointe
+end;
+
+@int sortTree(@int node)
+	if (node[1]) then
+		if (node[2]) then //both
+			node[1] = sortTree(node[1]);
+			@int top = sortTree(node[2]); //top is the very top end of the tree
+			node[2] = top[2];
+			@int bottom = node[1];
+			bottom = bottom[2]; 		//bottom is the right of top(node[1])
+
+			bottom[1] = top;
+			top[2] = bottom;  //adds circular pointers
+
+			@int temp = node[2]; 		//sets the links on the nodes left and right of central node
+			temp[1] = node;
+
+			temp = node[1];
+			temp[2] = node;
+
+		else 				//just left
+			top = node;
+			temp = node[1];
+			node[2] = temp[2];
+			bottom = node[2];
+			bottom[1] = node;
+			temp[2] = node;
+
+		endif;
+	else
+		if (node[2]) then //just right
+			node[2] = sortTree(node[2]);
+			temp = node[2];
+			top = temp[1];
+			temp[1] = node;
+			node[1] = top;
+			top[2] = node;
+		else  //neither
+			top = node;
+			node[1] = node;
+			node[2] = node;
+			endif;
+	endif;
+	return top;
+end;
