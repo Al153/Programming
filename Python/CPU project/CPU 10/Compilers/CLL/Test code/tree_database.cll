@@ -63,8 +63,18 @@ end;
 void reBalanceDictTree(@int dict)
 	@int top = sortTree(dict);  //turns tree into a doubly linked circular list with a pointer to the top element
 	int length = getListLength(top);
-	pointe
+	return createBalancedTree(top,length)
+	//////////////////////////////////////////
+	// FINISH ME PLZ 						//
+	//////////////////////////////////////////
 end;
+
+@int createBalancedTree(@int node,length)
+		///////////////////////////////////////////////////////////////
+		// USING JOHN LATHAM's ALGORITHM, REWRITTEN FOR LINKED LISTS //
+		///////////////////////////////////////////////////////////////
+end;
+
 
 @int sortTree(@int node)
 	if (node[1]) then
@@ -108,4 +118,51 @@ end;
 			endif;
 	endif;
 	return top;
+end;
+
+
+
+int simpleHash(@char string)
+	int i = 0;
+	int digest = 0;
+	while (string[i]) do
+		digest = (digest<<7)|(digest>>25); //rotates digest by 7
+		digest = digest^string[i];
+		i = i+1;
+	loop;
+	return digest;
+end;
+
+void insertToDict(@int dict, @char keystring, int dataPTR)
+	//generates a dictionary entry corresponding to the tree string
+	
+	int key = simpleHash(keystring);
+	while (1) do
+		entryAddress = findKey(key,dict); //gets address of a data ptr
+		if (entryAddress) then
+			if (checkKey(entryAddress[0],keystring)) then 
+				//if the same, then just  change dict pointer
+				entryAddress[1] = dataPTR;
+
+				break;
+			else //need to create a new key
+				entryAddress[2] = entryAddress[2] + 1; //increment collision counter by 1
+				key = key + entryAddress[2]; 			//offset key by collision counter
+				//doesnt break and allows second iteration
+		else
+			editDict(key,createNewDataEntry(keystring,dataPTR),dict); //if not in tree, create a new node in the tree
+			break;
+		endif;
+	loop;
+end;
+
+@int createNewDataEntry(@char keystring, int dataPTR)
+	//allocate space for a copy of the keystring
+
+	//allocate space for the newDictEntry
+end;
+
+int checkKey(@char key1, @char key2)
+	//checks if two strigns are equal
+	//returns 1 for equal, 0 for not
 end;
