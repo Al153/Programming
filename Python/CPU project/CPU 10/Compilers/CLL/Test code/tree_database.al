@@ -1896,6 +1896,19 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
+Load gp0 @1
+ 														
+
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+
+ADD gp0 gp1 														#ADD
+ 														
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+
 
 Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
 Load ret_addr 0 [Stack_pointer]

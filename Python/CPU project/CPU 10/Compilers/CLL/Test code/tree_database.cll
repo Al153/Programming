@@ -338,5 +338,5 @@ int getLength(@char string)
 	//finds length of a string
 	int count = 0;
 	for (count = 0, string[count], count = count + 1) continue; loop;
-	return count;
+	return count+1; //plus one to include null terminal
 end;
