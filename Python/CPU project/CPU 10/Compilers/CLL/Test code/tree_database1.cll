@@ -23,6 +23,18 @@ void main()
 	insertToDict(myDict,"a little ","lamb");
 	insertToDict(myDict,"foo","testing replacement");
 	insertToDict(myDict,"12","34");
+	insertToDict(myDict,"ab","bc");
+	insertToDict(myDict,"bc","cd");
+	insertToDict(myDict,"cd","de");
+	insertToDict(myDict,"de","ef");
+	insertToDict(myDict,"fg","gh");
+	insertToDict(myDict,"gh","hi");
+
+	dumpDict(myDict);
+	printf("DUMPED\n");
+	reBalanceDictTree(@myDict);
+
+	dumpDict(myDict);
 
 	@char test = retrieveFromDict(myDict,"a little ");
 	printf(test);
@@ -90,22 +102,25 @@ end;
 
 
 
-void reBalanceDictTree(@int dict)
-	printf("REBALANCING TREE\n")
+void reBalanceDictTree(@int dictptr)
+	@int dict = dictptr[0];
+	printf("REBALANCING TREE\n");
 	@int top = sortTree(dict);  //turns tree into a doubly linked circular list with a pointer to the top element
-	bottom = top[2];
+	@int bottom = top[2];
+	dumpList(dictptr);
 	bottom = pruneTree(bottom);
 	int length = getListLength(bottom);
 
-	return createBalancedTree(bottom,length);
+	dictptr[0] = createBalancedTree(bottom,length);
 end;
 
 @int createBalancedTree_rightmost; //stores next node
 int TREEOPCOUNT = 32; //counts number of tree insertions and deletions, after 32, the tree is rebalanced
+
 @int createBalancedTree(@int node, int length)
 	if (length) then
 		int left_length = length/2;
-		int right_length = left_length
+		int right_length = left_length;
 		if (left_length<<2 == length) then left_length = left_length-1; endif;
 		@int leftPointer = createBalancedTree(node,left_length);
 		node = createBalancedTree_rightmost;
@@ -126,13 +141,16 @@ end;
 	@int newBottom = bottom;
 	while(not(newBottom[3])) do
 		newBottom = newBottom[2];
-		if (newBottom=bottom) then
-			return bottom; endif; //there are no non-empty nodes so just return the bottom
+		if (newBottom==bottom) then
+			return bottom; endif; //there are no non-empty nodes so  just return the bottom
 	loop;
-	@int node = newBottom
-	while(node[2]!=newBottom)
+	@int node = newBottom;
+	while (node[2]!=newBottom) do
+		print_i(node);
+		printf("\n");
 		@int next = node[2];
 		if(not(node[3])) then
+			printf("DALLOCING\n");
 			@int previous = node[1];
 
 			previous[2] = next;
@@ -147,12 +165,13 @@ end;
 int getListLength(@int top)
 	int length = 1;
 	@int node = top;
-	while(node[2]!=top)
+	while(node[2]!=top) do
 		node = node[2];
-		length = length + 1
-	end;
+		length = length + 1;
+	loop;
 	return length;
 end;
+
 
 @int sortTree(@int node)
 //also needs to delete empty nodes
@@ -251,7 +270,7 @@ end;
 void insertToDict(@int dict, @char keyString, int dataPTR)
 	//generates a dictionary entry corresponding to the tree string
 	TREEOPCOUNT = TREEOPCOUNT - 1;
-	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(dict)
+	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
 	printf("\n");
 	printf(keyString);
 	printf("\n");
@@ -303,6 +322,8 @@ end;
 
 int deleteFromDict(@int dict, @char keyString)
 	//returns 1 for success, 0 for fail
+	TREEOPCOUNT = TREEOPCOUNT - 1;
+	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
 	int key = simpleHash(keyString);
 	@int treeNodeAddress = findTreeNode(key,dict);
 	@int entryAddress = treeNodeAddress[3]; //gets address of a data ptr
@@ -335,6 +356,38 @@ int deleteFromDict(@int dict, @char keyString)
 	else
 		return 0; //if not in tree, return failure
 	endif;
+end;
+
+//__________________________________ Dump dict ______________________________
+void dumpDict(@int dict)
+	if (dict[1]) then dumpDict(dict[1]); endif;
+	if (dict[2]) then dumpDict(dict[2]); endif;
+	@int entry = dict[3];
+	while (entry) do
+		printf(entry[0]);
+		printf(":");
+		printf(entry[1]);
+		printf("\n");
+		entry = entry[2];
+	loop;
+end;
+
+void dumpList(@int dict)
+	@int node = dict[2];
+	while(node!=dict)do
+		@int data = node[3];
+		@int keyString = data[0];
+		@int string = data[1];
+		print_i(data);
+		printf("\t");
+		printf(keyString);
+		printf(":");
+		printf(string);
+		printf("\n");
+		if (not(node[2])) then printf("NULL RIGHT LINK\n"); break; endif;
+		if (not(node[1])) then printf("NULL LEFT LINK\n"); break; endif;
+		node = node[2];
+	loop;
 end;
 
 //__________________________________ AUXILARY DICT EDITTING FUNCTIOnS __________________________________

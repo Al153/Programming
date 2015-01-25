@@ -469,7 +469,7 @@ class function:
 							return type_to_return
 						else:
 							#raise an error
-							print "ERROR(1): variable "+variable_parse_tree.children[0].string+" of type "+self.variables[variable_parse_tree.children[0]].string+" cannot be used as a pointer"
+							print "ERROR(1): variable "+variable_parse_tree.children[0].string+" of type "+self.variables[variable_parse_tree.children[0].string]+" cannot be used as a pointer"
 							quit()
 					elif variable_parse_tree.children[0].string in program.global_var_types:
 						if program.global_var_types[variable_parse_tree.children[0].string][0] == "@":
