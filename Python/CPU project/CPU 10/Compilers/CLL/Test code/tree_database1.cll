@@ -107,7 +107,7 @@ void reBalanceDictTree(@int dictptr)
 	printf("REBALANCING TREE\n");
 	@int top = sortTree(dict);  //turns tree into a doubly linked circular list with a pointer to the top element
 	@int bottom = top[2];
-	dumpList(dictptr);
+	dumpList(bottom);
 	bottom = pruneTree(bottom);
 	int length = getListLength(bottom);
 
@@ -179,8 +179,8 @@ end;
 // delete emptynodes 			//
 //////////////////////////////////
 	if (node[1]) then
+		node[1] = sortTree(node[1]);
 		if (node[2]) then //both
-			node[1] = sortTree(node[1]);
 			@int top = sortTree(node[2]); //top is the very top end of the tree
 			node[2] = top[2];
 			@int bottom = node[1];
@@ -207,17 +207,20 @@ end;
 	else
 		if (node[2]) then //just right
 			node[2] = sortTree(node[2]);
-			temp = node[2];
-			top = temp[1];
+			top = node[2];
+			temp = top[2];
 			temp[1] = node;
+			node[2] = temp;
 			node[1] = top;
 			top[2] = node;
 		else  //neither
 			top = node;
 			node[1] = node;
 			node[2] = node;
-			endif;
+		endif;
 	endif;
+	if (not(node[1])) then printf("ERROR IN SORT: EMPTY LEFT NODE\n"); endif;
+	if (not(node[2])) then printf("ERROR IN SORT: EMPTY RIGHT NODE\n"); endif;
 	return top;
 end;
 
@@ -271,9 +274,6 @@ void insertToDict(@int dict, @char keyString, int dataPTR)
 	//generates a dictionary entry corresponding to the tree string
 	TREEOPCOUNT = TREEOPCOUNT - 1;
 	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
-	printf("\n");
-	printf(keyString);
-	printf("\n");
 	int key = simpleHash(keyString);
 	@int entryAddress = findKey(key,dict); //gets address of a data ptr
 	if (entryAddress) then
@@ -373,13 +373,19 @@ void dumpDict(@int dict)
 end;
 
 void dumpList(@int dict)
-	@int node = dict[2];
-	while(node!=dict)do
+	@int node = dict;
+	printf("__________________________________ DUMPING LIST ________________________________\n");
+	while(1)do
 		@int data = node[3];
-		@int keyString = data[0];
-		@int string = data[1];
+		@char keyString = data[0];
+		@char string = data[1];
+		printf("Node address = ");
+		print_i(node);
+		printf("\tDataPointer = ");
 		print_i(data);
-		printf("\t");
+		printf("\tHash value = ");
+		print_i(node[0]);
+		printf("\tStored strings = ");
 		printf(keyString);
 		printf(":");
 		printf(string);
@@ -387,7 +393,9 @@ void dumpList(@int dict)
 		if (not(node[2])) then printf("NULL RIGHT LINK\n"); break; endif;
 		if (not(node[1])) then printf("NULL LEFT LINK\n"); break; endif;
 		node = node[2];
+		if (node == dict) then break; endif;
 	loop;
+	printf("__________________________________ LIST DUMPED _________________________________\n");
 end;
 
 //__________________________________ AUXILARY DICT EDITTING FUNCTIOnS __________________________________
