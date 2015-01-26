@@ -18,30 +18,135 @@ void main()
 	malloc_init();
 	@int myDict = newDict("Hello","world");
 
-	insertToDict(myDict,"foo","BAR");
-	insertToDict(myDict,"mary","had");
-	insertToDict(myDict,"a little ","lamb");
-	insertToDict(myDict,"foo","testing replacement");
-	insertToDict(myDict,"12","34");
-	insertToDict(myDict,"ab","bc");
-	insertToDict(myDict,"bc","cd");
-	insertToDict(myDict,"cd","de");
-	insertToDict(myDict,"de","ef");
-	insertToDict(myDict,"fg","gh");
-	insertToDict(myDict,"gh","hi");
-	dumpDict(myDict);
-	printf("\n");
-	@char test = retrieveFromDict(myDict,"a little ");
-	printf(test);
-	printf("\n");
-	reBalanceDictTree(@myDict);
+	//insertToDict(myDict,"foo","BAR");
+	//insertToDict(myDict,"mary","had");
+	//insertToDict(myDict,"a little ","lamb");
+	//insertToDict(myDict,"foo","testing replacement");
+	//insertToDict(myDict,"12","34");
+	//insertToDict(myDict,"ab","bc");
+	//insertToDict(myDict,"bc","cd");
+	//insertToDict(myDict,"cd","de");
+	//insertToDict(myDict,"de","ef");
+	//insertToDict(myDict,"fg","gh");
+	//insertToDict(myDict,"gh","hi");
+	//dumpDict(myDict);
+	//printf("\n");
+	//@char test = retrieveFromDict(myDict,"a little ");
+	//printf(test);
+	//printf("\n");
+	//reBalanceDictTree(@myDict);
 
-	dumpDict(myDict);
-	printf("\n");
-	@char test = retrieveFromDict(myDict,"a little ");
-	printf(test);
+	//dumpDict(myDict);
+	//printf("\n");
+	//@char test = retrieveFromDict(myDict,"a little ");
+	//printf(test);
+	demoSystem();
 end;
- 
+
+// ____________________________________ Demonstrations _____________________________
+char demoBUFPTR = 0;
+@char 255 BUF;
+
+
+#define EXIT 1
+#define ADD 2
+#define REMOVE 3
+#define RETRIEVE 4
+#define REBALANCE 5
+#define DUMP 6
+#define PASS 7
+
+void demoSystem()
+	@int demoDict = newDict("ROOT","ROOT");
+	printf("_________________STARTING SYSTEM_______________________\n");
+	while (1) do
+		readIn();
+		int op = getDemoOp();
+		if (op == EXIT) then break; endif;
+		if (op == ADD) then insertToDict(demoDict,getWord(),newString(getWord()));
+		else if (op == REMOVE) then 
+			if (deleteFromDict(demoDict,getWord())) then printf("SUCCESS\n"); else printf("FAILURE\n"); endif;
+		else if (op == RETRIEVE) then
+			@char result = retrieveFromDict(demoDict,getWord());
+			if (result) then
+				printf(result);
+				printf("\n");
+			else
+				printf("ERROR: KEY DOES NOT EXIST\n");
+			endif;
+		else if (op == REBALANCE) then reBalanceDictTree(@demoDict);
+		else if (op == DUMP) then dumpDict(demoDict);
+		endif;endif;endif;endif;endif;
+		printf("Ok\n");
+	loop;
+end;
+
+void readIn()
+	demoBUFPTR = 0;
+	char character;
+	printf(">>>");
+	char lineFeed = 10;
+	char blank = 0;
+	char backSpace = 8;
+	while (1) do
+		character = getw();
+		putc(character);
+		if (character == 13) then
+			BUF[demoBUFPTR] = 0; //nullifies string
+			putc(lineFeed);
+			break;
+		else
+			if (character == 8) then
+				BUF[demoBUFPTR] = 0;
+				demoBUFPTR = demoBUFPTR - 1;
+				putc(blank);
+				putc(backSpace);
+				continue;
+			endif;
+			BUF[demoBUFPTR] = character;
+			demoBUFPTR = demoBUFPTR + 1;
+		endif;
+	loop;
+	while (demoBUFPTR) do 
+		BUF[demoBUFPTR] = 0; //clear rest of buffer
+		demoBUFPTR = demoBUFPTR + 1;
+	loop;
+end;
+
+int getDemoOp()
+	@char opWord = getWord();
+	if (checkKey(opWord,"ADD")) then return ADD;
+	else if (checkKey(opWord,"EXIT")) then return EXIT;
+	else if (checkKey(opWord,"REMOVE")) then return REMOVE;
+	else if (checkKey(opWord,"RETRIEVE")) then return RETRIEVE;
+	else if (checkKey(opWord,"REBALANCE")) then return REBALANCE;
+	else if (checkKey(opWord,"DUMP")) then return DUMP;
+	else if (checkKey(opWord,"PASS")) then return PASS;
+	endif;endif;endif;endif;endif;endif;endif;
+	printf("ERROR: UNRECOGNISED INSTRUCTION\n");
+	return PASS;
+end;
+
+@char getWord()
+	while((not(BUF[demoBUFPTR]))or(BUF[demoBUFPTR] == 32)) do
+		demoBUFPTR = demoBUFPTR + 1;
+	loop;
+	@char return_value = BUF+demoBUFPTR;
+	while((BUF[demoBUFPTR])and(BUF[demoBUFPTR] != 32)) do
+		demoBUFPTR = demoBUFPTR + 1;
+	loop;
+	BUF[demoBUFPTR] = 0; 		//nullifies
+	demoBUFPTR = demoBUFPTR + 1;
+	return return_value;
+end;
+
+@char newString(@char string)
+	int stringLength = getLength(string);
+	if (stringLength&3) then stringLength = 1 + (stringLength>>2); else stringLength = stringLength>>2; endif;  //pads if needed, uses &3 and <<2 for %4 and *4 respectively
+	@char stringCopy = malloc(stringLength); 					//allocates a section of memory of desired length
+	copyString(string,stringCopy,stringLength<<2);  		//copies key string
+	return stringCopy;
+end;
 //____________________________________ DICT TREE EDITING ALGORITHMS _____________________________________________
 
 @int newDict(@char keyString,@int dataPTR)

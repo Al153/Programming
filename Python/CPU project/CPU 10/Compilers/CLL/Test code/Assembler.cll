@@ -1,0 +1,54 @@
+//////// ATTEMPT TO PRODUCE AN ASSEMBLER
+
+#define EXECUTE  1
+#define DUMP 2
+
+@int definedDict;
+@int variableDict;
+
+void assemble(@char source_text, int mode)
+	init();
+	@int tokens = pass1(source_text);
+
+	pass2(tokens);
+	if (mode == EXECUTE) then
+		execute(tokens);
+	else
+		dump(tokens);
+	endif;
+end;
+
+#include allocation.cll
+
+void init()
+	malloc_init();
+	//setup dicts
+end;
+
+
+@int pass1(@char source_text)
+	@int previousLine = malloc(4);
+	@int line;
+	for(line = getLine(source_text),line,line = getLine(source_text)) //for every line in the file
+		//runs first pass operations on the line
+		//tokens should be doubly linked list
+		//needs to generate next and previous objects
+		line[previous] = previousLine;
+		previousLine[next] = line;
+		checkIfDefinition(line);
+		intLiteral(line);
+	loop;
+end;
+
+@char getLine()
+	//reads in line, tokenises, forms a 
+end;
+
+void checkIfDefinition(@int line_object)
+	//checks if first token is a def ... ..., if it is adds to def dictionary
+	//deletes node
+end;
+
+void intLiteral()
+	//checks if an int literal, if it is then adds an int to it
+end;
