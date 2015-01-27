@@ -19,36 +19,150 @@ void assemble(@char source_text, int mode)
 end;
 
 #include allocation.cll
+#include hashTable.cll
 
 void init()
 	malloc_init();
 	//setup dicts
+	definedDict = newDict("ROOT","ROOT");
+	variableDict = newDict("ROOT","ROOT");
 end;
 
 
+//////////////////////// LINE OBJECT STRuCTURE //////////////////////////////////
+// 				
+// 			Line Object
+// 			_________________________ 			_________________________
+// 			|  Line Number   		| 			|  String pointer		|
+// 			|-----------------------| 			|-----------------------|
+//  		|  Next line 			| 			|	Flags				|
+// 			|-----------------------| 			|-----------------------|
+// 			|  Previous Line 		| 			|	Previous 			|
+// 			|-----------------------| 			|-----------------------|
+// 			|  tokens 				| 			| 	Next 	 			| 		- next here to make things line up
+// 			|_______________________|	  		|_______________________|
+//
+
 @int pass1(@char source_text)
-	@int previousLine = malloc(4);
+	@int top = malloc(4);
 	@int line;
+	@int previous+line = top;
 	for(line = getLine(source_text),line,line = getLine(source_text)) //for every line in the file
 		//runs first pass operations on the line
 		//tokens should be doubly linked list
 		//needs to generate next and previous objects
-		line[previous] = previousLine;
-		previousLine[next] = line;
+		line[2] = previousLine;
+		previousLine[1] = line;
 		checkIfDefinition(line);
 		intLiteral(line);
 	loop;
 end;
 
-@char getLine()
-	//reads in line, tokenises, forms a 
+
+void pass2(@int top)
+	@int line; @int token
+	@int count = 0;
+	for(line = top[2],line,line = line[2])
+		//for line in code
+		for(token = line[3],token,token = token[3])
+			@int replacementString =  retrieveFromDict(definedDict,token[0]); 		//do replacement and find @s
+			if (replacementString) then token[0] = replacementString; endif;
+			//////////////////////////////////////////////////////////////
+			// check if token is @...									//
+			// ADD @... to vars if necerssary, else continue			//
+			////////////////////////////////////////////////////////////// 
+		loop;
+		//////////////////////////////////////////////////////////////
+		// if there is an if ... then ... convert to ... if ... 	//
+		//////////////////////////////////////////////////////////////
+		@int first = line[3];
+		if (checkKey(first[0],"goto")) then
+			//////////////////////////////////////////
+			// expand goto macro, reset first 		//
+			//////////////////////////////////////////
+
+		endif;
+		if (getOpcode(first[0])) then
+			line[0] = count;
+			count = count + 8;
+		endif;
+		//////////////////////////////////////////
+		// set last = last token 				//
+		//////////////////////////////////////////
+		if (checkKey(last[0],"%")) then
+			///////////////////////////////////////////
+			// create a label variable 				 //
+			///////////////////////////////////////////
+		endif;
+		@int 3 varInfo; 		//3 for size,type,data
+		//////////////////////////////////////////////////////////////////////////////////////////
+		// check if var - if so then increment count, add data/word/instruction(s), add to dict //
+		//////////////////////////////////////////////////////////////////////////////////////////
+	loop;
+end;
+ 
+@char getLine(@char source_text)
+	//reads in line, tokenises, forms a line object, sorts out character literals
+
+	//uses FSM to tokenise
+
+	//state definitions
+	
+
+	#define START 0
+	#define TOKENFOUND 1
+	#define NOTOKEN 2
+	#define literal 3
+	#define INTLITERAL 4
+	#define INTCHARLITERAL 5
+
+	int state = START;
+	int index = 0;
+
+	@int Line = malloc(4);
+	Line[0] = 0;
+	@int previous = Line;
+	while (1) do
+		if (state == literal) then
+			@char newString = //generate new string to point to 
+
+			////////////////////////////////////////
+			// CREATE TOKEN OBJECT AND DO LINKAGE //
+			////////////////////////////////////////
+
+			index = index + 2; //skip over the final '
+			state = NOTOKEN;
+			continue;
+		endif;
+		if (state == START) then
+		endif; 
+	loop;
+	
+
+	@char currentToken;
+	
 end;
 
 void checkIfDefinition(@int line_object)
 	//checks if first token is a def ... ..., if it is adds to def dictionary
 	//deletes node
-end;
-
-void intLiteral()
-	//checks if an int literal, if it is then adds an int to it
+	@int first_token = line_object[3];
+	if (checkKey(first_token[0],"def")) then //defined
+		if (first_token[1]) then
+			@int nextToken = first_token[1];
+			if (nextToken[1]) then
+				@int finalToken = nextToken[1];
+				insertToDict(definedDict,nextToken[0],finalToken[0]);
+				////////////////////////////////////////////////////
+				// also handle [x] etc							  //
+				////////////////////////////////////////////////////
+			else
+				printf("ERROR: Not enough terms to def");
+				quit();
+			endif;
+		else
+			printf("ERROR: Not enough terms to def");
+			quit();
+		endif;
+	endif;
 end;
