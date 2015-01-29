@@ -110,11 +110,12 @@ end;
 	
 
 	#define START 0
-	#define TOKENFOUND 1
-	#define NOTOKEN 2
-	#define literal 3
-	#define INTLITERAL 4
-	#define INTCHARLITERAL 5
+	#define TOKEN 1
+	#define LITERAL 2
+	#define ESCAPED 3
+	#define ATLITERAL 4 
+	#define ATLITERAL2 5
+	#define ATESCAPED 6
 
 	int state = START;
 	int index = 0;
@@ -122,8 +123,10 @@ end;
 	@int Line = malloc(4);
 	Line[0] = 0;
 	@int previous = Line;
+
+	@char currentTokenStart;
 	while (1) do
-		if (state == literal) then
+		if (state == LITERAL) then
 			@char newString = //generate new string to point to 
 
 			////////////////////////////////////////
@@ -135,11 +138,41 @@ end;
 			continue;
 		endif;
 		if (state == START) then
-		endif; 
+			
+			index = index + 1;
+			continue;
+		endif;
+		if (state == ESCAPED) then
+
+			index = index + 2;
+			continue;
+		endif;
+		if (state == TOKEN) then
+
+			index = index + 1;
+			continue;
+		endif;
+		if (state == ATLITERAL) then
+
+			index = index + 1;
+			continue;
+		endif;
+		if (state == ATLITERAL2) then
+
+			index = index + 2;
+			continue;
+		endif;
+		if (state == ATESCAPED) then
+
+			index = index + 2;
+			continue;
+		endif;
+
+
 	loop;
 	
 
-	@char currentToken;
+
 	
 end;
 
