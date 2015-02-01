@@ -23,10 +23,12 @@
 
 <expr> ::= <expr> <addop> <term> | <unary_op> <term> | <term>
 <term> ::= <term> <mulop> <factor> | <factor>
-<factor> ::= <const> | <variable> | <fun_call> | "(" <expr> ")" 
+<factor> ::= <const> | <variable> | <fun_call> | "(" <expr> ")" | <type_cast>
 
 <fun_call> ::= id "(" <args> ")" | id "(" ")"
 <args> ::= <args> "," <expr> | <expr>
+
+<type_cast> ::= <type> "(" <expr> ")"
 
 <addop> ::= "+" | "-" | ">" ">" | "<" "<"
 <mulop> ::= "*" | "/" | "%" | "^" | "|" | "&"

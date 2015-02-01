@@ -908,11 +908,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 36 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 Load gp2 @4294967295  												#COMPARE (NOT LESS)
 Compare gp1 gp0
@@ -950,16 +948,8 @@ if Greater then Load PC Stack_overflow_error
 
 Load gp0 24 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @4
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 MUL gp0 gp1 														#MULTIPLY
  														
@@ -1009,16 +999,8 @@ Pass 										%if__dalloc-4true
 
 Load gp0 32 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @0
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -1046,11 +1028,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 36 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -1106,16 +1086,8 @@ Pass										%if__dalloc-0endif
 
 Load gp0 32 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @0
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -1143,11 +1115,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 36 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -1161,11 +1131,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 				
 SUB gp7 @4 															#POP GP0
-Load gp0  Expression_stack [gp7]
-
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0  Expression_stack [gp7]
 
 AND gp0 gp1
  														
@@ -1214,16 +1182,8 @@ if Greater then Load PC Stack_overflow_error
 
 Load gp0 28 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @4
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 MUL gp0 gp1 														#MULTIPLY
  														
@@ -1685,16 +1645,8 @@ Pass 										%loopmalloc_init-0entry 		#FOR LOOP
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @61144
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS LESS)
 Compare gp1 gp0
@@ -1718,29 +1670,13 @@ if gp0 then Load PC loopmalloc_init-0exit
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @6
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 ADD gp0 gp1 														#ADD
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @61144
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS LESS)
 Compare gp1 gp0
@@ -1777,29 +1713,13 @@ if Greater then Load PC Stack_overflow_error
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @6
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 ADD gp0 gp1 														#ADD
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @4
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 MUL gp0 gp1 														#MULTIPLY
  														
@@ -1841,16 +1761,8 @@ Pass 										%loopmalloc_init-0continue
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @6
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 ADD gp0 gp1 														#ADD
  														
@@ -1995,16 +1907,8 @@ Store gp0 8 [Stack_pointer] 						#STORE GP0
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @1
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -2022,16 +1926,8 @@ Pass										%ifdemoSystem-0endif
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @2
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -2044,16 +1940,8 @@ if gp0 then Load PC ifdemoSystem-7true 									#IF ELSE STATEMENT
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @3
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -2066,16 +1954,8 @@ if gp0 then Load PC ifdemoSystem-6true 									#IF ELSE STATEMENT
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @4
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -2088,16 +1968,8 @@ if gp0 then Load PC ifdemoSystem-5true 									#IF ELSE STATEMENT
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @5
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -2110,16 +1982,8 @@ if gp0 then Load PC ifdemoSystem-4true 									#IF ELSE STATEMENT
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @6
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -2401,16 +2265,8 @@ Pass 										%loopgetLength-0continue
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @1
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 ADD gp0 gp1 														#ADD
  														
@@ -2424,16 +2280,8 @@ Pass 										%loopgetLength-0exit
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @1
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 ADD gp0 gp1 														#ADD
  														
@@ -2708,7 +2556,7 @@ Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 ##################### GETC ###############################################
 #returns a char
-In gp0 function:getc #gets a char without waiting (state of keyboard)
+In gp0 %function:getc #gets a char without waiting (state of keyboard)
 Store gp0 Expression_stack [gp7]
 ADD gp7 @4
 Compare gp7 stack_length
@@ -2828,16 +2676,8 @@ Goto function:putc 												#CALLING putc
 
 LoadByte gp0 9 [Stack_pointer] 					#LOAD GP0 (CHAR)
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @13
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -2850,16 +2690,8 @@ if gp0 then Load PC ifreadIn-1true 									#IF ELSE STATEMENT
 
 LoadByte gp0 9 [Stack_pointer] 					#LOAD GP0 (CHAR)
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @8
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -3184,11 +3016,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 12 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -3214,11 +3044,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 12 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 Move Zero gp2 														#COMPARE (IS GREATER)
 Compare gp1 gp0
@@ -3523,11 +3351,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Load gp0 16 [Stack_pointer] 						#LOAD GP0
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 16 [Stack_pointer] 						#LOAD GP0
 
 Load  gp2 @4294967295 												#COMPARE (NOT EQUAL)
 Compare gp1 gp0 
@@ -3562,16 +3388,8 @@ Store gp0 8 [Stack_pointer] 						#STORE GP0
 
 Load gp0 12 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @1
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 ADD gp0 gp1 														#ADD
  														
@@ -3862,16 +3680,8 @@ Pass										%ifcheckKey-0endif
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @1
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 ADD gp0 gp1 														#ADD
  														
@@ -4004,11 +3814,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Load gp0 24 [Stack_pointer] 						#LOAD GP0
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 24 [Stack_pointer] 						#LOAD GP0
 
 Move Zero gp2 														#COMPARE (IS LESS)
 Compare gp1 gp0
@@ -4123,16 +3931,8 @@ Pass 										%loopcopyString-0continue
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @1
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 ADD gp0 gp1 														#ADD
  														
@@ -4291,16 +4091,8 @@ Store gp0 20 [Stack_pointer] 						#STORE GP0
 
 Load gp0 20 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @3
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 AND gp0 gp1 														#AND
  														
@@ -4772,11 +4564,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Load gp0 24 [Stack_pointer] 						#LOAD GP0
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 24 [Stack_pointer] 						#LOAD GP0
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -6357,11 +6147,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Load gp0 12 [Stack_pointer] 						#LOAD GP0
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 12 [Stack_pointer] 						#LOAD GP0
 
 Move Zero gp2 														#COMPARE (IS GREATER)
 Compare gp1 gp0
@@ -6529,16 +6317,8 @@ Pass										%if__malloc-2endif
 
 Load gp0 12 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @1
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS GREATER)
 Compare gp1 gp0
@@ -6690,11 +6470,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 20 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 AND gp0 gp1 														#AND
  														
@@ -6823,11 +6601,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 20 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 AND gp0 gp1 														#AND
  														
@@ -7116,16 +6892,8 @@ Store gp0 12 [Stack_pointer] 						#STORE GP0
 
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @1
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 ADD gp0 gp1 														#ADD
  														
@@ -7243,11 +7011,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -7298,11 +7064,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 Move Zero gp2 														#COMPARE (IS GREATER)
 Compare gp1 gp0
@@ -7457,16 +7221,8 @@ Store gp0 16 [Stack_pointer] 						#STORE GP0
 
 Load gp0 16 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @3
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 AND gp0 gp1 														#AND
  														
@@ -7738,11 +7494,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Load gp0 16 [Stack_pointer] 						#LOAD GP0
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 16 [Stack_pointer] 						#LOAD GP0
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -7796,11 +7550,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Load gp0 20 [Stack_pointer] 						#LOAD GP0
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 20 [Stack_pointer] 						#LOAD GP0
 
 Load  gp2 @4294967295 												#COMPARE (NOT EQUAL)
 Compare gp1 gp0 
@@ -8807,11 +8559,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -8855,11 +8605,9 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 MUL gp6 @4 														   #INDEXING FOR @INT
 
 ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
-Load gp0 0 [gp6]
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 0 [gp6]
 
 Move Zero gp2 														#COMPARE (IS GREATER)
 Compare gp1 gp0
@@ -9286,11 +9034,9 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 
 
-Load gp0 12 [Stack_pointer] 						#LOAD GP0
- 														
-
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
+Load gp0 12 [Stack_pointer] 						#LOAD GP0
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -9645,16 +9391,8 @@ if Greater then Load PC Stack_overflow_error
 
 Load gp0 20 [Stack_pointer] 						#LOAD GP0
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @4
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 MUL gp0 gp1 														#MULTIPLY
  														
@@ -9809,16 +9547,8 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 ADD gp6 CLL.BUF 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
 LoadByte gp0 0 [gp6]
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @32
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
@@ -9919,16 +9649,8 @@ Move gp0 gp6 		 				#PUSH gp0 POP gp6
 ADD gp6 CLL.BUF 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
 LoadByte gp0 0 [gp6]
  														
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-
+Move gp0 gp1 		 				#PUSH gp0 POP gp1 
 Load gp0 @32
- 														
-
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
 
 Load  gp2 @4294967295 												#COMPARE (NOT EQUAL)
 Compare gp1 gp0 

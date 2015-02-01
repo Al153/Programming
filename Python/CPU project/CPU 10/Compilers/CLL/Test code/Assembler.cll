@@ -76,6 +76,25 @@ void pass2(@int top)
 		// if there is an if ... then ... convert to ... if ... 	//
 		//////////////////////////////////////////////////////////////
 		@int first = line[3];
+		if (checkKey(first[0],"if")) then
+			@int token = first[3];
+			token = token[3]; // find the then clause
+			if (checkKey(token[0],"then")) then
+				@int last = token[3];
+				while(last[3]) do
+					last = last[3];
+				loop; 		//scrolls to end of line
+				last[3] = first;
+				line[3] = token[3]; //create new start
+				dalloc(token);
+				token = first[3];
+				token[3] = 0; 		//terminate line
+				first = line[3];
+			else
+				printf("ERROR: if statement without an if\n");
+				quit();
+			endif;
+		endif;
 		if (checkKey(first[0],"goto")) then
 			//////////////////////////////////////////
 			// expand goto macro, reset first 		//
@@ -86,9 +105,10 @@ void pass2(@int top)
 			line[0] = count;
 			count = count + 8;
 		endif;
-		//////////////////////////////////////////
-		// set last = last token 				//
-		//////////////////////////////////////////
+		@int last = first;
+		while(last[3]) do
+			last = last[3];
+		loop; 		//scrolls to end of line
 		if (checkKey(last[0],"%")) then
 			///////////////////////////////////////////
 			// create a label variable 				 //
@@ -186,9 +206,7 @@ void checkIfDefinition(@int line_object)
 			if (nextToken[1]) then
 				@int finalToken = nextToken[1];
 				insertToDict(definedDict,nextToken[0],finalToken[0]);
-				////////////////////////////////////////////////////
-				// also handle [x] etc							  //
-				////////////////////////////////////////////////////
+				insertToDict(definedDict,addSquareBrackets(nextToken[0]),addSquareBrackets(nextToken[0]));
 			else
 				printf("ERROR: Not enough terms to def");
 				quit();
@@ -198,4 +216,28 @@ void checkIfDefinition(@int line_object)
 			quit();
 		endif;
 	endif;
+end;
+
+@char addSquareBrackets(@char text)
+		int length = getStringLength(text);
+		length = length + 2; 		//two []s
+
+		int newlength = length>>2;
+		if (newlength<<2 != length) then newlength = newlength + 1; endif; 			//if length not a multiple of 4, add 1 to newlength
+		@char newText = malloc(newlength);
+		newText[0] = '[';
+		counter = 0;
+		while (text[counter]) do
+			newText[counter + 1] = text[counter];
+			counter = counter + 1;
+		loop;
+		newText[counter = 1] = ']';
+		newText[counter + 2] = 0;
+		return newText;
+end;
+
+int getStringLength(@char string)
+	int count = 0;
+	while(string[count]) do count = count + 1; loop;
+	return count;
 end;

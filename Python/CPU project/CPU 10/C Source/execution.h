@@ -15,7 +15,7 @@ unsigned int fetch_address(unsigned int *registers, unsigned char *MEMORY){ //fe
 }
 
 unsigned char get_conditional(unsigned int *registers,unsigned char conditional){ //checks whether instr is conditional and if condition is true returns 1
-	//woop woop, lot's of logic!
+	//woop woop, lots of logic!
 	if (conditional&128){ //if there is a conditional bit set (if instruction is conditional)
 		if (!(conditional & 64)){ //if conditional based on a flag
 			if (!((1<<(31-(conditional & 31))) & registers[5])){ //if condition true

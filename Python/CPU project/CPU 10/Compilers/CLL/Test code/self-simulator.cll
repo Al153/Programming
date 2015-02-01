@@ -1,0 +1,499 @@
+// Simulates itself in CLL
+#define MEMORY_SIZE 1048576
+#define MEMORY_LIMIT 1048576
+
+@int 16 REGISTERS;
+@char MEMORY_SIZE MEMORY;
+
+char BYTE_FILTER = 255;
+
+
+void main()
+	prepareMemory();
+	int instructionCount = 0;
+	printf("__________________ EXECUTING __________________\n");
+	while (step()) do 
+		instructionCount = instructionCount +1;
+	loop;
+	printf("__________________ ENDED ______________________\n");
+	printf("EXECUTED "); print_i(instructionCount); printf(" INSTRUCTIONS\n");
+end;
+
+void prepareMemory()
+	//extracts  program from file and constucts memory using it
+	char state = 0;   //uses a state machine to switch between address and data
+	int address;
+	char chr; 	//extracted character
+	int i = 0;
+	//file in format addr,addr,addr,addr,data,stop?
+	state = 0;
+	while (state != 6) do  //parsing state machine, state of 6 ==> halt;
+		chr = readHex();
+		if (state == 0)then
+			//printf("%x\n",chr);
+			state = 1;
+			address = chr;
+		else if (state == 1) then
+			//printf("%x\n",chr);
+			state = 2;
+			address = address << 8;
+			address = address + chr;
+		else if (state == 2) then
+			//printf("%x\n",chr);
+			state = 3;
+			address = address << 8;
+			address = address + chr;
+		else if (state == 3) then
+			//printf("%x\n",chr);
+			state = 4;
+			address = address << 8;
+			address = address + chr;
+
+			//printf("address = %u\n",address );
+		else if (state == 4) then
+			//printf("chr = %x\n",chr );
+			state = 5;
+			store_byte_memory(address,int(chr));
+		else if (state == 5) then //sixth byte is 1 for an EOF or 0 for continue
+			//printf("hit state 5: %x\n",chr);
+			if (chr == 1)then
+				state = 6;
+			else if (chr == 0) then
+				state = 0;
+			else
+				quit();
+			endif; endif;
+		endif; endif; endif; endif; endif; endif;
+	loop;
+end;
+
+char readHex()
+	//reads in a byte (two hex chars)
+	char result = 0;
+	char inPut = getw();
+	putc(inPut);
+	while (((inPut>='a')and(inPut<='f'))or((inPut>='0')and(inPut<='9'))) do
+		inPut = getw();
+		putc(inPut);
+	loop;
+	if ((inPut>='a')and(inPut<='f'))then
+		inPut = inPut-'a'+10;
+	else
+		inPut = inPut-'0';
+	endif;
+	result = inPut<<4;
+
+	inPut = getw();
+	putc(inPut);
+	while (((inPut>='a')and(inPut<='f'))or((inPut>='0')and(inPut<='9'))) do
+		inPut = getw();
+		putc(inPut);
+	loop;
+	if ((inPut>='a')and(inPut<='f'))then
+		inPut = inPut-'a'+10;
+	else
+		inPut = inPut-'0';
+	endif;
+	result = result+inPut;
+	return result;
+end;
+
+int step()
+	//gets instruction, increments program counter etc
+	@char 4 instruction;
+	fetchInstruction(instruction);
+	int address = fetchAddress();
+	executeInstruction(instruction,address);
+end;
+
+void executeInstruction(@char instruction, int address)
+	int reg1_value;
+	int reg2_value;		
+	char reg1 = instruction[1];
+	char reg2 = instruction[2];
+	if (get_conditional(instruction[3])) then // if condition is true, then it will execute			
+		reg1 = reg1&15; //actual register addresses, prevents C buffer overflows due to machine code self modifying
+		reg2 = reg2&15;
+		char opcode = instruction[0];			
+		// execute instruction
+		//checks opcode
+		if (opcode == 0) then
+			return 1;   		//halt
+		endif;
+		if (opcode == 1) then 				//Pass
+	 		return 0;
+	 	endif;
+		if (opcode == 2) then 				//Move
+			write_REGISTERS(reg2,read_REGISTERS(reg1));
+			return 0;
+		endif;
+		if (opcode == 3) then 				//Load
+			address = address +  read_REGISTERS(reg2);
+			write_REGISTERS(reg1,read_memory(address));
+			return 0;
+		endif;
+		if (opcode == 4) then 				//Store
+	 		address = address +  read_REGISTERS(reg2);
+	 		store_memory(address,read_REGISTERS(reg1));
+	 		return 0;
+		endif;
+		if (opcode == 5) then  				//Compare regs
+			REGISTERS[5] = REGISTERS[5] & 4294967071; //clear flags for <>=					
+			reg1_value = read_REGISTERS(reg1); //get values
+			reg2_value = read_REGISTERS(reg2);	
+			if (reg1_value > reg2_value) then
+				REGISTERS[5] = REGISTERS[5] | 64;	
+			else if (reg1_value == reg2_value) then
+				REGISTERS[5] = REGISTERS[5] | 128;
+			else
+				REGISTERS[5] = REGISTERS[5] | 32;
+			endif; endif;	
+			return 0;
+		endif;
+		if (opcode == 6) then 				//compare reg - address	
+			REGISTERS[5] = REGISTERS[5] & 4294967071; //clear flags for <>=
+			address = address + read_REGISTERS(reg2);					
+			reg1_value = read_REGISTERS(reg1); //get values
+			reg2_value = read_memory(address);	
+			if (reg1_value > reg2_value) then
+				REGISTERS[5] = REGISTERS[5] | 64;	
+			else if (reg1_value == reg2_value) then
+				REGISTERS[5] = REGISTERS[5] | 128;
+			else 
+				REGISTERS[5] = REGISTERS[5] | 32;
+			endif; endif;	
+			return 0;	
+		endif;
+		if (opcode == 7) then 				//Out reg
+			putc(BYTE_FILTER & read_REGISTERS(reg1));
+	 		return 0;
+		endif;
+		if (opcode == 8) then 				//Out  address
+			address = address + read_REGISTERS(reg2);
+			putc(BYTE_FILTER & read_memory(address));
+			return 0;
+		endif;
+		if (opcode == 9) then 				//Outd reg
+			print_i(read_REGISTERS(reg1));
+			return 0;
+		endif;
+		if (opcode == 10) then 				//Outd address
+			address = address + read_REGISTERS(reg2);
+			print_i(read_memory(address));
+			return 0;
+		endif;
+		if (opcode == 11) then 				//Load byte
+			address = address + read_REGISTERS(reg2);
+			write_REGISTERS(reg1,int(read_byte_memory(address)));
+			return 0;
+		endif;
+		if (opcode == 12) then				//Store byte
+	 		address = address + read_REGISTERS(reg2);
+	 		store_byte_memory(address,read_REGISTERS(reg1));
+			return 0;
+		endif;
+		if (opcode == 13) then 				//Load word
+			address = address + read_REGISTERS(reg2);
+			write_REGISTERS(reg1,read_word_memory(address)); 
+			return 0;
+		endif;
+		if (opcode == 14) then 				//Store word
+	 		address = address + read_REGISTERS(reg2);
+	 		store_word_memory(address,read_REGISTERS(reg1));
+			return 0;
+		endif;
+		if (opcode == 48) then 				//in reg
+			write_REGISTERS(reg1,int(getc()));
+			return 0;
+		endif;
+		if (opcode == 49) then  				//in addr
+			address = address + read_REGISTERS(reg2);
+	 		store_memory(address,int(getc()));				
+			return 0;	
+		else
+			if  ((16 <= opcode) and (opcode < 48))then //ALU operations
+				if (opcode < 32)then	//Reg/reg instr
+					reg1_value = read_REGISTERS(reg1); //get values
+					reg2_value = read_REGISTERS(reg2);
+					reg1_value = do_ALU_op(reg1_value,reg2_value,opcode);
+					write_REGISTERS(reg1,reg1_value);
+				else 				//reg/addr
+					address = address + read_REGISTERS(reg2);					
+					reg1_value = read_REGISTERS(reg1); //get values
+					reg2_value = read_memory(address);
+					reg1_value = do_ALU_op(reg1_value,reg2_value,opcode&15);
+					write_REGISTERS(reg1,reg1_value);
+				endif;
+			endif;
+			return 0;
+		endif;				
+	else
+		return 0;
+	endif;
+end;
+
+// ALU STUFF
+	int do_ALU_op(int value1,int value2,char opcode)
+		@int 3 ALU_return_array;
+		opcode = opcode & 15;
+	
+		if (opcode == 14)then //add with carry
+			if (not(REGISTERS[5]&16))then //if no carry flag do a normal addition
+				opcode = 0;
+			else
+				REGISTERS[5] = REGISTERS[5] & 4294967279;  //reset carry flag
+			endif;
+		else if(opcode == 15) then //sub with borrow
+			if (not(REGISTERS[5] & 8)) then  //if no borrow flag then do a normal subtract
+				opcode= 1;
+			else
+				REGISTERS[5] = REGISTERS[5] & 4294967287; //reset carry flag
+			endif;
+		endif; endif;
+		ALU_op(ALU_return_array,value1,value2,opcode); //run ALU operation
+		if (opcode == 2) then  //if mmultiplication, ACC register = top 32bits of result
+			REGISTERS[2] = ALU_return_array[1]; 
+		endif;
+	
+		REGISTERS[5] = REGISTERS[5] | ALU_return_array[2]; //rupdate flags
+		return ALU_return_array[0]; //return value of result
+	end;
+
+// __________________ ALU _____________________________
+	void ALU_op(@int to_return, int r1_value, int r2_value, char op) //need to pass an array to the function
+    	int result = 0;
+		int top_of_result = 0;
+		int flags = 0;
+	
+		if (op == 0) then 			//ADD
+			result = r1_value + r2_value;
+			if (result < r1_value) then	//if there is a carry
+				flags = 16;
+			endif;
+		else
+		if(op == 1) then		//SUB
+			result = r1_value - r2_value;
+			if (result > r1_value) then 	//if there is a borrow
+				flags = 8;
+			endif;
+		else
+		if(op == 2) then		//MUl
+			//experimenal multiplication algorithm
+			int a = r1_value>>16;
+			int b = r1_value&65535;
+			int c = r2_value>>16;
+			int d = r2_value&65535;
+			top_of_result = a*c + (a*d+b*c)>>16;
+			result = b*d + (a*d+b*c)<<16;
+		else
+		if(op == 3) then		//DIV
+			if  (r2_value == 0) then 	//division by 0
+				flags = 4;
+				result = 4294967295;	
+			else
+				result = r1_value/r2_value;
+			endif;
+		else
+		if(op == 4) then		//MOD
+			if (r2_value == 0) then
+				flags = 4;
+				result = 0;
+			else
+				result = r1_value % r2_value;
+			endif;
+		else
+		if(op == 5) then		//AND
+			result = r1_value & r2_value;
+		else
+		if(op == 6) then		//OR
+			result = r1_value | r2_value;
+		else
+		if(op == 7) then		//XOR
+			result = r1_value ^ r2_value;
+		else
+		if(op == 8) then 		//NOT
+			result = r1_value ^ 4294967295;
+		else
+		if(op == 9) then		//NAND
+			result = (r1_value & r2_value) ^ 4294967295;
+		else
+		if(op == 10) then		//NOR
+			result = (r1_value | r2_value) ^ 4294967295;
+		else
+		if(op == 11) then		//XNOR
+			result = (r1_value ^ r2_value) ^ 4294967295;
+		else
+		if(op == 12) then		//SHL
+			result = (r1_value << r2_value)&4294967295;
+		else
+		if(op == 13) then		//SHR
+			result = (r1_value >> r2_value)&4294967295;
+		else
+		if(op == 14) then		//ADDc
+			result = r1_value + r2_value + 1;
+			if (result < r1_value) then	//if there is a carry
+				flags = 16;
+			endif;
+		else
+		if(op == 15) then		//SUBb
+			result = r1_value - r2_value - 1;
+			if (result > r1_value) then 	//if there is a borrow
+				flags = 8;
+			endif;
+
+		endif;endif;endif;endif; //one of the problems of CLL
+		endif;endif;endif;endif;
+		endif;endif;endif;endif;
+		endif;endif;endif;endif;
+	
+		to_return[0] = result;
+		to_return[1] = top_of_result;
+		to_return[2] = flags;
+	end;
+
+
+// Pre execution stuff
+
+void fetchInstruction(@char instruction)
+	int i;
+	for (i = 0, i < 4, i = i + 1)		
+		instruction = read_memory(REGISTERS[4]+i); //reads instruction from memory, using REGISTERS[4] (program counter as an index)
+	loop;
+	REGISTERS[4] = REGISTERS[4] + 4; 								//increments program counter
+end;
+
+int fetchAddress()
+	int address;													//mostly the same as fetch_instruction
+	address = read_memory(REGISTERS[4]);
+	REGISTERS[4] = REGISTERS[4] + 4;
+	return address;
+end;
+
+char get_conditional(char conditional) //checks whether instr is conditional and if condition is true returns 1
+	//woop woop, lots of logic!
+	if (conditional&128) then //if there is a conditional bit set (if instruction is conditional)
+		if (not(conditional & 64))then //if conditional based on a flag
+			if (not(REGISTERS[5] & (1<<(31-(conditional & 31))))) then //if condition true
+				if ((conditional&31 == 24) or (conditional&31 == 25) or (conditional&31 == 26))then
+					REGISTERS[5] = REGISTERS[5] & 4294967071; //reset all three of the  ><= flags 
+				else
+					REGISTERS[5] = REGISTERS[5] & (1<<(31 - (conditional&31)))^4294967295;   //resets just the tested flag
+				endif;
+				return 0;
+			else
+				if  ((conditional&31 == 24) or (conditional&31 == 25) or (conditional&31 == 26)) then
+					REGISTERS[5] = REGISTERS[5] & 4294967071;					//#reset all three of the  ><= flags
+				else
+					REGISTERS[5] = REGISTERS[5] & (1<<(31-(conditional&31)))^4294967295;
+				endif;
+				return 1;
+			endif;
+		else //if conditional based on a register
+			if  (REGISTERS[conditional&15])then
+				return 1;
+			else
+				return 0;
+			endif;
+		endif;
+	else
+		return 1;
+	endif;
+end;
+
+//________________ memory access functions ____________________	
+	void store_memory(int addr,int data)
+		@char 4 data_bytes;
+		if (addr>MEMORY_LIMIT-3)then
+			printf("ADDRESS OVERFLOW) then "); print_i(addr); printf("\n");
+		endif;
+	
+		data_bytes[3] = data&255;
+		data = data >> 8;
+		data_bytes[2] = data&255;
+		data =  data >> 8;
+		data_bytes[1] = data&255;
+		data = data >> 8;
+		data_bytes[0] = data&255;
+		int i;
+		for (i = 0, i <4 , i = i + 1)
+			MEMORY[(addr + i)&MEMORY_LIMIT] = data_bytes[i];
+		loop;
+	end;
+	
+	void store_word_memory(int addr,int data)
+		if (addr>MEMORY_LIMIT-1)then
+			printf("ADDRESS OVERFLOW) then "); print_i(addr); printf("\n");
+		endif;
+	
+		@char 2 data_bytes;
+		data_bytes[1] = data&255;
+		data_bytes[0] = (data>>8)&255;
+		int i;
+		for ( i = 0, i <2 , i = i +1)
+			MEMORY[(addr + i)&MEMORY_LIMIT] = data_bytes[i];
+		loop;
+	end;
+	
+	void store_byte_memory(int addr,int data)
+		if (addr>MEMORY_LIMIT)then
+			printf("ADDRESS OVERFLOW) then "); print_i(addr); printf("\n");
+		endif;
+		MEMORY[addr&MEMORY_LIMIT] = data&255;
+	end;
+	
+	
+	
+	
+	int read_memory(int addr)
+		if (addr>MEMORY_LIMIT-3)then
+			printf("ADDRESS OVERFLOW) then "); print_i(addr); printf("\n");
+		endif;
+		int to_return = 0;
+		int i;
+		for (i = 0, i<4,i = i+1)
+			to_return = to_return << 8;
+			to_return =  to_return + MEMORY[(addr+i)&MEMORY_LIMIT];
+		loop;
+		return to_return;
+	end;
+	
+	int read_word_memory(int addr)
+		if (addr>MEMORY_LIMIT-1)then
+			printf("ADDRESS OVERFLOW) then "); print_i(addr); printf("\n");
+		endif;
+		int to_return = 0;
+		int i;
+		for (i = 0, i<2,i = i+1)
+			to_return = to_return << 8;
+			to_return =  to_return + MEMORY[(addr+i)&MEMORY_LIMIT];
+		loop;
+		return to_return;
+	end;
+	
+	int read_byte_memory(int addr)
+		if (addr>MEMORY_LIMIT)then
+			printf("ADDRESS OVERFLOW) then "); print_i(addr); printf("\n");
+		endif;
+		int to_return = 0;
+		to_return = MEMORY[addr&MEMORY_LIMIT]; 
+		return to_return;
+	end;
+// _____________ register access functions ________________
+	void write_REGISTERS(char addr, int data)
+		if (addr > 1)then 				//checks not one and zero regs
+			if (addr == 5)then   		//flags set
+				REGISTERS[5] = REGISTERS[5] | data;
+			else if(addr == 6)then 	// flags reset
+				REGISTERS[5] = REGISTERS[5] | data; //flags reset
+			else
+				REGISTERS[addr] = data;
+			endif; endif;
+		endif;
+	end;
+	
+	int read_REGISTERS(char addr)
+		if(addr == 6) then
+			return REGISTERS[5];
+		endif;
+		return REGISTERS[addr];
+	end;

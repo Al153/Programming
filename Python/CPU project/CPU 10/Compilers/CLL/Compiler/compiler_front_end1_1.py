@@ -1,8 +1,9 @@
 import LR1_parser
 import sys
-import code_generator
+import code_generator1_1
 import os
 
+# LL 1.1 adds direct casting support, and further underlying optimisations
 
 ###________________________ Compiling Strategy ____________________________
 
@@ -69,7 +70,7 @@ class Program:
 		#print_parse_tree(self.functions["main"].parse_tree)
 
 		global_var_addresses = {var:"CLL."+var for var in self.global_var_types}
-		assembly_code = code_generator.snippets[" setup routines "].generate_code({})
+		assembly_code = code_generator1_1.snippets[" setup routines "].generate_code({})
 		assembly_code += self.generate_global_vars()
 		#print assembly_code
 		#raw_input('')
@@ -77,7 +78,7 @@ class Program:
 			if self.functions[function_name].built_in:
 				assembly_code += self.functions[function_name].assembly #could do with only including code if built in function is used
 			else:
-				assembly_code += code_generator.code_generator(self.functions[function_name],global_var_addresses,self.global_var_types).assembly
+				assembly_code += code_generator1_1.code_generator(self.functions[function_name],global_var_addresses,self.global_var_types).assembly
 		write_to_file(assembly_code)
 
 
@@ -410,6 +411,13 @@ class function:
 	def check_typing(self,parse_tree):
 		#takes a parse tree and checks typing (fixes it if possible), and returns the type of the expression at the aend of evalutation of this part of the tree,
 		#to the extent of checking overall type - ie @int =~= @char =~= int
+		if parse_tree.type == "<type_cast>":
+			resultant_type = get_type(parse_tree.children[0])#get the two types
+			source_type = self.check_typing(parse_tree.children[2])
+
+			parse_tree.type = "<cast>"
+			parse_tree.children = [parse_tree.children[2],Terminal_parse_tree_node(source_type,source_type),Terminal_parse_tree_node(resultant_type,resultant_type)]
+			return resultant_type
 
 		if len(parse_tree.children) == 3:
 			if parse_tree.children[0].type == '"("': #( expression )
@@ -432,7 +440,10 @@ class function:
 			parse_tree.children[0].type = "<"+parse_tree.children[0].type[1:-1]+input_type+">" #fixes the operator to a specific type
 			return input_type
 		elif len(parse_tree.children) == 1:
-			if parse_tree.children[0].type == "<term>":
+			if parse_tree.children[0].type == "<type_cast>":
+				input_type =  self.check_typing(parse_tree.children[0])
+				return input_type
+			elif parse_tree.children[0].type == "<term>":
 				input_type =  self.check_typing(parse_tree.children[0])
 				return input_type
 			elif parse_tree.children[0].type == "<factor>":
@@ -699,7 +710,7 @@ def get_source_file():
 def get_parse_tree(source_text):
 	'''uses parser file to get a parse tree of the program'''
 	CURRENT_DIR = os.path.dirname(__file__)
-	file_path = os.path.join(CURRENT_DIR, 'CLL.parse')
+	file_path = os.path.join(CURRENT_DIR, 'CLL1_1.parse')
 	local_parser = LR1_parser.Parser(file_path,tokenise) #replace built in function in parser
 	parse_tree = local_parser.parse(source_text)
 	return parse_tree

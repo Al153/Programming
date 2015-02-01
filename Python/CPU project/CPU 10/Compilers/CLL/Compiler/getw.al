@@ -1,3 +1,4 @@
+
 ############################## GETW ################################
 #returns a char
 In gp0 %function:getw 				#waits for a user to press a key
