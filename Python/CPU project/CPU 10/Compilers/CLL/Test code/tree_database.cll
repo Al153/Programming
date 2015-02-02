@@ -64,8 +64,9 @@ void demoSystem()
 		int op = getDemoOp();
 		if (op == EXIT) then break; endif;
 		if (op == ADD) then insertToDict(demoDict,getWord(),newString(getWord()));
-		else if (op == REMOVE) then 
-			if (deleteFromDict(demoDict,getWord())) then printf("SUCCESS\n"); else printf("FAILURE\n"); endif;
+		else if (op == REMOVE) then
+			@char keyWord = getWord();
+			if (deleteFromDict(demoDict,keyWord)) then printf("SUCCESS\n"); else printf("FAILURE\n"); endif;
 		else if (op == RETRIEVE) then
 			@char result = retrieveFromDict(demoDict,getWord());
 			if (result) then
@@ -191,8 +192,8 @@ end;
 	//instead returns the address of the tree node as opposed to the data entry
 	if (not(dict)) then return 0; endif; //failure if no key of correct address
 	if (key == dict[0]) then return dict; endif; 		//if correct key then return address of data
-	if (key>dict[0]) then return findKey(key,dict[2]); endif;
-	return findKey(key,dict[1]);
+	if (key>dict[0]) then return findTreeNode(key,dict[2]); endif;
+	return findTreeNode(key,dict[1]);
 end;
 
 @int createNewTreeNode(int key,@int Llink,@int Rlink,@int dataPTR)
@@ -246,7 +247,6 @@ end;
 @int pruneTree(@int bottom)
 	@int newBottom = bottom;
 	while(not(newBottom[3])) do
-		printf("SKIPPING BOTTOM\n");
 		newBottom = newBottom[2];
 		if (newBottom==bottom) then
 			return bottom; endif; //there are no non-empty nodes so  just return the bottom
@@ -255,7 +255,6 @@ end;
 	while (node[2]!=newBottom) do
 		@int next = node[2];
 		if(not(node[3])) then
-			printf("DALLOCING\n");
 			@int previous = node[1];
 
 			previous[2] = next;
@@ -377,6 +376,7 @@ void insertToDict(@int dict, @char keyString, int dataPTR)
 	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
 	int key = simpleHash(keyString);
 	@int entryAddress = findKey(key,dict); //gets address of a data ptr
+	printf("DATA = ");print_i(dataPTR);printf("\n");
 	if (entryAddress) then
 		if (checkKey(entryAddress[0],keyString)) then 
 			//if the same, then just  change dict pointer
@@ -438,6 +438,7 @@ int deleteFromDict(@int dict, @char keyString)
 				treeNodeAddress[3] = 0;
 			endif;
 			@char entrykeyString = entryAddress[0];
+			printf("DATA = ");print_i(entrykeyString);printf("\n");
 			dalloc(entrykeyString);
 			dalloc(entryAddress);
 			return 1; //success
