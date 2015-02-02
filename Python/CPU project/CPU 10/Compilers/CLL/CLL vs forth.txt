@@ -6,9 +6,22 @@ Size of CLL assembly: 9179 Lines + 0 Overhead
 Size of Forth assembly: 487 Lines + 311 Overhead
 
 Size of CLL optimised assembly 6677 Lines + 0 overhead
+Size of CLL 1.1: 			   3630 Lines + 0 overhead
 
 
 instructions processed by CLL: 725409
 Instructions processed by Forth: 4729359
 
 instructions processed by CLL optimised: 491420
+CLL 1.1: 400187
+
+
+Language 			|	Assembly file size  |  Assembly overhead 	| running time(instr)
+------------------------------------------------------------------------------------------------
+Forth 				| 	487					|	311					| 	4729359
+------------------------------------------------------------------------------------------------
+Original CLL 		|	9179				|	0					| 	725409
+------------------------------------------------------------------------------------------------
+CLL optimised		|	6677				|	0					| 	491420
+------------------------------------------------------------------------------------------------
+CLL 1.1 			|	2018				|	0					|	352357

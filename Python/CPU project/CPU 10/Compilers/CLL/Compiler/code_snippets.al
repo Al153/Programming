@@ -381,7 +381,7 @@ Pass 										%if<number>endif
 
 <<Popgp0>>				
 SUB gp7 @4 															#POP GP0
-Load gp0  Expression_stack [gp7]
+Load gp0 Expression_stack [gp7]
 <<Popgp1>>
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
