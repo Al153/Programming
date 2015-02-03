@@ -106,106 +106,114 @@ Out @'R'
 Out @'O'
 Halt
 
-byteArray CLL.array_of_string30 2 [10, 0]
+byteArray CLL.array_of_string30 32 [69, 82, 82, 79, 82, 32, 73, 78, 32, 83, 79, 82, 84, 58, 32, 69, 77, 80, 84, 89, 32, 76, 69, 70, 84, 32, 78, 79, 68, 69, 10, 0]
 int CLL.string30 CLL.array_of_string30
-byteArray CLL.array_of_string31 8 [68, 65, 84, 65, 32, 61, 32, 0]
+byteArray CLL.array_of_string31 33 [69, 82, 82, 79, 82, 32, 73, 78, 32, 83, 79, 82, 84, 58, 32, 69, 77, 80, 84, 89, 32, 82, 73, 71, 72, 84, 32, 78, 79, 68, 69, 10, 0]
 int CLL.string31 CLL.array_of_string31
-byteArray CLL.array_of_string10 5 [82, 79, 79, 84, 0]
+byteArray CLL.array_of_string10 6 [72, 101, 108, 108, 111, 0]
 int CLL.string10 CLL.array_of_string10
-byteArray CLL.array_of_string11 57 [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 83, 84, 65, 82, 84, 73, 78, 71, 32, 83, 89, 83, 84, 69, 77, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 10, 0]
+byteArray CLL.array_of_string11 6 [119, 111, 114, 108, 100, 0]
 int CLL.string11 CLL.array_of_string11
-byteArray CLL.array_of_string12 9 [83, 85, 67, 67, 69, 83, 83, 10, 0]
+byteArray CLL.array_of_string12 5 [82, 79, 79, 84, 0]
 int CLL.string12 CLL.array_of_string12
-byteArray CLL.array_of_string13 9 [70, 65, 73, 76, 85, 82, 69, 10, 0]
+byteArray CLL.array_of_string13 5 [82, 79, 79, 84, 0]
 int CLL.string13 CLL.array_of_string13
-byteArray CLL.array_of_string14 2 [10, 0]
+byteArray CLL.array_of_string14 57 [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 83, 84, 65, 82, 84, 73, 78, 71, 32, 83, 89, 83, 84, 69, 77, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 10, 0]
 int CLL.string14 CLL.array_of_string14
-byteArray CLL.array_of_string15 27 [69, 82, 82, 79, 82, 58, 32, 75, 69, 89, 32, 68, 79, 69, 83, 32, 78, 79, 84, 32, 69, 88, 73, 83, 84, 10, 0]
+byteArray CLL.array_of_string15 9 [83, 85, 67, 67, 69, 83, 83, 10, 0]
 int CLL.string15 CLL.array_of_string15
-byteArray CLL.array_of_string16 4 [79, 107, 10, 0]
+byteArray CLL.array_of_string16 9 [70, 65, 73, 76, 85, 82, 69, 10, 0]
 int CLL.string16 CLL.array_of_string16
-byteArray CLL.array_of_string17 4 [62, 62, 62, 0]
+byteArray CLL.array_of_string17 2 [10, 0]
 int CLL.string17 CLL.array_of_string17
-byteArray CLL.array_of_string18 4 [65, 68, 68, 0]
+byteArray CLL.array_of_string18 27 [69, 82, 82, 79, 82, 58, 32, 75, 69, 89, 32, 68, 79, 69, 83, 32, 78, 79, 84, 32, 69, 88, 73, 83, 84, 10, 0]
 int CLL.string18 CLL.array_of_string18
 int CLL.TREEOPCOUNT 0
-byteArray CLL.array_of_string38 15 [9, 72, 97, 115, 104, 32, 118, 97, 108, 117, 101, 32, 61, 32, 0]
+byteArray CLL.array_of_string38 2 [10, 0]
 int CLL.string38 CLL.array_of_string38
-byteArray CLL.array_of_string39 19 [9, 83, 116, 111, 114, 101, 100, 32, 115, 116, 114, 105, 110, 103, 115, 32, 61, 32, 0]
+byteArray CLL.array_of_string39 82 [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 32, 68, 85, 77, 80, 73, 78, 71, 32, 76, 73, 83, 84, 32, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 10, 0]
 int CLL.string39 CLL.array_of_string39
-byteArray CLL.array_of_string19 5 [69, 88, 73, 84, 0]
+byteArray CLL.array_of_string19 4 [79, 107, 10, 0]
 int CLL.string19 CLL.array_of_string19
 array CLL.array_of_MALLOC_TREE_PARTITION 61144 []
 int CLL.MALLOC_TREE_PARTITION CLL.array_of_MALLOC_TREE_PARTITION
-byteArray CLL.array_of_string34 2 [10, 0]
+byteArray CLL.array_of_string34 8 [68, 65, 84, 65, 32, 61, 32, 0]
 int CLL.string34 CLL.array_of_string34
-byteArray CLL.array_of_string43 16 [78, 85, 76, 76, 32, 76, 69, 70, 84, 32, 76, 73, 78, 75, 10, 0]
+byteArray CLL.array_of_string43 19 [9, 83, 116, 111, 114, 101, 100, 32, 115, 116, 114, 105, 110, 103, 115, 32, 61, 32, 0]
 int CLL.string43 CLL.array_of_string43
-byteArray CLL.array_of_string8 6 [119, 111, 114, 108, 100, 0]
+byteArray CLL.array_of_string47 16 [78, 85, 76, 76, 32, 76, 69, 70, 84, 32, 76, 73, 78, 75, 10, 0]
+int CLL.string47 CLL.array_of_string47
+byteArray CLL.array_of_string8 2 [32, 0]
 int CLL.string8 CLL.array_of_string8
-byteArray CLL.array_of_string9 5 [82, 79, 79, 84, 0]
+byteArray CLL.array_of_string9 2 [10, 0]
 int CLL.string9 CLL.array_of_string9
-byteArray CLL.array_of_string6 2 [10, 0]
+byteArray CLL.array_of_string6 51 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 97, 108, 108, 111, 99, 97, 116, 105, 111, 110, 32, 115, 105, 122, 101, 32, 116, 111, 111, 32, 98, 105, 103, 32, 102, 111, 114, 32, 109, 97, 108, 108, 111, 99, 10, 0]
 int CLL.string6 CLL.array_of_string6
-byteArray CLL.array_of_string7 6 [72, 101, 108, 108, 111, 0]
+byteArray CLL.array_of_string7 45 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 114, 97, 110, 32, 111, 117, 116, 32, 111, 102, 32, 109, 97, 108, 108, 111, 99, 32, 116, 114, 101, 101, 32, 110, 111, 100, 101, 115, 10, 0]
 int CLL.string7 CLL.array_of_string7
-byteArray CLL.array_of_string4 45 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 114, 97, 110, 32, 111, 117, 116, 32, 111, 102, 32, 109, 97, 108, 108, 111, 99, 32, 116, 114, 101, 101, 32, 110, 111, 100, 101, 115, 10, 0]
+byteArray CLL.array_of_string4 2 [10, 0]
 int CLL.string4 CLL.array_of_string4
-byteArray CLL.array_of_string5 2 [32, 0]
+byteArray CLL.array_of_string5 52 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 84, 114, 105, 101, 100, 32, 116, 111, 32, 100, 101, 97, 108, 108, 111, 99, 97, 116, 101, 32, 105, 110, 118, 97, 108, 105, 100, 32, 97, 100, 100, 114, 101, 115, 115, 10, 0]
 int CLL.string5 CLL.array_of_string5
-byteArray CLL.array_of_string2 52 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 84, 114, 105, 101, 100, 32, 116, 111, 32, 100, 101, 97, 108, 108, 111, 99, 97, 116, 101, 32, 105, 110, 118, 97, 108, 105, 100, 32, 97, 100, 100, 114, 101, 115, 115, 10, 0]
+byteArray CLL.array_of_string2 11 [65, 68, 68, 82, 69, 83, 83, 32, 61, 32, 0]
 int CLL.string2 CLL.array_of_string2
-byteArray CLL.array_of_string3 51 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 97, 108, 108, 111, 99, 97, 116, 105, 111, 110, 32, 115, 105, 122, 101, 32, 116, 111, 111, 32, 98, 105, 103, 32, 102, 111, 114, 32, 109, 97, 108, 108, 111, 99, 10, 0]
+byteArray CLL.array_of_string3 17 [32, 110, 111, 100, 101, 32, 97, 100, 100, 114, 101, 115, 115, 32, 61, 32, 0]
 int CLL.string3 CLL.array_of_string3
 byteArray CLL.array_of_string0 43 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 117, 110, 97, 98, 108, 101, 32, 116, 111, 32, 97, 108, 108, 111, 99, 97, 116, 101, 32, 109, 101, 109, 111, 114, 121, 32, 10, 0]
 int CLL.string0 CLL.array_of_string0
 byteArray CLL.array_of_string1 44 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 99, 111, 117, 108, 100, 32, 110, 111, 116, 32, 100, 101, 97, 108, 108, 111, 99, 97, 116, 101, 32, 109, 101, 109, 111, 114, 121, 10, 0]
 int CLL.string1 CLL.array_of_string1
-byteArray CLL.array_of_string29 8 [68, 65, 84, 65, 32, 61, 32, 0]
+byteArray CLL.array_of_string29 19 [10, 82, 69, 66, 65, 76, 65, 78, 67, 73, 78, 71, 32, 84, 82, 69, 69, 10, 0]
 int CLL.string29 CLL.array_of_string29
-byteArray CLL.array_of_string28 33 [69, 82, 82, 79, 82, 32, 73, 78, 32, 83, 79, 82, 84, 58, 32, 69, 77, 80, 84, 89, 32, 82, 73, 71, 72, 84, 32, 78, 79, 68, 69, 10, 0]
+byteArray CLL.array_of_string28 33 [69, 82, 82, 79, 82, 58, 32, 85, 78, 82, 69, 67, 79, 71, 78, 73, 83, 69, 68, 32, 73, 78, 83, 84, 82, 85, 67, 84, 73, 79, 78, 10, 0]
 int CLL.string28 CLL.array_of_string28
-byteArray CLL.array_of_string44 82 [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 32, 76, 73, 83, 84, 32, 68, 85, 77, 80, 69, 68, 32, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 10, 0]
+byteArray CLL.array_of_string44 2 [58, 0]
 int CLL.string44 CLL.array_of_string44
-byteArray CLL.array_of_string21 9 [82, 69, 84, 82, 73, 69, 86, 69, 0]
+byteArray CLL.array_of_string48 82 [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 32, 76, 73, 83, 84, 32, 68, 85, 77, 80, 69, 68, 32, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 10, 0]
+int CLL.string48 CLL.array_of_string48
+byteArray CLL.array_of_string21 4 [65, 68, 68, 0]
 int CLL.string21 CLL.array_of_string21
-byteArray CLL.array_of_string20 7 [82, 69, 77, 79, 86, 69, 0]
+byteArray CLL.array_of_string20 4 [62, 62, 62, 0]
 int CLL.string20 CLL.array_of_string20
-byteArray CLL.array_of_string23 5 [68, 85, 77, 80, 0]
+byteArray CLL.array_of_string23 7 [82, 69, 77, 79, 86, 69, 0]
 int CLL.string23 CLL.array_of_string23
-byteArray CLL.array_of_string22 10 [82, 69, 66, 65, 76, 65, 78, 67, 69, 0]
+byteArray CLL.array_of_string22 5 [69, 88, 73, 84, 0]
 int CLL.string22 CLL.array_of_string22
-byteArray CLL.array_of_string25 33 [69, 82, 82, 79, 82, 58, 32, 85, 78, 82, 69, 67, 79, 71, 78, 73, 83, 69, 68, 32, 73, 78, 83, 84, 82, 85, 67, 84, 73, 79, 78, 10, 0]
+byteArray CLL.array_of_string25 10 [82, 69, 66, 65, 76, 65, 78, 67, 69, 0]
 int CLL.string25 CLL.array_of_string25
-byteArray CLL.array_of_string24 5 [80, 65, 83, 83, 0]
+byteArray CLL.array_of_string24 9 [82, 69, 84, 82, 73, 69, 86, 69, 0]
 int CLL.string24 CLL.array_of_string24
-byteArray CLL.array_of_string27 32 [69, 82, 82, 79, 82, 32, 73, 78, 32, 83, 79, 82, 84, 58, 32, 69, 77, 80, 84, 89, 32, 76, 69, 70, 84, 32, 78, 79, 68, 69, 10, 0]
+byteArray CLL.array_of_string27 5 [80, 65, 83, 83, 0]
 int CLL.string27 CLL.array_of_string27
-byteArray CLL.array_of_string26 19 [10, 82, 69, 66, 65, 76, 65, 78, 67, 73, 78, 71, 32, 84, 82, 69, 69, 10, 0]
+byteArray CLL.array_of_string26 5 [68, 85, 77, 80, 0]
 int CLL.string26 CLL.array_of_string26
-byteArray CLL.array_of_string41 2 [10, 0]
+byteArray CLL.array_of_string41 16 [9, 68, 97, 116, 97, 80, 111, 105, 110, 116, 101, 114, 32, 61, 32, 0]
 int CLL.string41 CLL.array_of_string41
-byteArray CLL.array_of_string40 2 [58, 0]
+byteArray CLL.array_of_string46 17 [78, 85, 76, 76, 32, 82, 73, 71, 72, 84, 32, 76, 73, 78, 75, 10, 0]
+int CLL.string46 CLL.array_of_string46
+byteArray CLL.array_of_string40 16 [78, 111, 100, 101, 32, 97, 100, 100, 114, 101, 115, 115, 32, 61, 32, 0]
 int CLL.string40 CLL.array_of_string40
 char CLL.demoBUFPTR 0
 int CLL.MALLOC_TREE 0
-byteArray CLL.array_of_string36 16 [78, 111, 100, 101, 32, 97, 100, 100, 114, 101, 115, 115, 32, 61, 32, 0]
+byteArray CLL.array_of_string36 15 [115, 101, 99, 111, 110, 100, 32, 100, 97, 108, 108, 111, 99, 10, 0]
 int CLL.string36 CLL.array_of_string36
 int CLL.createBalancedTree_rightmost 0
-byteArray CLL.array_of_string37 16 [9, 68, 97, 116, 97, 80, 111, 105, 110, 116, 101, 114, 32, 61, 32, 0]
+byteArray CLL.array_of_string37 2 [58, 0]
 int CLL.string37 CLL.array_of_string37
-byteArray CLL.array_of_string42 17 [78, 85, 76, 76, 32, 82, 73, 71, 72, 84, 32, 76, 73, 78, 75, 10, 0]
+byteArray CLL.array_of_string42 15 [9, 72, 97, 115, 104, 32, 118, 97, 108, 117, 101, 32, 61, 32, 0]
 int CLL.string42 CLL.array_of_string42
 byteArray CLL.array_of_BUF 255 []
 int CLL.BUF CLL.array_of_BUF
 array CLL.array_of_MALLOC_HEAP 65536 []
 int CLL.MALLOC_HEAP CLL.array_of_MALLOC_HEAP
-byteArray CLL.array_of_string35 82 [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 32, 68, 85, 77, 80, 73, 78, 71, 32, 76, 73, 83, 84, 32, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 10, 0]
+byteArray CLL.array_of_string35 2 [10, 0]
 int CLL.string35 CLL.array_of_string35
+byteArray CLL.array_of_string45 2 [10, 0]
+int CLL.string45 CLL.array_of_string45
 int CLL.MALLOC_POOL 0
-byteArray CLL.array_of_string32 2 [10, 0]
+byteArray CLL.array_of_string32 8 [68, 65, 84, 65, 32, 61, 32, 0]
 int CLL.string32 CLL.array_of_string32
-byteArray CLL.array_of_string33 2 [58, 0]
+byteArray CLL.array_of_string33 2 [10, 0]
 int CLL.string33 CLL.array_of_string33
 																	Scope newDict
 def length gp4
@@ -550,6 +558,39 @@ MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 36 [Stack_pointer] 							#LOAD GP0 RELATIVE
 Load gp0 0 [gp6]
 Store gp0 8 [Stack_pointer] 						#STORE GP0
+Load gp0 CLL.string2 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp0 12 [Stack_pointer] 						#LOAD GP0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:print_i 												#CALLING print_i
+Load gp0 CLL.string3 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp6 @2
+MUL gp6 @4 														   #INDEXING FOR @INT
+ADD gp6 36 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:print_i 												#CALLING print_i
+Load gp0 CLL.string4 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
 Load gp0 12 [Stack_pointer] 						#LOAD GP0
 Move gp0 gp1 						#PUSH gp0 POP gp1
 Load gp6 @2
@@ -593,7 +634,7 @@ SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
 AND gp0 gp1
 if gp0 then Load PC if__dalloc-4true 									#IF ELSE STATEMENT
-Load gp0 CLL.string2 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string5 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -709,7 +750,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 32 [Stack_pointer] 						#LOAD GP0
+Load gp0 8 [Stack_pointer] 						#LOAD GP0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -772,7 +813,7 @@ Load gp6 @4
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 36 [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load gp0 @5
+Load gp0 @0
 Load gp6 @5
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 36 [Stack_pointer] 							#STORE GP0 RELATIVE
@@ -851,7 +892,7 @@ MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
 Load gp0 0 [gp6]
 Store gp0 16 [Stack_pointer] 						#STORE GP0
-Load gp0 CLL.string26 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string29 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1010,12 +1051,12 @@ Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]
-Load gp0 CLL.string9 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string12 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 CLL.string10 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string13 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1024,7 +1065,7 @@ Goto function:newDict 												#CALLING newDict
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 Store gp0 12 [Stack_pointer] 						#STORE GP0
-Load gp0 CLL.string11 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string14 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1118,7 +1159,7 @@ Store gp0 20 [Stack_pointer] 						#STORE GP0
 Load gp0 20 [Stack_pointer] 						#LOAD GP0
 if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 if gp0 then Load PC ifdemoSystem-2true 									#IF ELSE STATEMENT
-Load gp0 CLL.string15 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string18 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1132,7 +1173,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load gp0 CLL.string14 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string17 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1161,7 +1202,7 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 if gp0 then Load PC ifdemoSystem-1true 									#IF ELSE STATEMENT
-Load gp0 CLL.string13 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string16 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1169,7 +1210,7 @@ if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
 Load PC ifdemoSystem-1endif
 Pass 										%ifdemoSystem-1true
-Load gp0 CLL.string12 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string15 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1189,7 +1230,7 @@ Goto function:getWord 												#CALLING getWord
 Goto function:newString 												#CALLING newString
 Goto function:insertToDict 												#CALLING insertToDict
 Pass 										%ifdemoSystem-7endif           
-Load gp0 CLL.string16 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string19 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1279,7 +1320,7 @@ Store gp0 12 [Stack_pointer] 						#STORE GP0
 Load gp0 12 [Stack_pointer] 						#LOAD GP0
 if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 if gp0 then Load PC ifcreate_tree_node-0true 									#IF ELSE STATEMENT
-Load gp0 CLL.string4 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string7 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1366,7 +1407,7 @@ Store previous_stack_ptr 4 [Stack_pointer]
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.demoBUFPTR 									#STORE GP0 GLOBAL (CHAR)
-Load gp0 CLL.string17 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string20 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1793,7 +1834,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string5 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string8 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1808,7 +1849,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string6 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string9 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -2012,12 +2053,12 @@ StoreByte gp0 CLL.demoBUFPTR 									#STORE GP0 GLOBAL (CHAR)
 Load gp0 @32
 Store gp0 CLL.TREEOPCOUNT 										#STORE GP0 GLOBAL
 Goto function:malloc_init 												#CALLING malloc_init
-Load gp0 CLL.string7 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string10 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 CLL.string8 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string11 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -2461,7 +2502,7 @@ Goto function:findKey 												#CALLING findKey
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 Store gp0 8 [Stack_pointer] 						#STORE GP0
-Load gp0 CLL.string29 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string32 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -2473,7 +2514,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string30 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string33 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -2592,6 +2633,10 @@ Load gp6 @1
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 8 [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
 Pass 										%ifinsertToDict-2endif           
 Pass 										%ifinsertToDict-3endif           
 Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
@@ -2809,7 +2854,7 @@ if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 NOT gp0 														
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifsortTree-3endif
-Load gp0 CLL.string27 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string30 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -2824,7 +2869,7 @@ if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 NOT gp0 														
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifsortTree-4endif
-Load gp0 CLL.string28 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string31 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -3116,7 +3161,7 @@ Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 Load PC if__malloc-11endif
 Pass 										%if__malloc-11true
-Load gp0 CLL.string3 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string6 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -3737,12 +3782,12 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:dalloc 												#CALLING dalloc
 Pass 										%ifdeleteFromDict-1endif           
-Load gp6 @0
+Load gp6 @1
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
 Load gp0 0 [gp6]
 Store gp0 28 [Stack_pointer] 						#STORE GP0
-Load gp0 CLL.string31 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string34 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -3754,18 +3799,27 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string32 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string35 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load gp0 28 [Stack_pointer] 						#LOAD GP0
+Load gp6 @0
+MUL gp6 @4 														   #INDEXING FOR @INT
+ADD gp6 8 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:dalloc 												#CALLING dalloc
+Load gp0 CLL.string36 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -4041,7 +4095,7 @@ Load gp0 Expression_stack [gp7]
 Store gp0 12 [Stack_pointer] 						#STORE GP0
 Load gp0 12 [Stack_pointer] 						#LOAD GP0
 Store gp0 8 [Stack_pointer] 						#STORE GP0
-Load gp0 CLL.string35 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string39 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4067,7 +4121,7 @@ MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 16 [Stack_pointer] 							#LOAD GP0 RELATIVE
 Load gp0 0 [gp6]
 Store gp0 20 [Stack_pointer] 						#STORE GP0
-Load gp0 CLL.string36 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string40 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4079,7 +4133,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string37 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string41 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4091,7 +4145,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string38 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string42 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4106,7 +4160,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string39 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string43 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4118,7 +4172,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load gp0 CLL.string40 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string44 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4130,7 +4184,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load gp0 CLL.string41 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string45 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4144,7 +4198,7 @@ if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 NOT gp0 														
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifdumpList-0endif
-Load gp0 CLL.string42 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string46 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4160,7 +4214,7 @@ if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 NOT gp0 														
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifdumpList-1endif
-Load gp0 CLL.string43 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string47 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4185,7 +4239,7 @@ Load PC loopdumpList-0exit
 Pass										%ifdumpList-2endif
 Load PC loopdumpList-0entry					%loopdumpList-0continue
 Pass 										%loopdumpList-0exit
-Load gp0 CLL.string44 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string48 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4262,7 +4316,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load gp0 CLL.string33 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string37 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4277,7 +4331,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load gp0 CLL.string34 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string38 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4545,7 +4599,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 CLL.string18 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string21 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4560,7 +4614,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 CLL.string19 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string22 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4575,7 +4629,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 CLL.string20 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string23 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4590,7 +4644,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 CLL.string21 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string24 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4605,7 +4659,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 CLL.string22 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string25 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4620,7 +4674,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 CLL.string23 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string26 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4635,7 +4689,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 CLL.string24 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string27 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4728,7 +4782,7 @@ Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 Pass 										%ifgetDemoOp-6endif           
-Load gp0 CLL.string25 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string28 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length

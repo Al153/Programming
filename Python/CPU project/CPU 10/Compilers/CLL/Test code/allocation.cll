@@ -4,8 +4,9 @@
 	// 1: Allocated? - 1 if allocated else not. if acting as a node with children ALLOCATED = childo.allocated&child[1].allocated
 	// 2: address 	 - address of memory pointed to by that node
 	// 3: size       - size of block pointed to
-	// 4: child0	 -
-    // 5: child1 
+	// 4: child0	 - addresses of child nodes
+    // 5: child1  	 -
+
 #define MALLOC_HEAP_SIZE 65536 //should be length 2**n
 #define MALLOC_TREE_LENGTH 61144 //n/6 nodes
 #define MALLOC_BLOCK_SIZE 4  		// 4byte words
@@ -60,27 +61,26 @@ int __dalloc(int address, @int parent_node)
 	@int left_child = parent_node[4]; 
 	@int right_child = parent_node[5];
 	int return_value;
-
+	printf("ADDRESS = "); print_i(address); printf(" node address = ");print_i(parent_node[2]);printf("\n");
 	if ((address => parent_node[2])and(address<parent_node[2]+parent_size*MALLOC_BLOCK_SIZE)) then //if valid address
-		if ((left_child == 0) and (address == parent_node[2])) then //if correct address and node has no children then deallocate and return 1 (success)
+		if ((left_child == 0) and (address == parent_node[2])) then //if  node has no children and has correct address for node then deallocate and return 1 (success)
 			parent_node[1] = 0; //no longer allocated
 			return 1;
 		endif;
-
-		if ((left_child == 0) and (not(address == parent_node[2]))) then //if incorrect and node has no children then deallocate and return 0 (failure)
+		if ((left_child == 0) and (not(address == parent_node[2]))) then //if node has no children but incorrect address then return 0 (failure)
 			return 0;
 		endif;
 
 		if (address < parent_node[2]+child_size*MALLOC_BLOCK_SIZE) then //if in left hand child, try to deallocate left hand child
 			return_value = __dalloc(address,left_child);
 		else 										  //try to deallocate right hand side
-			return_value = __dalloc(address,left_child);
+			return_value = __dalloc(address,right_child);
 		endif;
 		if (not((left_child[1]) or (right_child[1]))) then //if neither right or left child is allocated, combine two nodes and delete the children
 			delete_tree_node(left_child);
 			delete_tree_node(right_child);
 			parent_node[4] = 0;
-			parent_node[5] = 5;
+			parent_node[5] = 0;
   		endif;
   		return return_value;
 	else

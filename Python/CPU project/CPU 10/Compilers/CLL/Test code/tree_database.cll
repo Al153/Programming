@@ -381,6 +381,7 @@ void insertToDict(@int dict, @char keyString, int dataPTR)
 		if (checkKey(entryAddress[0],keyString)) then 
 			//if the same, then just  change dict pointer
 			entryAddress[1] = dataPTR;
+			return;
 		else //need to add to linked list
 			while(entryAddress[2])do
 				entryAddress = entryAddress[2];  //gets to the end of the linked list
@@ -437,9 +438,10 @@ int deleteFromDict(@int dict, @char keyString)
 			else
 				treeNodeAddress[3] = 0;
 			endif;
-			@char entrykeyString = entryAddress[0];
-			printf("DATA = ");print_i(entrykeyString);printf("\n");
-			dalloc(entrykeyString);
+			@char entryString = entryAddress[1];
+			printf("DATA = ");print_i(entryString);printf("\n");
+			dalloc(entryAddress[0]);
+			printf("second dalloc\n");
 			dalloc(entryAddress);
 			return 1; //success
 		else //need to delete from linked list
