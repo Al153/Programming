@@ -1,8 +1,14 @@
 import LR1_parser
 import sys
-import code_generator
+import code_generator1_1
 import os
 
+# LL 1.1 adds direct casting support, and further underlying optimisations
+
+#also want to add ternary operator, and increment operators
+
+#<expr> ::= <ternary_op>
+#<ternary_op> ::= "(" <expr> "if" <for_bool_expr> "else" <expr> ")"
 
 ###________________________ Compiling Strategy ____________________________
 
@@ -19,29 +25,34 @@ import os
 
 
 class Program:
-	def __init__(self): 		#is main argument is to tell ow much setup should occur			
+	def __init__(self): 		#is main argument is to tell ow much setup should occur
+		print "getting source = ",			
 		self.source = get_source_file()
+		print "DONE!\nParsing = ",
 		self.parse_tree = get_parse_tree(self.source)
+		print "DONE!"
 
 	def compile(self):
+		print "Creating built in functions = ",
 		CURRENT_DIR = os.path.dirname(__file__)
 		self.built_in_functions = [
-			built_in_function([("@char","word")],"void","printf", open(os.path.join(CURRENT_DIR, 'printf.al'),"r").read()),
-			built_in_function([("int","number")],"void","print_i",open(os.path.join(CURRENT_DIR, 'print_i.al'),"r").read()),
-			built_in_function([("int","number")],"char","char",open(os.path.join(CURRENT_DIR, 'char.al'),"r").read()),
-			built_in_function([("char","character")],"void","putc",open(os.path.join(CURRENT_DIR, 'putc.al'),"r").read()),
-			built_in_function([],"char","getc",open(os.path.join(CURRENT_DIR, 'getc.al'),"r").read()),
-			built_in_function([],"char","getw",open(os.path.join(CURRENT_DIR, 'getw.al'),"r").read()),
-			built_in_function([],"void","quit",open(os.path.join(CURRENT_DIR, 'quit.al'),"r").read())
+			built_in_function([("@char","word")],"void","printf", open(os.path.join(CURRENT_DIR, 'BuiltIns\\printf.al'),"r").read()),
+			built_in_function([("int","number")],"void","print_i",open(os.path.join(CURRENT_DIR, 'BuiltIns\\print_i.al'),"r").read()),
+			built_in_function([("int","number")],"char","char",open(os.path.join(CURRENT_DIR, 'BuiltIns\\char.al'),"r").read()),
+			built_in_function([("char","character")],"void","putc",open(os.path.join(CURRENT_DIR, 'BuiltIns\\putc.al'),"r").read()),
+			built_in_function([],"char","getc",open(os.path.join(CURRENT_DIR, 'BuiltIns\\getc.al'),"r").read()),
+			built_in_function([],"char","getw",open(os.path.join(CURRENT_DIR, 'BuiltIns\\getw.al'),"r").read()),
+			built_in_function([],"void","quit",open(os.path.join(CURRENT_DIR, 'BuiltIns\\quit.al'),"r").read())
 
 		]
-		
+		print "DONE!\nExtracting functions = ",	
 
 
 		self.functions = [function(tree) for tree in find_functions(self.parse_tree)] +self.built_in_functions
 		self.functions = {function.name:function for function in self.functions}
 		self.header_code = Non_terminal_parse_tree_node("<block>",linearise_code(self.parse_tree))
 
+		print "DONE!\nFinding global variables =",
 		#print_parse_tree(self.header_code)
 
 		self.global_var_types = {}
@@ -60,6 +71,7 @@ class Program:
 
 		self.functions["main"].parse_tree.children = self.global_var_values + self.functions["main"].parse_tree.children #inserts assignments for global variables
 
+		print "DONE!\nChecking functions = ",
 		for function_name in self.functions:
 			if not self.functions[function_name].built_in:
 				#if function_name == "main":
@@ -68,8 +80,9 @@ class Program:
 				self.functions[function_name].check_function_typing(self.functions[function_name].parse_tree)
 		#print_parse_tree(self.functions["main"].parse_tree)
 
+		print "DONE!\nGenerating assembly =",
 		global_var_addresses = {var:"CLL."+var for var in self.global_var_types}
-		assembly_code = code_generator.snippets[" setup routines "].generate_code({})
+		assembly_code = code_generator1_1.snippets[" setup routines "].generate_code({})
 		assembly_code += self.generate_global_vars()
 		#print assembly_code
 		#raw_input('')
@@ -77,9 +90,10 @@ class Program:
 			if self.functions[function_name].built_in:
 				assembly_code += self.functions[function_name].assembly #could do with only including code if built in function is used
 			else:
-				assembly_code += code_generator.code_generator(self.functions[function_name],global_var_addresses,self.global_var_types).assembly
+				assembly_code += code_generator1_1.code_generator(self.functions[function_name],global_var_addresses,self.global_var_types).assembly
+		print "DONE!\nWriting to file =",
 		write_to_file(assembly_code)
-
+		print "DONE\nCompilation complete"
 
 
 
@@ -410,6 +424,13 @@ class function:
 	def check_typing(self,parse_tree):
 		#takes a parse tree and checks typing (fixes it if possible), and returns the type of the expression at the aend of evalutation of this part of the tree,
 		#to the extent of checking overall type - ie @int =~= @char =~= int
+		if parse_tree.type == "<type_cast>":
+			resultant_type = get_type(parse_tree.children[0])#get the two types
+			source_type = self.check_typing(parse_tree.children[2])
+
+			parse_tree.type = "<cast>"
+			parse_tree.children = [parse_tree.children[2],Terminal_parse_tree_node(source_type,source_type),Terminal_parse_tree_node(resultant_type,resultant_type)]
+			return resultant_type
 
 		if len(parse_tree.children) == 3:
 			if parse_tree.children[0].type == '"("': #( expression )
@@ -432,7 +453,10 @@ class function:
 			parse_tree.children[0].type = "<"+parse_tree.children[0].type[1:-1]+input_type+">" #fixes the operator to a specific type
 			return input_type
 		elif len(parse_tree.children) == 1:
-			if parse_tree.children[0].type == "<term>":
+			if parse_tree.children[0].type == "<type_cast>":
+				input_type =  self.check_typing(parse_tree.children[0])
+				return input_type
+			elif parse_tree.children[0].type == "<term>":
 				input_type =  self.check_typing(parse_tree.children[0])
 				return input_type
 			elif parse_tree.children[0].type == "<factor>":
@@ -699,7 +723,7 @@ def get_source_file():
 def get_parse_tree(source_text):
 	'''uses parser file to get a parse tree of the program'''
 	CURRENT_DIR = os.path.dirname(__file__)
-	file_path = os.path.join(CURRENT_DIR, 'CLL.parse')
+	file_path = os.path.join(CURRENT_DIR, 'CLL1_1.parse')
 	local_parser = LR1_parser.Parser(file_path,tokenise) #replace built in function in parser
 	parse_tree = local_parser.parse(source_text)
 	return parse_tree

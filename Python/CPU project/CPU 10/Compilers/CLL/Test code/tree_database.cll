@@ -17,29 +17,6 @@
 void main()
 	malloc_init();
 	@int myDict = newDict("Hello","world");
-
-	//insertToDict(myDict,"foo","BAR");
-	//insertToDict(myDict,"mary","had");
-	//insertToDict(myDict,"a little ","lamb");
-	//insertToDict(myDict,"foo","testing replacement");
-	//insertToDict(myDict,"12","34");
-	//insertToDict(myDict,"ab","bc");
-	//insertToDict(myDict,"bc","cd");
-	//insertToDict(myDict,"cd","de");
-	//insertToDict(myDict,"de","ef");
-	//insertToDict(myDict,"fg","gh");
-	//insertToDict(myDict,"gh","hi");
-	//dumpDict(myDict);
-	//printf("\n");
-	//@char test = retrieveFromDict(myDict,"a little ");
-	//printf(test);
-	//printf("\n");
-	//reBalanceDictTree(@myDict);
-
-	//dumpDict(myDict);
-	//printf("\n");
-	//@char test = retrieveFromDict(myDict,"a little ");
-	//printf(test);
 	demoSystem();
 end;
 
@@ -151,12 +128,9 @@ end;
 //____________________________________ DICT TREE EDITING ALGORITHMS _____________________________________________
 
 @int newDict(@char keyString,@int dataPTR)
-	//initialises a dictionary using the
+	//initialises a dictionary using a root (root can be changed afterwards)
 	int key = simpleHash(keyString);
-//	printf("\nKey = "); print_i(key);
 	@int data = createNewDataEntry(keyString,dataPTR);
-//	printf("\naddress = "); print_i(data);
-//	printf("\n");
 	return createNewTreeNode(key,0,0,data);
 end;
 
@@ -180,7 +154,6 @@ end;
 
 @int findKey(int key, @int dict)
 	//binary searchon tree
-//	printf("\nkey at node = "); print_i(dict[3]);
 	if (not(dict)) then return 0; endif; //failure if no key of correct address
 	if (key == dict[0]) then return dict[3]; endif; 		//if correct key then return address of data
 	if (key>dict[0]) then return findKey(key,dict[2]); endif;
@@ -203,7 +176,6 @@ end;
 	return_value[1] = Llink;
 	return_value[2] = Rlink;
 	return_value[3] = dataPTR;
-//	printf("\nnew tree node address = "); print_i(return_value);
 	return return_value;
 end;
 
@@ -376,7 +348,6 @@ void insertToDict(@int dict, @char keyString, int dataPTR)
 	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
 	int key = simpleHash(keyString);
 	@int entryAddress = findKey(key,dict); //gets address of a data ptr
-	printf("DATA = ");print_i(dataPTR);printf("\n");
 	if (entryAddress) then
 		if (checkKey(entryAddress[0],keyString)) then 
 			//if the same, then just  change dict pointer
@@ -439,9 +410,7 @@ int deleteFromDict(@int dict, @char keyString)
 				treeNodeAddress[3] = 0;
 			endif;
 			@char entryString = entryAddress[1];
-			printf("DATA = ");print_i(entryString);printf("\n");
 			dalloc(entryAddress[0]);
-			printf("second dalloc\n");
 			dalloc(entryAddress);
 			return 1; //success
 		else //need to delete from linked list
@@ -508,8 +477,6 @@ end;
 	if (keyStringLength&3) then keyStringLength = 1 + (keyStringLength>>2); else keyStringLength = keyStringLength>>2; endif;  //pads if needed, uses &3 and <<2 for %4 and *4 respectively
 	@char keyStringCopy = malloc(keyStringLength); 					//allocates a section of memory of desired length
 	copyString(keyString,keyStringCopy,keyStringLength<<2);  		//copies key string
-//	printf("\nnew string = ");
-//	printf(keyStringCopy);
 	//allocate space for the newDictEntry
 	@int return_value = malloc(4);
 	return_value[0] = keyStringCopy; //adds in pointers to keyString and data pointer

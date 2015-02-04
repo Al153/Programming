@@ -1,23 +1,8 @@
-#include string_tools.cll
-#include allocation.cll
 void main()
-	malloc_init(); //initiallises malloc
-	//print_pool(MALLOC_POOL);
-	if (1 != 2) then printf("YAY\n"); endif;
-	if (1 == 2) then printf("NAY!\n"); endif;
-	int a = malloc(10); //allocate 10*4 bytes
-	print_i(a);
-	printf("\n");
-	int b = malloc(32);
-	print_i(b);
-	printf("\n");
-
-	dalloc(a);
-
-	int d = malloc(10);
-	print_i(d);
-	printf("\n");
-	int c = malloc(100); //should crash
+	int i;
+	for (i = 0, i<10, i+=1)
+		print_i(i);
+	loop;
 end;
 
 

@@ -1,6 +1,5 @@
-#implementing continue and break statements
-
 import sys
+import optimiser1_2 as optimiser
 def process_snippets(filename):
 	'''generates a list of snippets objects'''
 	snippet_text = open(filename,"r").read()
@@ -138,6 +137,7 @@ class code_generator:
 		#does the generation
 		self.in_loop = 0
 		self.assembly = self.generate_function_code(function_object.parse_tree,self.input_variables,self.simplified_variable_types,self.stack_frame_size)
+		self.assembly = optimiser.assembly_optimise(self.assembly)
 
 	#Code generation code to write:
 	#	expression generation code
@@ -254,6 +254,8 @@ class code_generator:
 					return self.generate_break_code()
 				elif line.children[0].type == '"continue"':
 					return self.generate_continue_code()
+				elif line.children[0].type == '"pass"':
+					return '' #placeholder
 				else:
 					print "ERROR(11): not expecting tree of type: "+line.children[0].type+" as an \"<other>\" line"
 					quit()
@@ -287,7 +289,7 @@ class code_generator:
 		return_code =  self.snippets[" if statement code "].generate_code({ 			#generates if code using a snippet
 			"Calculate_condition":condition_code,
 			"Popgp0":pop_gp0,
-			"number":self.function_name+str(self.IF_COUNT), 	#if count used to make labels distinct
+			"number":self.function_name+"-"+str(self.IF_COUNT), 	#if count used to make labels distinct
 			"conditional code":block_code,
 			})
 		self.IF_COUNT += 1 															#increments if count to make it distinct
@@ -301,7 +303,7 @@ class code_generator:
 		return_code =  self.snippets[" if-else statement code "].generate_code({ 					#uses snippet
 			"Calculate_condition":condition_code,
 			"Popgp0":pop_gp0,
-			"number":self.function_name+str(self.IF_COUNT),
+			"number":self.function_name+"-"+str(self.IF_COUNT),
 			"true_code":true_code,
 			"false_code":false_code
 			})
@@ -317,7 +319,7 @@ class code_generator:
 		looped_code = self.generate_block_code(while_parse_tree.children[1])
 		self.in_loop = previous_in_loop
 		return_code = self.snippets[" while loop code "].generate_code({ 					#snippet used to generate code
-			"number":self.function_name+str(self.LOOP_COUNT),
+			"number":self.function_name+"-"+str(self.LOOP_COUNT),
 			"Popgp0":pop_gp0,
 			"Calculate_condition":condition_code,
 			"looped_code":looped_code
@@ -346,7 +348,7 @@ class code_generator:
 				"Calculate_condition":condition,
 				"Popgp0":pop_gp0,
 				"assignment2":assign_2,
-				"number": self.function_name+str(self.LOOP_COUNT),
+				"number": self.function_name+"-"+str(self.LOOP_COUNT),
 				"looped_code":block
 			})
 		self.LOOP_COUNT += 1
@@ -355,7 +357,7 @@ class code_generator:
 	def generate_break_code(self):
 		#goes to exit of the loop
 		if self.in_loop:
-			return "Load PC loop"+self.function_name+str(self.LOOP_COUNT)+"exit\n" #most recent loop generated
+			return "Load PC loop"+self.function_name+"-"+str(self.LOOP_COUNT)+"exit\n" #most recent loop generated
 		else:
 			print "ERROR(44): Break called outside of a loop"
 			quit()
@@ -363,7 +365,7 @@ class code_generator:
 	def generate_continue_code(self):
 		#skips to next iteration of the loop
 		if self.in_loop:
-			return "Load PC loop"+self.function_name+str(self.LOOP_COUNT)+"continue\n" #most recent loop generated
+			return "Load PC loop"+self.function_name+"-"+str(self.LOOP_COUNT)+"continue\n" #most recent loop generated
 		else:
 			print "ERROR(44): Continue called outside of a loop"
 			quit()	
@@ -564,7 +566,7 @@ class code_generator:
 		if len(expression_parse_tree.children) == 1:
 			#term, factor, variable, const, fun_call
 			child = expression_parse_tree.children[0]
-			if child.type in ["<term>","<factor>","<cast>"]: #simple to do, just pass on to another recursion level
+			if child.type in ["<term>","<factor>","<cast>","<ternary_op>"]: #simple to do, just pass on to another recursion level
 				#print "simple pass on"
 				return_code = self.generate_expression_code(child)
 				return return_code
@@ -578,6 +580,7 @@ class code_generator:
 				return return_code
 			else:
 				print "ERROR(28): code generator cannot handle expressions of type: "+expression_parse_tree.type+" with length 1"
+				print_parse_tree(expression_parse_tree)
 				quit()
 
 		elif len(expression_parse_tree.children) == 2: #unary ops only: handled by unary ops generator
@@ -608,7 +611,26 @@ class code_generator:
 			else:
 				print "ERROR(29): cannot handle node of type: "+expression_parse_tree.type
 				quit()
-		
+		elif expression_parse_tree.type == "<ternary_op>":
+			true_code = self.generate_expression_code(expression_parse_tree.children[0])
+			false_code = self.generate_expression_code(expression_parse_tree.children[4])
+
+
+			if expression_parse_tree.children[2].children[0].type == "bool_factor":
+				condition_code = self.generate_boolean_factor(expression_parse_tree.children[2].children[0])
+			else:
+				condition_code = self.generate_comparison(expression_parse_tree.children[2].children[0])
+			pop_gp0 = self.snippets["Popgp0"].generate_code({})
+			return_code =  self.snippets[" if-else statement code "].generate_code({ 					#uses snippet
+				"Calculate_condition":condition_code,
+				"Popgp0":pop_gp0,
+				"number":self.function_name+"-"+str(self.IF_COUNT),
+				"true_code":true_code,
+				"false_code":false_code
+				})
+			self.IF_COUNT += 1
+			return return_code
+
 		print "ERROR(30): unrecognised tree handled by code generator: "+parse_tree.type
 		quit()
 
@@ -616,6 +638,7 @@ class code_generator:
 	
 	def generate_boolean_expression(self,bool_parse_tree):  			#set of mutually recursive functions
 		#print_parse_tree(bool_parse_tree)
+		print_parse_tree(bool_parse_tree)
 		if bool_parse_tree.children[1].type == "<bool_factor>":  	#follows grammar parse tree
 			return self.generate_boolean_factor(bool_parse_tree.children[1])   
 		elif bool_parse_tree.children[1].type == "<comparison>":
@@ -668,8 +691,8 @@ class code_generator:
 			expr1 = self.generate_expression_code(bool_parse_tree.children[2]) 
 			push_gp0 = self.snippets["Pushgp0"].generate_code({})
 			comparison_operation = bool_parse_tree.children[1]
-			if len(comparison_operation.children) == 2: 						#is equal
-				return expr0 + expr1 + self.snippets["is equal"].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"Push gp0":push_gp0})
+			if len(comparison_operation.children) == 2: 						#is equal/not equal
+				return expr0 + expr1 + self.snippets[("is equal" if comparison_operation.children[0].string == "=" else "not equal")].generate_code({"getgp0":pop_gp0,"getgp1":pop_gp1,"Push gp0":push_gp0})
 			elif len(comparison_operation.children) == 1: 						#other operations
 				if comparison_operation.children[0].terminal:  					#if a < or >
 					if comparison_operation.children[0].string == "<":
@@ -783,22 +806,7 @@ def print_parse_tree(parse_tree_node,offset = ''):
 			print_parse_tree(child,offset+"  ")
 		print offset+")"
 
-def optimise(assembly_code):
-	'''a peephole optimiser, looks for simple instruction level optimisations'''
-	#remove unnecessary push-pop pairs
-	push_pop_pair = '''Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
 
-
-				
-SUB gp7 @4 															#POP GP0
-Load gp0  Expression_stack [gp7]'''
-	while push_pop_pair in assembly_code:
-		index = assembly_code.index(push_pop_pair)
-		assembly_code = assembly_code[:index]+assembly_code[index+len(push_pop_pair):]
-	return assembly_code
 
 import os
 CURRENT_DIR = os.path.dirname(__file__)

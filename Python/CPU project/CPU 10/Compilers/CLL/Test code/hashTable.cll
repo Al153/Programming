@@ -1,13 +1,25 @@
 //header file for hash tables - uses my tree database code
+// database entry format:
+
+
+//////////////////////
+// KEY (32bit) 		//	
+//////////////////////
+// Llink 			//
+//////////////////////
+// Rlink 			//
+//////////////////////
+// Data pointer     //
+//////////////////////
+
+#include allocation.cll
+
 //____________________________________ DICT TREE EDITING ALGORITHMS _____________________________________________
 
 @int newDict(@char keyString,@int dataPTR)
-	//initialises a dictionary using the
+	//initialises a dictionary using a root (root can be changed afterwards)
 	int key = simpleHash(keyString);
-//	printf("\nKey = "); print_i(key);
 	@int data = createNewDataEntry(keyString,dataPTR);
-//	printf("\naddress = "); print_i(data);
-//	printf("\n");
 	return createNewTreeNode(key,0,0,data);
 end;
 
@@ -31,7 +43,6 @@ end;
 
 @int findKey(int key, @int dict)
 	//binary searchon tree
-//	printf("\nkey at node = "); print_i(dict[3]);
 	if (not(dict)) then return 0; endif; //failure if no key of correct address
 	if (key == dict[0]) then return dict[3]; endif; 		//if correct key then return address of data
 	if (key>dict[0]) then return findKey(key,dict[2]); endif;
@@ -43,8 +54,8 @@ end;
 	//instead returns the address of the tree node as opposed to the data entry
 	if (not(dict)) then return 0; endif; //failure if no key of correct address
 	if (key == dict[0]) then return dict; endif; 		//if correct key then return address of data
-	if (key>dict[0]) then return findKey(key,dict[2]); endif;
-	return findKey(key,dict[1]);
+	if (key>dict[0]) then return findTreeNode(key,dict[2]); endif;
+	return findTreeNode(key,dict[1]);
 end;
 
 @int createNewTreeNode(int key,@int Llink,@int Rlink,@int dataPTR)
@@ -54,7 +65,6 @@ end;
 	return_value[1] = Llink;
 	return_value[2] = Rlink;
 	return_value[3] = dataPTR;
-//	printf("\nnew tree node address = "); print_i(return_value);
 	return return_value;
 end;
 
@@ -98,7 +108,6 @@ end;
 @int pruneTree(@int bottom)
 	@int newBottom = bottom;
 	while(not(newBottom[3])) do
-		printf("SKIPPING BOTTOM\n");
 		newBottom = newBottom[2];
 		if (newBottom==bottom) then
 			return bottom; endif; //there are no non-empty nodes so  just return the bottom
@@ -107,7 +116,6 @@ end;
 	while (node[2]!=newBottom) do
 		@int next = node[2];
 		if(not(node[3])) then
-			printf("DALLOCING\n");
 			@int previous = node[1];
 
 			previous[2] = next;
@@ -233,6 +241,7 @@ void insertToDict(@int dict, @char keyString, int dataPTR)
 		if (checkKey(entryAddress[0],keyString)) then 
 			//if the same, then just  change dict pointer
 			entryAddress[1] = dataPTR;
+			return;
 		else //need to add to linked list
 			while(entryAddress[2])do
 				entryAddress = entryAddress[2];  //gets to the end of the linked list
@@ -289,8 +298,8 @@ int deleteFromDict(@int dict, @char keyString)
 			else
 				treeNodeAddress[3] = 0;
 			endif;
-			@char entrykeyString = entryAddress[0];
-			dalloc(entrykeyString);
+			@char entryString = entryAddress[1];
+			dalloc(entryAddress[0]);
 			dalloc(entryAddress);
 			return 1; //success
 		else //need to delete from linked list
@@ -357,8 +366,6 @@ end;
 	if (keyStringLength&3) then keyStringLength = 1 + (keyStringLength>>2); else keyStringLength = keyStringLength>>2; endif;  //pads if needed, uses &3 and <<2 for %4 and *4 respectively
 	@char keyStringCopy = malloc(keyStringLength); 					//allocates a section of memory of desired length
 	copyString(keyString,keyStringCopy,keyStringLength<<2);  		//copies key string
-//	printf("\nnew string = ");
-//	printf(keyStringCopy);
 	//allocate space for the newDictEntry
 	@int return_value = malloc(4);
 	return_value[0] = keyStringCopy; //adds in pointers to keyString and data pointer

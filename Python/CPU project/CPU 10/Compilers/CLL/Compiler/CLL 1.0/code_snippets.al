@@ -275,7 +275,6 @@ Compare gp1 gp0
 if Less then Load gp2 @4294967295
 Move gp2 gp0
 <Push gp0>
-
 <<not equal>>
 <getgp0><getgp1>
 Load  gp2 @4294967295 												#COMPARE (NOT EQUAL)
