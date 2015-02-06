@@ -28,6 +28,7 @@ void prepareMemory()
 	//file in format addr,addr,addr,addr,data,stop?
 	state = 0;
 	while (state != 6) do  //parsing state machine, state of 6 ==> halt;
+		print_i(int(state));
 		chr = readHex();
 		if (state == 0)then
 			//printf("%x\n",chr);
@@ -72,7 +73,7 @@ char readHex()
 	char result = 0;
 	char inPut = getw();
 	putc(inPut);
-	while (((inPut>='a')and(inPut<='f'))or((inPut>='0')and(inPut<='9'))) do
+	while (((inPut<'a')or(inPut>'f'))and((inPut<'0')or(inPut>'9'))) do
 		inPut = getw();
 		putc(inPut);
 	loop;
@@ -85,7 +86,7 @@ char readHex()
 
 	inPut = getw();
 	putc(inPut);
-	while (((inPut>='a')and(inPut<='f'))or((inPut>='0')and(inPut<='9'))) do
+	while (((inPut<'a')or(inPut>='f'))and((inPut<='0')or(inPut>'9'))) do
 		inPut = getw();
 		putc(inPut);
 	loop;

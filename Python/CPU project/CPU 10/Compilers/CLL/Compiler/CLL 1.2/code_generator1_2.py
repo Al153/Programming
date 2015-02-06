@@ -638,7 +638,7 @@ class code_generator:
 	
 	def generate_boolean_expression(self,bool_parse_tree):  			#set of mutually recursive functions
 		#print_parse_tree(bool_parse_tree)
-		print_parse_tree(bool_parse_tree)
+		#print_parse_tree(bool_parse_tree)
 		if bool_parse_tree.children[1].type == "<bool_factor>":  	#follows grammar parse tree
 			return self.generate_boolean_factor(bool_parse_tree.children[1])   
 		elif bool_parse_tree.children[1].type == "<comparison>":
