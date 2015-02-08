@@ -1,6 +1,6 @@
 // Simulates itself in CLL
 #define MEMORY_SIZE 1048576
-#define MEMORY_LIMIT 1048576
+#define MEMORY_LIMIT 1048575
 
 @int 16 REGISTERS;
 @char MEMORY_SIZE MEMORY;
@@ -10,12 +10,17 @@ char BYTE_FILTER = 255;
 
 void main()
 	prepareMemory();
+	printf("\n\n\n");
+	dumpMEMORY();
 	int instructionCount = 0;
-	printf("__________________ EXECUTING __________________\n");
-	while (step()) do 
+	printf("\n\n__________________ EXECUTING __________________\n");
+	while (not(step())) do 
+		print_i(REGISTERS[5]);
+		printf("\n");
 		instructionCount = instructionCount +1;
+		char cont = getw();
 	loop;
-	printf("__________________ ENDED ______________________\n");
+	printf("\n__________________ ENDED ______________________\n");
 	printf("EXECUTED "); print_i(instructionCount); printf(" INSTRUCTIONS\n");
 end;
 
@@ -28,7 +33,6 @@ void prepareMemory()
 	//file in format addr,addr,addr,addr,data,stop?
 	state = 0;
 	while (state != 6) do  //parsing state machine, state of 6 ==> halt;
-		print_i(int(state));
 		chr = readHex();
 		if (state == 0)then
 			//printf("%x\n",chr);
@@ -62,7 +66,7 @@ void prepareMemory()
 			else if (chr == 0) then
 				state = 0;
 			else
-				quit();
+				return;
 			endif; endif;
 		endif; endif; endif; endif; endif; endif;
 	loop;
@@ -77,7 +81,7 @@ char readHex()
 		inPut = getw();
 		putc(inPut);
 	loop;
-	if ((inPut>='a')and(inPut<='f'))then
+	if (inPut>='a')then
 		inPut = inPut-'a'+10;
 	else
 		inPut = inPut-'0';
@@ -86,11 +90,11 @@ char readHex()
 
 	inPut = getw();
 	putc(inPut);
-	while (((inPut<'a')or(inPut>='f'))and((inPut<='0')or(inPut>'9'))) do
+	while (((inPut<'a')or(inPut>'f'))and((inPut<'0')or(inPut>'9'))) do
 		inPut = getw();
 		putc(inPut);
 	loop;
-	if ((inPut>='a')and(inPut<='f'))then
+	if (inPut>='a')then
 		inPut = inPut-'a'+10;
 	else
 		inPut = inPut-'0';
@@ -104,10 +108,11 @@ int step()
 	@char 4 instruction;
 	fetchInstruction(instruction);
 	int address = fetchAddress();
-	executeInstruction(instruction,address);
+	DumpInstruction(instruction,address);
+	return executeInstruction(instruction,address);
 end;
 
-void executeInstruction(@char instruction, int address)
+int executeInstruction(@char instruction, int address)
 	int reg1_value;
 	int reg2_value;		
 	char reg1 = instruction[1];
@@ -115,7 +120,9 @@ void executeInstruction(@char instruction, int address)
 	if (get_conditional(instruction[3])) then // if condition is true, then it will execute			
 		reg1 = reg1&15; //actual register addresses, prevents C buffer overflows due to machine code self modifying
 		reg2 = reg2&15;
-		char opcode = instruction[0];			
+		char opcode = instruction[0];
+		//printf("OPCODE = ");		
+		//print_i(int(opcode));
 		// execute instruction
 		//checks opcode
 		if (opcode == 0) then
@@ -166,12 +173,13 @@ void executeInstruction(@char instruction, int address)
 			return 0;	
 		endif;
 		if (opcode == 7) then 				//Out reg
-			putc(BYTE_FILTER & read_REGISTERS(reg1));
+			putc(char(read_REGISTERS(reg1)));
 	 		return 0;
 		endif;
 		if (opcode == 8) then 				//Out  address
 			address = address + read_REGISTERS(reg2);
-			putc(BYTE_FILTER & read_memory(address));
+			//print_i(read_memory(address));
+			putc(char(read_memory(address)));
 			return 0;
 		endif;
 		if (opcode == 9) then 				//Outd reg
@@ -210,24 +218,24 @@ void executeInstruction(@char instruction, int address)
 		if (opcode == 49) then  				//in addr
 			address = address + read_REGISTERS(reg2);
 	 		store_memory(address,int(getc()));				
-			return 0;	
-		else
-			if  ((16 <= opcode) and (opcode < 48))then //ALU operations
-				if (opcode < 32)then	//Reg/reg instr
-					reg1_value = read_REGISTERS(reg1); //get values
-					reg2_value = read_REGISTERS(reg2);
-					reg1_value = do_ALU_op(reg1_value,reg2_value,opcode);
-					write_REGISTERS(reg1,reg1_value);
-				else 				//reg/addr
-					address = address + read_REGISTERS(reg2);					
-					reg1_value = read_REGISTERS(reg1); //get values
-					reg2_value = read_memory(address);
-					reg1_value = do_ALU_op(reg1_value,reg2_value,opcode&15);
-					write_REGISTERS(reg1,reg1_value);
-				endif;
-			endif;
 			return 0;
-		endif;				
+		endif;
+
+		if  ((16 <= opcode) and (opcode < 48))then //ALU operations
+			if (opcode < 32)then	//Reg/reg instr
+				reg1_value = read_REGISTERS(reg1); //get values
+				reg2_value = read_REGISTERS(reg2);
+				reg1_value = do_ALU_op(reg1_value,reg2_value,opcode);
+				write_REGISTERS(reg1,reg1_value);
+			else 				//reg/addr
+				address = address + read_REGISTERS(reg2);					
+				reg1_value = read_REGISTERS(reg1); //get values
+				reg2_value = read_memory(address);
+				reg1_value = do_ALU_op(reg1_value,reg2_value,opcode);
+				write_REGISTERS(reg1,reg1_value);
+			endif;
+		endif;
+		return 0;				
 	else
 		return 0;
 	endif;
@@ -236,7 +244,7 @@ end;
 // ALU STUFF
 	int do_ALU_op(int value1,int value2,char opcode)
 		@int 3 ALU_return_array;
-		opcode = opcode & 15;
+		opcode &= 15;
 	
 		if (opcode == 14)then //add with carry
 			if (not(REGISTERS[5]&16))then //if no carry flag do a normal addition
@@ -251,6 +259,7 @@ end;
 				REGISTERS[5] = REGISTERS[5] & 4294967287; //reset carry flag
 			endif;
 		endif; endif;
+
 		ALU_op(ALU_return_array,value1,value2,opcode); //run ALU operation
 		if (opcode == 2) then  //if mmultiplication, ACC register = top 32bits of result
 			REGISTERS[2] = ALU_return_array[1]; 
@@ -265,7 +274,8 @@ end;
     	int result = 0;
 		int top_of_result = 0;
 		int flags = 0;
-	
+		printf("\nALUING: ");
+		print_i(int(op));
 		if (op == 0) then 			//ADD
 			result = r1_value + r2_value;
 			if (result < r1_value) then	//if there is a carry
@@ -346,7 +356,7 @@ end;
 		endif;endif;endif;endif;
 		endif;endif;endif;endif;
 		endif;endif;endif;endif;
-	
+
 		to_return[0] = result;
 		to_return[1] = top_of_result;
 		to_return[2] = flags;
@@ -355,11 +365,8 @@ end;
 
 // Pre execution stuff
 
-void fetchInstruction(@char instruction)
-	int i;
-	for (i = 0, i < 4, i = i + 1)		
-		instruction = read_memory(REGISTERS[4]+i); //reads instruction from memory, using REGISTERS[4] (program counter as an index)
-	loop;
+void fetchInstruction(@int instruction)
+	instruction[0] =  read_memory(REGISTERS[4]);
 	REGISTERS[4] = REGISTERS[4] + 4; 								//increments program counter
 end;
 
@@ -372,6 +379,7 @@ end;
 
 char get_conditional(char conditional) //checks whether instr is conditional and if condition is true returns 1
 	//woop woop, lots of logic!
+//printf("GETTING CONDITIONAL\n");
 	if (conditional&128) then //if there is a conditional bit set (if instruction is conditional)
 		if (not(conditional & 64))then //if conditional based on a flag
 			if (not(REGISTERS[5] & (1<<(31-(conditional & 31))))) then //if condition true
@@ -403,6 +411,7 @@ end;
 
 //________________ memory access functions ____________________	
 	void store_memory(int addr,int data)
+		printf("\nSTORING TO MEMORY:");print_i(addr);printf(" : ");print_i(data);
 		@char 4 data_bytes;
 		if (addr>MEMORY_LIMIT-3)then
 			printf("ADDRESS OVERFLOW) then "); print_i(addr); printf("\n");
@@ -436,6 +445,7 @@ end;
 	end;
 	
 	void store_byte_memory(int addr,int data)
+//		printf("\nSTORING TO MEMORY:");print_i(addr);printf(" : ");print_i(int(data));printf("\n");
 		if (addr>MEMORY_LIMIT)then
 			printf("ADDRESS OVERFLOW) then "); print_i(addr); printf("\n");
 		endif;
@@ -498,3 +508,33 @@ end;
 		endif;
 		return REGISTERS[addr];
 	end;
+
+
+void dumpMEMORY()
+	int i;
+	int j;
+	@int intMEM = MEMORY + 4;
+	for (i=0, i<100, i+=1)
+		for (j=0,j<4,j+=1)
+			print_i(int(MEMORY[i*8+j]));
+			printf(" ");
+
+
+		loop;
+		printf("	");
+		print_i(intMEM[0]);
+		printf("\n");
+		intMEM += 8;
+	loop;
+end;
+
+void DumpInstruction(@char instruction,int address)
+	int i;
+	for (i=0,i<4,i+=1)
+		print_i(int(instruction[i]));
+		printf(" ");
+	loop;
+	printf("\t");
+	print_i(address);
+	printf("\n");
+end;

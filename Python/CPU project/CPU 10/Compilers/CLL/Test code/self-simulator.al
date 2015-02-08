@@ -106,74 +106,83 @@ Out @'R'
 Out @'O'
 Halt
 
-byteArray CLL.array_of_string11 2 [10, 0]
-int CLL.string11 CLL.array_of_string11
-byteArray CLL.array_of_string13 2 [10, 0]
-int CLL.string13 CLL.array_of_string13
-byteArray CLL.array_of_string9 2 [10, 0]
-int CLL.string9 CLL.array_of_string9
-byteArray CLL.array_of_string10 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
+byteArray CLL.array_of_string10 2 [10, 0]
 int CLL.string10 CLL.array_of_string10
-byteArray CLL.array_of_string6 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
-int CLL.string6 CLL.array_of_string6
-byteArray CLL.array_of_string12 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
+byteArray CLL.array_of_string11 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
+int CLL.string11 CLL.array_of_string11
+byteArray CLL.array_of_string12 2 [10, 0]
 int CLL.string12 CLL.array_of_string12
+byteArray CLL.array_of_string13 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
+int CLL.string13 CLL.array_of_string13
+byteArray CLL.array_of_string14 2 [10, 0]
+int CLL.string14 CLL.array_of_string14
+byteArray CLL.array_of_string15 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
+int CLL.string15 CLL.array_of_string15
+byteArray CLL.array_of_string16 2 [10, 0]
+int CLL.string16 CLL.array_of_string16
+byteArray CLL.array_of_string17 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
+int CLL.string17 CLL.array_of_string17
+byteArray CLL.array_of_string18 2 [10, 0]
+int CLL.string18 CLL.array_of_string18
+byteArray CLL.array_of_string19 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
+int CLL.string19 CLL.array_of_string19
+char CLL.BYTE_FILTER 0
+byteArray CLL.array_of_string8 4 [32, 58, 32, 0]
+int CLL.string8 CLL.array_of_string8
+byteArray CLL.array_of_string9 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
+int CLL.string9 CLL.array_of_string9
+byteArray CLL.array_of_string6 10 [10, 65, 76, 85, 73, 78, 71, 58, 32, 0]
+int CLL.string6 CLL.array_of_string6
+byteArray CLL.array_of_string7 20 [10, 83, 84, 79, 82, 73, 78, 71, 32, 84, 79, 32, 77, 69, 77, 79, 82, 89, 58, 0]
+int CLL.string7 CLL.array_of_string7
+byteArray CLL.array_of_string4 10 [69, 88, 69, 67, 85, 84, 69, 68, 32, 0]
+int CLL.string4 CLL.array_of_string4
+byteArray CLL.array_of_string5 15 [32, 73, 78, 83, 84, 82, 85, 67, 84, 73, 79, 78, 83, 10, 0]
+int CLL.string5 CLL.array_of_string5
+byteArray CLL.array_of_string2 2 [10, 0]
+int CLL.string2 CLL.array_of_string2
+byteArray CLL.array_of_string3 50 [10, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 32, 69, 78, 68, 69, 68, 32, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 10, 0]
+int CLL.string3 CLL.array_of_string3
+byteArray CLL.array_of_string0 4 [10, 10, 10, 0]
+int CLL.string0 CLL.array_of_string0
+byteArray CLL.array_of_string1 51 [10, 10, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 32, 69, 88, 69, 67, 85, 84, 73, 78, 71, 32, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 10, 0]
+int CLL.string1 CLL.array_of_string1
+byteArray CLL.array_of_string21 2 [32, 0]
+int CLL.string21 CLL.array_of_string21
+byteArray CLL.array_of_string20 2 [10, 0]
+int CLL.string20 CLL.array_of_string20
+byteArray CLL.array_of_string23 2 [10, 0]
+int CLL.string23 CLL.array_of_string23
+byteArray CLL.array_of_string22 2 [9, 0]
+int CLL.string22 CLL.array_of_string22
+byteArray CLL.array_of_string25 2 [9, 0]
+int CLL.string25 CLL.array_of_string25
+byteArray CLL.array_of_string24 2 [32, 0]
+int CLL.string24 CLL.array_of_string24
+byteArray CLL.array_of_string26 2 [10, 0]
+int CLL.string26 CLL.array_of_string26
 array CLL.array_of_REGISTERS 16 []
 int CLL.REGISTERS CLL.array_of_REGISTERS
-byteArray CLL.array_of_string14 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
-int CLL.string14 CLL.array_of_string14
-byteArray CLL.array_of_string15 2 [10, 0]
-int CLL.string15 CLL.array_of_string15
-byteArray CLL.array_of_string8 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
-int CLL.string8 CLL.array_of_string8
 byteArray CLL.array_of_MEMORY 1048576 []
 int CLL.MEMORY CLL.array_of_MEMORY
-char CLL.BYTE_FILTER 0
-byteArray CLL.array_of_string7 2 [10, 0]
-int CLL.string7 CLL.array_of_string7
-byteArray CLL.array_of_string4 24 [65, 68, 68, 82, 69, 83, 83, 32, 79, 86, 69, 82, 70, 76, 79, 87, 41, 32, 116, 104, 101, 110, 32, 0]
-int CLL.string4 CLL.array_of_string4
-byteArray CLL.array_of_string5 2 [10, 0]
-int CLL.string5 CLL.array_of_string5
-byteArray CLL.array_of_string2 10 [69, 88, 69, 67, 85, 84, 69, 68, 32, 0]
-int CLL.string2 CLL.array_of_string2
-byteArray CLL.array_of_string3 15 [32, 73, 78, 83, 84, 82, 85, 67, 84, 73, 79, 78, 83, 10, 0]
-int CLL.string3 CLL.array_of_string3
-byteArray CLL.array_of_string0 49 [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 32, 69, 88, 69, 67, 85, 84, 73, 78, 71, 32, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 10, 0]
-int CLL.string0 CLL.array_of_string0
-byteArray CLL.array_of_string1 49 [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 32, 69, 78, 68, 69, 68, 32, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 10, 0]
-int CLL.string1 CLL.array_of_string1
 																	Scope fetchInstruction
 def length gp4
 def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 Move Stack_pointer previous_stack_ptr								%function:fetchInstruction
-SUB Stack_pointer @16 									#OVERHEAD FOR FUNCTION fetchInstruction
+SUB Stack_pointer @12 									#OVERHEAD FOR FUNCTION fetchInstruction
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
-Store gp0 12 [Stack_pointer] 						#STORE GP0
-Load gp0 @0
 Store gp0 8 [Stack_pointer] 						#STORE GP0
-Pass 										%loopfetchInstruction-0entry 		#FOR LOOP
-Load gp1 8 [Stack_pointer] 						#LOAD GP0
-Load gp0 @4
-Move Zero gp2 														#COMPARE (IS LESS)
-Compare gp1 gp0
-if Less then Load gp2 @4294967295
-Move gp2 gp0
-NOT gp0
-if gp0 then Load PC loopfetchInstruction-0exit
 Load gp6 @4
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 CLL.REGISTERS 											#LOAD GP0 GLOBAL RELATIVE
-Load gp1 0 [gp6]									
-Load gp0 8 [Stack_pointer] 						#LOAD GP0
-ADD gp0 gp1 														#ADD
+Load gp0 0 [gp6]									
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -181,14 +190,10 @@ if Greater then Load PC Stack_overflow_error
 Goto function:read_memory 												#CALLING read_memory
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
-Store gp0 12 [Stack_pointer] 						#STORE GP0
-Pass 										%loopfetchInstruction-0continue
-Load gp1 8 [Stack_pointer] 						#LOAD GP0
-Load gp0 @1
-ADD gp0 gp1 														#ADD
-Store gp0 8 [Stack_pointer] 						#STORE GP0
-Load PC loopfetchInstruction-0entry
-Pass 										%loopfetchInstruction-0exit
+Load gp6 @0
+MUL gp6 @4 														   #INDEXING FOR @INT
+ADD gp6 8 [Stack_pointer] 							#STORE GP0 RELATIVE
+Store gp0 0 [gp6]
 Load gp6 @4
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 CLL.REGISTERS 											#LOAD GP0 GLOBAL RELATIVE
@@ -577,20 +582,6 @@ Load gp2 @4294967295  												#COMPARE (NOT LESS)
 Compare gp1 gp0
 if Less then Move Zero gp2
 Move gp2 gp0
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-LoadByte gp0 8 [Stack_pointer] 					#LOAD GP0 (CHAR)
-Move gp0 gp1 						#PUSH gp0 POP gp1
-Load gp0 @102
-Move Zero gp2 														#COMPARE (IS GREATER)
-Compare gp1 gp0
-if Greater then Load gp2 @4294967295
-Move gp2 gp0
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
-AND gp0 gp1
 if gp0 then Load PC ifreadHex-0true 									#IF ELSE STATEMENT
 LoadByte gp0 8 [Stack_pointer] 					#LOAD GP0 (CHAR)
 Store gp0 Expression_stack [gp7]									#PUSH GP0
@@ -675,9 +666,9 @@ if Greater then Load PC Stack_overflow_error
 LoadByte gp0 8 [Stack_pointer] 					#LOAD GP0 (CHAR)
 Move gp0 gp1 						#PUSH gp0 POP gp1
 Load gp0 @102
-Load gp2 @4294967295  												#COMPARE (NOT LESS)
+Move Zero gp2 														#COMPARE (IS GREATER)
 Compare gp1 gp0
-if Less then Move Zero gp2
+if Greater then Load gp2 @4294967295
 Move gp2 gp0
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
@@ -689,9 +680,9 @@ if Greater then Load PC Stack_overflow_error
 LoadByte gp0 8 [Stack_pointer] 					#LOAD GP0 (CHAR)
 Move gp0 gp1 						#PUSH gp0 POP gp1
 Load gp0 @48
-Move Zero gp2 														#COMPARE (IS GREATER)
+Move Zero gp2 														#COMPARE (IS LESS)
 Compare gp1 gp0
-if Greater then Load gp2 @4294967295
+if Less then Load gp2 @4294967295
 Move gp2 gp0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -731,20 +722,6 @@ Load gp2 @4294967295  												#COMPARE (NOT LESS)
 Compare gp1 gp0
 if Less then Move Zero gp2
 Move gp2 gp0
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-LoadByte gp0 8 [Stack_pointer] 					#LOAD GP0 (CHAR)
-Move gp0 gp1 						#PUSH gp0 POP gp1
-Load gp0 @102
-Move Zero gp2 														#COMPARE (IS GREATER)
-Compare gp1 gp0
-if Greater then Load gp2 @4294967295
-Move gp2 gp0
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
-AND gp0 gp1
 if gp0 then Load PC ifreadHex-1true 									#IF ELSE STATEMENT
 LoadByte gp0 8 [Stack_pointer] 					#LOAD GP0 (CHAR)
 Store gp0 Expression_stack [gp7]									#PUSH GP0
@@ -840,14 +817,14 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 Store gp0 12 [Stack_pointer] 						#STORE GP0
 Load gp1 12 [Stack_pointer] 						#LOAD GP0
-Load gp0 @1048576
+Load gp0 @1048575
 Move Zero gp2 														#COMPARE (IS GREATER)
 Compare gp1 gp0
 if Greater then Load gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifstore_byte_memory-0endif
-Load gp0 CLL.string8 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string13 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -859,7 +836,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string9 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string14 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -875,7 +852,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Load gp1 12 [Stack_pointer] 						#LOAD GP0
-Load gp0 @1048576
+Load gp0 @1048575
 AND gp0 gp1 														#AND
 Move gp0 gp6 						#PUSH gp0 POP gp6
 SUB gp7 @4 															#POP GP0
@@ -911,14 +888,14 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 Store gp0 12 [Stack_pointer] 						#STORE GP0
 Load gp1 12 [Stack_pointer] 						#LOAD GP0
-Load gp0 @1048576
+Load gp0 @1048575
 Move Zero gp2 														#COMPARE (IS GREATER)
 Compare gp1 gp0
 if Greater then Load gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifread_byte_memory-0endif
-Load gp0 CLL.string14 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string19 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -930,7 +907,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string15 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string20 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -940,7 +917,7 @@ Pass										%ifread_byte_memory-0endif
 Load gp0 @0
 Store gp0 8 [Stack_pointer] 						#STORE GP0
 Load gp1 12 [Stack_pointer] 						#LOAD GP0
-Load gp0 @1048576
+Load gp0 @1048575
 AND gp0 gp1 														#AND
 Move gp0 gp6 						#PUSH gp0 POP gp6
 ADD gp6 CLL.MEMORY 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
@@ -976,7 +953,7 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 Move Stack_pointer previous_stack_ptr								%function:main
-SUB Stack_pointer @12 									#OVERHEAD FOR FUNCTION main
+SUB Stack_pointer @13 									#OVERHEAD FOR FUNCTION main
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
@@ -985,9 +962,16 @@ Load gp0 @255
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.BYTE_FILTER 									#STORE GP0 GLOBAL (CHAR)
 Goto function:prepareMemory 												#CALLING prepareMemory
-Load gp0 @0
-Store gp0 8 [Stack_pointer] 						#STORE GP0
 Load gp0 CLL.string0 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Goto function:dumpMEMORY 												#CALLING dumpMEMORY
+Load gp0 @0
+Store gp0 9 [Stack_pointer] 						#STORE GP0
+Load gp0 CLL.string1 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -998,33 +982,53 @@ Goto function:step 												#CALLING step
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
+NOT gp0 														
 NOT gp0
 if gp0 then Load PC loopmain-0exit 								#WHILE LOOP
-Load gp1 8 [Stack_pointer] 						#LOAD GP0
-Load gp0 @1
-ADD gp0 gp1 														#ADD
-Store gp0 8 [Stack_pointer] 						#STORE GP0
-Load PC loopmain-0entry					%loopmain-0continue
-Pass 										%loopmain-0exit
-Load gp0 CLL.string1 										#LOAD GP0 GLOBAL
+Load gp6 @5
+MUL gp6 @4 														   #INDEXING FOR @INT
+ADD gp6 CLL.REGISTERS 											#LOAD GP0 GLOBAL RELATIVE
+Load gp0 0 [gp6]									
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Goto function:printf 												#CALLING printf
+Goto function:print_i 												#CALLING print_i
 Load gp0 CLL.string2 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load gp0 8 [Stack_pointer] 						#LOAD GP0
+Load gp1 9 [Stack_pointer] 						#LOAD GP0
+Load gp0 @1
+ADD gp0 gp1 														#ADD
+Store gp0 9 [Stack_pointer] 						#STORE GP0
+Goto function:getw 												#CALLING getw
+SUB gp7 @4 															#POP GP0
+Load gp0 Expression_stack [gp7]
+StoreByte gp0 8 [Stack_pointer] 					#STORE GP0 (CHAR)
+Load PC loopmain-0entry					%loopmain-0continue
+Pass 										%loopmain-0exit
+Load gp0 CLL.string3 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp0 CLL.string4 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp0 9 [Stack_pointer] 						#LOAD GP0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string3 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string5 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1056,7 +1060,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 @1048576
+Load gp0 @1048575
 Load gp1 @1
 SUB gp0 gp1 														#SUBTRACT
 Load Flags_reset @4294967287 
@@ -1068,7 +1072,7 @@ if Greater then Load gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifstore_word_memory-0endif
-Load gp0 CLL.string6 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string11 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1080,7 +1084,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string7 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string12 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1129,7 +1133,7 @@ Load gp1 18 [Stack_pointer] 						#LOAD GP0
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
 ADD gp0 gp1 														#ADD
 Move gp0 gp1 						#PUSH gp0 POP gp1
-Load gp0 @1048576
+Load gp0 @1048575
 AND gp0 gp1 														#AND
 Move gp0 gp6 						#PUSH gp0 POP gp6
 SUB gp7 @4 															#POP GP0
@@ -1143,6 +1147,106 @@ ADD gp0 gp1 														#ADD
 Store gp0 8 [Stack_pointer] 						#STORE GP0
 Load PC loopstore_word_memory-0entry
 Pass 										%loopstore_word_memory-0exit
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+																	Scope dumpMEMORY
+def length gp4
+def expression_stack_ptr gp7
+def ret_addr Jump
+def previous_stack_ptr gp5
+Move Stack_pointer previous_stack_ptr								%function:dumpMEMORY
+SUB Stack_pointer @20 									#OVERHEAD FOR FUNCTION dumpMEMORY
+Compare Stack_pointer Callstack_ptr
+if Less then Load PC Recursion_limit_reached
+Store ret_addr 0 [Stack_pointer]
+Store previous_stack_ptr 4 [Stack_pointer]
+Load gp1 CLL.MEMORY 										#LOAD GP0 GLOBAL
+Load gp0 @4
+ADD gp0 gp1 														#ADD
+Store gp0 12 [Stack_pointer] 						#STORE GP0
+Load gp0 @0
+Store gp0 8 [Stack_pointer] 						#STORE GP0
+Pass 										%loopdumpMEMORY-1entry 		#FOR LOOP
+Load gp1 8 [Stack_pointer] 						#LOAD GP0
+Load gp0 @100
+Move Zero gp2 														#COMPARE (IS LESS)
+Compare gp1 gp0
+if Less then Load gp2 @4294967295
+Move gp2 gp0
+NOT gp0
+if gp0 then Load PC loopdumpMEMORY-1exit
+Load gp0 @0
+Store gp0 16 [Stack_pointer] 						#STORE GP0
+Pass 										%loopdumpMEMORY-0entry 		#FOR LOOP
+Load gp1 16 [Stack_pointer] 						#LOAD GP0
+Load gp0 @4
+Move Zero gp2 														#COMPARE (IS LESS)
+Compare gp1 gp0
+if Less then Load gp2 @4294967295
+Move gp2 gp0
+NOT gp0
+if gp0 then Load PC loopdumpMEMORY-0exit
+Load gp1 8 [Stack_pointer] 						#LOAD GP0
+Load gp0 @8
+MUL gp0 gp1 														#MULTIPLY
+Move gp0 gp1 						#PUSH gp0 POP gp1
+Load gp0 16 [Stack_pointer] 						#LOAD GP0
+ADD gp0 gp1 														#ADD
+Move gp0 gp6 						#PUSH gp0 POP gp6
+ADD gp6 CLL.MEMORY 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
+LoadByte gp0 0 [gp6]
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:print_i 												#CALLING print_i
+Load gp0 CLL.string21 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Pass 										%loopdumpMEMORY-0continue
+Load gp1 16 [Stack_pointer] 						#LOAD GP0
+Load gp0 @1
+ADD gp0 gp1 														#ADD
+Store gp0 16 [Stack_pointer] 						#STORE GP0
+Load PC loopdumpMEMORY-0entry
+Pass 										%loopdumpMEMORY-0exit
+Load gp0 CLL.string22 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp6 @0
+MUL gp6 @4 														   #INDEXING FOR @INT
+ADD gp6 12 [Stack_pointer] 							#LOAD GP0 RELATIVE
+Load gp0 0 [gp6]
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:print_i 												#CALLING print_i
+Load gp0 CLL.string23 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp1 12 [Stack_pointer] 						#LOAD GP0
+Load gp0 @8
+ADD gp0 gp1 														#ADD
+Store gp0 12 [Stack_pointer] 						#STORE GP0
+Pass 										%loopdumpMEMORY-1continue
+Load gp1 8 [Stack_pointer] 						#LOAD GP0
+Load gp0 @1
+ADD gp0 gp1 														#ADD
+Store gp0 8 [Stack_pointer] 						#STORE GP0
+Load PC loopdumpMEMORY-1entry
+Pass 										%loopdumpMEMORY-1exit
 Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
 Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
@@ -1588,7 +1692,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 @1048576
+Load gp0 @1048575
 Load gp1 @3
 SUB gp0 gp1 														#SUBTRACT
 Load Flags_reset @4294967287 
@@ -1600,7 +1704,7 @@ if Greater then Load gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifread_memory-0endif
-Load gp0 CLL.string10 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string15 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1612,7 +1716,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string11 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string16 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -1645,7 +1749,7 @@ Load gp1 16 [Stack_pointer] 						#LOAD GP0
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
 ADD gp0 gp1 														#ADD
 Move gp0 gp1 						#PUSH gp0 POP gp1
-Load gp0 @1048576
+Load gp0 @1048575
 AND gp0 gp1 														#AND
 Move gp0 gp6 						#PUSH gp0 POP gp6
 ADD gp6 CLL.MEMORY 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
@@ -1713,7 +1817,22 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
+Goto function:DumpInstruction 												#CALLING DumpInstruction
+Load gp0 8 [Stack_pointer] 						#LOAD GP0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp0 16 [Stack_pointer] 						#LOAD GP0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
 Goto function:executeInstruction 												#CALLING executeInstruction
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -1810,6 +1929,18 @@ Load gp0 @0
 Store gp0 40 [Stack_pointer] 						#STORE GP0
 Load gp0 @0
 Store gp0 32 [Stack_pointer] 						#STORE GP0
+Load gp0 CLL.string6 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+LoadByte gp0 48 [Stack_pointer] 					#LOAD GP0 (CHAR)
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:print_i 												#CALLING print_i
 LoadByte gp0 48 [Stack_pointer] 					#LOAD GP0 (CHAR)
 Move gp0 gp1 						#PUSH gp0 POP gp1
 Load gp0 @0
@@ -2258,12 +2389,6 @@ if Equal then Move Zero gp2
 Move gp2 gp0
 NOT gp0
 if gp0 then Load PC loopprepareMemory-0exit 								#WHILE LOOP
-LoadByte gp0 12 [Stack_pointer] 					#LOAD GP0 (CHAR)
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-Goto function:print_i 												#CALLING print_i
 Goto function:readHex 												#CALLING readHex
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
@@ -2333,7 +2458,10 @@ Compare gp1 gp0
 if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 if gp0 then Load PC ifprepareMemory-0true 									#IF ELSE STATEMENT
-Goto function:quit 												#CALLING quit
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
 Load PC ifprepareMemory-0endif
 Pass 										%ifprepareMemory-0true
 Load gp0 @0
@@ -2899,11 +3027,6 @@ if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifexecuteInstruction-11endif
-LoadByte gp0 CLL.BYTE_FILTER 									#LOAD GP0 GLOBAL (CHAR)
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
 LoadByte gp0 26 [Stack_pointer] 					#LOAD GP0 (CHAR)
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -2913,10 +3036,6 @@ Goto function:read_REGISTERS 												#CALLING read_REGISTERS
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 AND gp0 @255 													  #CASTING INT TO CHAR
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
-AND gp0 gp1 														#AND (CHARS)
-AND gp0 @255
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -2958,11 +3077,6 @@ SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
 ADD gp0 gp1 														#ADD
 Store gp0 16 [Stack_pointer] 						#STORE GP0
-LoadByte gp0 CLL.BYTE_FILTER 									#LOAD GP0 GLOBAL (CHAR)
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
 Load gp0 16 [Stack_pointer] 						#LOAD GP0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -2972,10 +3086,6 @@ Goto function:read_memory 												#CALLING read_memory
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 AND gp0 @255 													  #CASTING INT TO CHAR
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
-AND gp0 gp1 														#AND (CHARS)
-AND gp0 @255
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -3285,7 +3395,42 @@ Move Zero gp2 														#COMPARE (IS EQUAL)
 Compare gp1 gp0
 if Equal then Load  gp2 @4294967295
 Move gp2 gp0
-if gp0 then Load PC ifexecuteInstruction-22true 									#IF ELSE STATEMENT
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifexecuteInstruction-20endif
+Load gp0 16 [Stack_pointer] 						#LOAD GP0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+LoadByte gp0 25 [Stack_pointer] 					#LOAD GP0 (CHAR)
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:read_REGISTERS 												#CALLING read_REGISTERS
+SUB gp7 @4 															#POP GP0
+Load gp0 Expression_stack [gp7]
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+ADD gp0 gp1 														#ADD
+Store gp0 16 [Stack_pointer] 						#STORE GP0
+Load gp0 16 [Stack_pointer] 						#LOAD GP0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:getc 												#CALLING getc
+Goto function:store_memory 												#CALLING store_memory
+Load gp0 @0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+Pass										%ifexecuteInstruction-20endif
 Load gp0 @16
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -3294,9 +3439,9 @@ if Greater then Load PC Stack_overflow_error
 LoadByte gp0 20 [Stack_pointer] 					#LOAD GP0 (CHAR)
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
-Move Zero gp2 														#COMPARE (IS GREATER)
+Load gp2 @4294967295 												#COMPARE (NOT GREATER)
 Compare gp1 gp0
-if Greater then Load gp2 @4294967295
+if Greater then Move Zero gp2
 Move gp2 gp0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -3313,7 +3458,7 @@ SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
 AND gp0 gp1
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC ifexecuteInstruction-21endif
+if gp0 then Load PC ifexecuteInstruction-22endif
 LoadByte gp0 20 [Stack_pointer] 					#LOAD GP0 (CHAR)
 Move gp0 gp1 						#PUSH gp0 POP gp1
 Load gp0 @32
@@ -3321,7 +3466,7 @@ Move Zero gp2 														#COMPARE (IS LESS)
 Compare gp1 gp0
 if Less then Load gp2 @4294967295
 Move gp2 gp0
-if gp0 then Load PC ifexecuteInstruction-20true 									#IF ELSE STATEMENT
+if gp0 then Load PC ifexecuteInstruction-21true 									#IF ELSE STATEMENT
 Load gp0 16 [Stack_pointer] 						#LOAD GP0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -3372,16 +3517,6 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 @15
-AND gp0 @255 													  #CASTING INT TO CHAR
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
-AND gp0 gp1 														#AND (CHARS)
-AND gp0 @255
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
 Goto function:do_ALU_op 												#CALLING do_ALU_op
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
@@ -3397,8 +3532,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:write_REGISTERS 												#CALLING write_REGISTERS
-Load PC ifexecuteInstruction-20endif
-Pass 										%ifexecuteInstruction-20true
+Load PC ifexecuteInstruction-21endif
+Pass 										%ifexecuteInstruction-21true
 LoadByte gp0 26 [Stack_pointer] 					#LOAD GP0 (CHAR)
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -3447,8 +3582,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:write_REGISTERS 												#CALLING write_REGISTERS
-Pass 										%ifexecuteInstruction-20endif           
-Pass										%ifexecuteInstruction-21endif
+Pass 										%ifexecuteInstruction-21endif           
+Pass										%ifexecuteInstruction-22endif
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -3458,43 +3593,83 @@ Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
 Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
-Load PC ifexecuteInstruction-22endif
-Pass 										%ifexecuteInstruction-22true
-Load gp0 16 [Stack_pointer] 						#LOAD GP0
+Pass 										%ifexecuteInstruction-23endif           
+Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-LoadByte gp0 25 [Stack_pointer] 					#LOAD GP0 (CHAR)
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-Goto function:read_REGISTERS 												#CALLING read_REGISTERS
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+																	Scope DumpInstruction
+def length gp4
+def expression_stack_ptr gp7
+def ret_addr Jump
+def previous_stack_ptr gp5
+Move Stack_pointer previous_stack_ptr								%function:DumpInstruction
+SUB Stack_pointer @20 									#OVERHEAD FOR FUNCTION DumpInstruction
+Compare Stack_pointer Callstack_ptr
+if Less then Load PC Recursion_limit_reached
+Store ret_addr 0 [Stack_pointer]
+Store previous_stack_ptr 4 [Stack_pointer]
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
-ADD gp0 gp1 														#ADD
 Store gp0 16 [Stack_pointer] 						#STORE GP0
+SUB gp7 @4 															#POP GP0
+Load gp0 Expression_stack [gp7]
+Store gp0 12 [Stack_pointer] 						#STORE GP0
+Load gp0 @0
+Store gp0 8 [Stack_pointer] 						#STORE GP0
+Pass 										%loopDumpInstruction-0entry 		#FOR LOOP
+Load gp1 8 [Stack_pointer] 						#LOAD GP0
+Load gp0 @4
+Move Zero gp2 														#COMPARE (IS LESS)
+Compare gp1 gp0
+if Less then Load gp2 @4294967295
+Move gp2 gp0
+NOT gp0
+if gp0 then Load PC loopDumpInstruction-0exit
+Load gp6 8 [Stack_pointer] 						#LOAD GP0
+ADD gp6 12 [Stack_pointer]							#LOAD GP0 RELATIVE (CHAR)
+LoadByte gp0 0 [gp6]
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:print_i 												#CALLING print_i
+Load gp0 CLL.string24 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Pass 										%loopDumpInstruction-0continue
+Load gp1 8 [Stack_pointer] 						#LOAD GP0
+Load gp0 @1
+ADD gp0 gp1 														#ADD
+Store gp0 8 [Stack_pointer] 						#STORE GP0
+Load PC loopDumpInstruction-0entry
+Pass 										%loopDumpInstruction-0exit
+Load gp0 CLL.string25 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
 Load gp0 16 [Stack_pointer] 						#LOAD GP0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Goto function:getc 												#CALLING getc
-Goto function:store_memory 												#CALLING store_memory
-Load gp0 @0
+Goto function:print_i 												#CALLING print_i
+Load gp0 CLL.string26 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
-Move ret_addr PC
-Pass 										%ifexecuteInstruction-22endif           
-Pass 										%ifexecuteInstruction-23endif           
+Goto function:printf 												#CALLING printf
 Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
 Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
@@ -3603,7 +3778,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 @1048576
+Load gp0 @1048575
 Load gp1 @1
 SUB gp0 gp1 														#SUBTRACT
 Load Flags_reset @4294967287 
@@ -3615,7 +3790,7 @@ if Greater then Load gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifread_word_memory-0endif
-Load gp0 CLL.string12 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string17 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -3627,7 +3802,7 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string13 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string18 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -3660,7 +3835,7 @@ Load gp1 16 [Stack_pointer] 						#LOAD GP0
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
 ADD gp0 gp1 														#ADD
 Move gp0 gp1 						#PUSH gp0 POP gp1
-Load gp0 @1048576
+Load gp0 @1048575
 AND gp0 gp1 														#AND
 Move gp0 gp6 						#PUSH gp0 POP gp6
 ADD gp6 CLL.MEMORY 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
@@ -3711,27 +3886,7 @@ Store gp0 16 [Stack_pointer] 						#STORE GP0
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 Store gp0 20 [Stack_pointer] 						#STORE GP0
-Move Stack_pointer gp0 											#GETTING POINTER
-ADD gp0 @12
-Store gp0 24 [Stack_pointer] 						#STORE GP0
-Load gp0 20 [Stack_pointer] 						#LOAD GP0
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-Load gp0 @1048576
-Load gp1 @3
-SUB gp0 gp1 														#SUBTRACT
-Load Flags_reset @4294967287 
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
-Move Zero gp2 														#COMPARE (IS GREATER)
-Compare gp1 gp0
-if Greater then Load gp2 @4294967295
-Move gp2 gp0
-NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC ifstore_memory-0endif
-Load gp0 CLL.string4 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string7 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -3743,7 +3898,51 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load gp0 CLL.string5 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string8 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp0 16 [Stack_pointer] 						#LOAD GP0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:print_i 												#CALLING print_i
+Move Stack_pointer gp0 											#GETTING POINTER
+ADD gp0 @12
+Store gp0 24 [Stack_pointer] 						#STORE GP0
+Load gp0 20 [Stack_pointer] 						#LOAD GP0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp0 @1048575
+Load gp1 @3
+SUB gp0 gp1 														#SUBTRACT
+Load Flags_reset @4294967287 
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+Move Zero gp2 														#COMPARE (IS GREATER)
+Compare gp1 gp0
+if Greater then Load gp2 @4294967295
+Move gp2 gp0
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifstore_memory-0endif
+Load gp0 CLL.string9 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp0 20 [Stack_pointer] 						#LOAD GP0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:print_i 												#CALLING print_i
+Load gp0 CLL.string10 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -3812,7 +4011,7 @@ Load gp1 20 [Stack_pointer] 						#LOAD GP0
 Load gp0 8 [Stack_pointer] 						#LOAD GP0
 ADD gp0 gp1 														#ADD
 Move gp0 gp1 						#PUSH gp0 POP gp1
-Load gp0 @1048576
+Load gp0 @1048575
 AND gp0 gp1 														#AND
 Move gp0 gp6 						#PUSH gp0 POP gp6
 SUB gp7 @4 															#POP GP0

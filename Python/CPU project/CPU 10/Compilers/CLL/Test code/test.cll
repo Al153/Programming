@@ -1,11 +1,6 @@
 void main()
-	int i;
-	for (i = 0, i<10, i+=1)
-		print_i(i);
-	loop;
+	if (1<=2) then printf("HELLO\n"); endif;
 end;
-
-
 
 
 

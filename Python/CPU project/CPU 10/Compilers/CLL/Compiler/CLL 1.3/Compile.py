@@ -1,10 +1,20 @@
 import LR1_parser
 import sys
 import os
-import code_generator1_2 as code_generator
+import code_generator1_3 as code_generator
 
 # CLL 1.1 adds direct casting support, and further underlying optimisations
 # CLL 1.2 adds the ternary expression and modifying assignments (a += b etc)
+# CLL 1.3 is the typing revolution - going to completely redesign the back end of typing and what one can do with typing
+#	- Add signedInt and signedChar, float
+#	- structs - collections of variables can be defined as a whole new type
+#	- Overhaul pointers (allow a pointer to point to any kind of type - ie @@int @float, to user defined structs)
+# 	- added ability to comment in grammar
+#
+#
+#
+#	
+#
 
 ###________________________ Compiling Strategy ____________________________
 

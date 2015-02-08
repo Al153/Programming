@@ -1,5 +1,5 @@
 import sys
-import optimiser1_2 as optimiser
+import optimiser1_3 as optimiser
 def process_snippets(filename):
 	'''generates a list of snippets objects'''
 	snippet_text = open(filename,"r").read()

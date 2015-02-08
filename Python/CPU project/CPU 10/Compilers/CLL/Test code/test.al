@@ -106,10 +106,8 @@ Out @'R'
 Out @'O'
 Halt
 
-byteArray CLL.array_of_string0 4 [121, 97, 121, 0]
+byteArray CLL.array_of_string0 7 [72, 69, 76, 76, 79, 10, 0]
 int CLL.string0 CLL.array_of_string0
-byteArray CLL.array_of_string1 4 [110, 97, 121, 0]
-int CLL.string1 CLL.array_of_string1
 
 Halt %function:quit
 
@@ -169,58 +167,26 @@ def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
 Move Stack_pointer previous_stack_ptr								%function:main
-SUB Stack_pointer @12 									#OVERHEAD FOR FUNCTION main
+SUB Stack_pointer @8 									#OVERHEAD FOR FUNCTION main
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]
-Goto function:getw 												#CALLING getw
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
-Load gp0 @121
-Move Zero gp2 														#COMPARE (IS EQUAL)
+Load gp1 @1
+Load gp0 @2
+Load gp2 @4294967295 												#COMPARE (NOT GREATER)
 Compare gp1 gp0
-if Equal then Load  gp2 @4294967295
+if Greater then Move Zero gp2
 Move gp2 gp0
-if gp0 then Load PC ifmain-0true 									#IF ELSE STATEMENT
-Load gp0 CLL.string1 										#LOAD GP0 GLOBAL
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-Load PC ifmain-0endif
-Pass 										%ifmain-0true
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifmain-0endif
 Load gp0 CLL.string0 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Pass 										%ifmain-0endif           
 Goto function:printf 												#CALLING printf
-Load gp0 @0
-Store gp0 8 [Stack_pointer] 						#STORE GP0
-Pass 										%loopmain-0entry 		#FOR LOOP
-Load gp1 8 [Stack_pointer] 						#LOAD GP0
-Load gp0 @10
-Move Zero gp2 														#COMPARE (IS LESS)
-Compare gp1 gp0
-if Less then Load gp2 @4294967295
-Move gp2 gp0
-NOT gp0
-if gp0 then Load PC loopmain-0exit
-Load gp0 8 [Stack_pointer] 						#LOAD GP0
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-Goto function:print_i 												#CALLING print_i
-Pass 										%loopmain-0continue
-Load gp1 8 [Stack_pointer] 						#LOAD GP0
-Load gp0 @1
-ADD gp0 gp1 														#ADD
-Store gp0 8 [Stack_pointer] 						#STORE GP0
-Load PC loopmain-0entry
-Pass 										%loopmain-0exit
+Pass										%ifmain-0endif
 Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
 Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
