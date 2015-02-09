@@ -13,9 +13,11 @@ import code_generator1_3 as code_generator
 #
 #
 #
-#	
+#	TO DO:
 #
-
+# need to update variable stuff and ability to create structs
+# refactor variable handling code (unify it)
+# need to update code generator and snippets
 ###________________________ Compiling Strategy ____________________________
 
 #-get primary source code
@@ -31,7 +33,7 @@ import code_generator1_3 as code_generator
 
 
 class Program:
-	def __init__(self): 		#is main argument is to tell ow much setup should occur
+	def __init__(self): 		
 		print "getting source = ",			
 		self.source = get_source_file()
 		print "DONE!\nParsing = ",
@@ -60,7 +62,8 @@ class Program:
 
 		print "DONE!\nFinding global variables =",
 		#print_parse_tree(self.header_code)
-
+		self.type_sizes = {"char":1,"int":4,"float":4,"signedChar":1,"signedInt":4}
+		self.structs = self.get_structs()
 		self.global_var_types = {}
 		self.global_array_values = {}
 		self.global_var_values = [] #for simple type global vars
@@ -171,13 +174,106 @@ class Program:
 
 		return return_string
 
+	def get_structs(self):
+		#returns a dict of struct objects
+		structs_dict = {}
+		for line in self.header_code.children:
+			if line.type == "<struct_def>":
+				structs_dict[line.children[1].string] = Struct(line)
+				index = self.header_code.children.index(line)
+				self.header_code.children = self.header_code.children[:index]+self.header_code.children[index+1:]
+		return structs_dict
+
+class Struct:
+	#class for objects to store information on structs
+	def __init__(self,line):
+		#an array called "has_array" is generated which lists the elements which must be set to equal arrays
+		self.name = line.children[1].string
+		self.declarations = self.linearise_declarations(line.children[3]) #identify var declarations
+		self.var_types = self.get_var_types() 							  #work out the types of each variable - including the length of any arrays
+		self.var_sizes = self.get_var_sizes()							  #works out the size of each variable within the structure
+		self.var_offsets = self.get_var_offsets() 						  #works out the internal address offsets within the struct (ie the internal address of each variable)
+																		  #also works out the memory footprint of the struct and adds it to the global var size dict
+		self.startng_values = self.get_starting_values() 										  #works out if there are any starting values for variables within the struct
+
+
+	def get_var_types(self):
+		#produces a {name:type} dict of all the variables in the declarations
+		self.has_array = []
+		var_types = {}
+		for declaration in self.declarations:
+			this_type = get_type(declaration.children[0]) #adds type is type
+			var_types[declaration.children[1].string] =  this_type
+			if len(declaration.children[0].children == 3): #if there is an array, create an entry for the array too
+				self.has_array.append(declaration.children[1].string)
+				var_types["array_of_"+declaration.children.[1].string] = "ARRAY|"+this_type[1:]+"|"+declaration.children[0].children[2].string #adds an array type, the type reoves a singe pointer
+		return var_types
+
+	def get_var_sizes(self):
+		var_sizes = {}
+		for var in self.var_types:
+			var_type = var_types[var]
+			if len(var_type.split("|"))>1: #if an array
+				array_type = var_type.split("|")
+				try:
+					size = 4 if array_type[1][0] == '@' else program.var_sizes[array_type[1]] #he size of an @var is always 4
+					var_sizes[var] = size*int(array_type[2]) 
+				except KeyError:
+					print "ERROR(45): undefined type: "+array_type[1]
+					quit()
+			else:
+				try:
+					size = 4 if var_type[0] == '@' else program.var_sizes[var_type]
+					var_sizes[var] = size
+				except KeyError:
+					print "ERROR(45): undefined type: "+array_type[1]
+					quit()
+			var_sizes[var] = new_size
+		return var_sizes
+
+	def get_starting_values():
+		#goes through the list of declarations checking for starting values
+		starting_values = {}
+		for declaration in self.declarations:
+			if len(declaration.children) == 4:
+			var = declaration.children[1].string
+			rhs = declaration.children[3]
+			if var in self.has_array: #if an array
+				if len(rhs.children) == 3: #if an array
+					star][var] = rhs.children[1]
+				else:
+					#raise an error an array must have an array asignment
+					print "ERROR(47): arrays oonly have array "
+			else:
+				if len(rhs.children) == 3: #if an array assignment, raise an error
+					print "ERROR(46): arrays can only be assigned to array types"
+					quit()
+				else:
+					#add the value to the dict
+					starting_values[var] = rhs
 
 
 
+	def get_var_offsets(self):
+		#gets internal addresses of variables within a structss
+		var_offsets = {}
+		offset = 0
+		for var in self.var_sizes:
+			var_offsets[var] = offset
+			offset += self.var_sizes[var]
+		self.size = offset #remaining offset is the entrire size of the struct
+		program.var_sizes[self.name] = self.size 		#updaes the external struct dict
+		return var_offsets
 
-#		for function_instance in functions:
-#			for line in function_instance.lines:
-#				print_parse_tree(line)
+	def linearise_declarations(self,inside_struct):
+		#recursive unary tree structure => array
+		declarations = []
+		while len(inside_struct.children) >1:
+			declarations.append(inside_struct.children[1])
+			inside_struct = inside_struct.children[1]
+		declarations.append(inside_struct.children[0])
+		declarations.reverse()
+		return declarations
 
 
 
@@ -267,10 +363,15 @@ class function:
 		return parse_tree
 
 	def get_variables(self,parse_tree):
+	#########################################################################
+	# Need to update to account for floats, signeds, unsigneds,structs 		#
+	#########################################################################
+
+
 		return_variables = {}  #names:types
 		values = [] 		   #names:preset expressions
 		widths = {} 		   #names:bytewidth
-		widths_lookup = {"int":4,"char":1,"@int":4,"@char":4} #arrays for @chars and @ints are 4+n or 4+(n*4), ptr, then array
+		widths_lookup = program.type_sizes #arrays for @chars and @ints are 4+n or 4+(n*4), ptr, then array
 		i = 0
 		while i < len(parse_tree.children):
 			#print i, len(parse_tree.children)
@@ -309,13 +410,13 @@ class function:
 				#print "VAR DEC"
 				#print_parse_tree(parse_tree)
 				#print get_type(child.children[0])
-				return_variables[child.children[1].string] = get_type(child.children[0])			#adds an entry for the new variable
-				widths[child.children[1].string] = widths_lookup[get_type(child.children[0])]
-				
+				child_type = get_type(child.children[0])
+				return_variables[child.children[1].string] = child_type			#adds an entry for the new variable
+				widths[child.children[1].string] = 4 if child_type[0] == '@' else widths_lookup[child_type] #pointers have a width of 4 (int), otherwise ooku the type width
 				if len(child.children[0].children)==3: #if there is an array type 
 					#print "ARRAY TYPE !"
 					array_type = get_type(child.children[0])[1:] 			#type of variables in array
-					array_length =int(child.children[0].children[2].string)*widths_lookup[array_type] #adds the length of the array to lengths
+					array_length =int(child.children[0].children[2].string)*(4 if array_type[0] == '@' else widths_lookup[array_type]) #adds the length of the array to lengths
 					widths["Array_of"+child.children[1].string] = array_length
 					return_variables["Array_of"+child.children[1].string] 	= return_variables[child.children[1].string] + "array" #adds @intarray and @chararray types internally
 
@@ -382,8 +483,7 @@ class function:
 
 	def get_var_width(self,var_type):
 		#gets width of input parameters, ignores arrays, just get input as pointers
-		widths_lookup = {"int":4,"char":1,"@int":4,"@char":4}
-		return widths_lookup[var_type]
+		return 4 if var_type[0] == '@' else program.type_sizes[var_type]
 
 	def parse_array(self,array_tree):
 		#print array_tree.type
@@ -394,7 +494,9 @@ class function:
 
 	def get_overall_type(self,specific_type):
 		#reduces ints, chars, pointers etc to what they can be treated as, ie an @int is basically an int in terms of arithmetic
-		return "char" if specific_type == "char" else "void" if specific_type == "void" else "int"
+		if specific_type[0] == "@":
+			return "int"
+		return specific_typess
 
 	def check_function_typing(self,parse_tree):
 		#searches whole parse tree looking for expressions to check
@@ -821,10 +923,10 @@ def store_parse_tree(parse_tree_node,offset = ''):
 		return return_string
 
 def get_type(type_tree):
-	if len(type_tree.children) == 1: #int or char
+	if len(type_tree.children) == 1: #primitive
 		return type_tree.children[0].string
-	elif len(type_tree.children) >= 2: #@int or @char
-		return type_tree.children[0].string+type_tree.children[1].string
+	elif len(type_tree.children) >= 2: #@pointer
+		return "@" + get_type(type_tree.children[1])
 	#print type_tree.type
 	quit()
 

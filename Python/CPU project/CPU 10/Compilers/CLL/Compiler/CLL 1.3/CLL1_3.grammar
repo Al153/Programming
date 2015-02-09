@@ -63,5 +63,5 @@
 <while_loop> ::= "while" <bool_expr> "do" <block> "loop"
 <for_loop> ::= "for" "(" <assignment> "," <for_bool_expr> "," <assignment> ")" <block> "loop"
 
-<type> ::= "int" | "char" | "@" <type> num |  @ <type> | "void" | id  		-- types can now include pointers to any other type, and structs
+<type> ::= "int" | "char" | "signedInt" | "signedChar" | "float" | "@" <type> num |  @ <type> | "void" | id  		-- types can now include pointers to any other type, and structs
 <array> ::= <array> "," num | num
