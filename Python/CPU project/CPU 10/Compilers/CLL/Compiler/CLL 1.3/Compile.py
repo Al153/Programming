@@ -64,6 +64,7 @@ class Program:
 		#print_parse_tree(self.header_code)
 		self.type_sizes = {"char":1,"int":4,"float":4,"signedChar":1,"signedInt":4}
 		self.structs = self.get_structs()
+		self.has_array = []
 		self.global_var_types = {}
 		self.global_array_values = {}
 		self.global_var_values = [] #for simple type global vars
@@ -114,6 +115,7 @@ class Program:
 		try:
 			array_size = int(var_type.split(";")[1])
 			var_type = var_type.split(";")[0]
+			self.has_array.append(var_name)
 		except IndexError:
 			array_size = 0
 		if len(var_line.children) == 4: #if there is a preset value for the variable
@@ -131,13 +133,9 @@ class Program:
 			self.global_var_values.append(assignment_node)
 
 	def get_type(self,type_tree):
-		type_string = ''
-		for node in type_tree.children:
-			try:
-				int(node.string)
-				type_string += ";"+node.string #if an array with a length, add a semicolon to split type and  length
-			except ValueError:
-				type_string += node.string
+		type_string = get_type(type_tree) #gets the type
+		if len(type_tree.children) == 3: #if an array
+			type_string += ";"+ type_tree.children[2].string
 		return type_string
 	def parse_array(self,array_tree):
 		#print array_tree.type
@@ -153,24 +151,26 @@ class Program:
 			#print self.global_var_types[var_name]
 			#cont = raw_input('')
 			self.global_var_types[var_name]
-			if self.global_var_types[var_name] in ["int","char"]:     #plain variables
-				return_string += self.global_var_types[var_name] +" CLL."+var_name+" 0\n"
-			elif self.global_var_types[var_name] in ["@int","@char"]: #pointers
-				if self.global_var_sizes[var_name] == 0: 				#array less pointers
-					return_string += "int CLL."+var_name+" 0\n"
-				else:
+			if self.global_var_types[var_name][0] == '@': #pointers
+				if var_name in self.has_array: #array
 					array_length = str(self.global_var_sizes[var_name]) #gets length
 					array_name = "CLL.array_of_"+var_name
 					if var_name in self.global_array_values:
 						array_values = "["+ ', '.join([str(value) for value in self.global_array_values[var_name]])+"]\n"	
 					else:
 						array_values = '[]\n'
-					if self.global_var_types[var_name] == "@int":
-						return_string += "array "+array_name+" "+array_length+" "+array_values #creates array
-						return_string += "int CLL."+var_name+" "+array_name+"\n"
-					elif self.global_var_types[var_name][:5] == "@char":
+					if self.global_var_types[var_name][1:] == "char": 					#chars are one byte
 						return_string += "byteArray "+array_name+" "+array_length+" "+array_values #creates array
-						return_string += "int CLL."+var_name+" "+array_name	+"\n"			
+						return_string += "int CLL."+var_name+" "+array_name	+"\n"
+					else: 															#points to int type
+						return_string += "array "+array_name+" "+array_length+" "+array_values #creates array
+						return_string += "int CLL."+var_name+" "+array_name+"\n"		
+				else: #no array
+					return_string += "int CLL."+var_name+" 0\n"
+
+
+			if self.global_var_types[var_name] in ["int","char","float","signedInt","signedChar"]:     #plain variables
+				return_string += self.global_var_types[var_name] +" CLL."+var_name+" 0\n"
 
 		return return_string
 
