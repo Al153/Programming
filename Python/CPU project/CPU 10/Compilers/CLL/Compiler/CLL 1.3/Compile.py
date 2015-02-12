@@ -580,8 +580,12 @@ class function:
 				self.check_function_call(parse_tree.children[0])
 				#print "FUNCTION TYPE = ", function_type
 				return function_type
+
+
 			elif parse_tree.children[0].type == "<variable>":
 
+
+############################## Needs to be rewritten with unified variables
 				variable_parse_tree = parse_tree.children[0]
 				if len(variable_parse_tree.children) == 1: #treating a variable as itself
 					if variable_parse_tree.children[0].string in self.variables:
@@ -593,16 +597,22 @@ class function:
 					else:
 						print "ERROR(0): Unrecognised variable: "+ variable_parse_tree.children[0].string + " in function "+self.name
 						quit()
-				else: #indirect addressing
+
+
+				elif len(variable_parse_tree.children) == 4: #if getting a value with respect to a pointer then
 					#needs to be a pointer
 					#print "POINTER"
 					if variable_parse_tree.children[0].string in self.variables: #if local
 						if self.variables[variable_parse_tree.children[0].string][0] == "@":
 							#if the variable type is a pointer
-							type_to_return = self.variables[variable_parse_tree.children[0].string][1:] #gets the pointed to type
+							type_to_return = self.get_overall_type(self.variables[variable_parse_tree.children[0].string][1:]) #gets the pointed to type
 							#print type_to_return
-							self.check_typing(variable_parse_tree.children[2])
-							return type_to_return
+							index_type = self.check_typing(variable_parse_tree.children[2])
+							if index_type in ["int","char","signedInt","signedChar"]: #checks the type can be used to index
+								return type_to_return
+							else:
+								print "ERROR(47): type: " + index_type + " cannot be used to index a pointer"
+								quit()
 						else:
 							#raise an error
 							print "ERROR(1): variable "+variable_parse_tree.children[0].string+" of type "+self.variables[variable_parse_tree.children[0].string]+" cannot be used as a pointer"
@@ -611,9 +621,12 @@ class function:
 						if program.global_var_types[variable_parse_tree.children[0].string][0] == "@":
 							#if the variable type is a pointer
 							type_to_return = program.global_var_types[variable_parse_tree.children[0].string][1:] #gets the pointed to type
-							self.check_typing(variable_parse_tree.children[2])
-							#print type_to_return
-							return type_to_return
+							index_type = self.check_typing(variable_parse_tree.children[2])
+							if index_type in ["int","char","signedInt","signedChar"]: #checks the type can be used to index
+								return type_to_return
+							else:
+								print "ERROR(47): type: " + index_type + " cannot be used to index a pointer"
+								quit()
 						else:
 							#raise an error
 							print "ERROR(2): variable "+variable_parse_tree.children[0].string+" of type "+program.global_var_types[variable_parse_tree.children[0]].string+" cannot be used as a pointer"
@@ -621,6 +634,16 @@ class function:
 					else:
 						print "ERROR(3): Unrecognised variable: \""+variable_parse_tree.children[0].string + "\""
 						quit()
+				elif len(variable_parse_tree.children) == 3: #if a struct reference
+					#############################################################
+					# needs to check that the particular variable is a struct 	#
+					#############################################################
+					#####################################################################
+					# needs to check that the particular struct has the right entry 	#
+					#####################################################################
+					#####################################################################
+					# return type 														#
+					#####################################################################
 
 			elif parse_tree.children[0].type == "<const>":
 				#print "CONSTANT"
