@@ -412,7 +412,7 @@ class function:
 				#print get_type(child.children[0])
 				child_type = get_type(child.children[0])
 				return_variables[child.children[1].string] = child_type			#adds an entry for the new variable
-				widths[child.children[1].string] = 4 if child_type[0] == '@' else widths_lookup[child_type] #pointers have a width of 4 (int), otherwise ooku the type width
+				widths[child.children[1].string] = 4 if child_type[0] == '@' else widths_lookup[child_type] #pointers have a width of 4 (int), otherwise lookup the type width
 				if len(child.children[0].children)==3: #if there is an array type 
 					#print "ARRAY TYPE !"
 					array_type = get_type(child.children[0])[1:] 			#type of variables in array
@@ -635,15 +635,18 @@ class function:
 						print "ERROR(3): Unrecognised variable: \""+variable_parse_tree.children[0].string + "\""
 						quit()
 				elif len(variable_parse_tree.children) == 3: #if a struct reference
-					#############################################################
-					# needs to check that the particular variable is a struct 	#
-					#############################################################
-					#####################################################################
-					# needs to check that the particular struct has the right entry 	#
-					#####################################################################
-					#####################################################################
-					# return type 														#
-					#####################################################################
+					struct_type = self.check_typing(variable_parse_tree.children[0])
+					if (struct_type in program.structs): #if a struct
+						possible_member = variable_parse_tree.children[2].string
+						if possible_member in program.structs[struct_type].var_types:
+							return program.structs[struct_type].var_types[possible_member]:
+						else:
+							print "ERROR(49): struct of type: ",struct_type," does not have member: ",possible_member," in function: ",self.name
+							quit()
+					else: #raise error
+						print "ERROR(48): tried to access member of a non struct variable: ",struct_type," in function: ",self.name
+						quit()
+
 
 			elif parse_tree.children[0].type == "<const>":
 				#print "CONSTANT"

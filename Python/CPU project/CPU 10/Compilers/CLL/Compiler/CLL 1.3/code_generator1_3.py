@@ -1,3 +1,30 @@
+# To do:
+#	- reorganise getting hold of variables
+#	- calculate struct offsets
+#	- get hold of values from structs
+#	- write floating point library
+#	- write casting operations - woop woop -Assembly!
+#	- 
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+
 import sys
 import optimiser1_3 as optimiser
 def process_snippets(filename):
