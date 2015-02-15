@@ -6,7 +6,7 @@
 #	- write casting operations - woop woop -Assembly!
 #	- Reoranise snippets - also eed to rorganise code generator for multiple snippet files 
 # 	- conditional import snippet files - such as floating point
-#
+#	- rewrite signed snippets
 #
 #
 #
