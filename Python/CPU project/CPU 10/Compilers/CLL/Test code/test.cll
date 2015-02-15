@@ -1,7 +1,15 @@
-void main()
-	if (1<=2) then printf("HELLO\n"); endif;
+struct record is
+	int number;
+	@char 5 string;
+	float yayFloats;
 end;
 
+void main()
+	record a;
+	a.number = 5;
+	a.yayFloats = 2.55
+	@record b = @a;
+end;
 
 
 	

@@ -21,7 +21,7 @@
 
 
 <variable> ::= id | <variable> "[" <expr> "]"  | <variable> "." id 	--allows chaining of []s eg two_d_array[i][j], also added struct membership
-<const> ::= num | "@" id
+<const> ::= num | "@" id | num "." num 								-- num.num allows for floats
 
 <expr> ::= <expr> <addop> <term> | <unary_op> <term> | <term> | <ternary_op>
 <term> ::= <term> <mulop> <factor> | <factor>

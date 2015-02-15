@@ -15,8 +15,8 @@ import code_generator1_3 as code_generator
 #
 #	TO DO:
 #
-# need to update variable stuff and ability to create structs
-# refactor variable handling code (unify it)
+# need to update variable stuff and ability to create structs 				DONE -  needs checking
+# refactor variable handling code (unify it)  								DONE -  needs checking
 # need to update code generator and snippets
 ###________________________ Compiling Strategy ____________________________
 
@@ -363,11 +363,6 @@ class function:
 		return parse_tree
 
 	def get_variables(self,parse_tree):
-	#########################################################################
-	# Need to update to account for floats, signeds, unsigneds,structs 		#
-	#########################################################################
-
-
 		return_variables = {}  #names:types
 		values = [] 		   #names:preset expressions
 		widths = {} 		   #names:bytewidth
@@ -532,16 +527,18 @@ class function:
 	def check_typing(self,parse_tree):
 		#takes a parse tree and checks typing (fixes it if possible), and returns the type of the expression at the aend of evalutation of this part of the tree,
 		#to the extent of checking overall type - ie @int =~= @char =~= int
-		if parse_tree.type == "<type_cast>":
+		#very large function - should probably be cut down into smaller pieces
+		#runs recursively 
+		if parse_tree.type == "<type_cast>": #casting type expressions always return the destination type, but need to check the tyhping of the expression to be cast
 			resultant_type = get_type(parse_tree.children[0])#get the two types
 			source_type = self.check_typing(parse_tree.children[2])
 
-			parse_tree.type = "<cast>"
-			parse_tree.children = [parse_tree.children[2],Terminal_parse_tree_node(source_type,source_type),Terminal_parse_tree_node(resultant_type,resultant_type)]
+			parse_tree.type = "<cast>" 		#change the type of parse tree
+			parse_tree.children = [parse_tree.children[2],Terminal_parse_tree_node(source_type,source_type),Terminal_parse_tree_node(resultant_type,resultant_type)] #reconstruct parse tree
 			return resultant_type
 
-		if parse_tree.type == "<ternary_op>":
-			true_type = self.check_typing(parse_tree.children[0])
+		if parse_tree.type == "<ternary_op>": 				#ternary op must check that the types of the true expression and false expression are the same
+			true_type = self.check_typing(parse_tree.children[0]) 			# the rest is fairly self explanatory
 			false_type = self.check_typing(parse_tree.children[4])
 			if true_type != false_type:
 				print "ERROR(44): Types of the two results in a ternary statement must be the same"
@@ -549,50 +546,40 @@ class function:
 			else:
 				return true_type
 
-		if len(parse_tree.children) == 3:
+		if len(parse_tree.children) == 3: 		#for all expressions with 3 children
 			if parse_tree.children[0].type == '"("': #( expression )
-				input_type =  self.check_typing(parse_tree.children[1])
+				input_type =  self.check_typing(parse_tree.children[1]) 	#just need to check the tying of the child
 				return input_type
-			else: 									# expr + term or equivalent
-			#	print_parse_tree(parse_tree)
+			else: 									# expr + term or equivalent, binary opss
 				lhs_type = self.check_typing(parse_tree.children[0])
 				rhs_type = self.check_typing(parse_tree.children[2])
 				overall_type = lhs_type #left hand rule
-
-				#print lhs_type,rhs_type
-		#				print_parse_tree(parse_tree)
-		#				cont = raw_input("")
-
 				parse_tree.children[2] = self.cast_type(rhs_type,lhs_type,parse_tree.children[2]) #casts rhs into the type
-				parse_tree.children[1].type = "<"+parse_tree.children[1].type[1:-1]+lhs_type+">" #fixes the operator to a specific type
+				parse_tree.children[1].type = "<"+parse_tree.children[1].type[1:-1]+lhs_type+">" #fixes the operator to a specific type for the code generator - results in ADDOpchar, or ADDop int
 			 	return lhs_type
 		elif len(parse_tree.children) == 2:   #unary ops
-			input_type = self.check_typing(parse_tree.children[1])
-			parse_tree.children[0].type = "<"+parse_tree.children[0].type[1:-1]+input_type+">" #fixes the operator to a specific type
+			input_type = self.check_typing(parse_tree.children[1]) 								#checks typing of child
+			parse_tree.children[0].type = "<"+parse_tree.children[0].type[1:-1]+input_type+">" #fixes the operator to a specific type, as above
 			return input_type
-		elif len(parse_tree.children) == 1:
+		elif len(parse_tree.children) == 1: 													#skips ahead if one of these
 			if parse_tree.children[0].type in ("<type_cast>","<term>","<factor>","<ternary_op>"):
 				input_type =  self.check_typing(parse_tree.children[0])
 				return input_type
-			elif parse_tree.children[0].type == "<fun_call>":
+			elif parse_tree.children[0].type == "<fun_call>": 									#returns the return type of the function called, after checking that the parameters match up
 				function_name = parse_tree.children[0].children[0].string
 				function_type = self.get_overall_type(program.functions[function_name].return_type)
 				self.check_function_call(parse_tree.children[0])
-				#print "FUNCTION TYPE = ", function_type
 				return function_type
 
 
-			elif parse_tree.children[0].type == "<variable>":
+			elif parse_tree.children[0].type == "<variable>": #for variables
 
 
-############################## Needs to be rewritten with unified variables
 				variable_parse_tree = parse_tree.children[0]
-				if len(variable_parse_tree.children) == 1: #treating a variable as itself
+				if len(variable_parse_tree.children) == 1: #simple variable (not a pointer or a struct)
 					if variable_parse_tree.children[0].string in self.variables:
-						#print	self.get_overall_type(self.variables[variable_parse_tree.children[0].string])
 						return self.get_overall_type(self.variables[variable_parse_tree.children[0].string]) #gets overall type
 					elif variable_parse_tree.children[0].string in program.global_var_types:
-						#print self.get_overall_type(program.global_var_types[variable_parse_tree.children[0].string])
 						return self.get_overall_type(program.global_var_types[variable_parse_tree.children[0].string])
 					else:
 						print "ERROR(0): Unrecognised variable: "+ variable_parse_tree.children[0].string + " in function "+self.name
@@ -628,7 +615,7 @@ class function:
 								print "ERROR(47): type: " + index_type + " cannot be used to index a pointer"
 								quit()
 						else:
-							#raise an error
+							#otherwise raise an error
 							print "ERROR(2): variable "+variable_parse_tree.children[0].string+" of type "+program.global_var_types[variable_parse_tree.children[0]].string+" cannot be used as a pointer"
 							quit()
 					else:
@@ -638,8 +625,8 @@ class function:
 					struct_type = self.check_typing(variable_parse_tree.children[0])
 					if (struct_type in program.structs): #if a struct
 						possible_member = variable_parse_tree.children[2].string
-						if possible_member in program.structs[struct_type].var_types:
-							return program.structs[struct_type].var_types[possible_member]:
+						if possible_member in program.structs[struct_type].var_types:  #if the struct contains a value of the right type
+							return program.structs[struct_type].var_types[possible_member] #finds ype of the member
 						else:
 							print "ERROR(49): struct of type: ",struct_type," does not have member: ",possible_member," in function: ",self.name
 							quit()
@@ -649,16 +636,18 @@ class function:
 
 
 			elif parse_tree.children[0].type == "<const>":
-				#print "CONSTANT"
-				return "int"  #constants are either numbers or pointers (ints)
-			else:
+				if len(parse_tree.children[0].children) == 3: #floats are num . num
+					return "float"
+				return "int"  #other constants are either numbers or pointers (ints)
+			else: #unkonown node - ore for debugging the compiler than debugging CLL code
 				print "ERROR(39): incorrect node passed: "+ parse_tree.children[0].type
 				print_parse_tree(parse_tree)
 				quit()
-		else:
+		else: #debugging 
 			print "ERROR(40): incorrect node passed: "+pass_tree.type
 			quit()
-	def cast_type(self,start_type,end_type,parse_tree):
+
+	def cast_type(self,start_type,end_type,parse_tree): #creates a cast tree object, containing the types
 		return Non_terminal_parse_tree_node(
 			"<cast>",[
 				parse_tree,
@@ -670,7 +659,7 @@ class function:
 	def check_function_call(self,parse_tree):
 		#checks type and number of arguments
 		function_name = parse_tree.children[0]
-		function_parameters = program.functions[function_name.string].input_parameters
+		function_parameters = program.functions[function_name.string].input_parameters #gets hold of the desired parmeters of the function
 		if len(parse_tree.children) == 3:
 			# no arguments
 			if len(function_parameters) == 0:
@@ -684,7 +673,7 @@ class function:
 			if len(parameters) == len(function_parameters):
 				#do type_checking
 				i = 0
-				for parameter in parameters:
+				for parameter in parameters: #iterates through the parameters checking they match types
 					parameter_type = self.check_typing(parameter)
 					if parameter_type != self.get_overall_type(function_parameters[i][0]):
 						print "ERROR(5): parameter of type "+parameter_type+" passed, in " + self.name+" to function "+function_name.string+", expected "+ function_parameters[i][1]+" of type " + function_parameters[i][0]
@@ -702,7 +691,7 @@ class function:
 			return self.get_given_parameters(parameters_parse_tree.children[0]) + [parameters_parse_tree.children[2]]
 
 
-class built_in_function:
+class built_in_function: 					#class for built in functions (have associated assemblys)
 	def __init__(self,arguments,return_type,name,assembly_equivalent):
 		self.built_in = 1
 		self.return_type = return_type
@@ -725,45 +714,41 @@ class Terminal_parse_tree_node:                                                 
 
 def tokenise(self,source_text):
 	#tokeniser which handles strings and comments, deals with import directives etc
-	#source_text = fix_strings_and_comments(source_text)
-	#print "tokenising"
+
+	#pretokenise carries out directives such as define and import
 	source_text,macro_replace_dict = pretokenise(source_text,sys.argv[1].split("\\")[:-1])
-	#standard tokenizing routine
+	#main tokenise is a standard tokenizing routine
 	string_token_list = main_tokenise(self,source_text)
 	token_list = []
-	string_counter = 0 #string counter allows string names to be unique
+	string_counter = 0 #string counter allows string names to be unique -deals with stings by creating a @char n for the string and renaming it to stringX, then replacing references to it with stringX
 	i = 0
-	while i < len(string_token_list):
+	while i < len(string_token_list):		#iterates through tokens
 		current_token = string_token_list[i]
 		#print current_token
 		if current_token[0] == current_token[-1] == '"': #if a string
 			name  = "string"+str(string_counter)
 			values_list = []
-			for char in current_token[1:-1]:
+			for char in current_token[1:-1]: #get ordinal value of each char
 				values_list.append(str(ord(char)))
 				values_list.append(",")
-			values_list.append('0')
-			string_token_list += ["@","char",str(len(current_token)-1),name,"=","["]+values_list + ["]",";"]
-			string_token_list[i] = name
-			#if string_token_list[i] == name:
-			#	print "String found: ",name,current_token
-			#	cont = raw_input('')
-			string_counter += 1
+			values_list.append('0')					#nullify strignby adding a 0
+			string_token_list += ["@","char",str(len(current_token)-1),name,"=","["]+values_list + ["]",";"]   #adds tokens to end of token list declaring the string
+			string_token_list[i] = name 			#replaces the "string" token with name
+			string_counter += 1 
 		elif current_token[0] == current_token[-1] == "'":
 			string_token_list[i] = str(ord(current_token[1]))
-		if current_token not in self.to_ignore:
+		if current_token not in self.to_ignore:				#removes tokens to ingore (\n, \r space etc)
 			if current_token in macro_replace_dict:
-				string_token_list[i] = macro_replace_dict[current_token]
+				string_token_list[i] = macro_replace_dict[current_token] 				#does the replacement if the token is defined as something else
 			token_list.append(self.get_parse_tree_node(string_token_list[i]))
 		i += 1
 	token_list.append(Terminal_parse_tree_node("END","END"))                                    #adds end symbol to end of code
-	#print [token.string for token in token_list]
 	return token_list
 
 def main_tokenise(self,text_file):
 	'''
 	Monolithic tokenizer
-	''' #replaces parser tokeniser
+	''' #replaces parser tokeniser, acts a a finite state machine
 	text_file = [line for line in text_file.split("\n")]
 	token_list = []
 	string = 0
@@ -833,14 +818,13 @@ def pretokenise(source_text,path):
 		line = lines[i]
 		if len(line) and line[0] == "#":
 			if line[:9] == "#include ":
-				#print line
 				file_path = path+[line[9:]]
-				included = pretokenise(open("\\".join(file_path),"r").read(),file_path[-1])
+				included = pretokenise(open("\\".join(file_path),"r").read(),file_path[-1]) #an include statement means to replace that line with code from another file
 				lines[i] = included[0]
-				replace_dict.update(included[1])
+				replace_dict.update(included[1]) 			#also imports the macros from the included file
 			elif line.split(" ")[0] == "#define": #defines token to be changed for another
 				try:
-					replace_dict[line.split(" ")[1]] = line.split(" ")[2]
+					replace_dict[line.split(" ")[1]] = line.split(" ")[2] 		#sets the replacement dict up
 					lines = lines[:i]+lines[i+1:] #removes line 
 					i -=1 							#accounts for removal of line
 				except IndexError:
@@ -850,6 +834,7 @@ def pretokenise(source_text,path):
 	return "\n".join(lines),replace_dict
 
 def write_to_file(assembly_code):
+	#'nuff said
 	file_name = ".".join(sys.argv[1].split(".")[:-1]+["al"])
 	open(file_name,"w").write(assembly_code)
 
@@ -867,58 +852,29 @@ def get_parse_tree(source_text):
 	return parse_tree
 
 def find_functions(parse_tree):
+	#snips out functions from code and adds to a list of functions
 	function_list = []
 	i = 0
-	while i < len(parse_tree.children):
+	while i < len(parse_tree.children): #iterates through the childrenof the block parse tree
 		child = parse_tree.children[i]
-		if child.type == "<block>":
+		if child.type == "<block>": 		#blocks indicate to search the block for functions - recursive
 			function_list += find_functions(child)
 		elif child.children[0].children[0].type == "<fun_dec>":
 			#found a function
 			function_list.append(child.children[0].children[0]) #function found
-			parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:]
+			parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:]#cut out of parse tree and readjust i
 			i -=1
 		i +=1
 	return function_list
 
 
-#def find_functions(parse_tree,parent = None):
-#	'''recursively searches parse tree to find functions'''
-#	#print parse_tree.type
-#	if parse_tree.type == "<PROGRAM>":						#program is the top node of the tree
-#		return find_functions(parse_tree.children[0],parse_tree) #need to get functions lower down in the tree
-#	elif parse_tree.type == "<block>": 						#blocks contain another block and a line or just a line
-#		if len(parse_tree.children)>1:						#if the block has children
-#			if parse_tree.children[1].children[0].children[0].type == "<fun_dec>": 	#if the line child derives to a function declaration
-#	#			print "FOUND FUNCTION!"
-#				return_list =  [parse_tree.children[1].children[0].children[0]] + find_functions(parse_tree.children[0],parse_tree) #copies out a list to return
-#				parse_tree.children = parse_tree.children[:1] 									#chops out function definition
-#				return return_list
-#			else:
-#				return find_functions(parse_tree.children[0],parse_tree)
-#		elif len(parse_tree.children) == 1:											#if the end block:
-#			if parse_tree.children[0].children[0].children[0].type == "<fun_dec>":
-#	#			print "FOUND FUNCTION!"
-#				return_list =  [parse_tree.children[0].children[0].children[0]]
-#				parent.children = [] if parent.type == "<block>" else []
-#				return return_list
-#			elif parse_tree.children[0].type == "<block>":
-#				return find_functions(parse_tree.children[0],parse_tree)
-#			else:
-#				return []
-#			#print parse_tree.children[0].type
-#			quit()
-#		else:
-#			return []
-#	else:
-#		return []
 
 
 def linearise_code(parse_tree):
 	'''searches parse tree for line expressions and then adds them to a list'''
 	if parse_tree.type == "<PROGRAM>":
-		return linearise_code(parse_tree.children[0]) if len(parse_tree.children) else []
-	elif parse_tree.type == "<block>":
+		return linearise_code(parse_tree.children[0]) if len(parse_tree.children) else [] #checks if program has any non funion children
+	elif parse_tree.type == "<block>": #check the blocks children
 		code_to_return = []
 		for child in parse_tree.children:
 			if child.type == "<line>":
@@ -929,9 +885,9 @@ def linearise_code(parse_tree):
 
 
 def print_parse_tree(parse_tree_node,offset = ''):
+	#output parse tree recursively
 	if parse_tree_node.terminal:
 		print offset+parse_tree_node.type+"("+parse_tree_node.string+")"
-		return
 	else:
 		print offset+parse_tree_node.type+"("
 		for child in parse_tree_node.children:
@@ -939,6 +895,7 @@ def print_parse_tree(parse_tree_node,offset = ''):
 		print offset+")"
 
 def store_parse_tree(parse_tree_node,offset = ''):
+	#writes th parse tree to a string
 	if parse_tree_node.terminal:
 		return offset+parse_tree_node.type+"("+parse_tree_node.string+")"
 	else:
@@ -957,6 +914,7 @@ def get_type(type_tree):
 	quit()
 
 def copy_parse_tree(parse_tree):
+	#performs a deep copy of the parse tree
 	if parse_tree.terminal:
 		return Terminal_parse_tree_node(parse_tree.type,parse_tree.string)
 	else:
@@ -968,7 +926,7 @@ def process_assignment(assignment):
 	#assignments become a lhs and rhs
 	if assignment.children[1].terminal: #if a normal assignment
 		assignment.children = [assignment.children[0],assignment.children[2]]
-	else:
+	else: #if a modifying assignment
 		new_children = []
 		new_children.append(assignment.children[0])
 		lhs = copy_parse_tree(assignment.children[0])

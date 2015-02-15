@@ -4,8 +4,8 @@
 #	- get hold of values from structs
 #	- write floating point library
 #	- write casting operations - woop woop -Assembly!
-#	- 
-#
+#	- Reoranise snippets - also eed to rorganise code generator for multiple snippet files 
+# 	- conditional import snippet files - such as floating point
 #
 #
 #
