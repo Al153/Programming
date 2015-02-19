@@ -66,14 +66,44 @@ class SudokuSquare:
 	def last_elimination(self):
 		#checks to see if a square is the only place a particular number could go, by both checking against the row, column and the square
 		changes = 1
+		self.remove_unambiguous()
 		while changes:
 			changes = 0
 
-			####### check if anything can be changed ####
+
+			for y in range(3):
+				for x in range(3):
+					for number in self.grid[y][x].value
+						if not self.grid[y][x].definite: #for every cell in the square that isn't definite yet:
+							found = 0
+							for y1 in range(3):
+								for x1 in range(3):
+									if y1 != y and x1 != x: #for all other cells
+										if number in self.grid[y1][x1].value:
+											found = 1
+											break
+								if found = 1:
+									break
+							if not found: 					#if number not found anywhere in grid
+								self.grid[y][x].definite = 1
+								self.grid[y][x].values = set([number])
+								break
+
+							found = 0 						#now check row and column
+
+
+						
+						if self.grid[y][x].value - set_to_check != self.grid[y][x].value: 		#if removing the set of items would make a change:
+							self.grid[y][x].value -= set_to_check
+							changes = 1
 
 			if changes:
-				#remove unambiguous(self)
-				#run last and direct direct_elimination on adjacent cells
+				self.remove_unambiguous()				#go and do direct elimination on other cells
+				square1.direct_elimination()
+				square2.direct_elimination()
+				square3.direct_elimination()
+				square4.direct_elimination()
+
 
 
 
@@ -81,22 +111,41 @@ class SudokuSquare:
 	def direct_elimination(self):
 		#checks to see if the positioning of other numbers means that no numbers can be in this particular square
 		changes = 1
+		self.remove_unambiguous()
 		while changes:
 			changes = 0
 
-			for x in range(3):
-				for y in range(3):
-					if not self.grid[x][y].definite: #for every cell in the square that isn't definite yet:
+			for y in range(3):
+				for x in range(3):
+					if not self.grid[y][x].definite: #for every cell in the square that isn't definite yet:
 						#check the global grid to see if any eliminations can be made
 						#if they can, changes = 1
 						#check the row:
-						
+						set_to_check = set([])
 
+						square1 = self.parent.grid[self.y][(self.x+1)%3]
+						square2 = self.parent.grid[self.y][(self.x-1)%3]
 
+						set_to_check += square1.summarize_row(y)
+						set_to_check += square2.summarize_row(y) 
+
+						square3 = self.parent.grid[(self.y-1)%3][self.x]
+						square4 = self.parent.grid[(self.y+1)%3][self.x]
+
+						set_to_check += square3.summarize_column(x)
+						set_to_check += square4.summarize_column(x)
+
+						if self.grid[y][x].value - set_to_check != self.grid[y][x].value: 		#if removing the set of items would make a change:
+							self.grid[y][x].value -= set_to_check
+							changes = 1
 
 			if changes:
-				#remove unambiguous(self)
-				#run last and direct direct_elimination on adjacent cells
+				self.remove_unambiguous()				#go and do direct elimination on other cells
+				square1.direct_elimination()
+				square2.direct_elimination()
+				square3.direct_elimination()
+				square4.direct_elimination()
+				
 
 	def remove_unambiguous(self):
 		changes = 1
