@@ -62,6 +62,17 @@ class SudokuSquare:
 						column_contains_set.add(number)
 		return column_contains_set
 
+	def get_row_possibilities(self,row_number):
+		return_set = set([])
+		for cell in self.grid[row_number]:
+			return_set += cell.value
+		return return_set
+
+	def get_column_possibilities(self,column_number):
+		return_set([])
+		for row in self.grid:
+			return_set += row[column_number].value
+
 
 	def last_elimination(self):
 		#checks to see if a square is the only place a particular number could go, by both checking against the row, column and the square
@@ -90,6 +101,15 @@ class SudokuSquare:
 								break
 
 							found = 0 						#now check row and column
+							#now gonna check the row and column the cell is in
+							#check row:
+							if number not in (self.grid[y][(x+1)%3].value + self.grid[y][(x+1)%3].value):
+
+
+
+
+							#check column:
+							if number not in (self.grid[y][(x+1)%3].value + self.grid[y][(x+1)%3].value):
 
 
 						
