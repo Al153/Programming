@@ -135,29 +135,49 @@ OR gp0 gp4
 << Float ADD >>
 	#assume  float1 has largest exponent
 <getgp1><getgp0>
-#Expand floats to fill registers
+Move gp0 gp2
+Move gp1 gp3
+
+	AND gp2 @2139095040 			#gp2 and gp3 are the respective exponents, - bit mask to expose just exponent
+	AND gp3 @2139095040
+
+	Compare gp2 gp3
+	if Less then Goto FP.ADD.swap_floats
+	Move gp2 gp4					   #
+	SUB gp4 gp3                        #exponent_difference ==> gp3
+	Move gp4 gp3
+
+	Load gp4 @2147483648				#signs go to gps 4 and 5				
+	Load gp5 @2147483648
+
+	AND gp4 gp0 						#gets signs
+	AND gp5 gp1
+
+	AND gp0 @8388607
+	AND gp1 @8388607
+	OR gp0 @8388608 				#adds implied bit
+	OR gp1 @8388608 
+
+	SHR gp1 gp3                        #scale float2.fraction by the difference in exponents
+									   #gp3 is now dead
+
+
+#gp0 		f1 mantissa
+#gp1 		f2 mantissa
+#gp2 		result exponent
+#gp3 		spare
+#gp4 		f1 sign
+#gp5 		f2 sign
+#gp6
+#gp7
 
 	Compare gp4 gp5
-	if Less then Goto FP.ADD.swap_floats
-
-	StoreByte gp4 1 [result_pointer]   #the exponent of the rewsult is the same a that of float1
-	SUB gp4 gp5                        #exponent_difference ==> gp4
-	Load gp5 2 [float1]                #fetch fractions
-	Load gp6 2 [float2]     
-
-	SHR gp6 gp4                        #scale float2.fraction by the difference in exponents
-
-	Move gp5 gp4 					   #free up gp6
-	Move gp6 gp5 
-
-	LoadByte gp6 0 [float1]            #fetch signs
-	LoadByte gp7 0 [float2]
-	Compare gp6 gp7
 	if Equal then  Load PC FP.ADD.Equal_signs
 		Load Flags_reset  @4294967287  			#resets the borrow flag
+
+############ here ##############################
 		SUB gp4 gp5
 		if Borrow then Load PC FP.ADD.negative_fraction
-		#else
 		Load PC FP.ADD.return
 
 
