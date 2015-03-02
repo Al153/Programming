@@ -7,7 +7,7 @@
 #sign exponent mantissa
 #exponent is excess 127
 
-<<FP standard funtions>> #included optinonally by compiler
+<<FP standard funtions>> #included optionally by compiler
 
 
 #Expect mantissa in gp0, exp in gp2
@@ -30,11 +30,9 @@ Load gp2 @2139095040  #255<<23
 Move Jump PC
 
 
-<< Float MUL >>
-<getgp0>
-<getgp1>
-#cant use gp6 or gp7
-Load Flags_reset @4294967287 			#reset flags
+
+#################################################### FP.MULTIPLY
+Load Flags_reset @4294967287 			%FP.MUL #reset flags
 Move gp0 gp2
 Move gp0 gp4
 Move gp1 gp3
@@ -67,14 +65,13 @@ if Greater then Goto FP.multiply.Infinitys
 AND gp0 @8388607
 OR gp0 gp2
 OR gp0 gp4
-<storegp0>
+Move Jump PC
 
 
-<<Float DIV >>
-<getgp1>
-<getgp0>
-#cant use gp6 or gp7
-Load Flags_reset @4294967287 			#reset flags
+########################### FP DIV #######################################
+
+
+Load Flags_reset @4294967287 	%FP.DIV		#reset flags
 Move gp0 gp2
 Move gp0 gp4
 Move gp1 gp3
@@ -130,20 +127,21 @@ if Greater then Goto FP.multiply.Infinitys
 AND gp0 @8388607
 OR gp0 gp2
 OR gp0 gp4
-<storegp0>
+Move Jump PC
 
-<< Float ADD >>
+################################# ADD ###############################
+
+
 	#assume  float1 has largest exponent
-<getgp1><getgp0>
-Move gp0 gp2
+Move gp0 gp2 		%FP.ADD
 Move gp1 gp3
 
 	AND gp2 @2139095040 			#gp2 and gp3 are the respective exponents, - bit mask to expose just exponent
 	AND gp3 @2139095040
 
 	Compare gp2 gp3
-	if Less then Goto FP.ADD.swap_floats
-	Move gp2 gp4					   #
+	if Less then Load PC FP.ADD.swap_floats
+	Move gp2 gp4					   %FP.ADD.swapped
 	SUB gp4 gp3                        #exponent_difference ==> gp3
 	Move gp4 gp3
 
@@ -173,41 +171,64 @@ Move gp1 gp3
 
 	Compare gp4 gp5
 	if Equal then  Load PC FP.ADD.Equal_signs
-		Load Flags_reset  @4294967287  			#resets the borrow flag
+	Load Flags_reset  @4294967287  			#resets the borrow flag
 
 ############ here ##############################
-		SUB gp4 gp5
-		if Borrow then Load PC FP.ADD.negative_fraction
-		Load PC FP.ADD.return
+	SUB gp0 gp1
+	if Borrow then Load PC FP.ADD.negative_fraction
+	Load PC FP.ADD.return
+
+
+	Load Flags_reset @4294967287  		%FP.ADD.return #resets the borrow flag
+
+
+#reduces fraction if too big
+Compare gp0 @16777216    			%FP.normalise_stage_1
+if Less then Load PC FP.normalise_stage_2
+	SHR gp0 One
+	ADD gp2 @8388608
+	Load PC FP.normalise_stage_1
+
+
+#checks if exponent is too large
+Compare gp2 @2139095040         			%FP.normalise_stage_2
+if Greater then Load PC normalise_return_infinity
 
 
 
+#boosts fraction if too small
+Compare gp0 @8388607   			%FP.normalise_stage_3            #8388607 is 2**23 -1
+if Greater then Load PC FP.normalise_stage_4
+	SHL gp0 One
+	SUB gp2 @8388608
+	if Borrow then Load PC normalise_return_zero
+	Load PC FP.normalise_stage_3
 
 
 
+AND gp0 8388607					%FP.normalise_stage_4
+
+OR gp0 gp2			
+OR gp0 gp4
+Move Jump PC
 
 
-	Store gp4 2 [result_pointer]   %FP.ADD.return
-	StoreByte gp6 0 [result_pointer]
-	Push result_pointer
+	Compare gp2 @2139095040  %normalise_return_infinity
+	Load gp0 @16777215   #biggest possible value of the fraction
+	Load PC FP.normalise_stage_4
+	
+	Move Zero gp2 %normalise_return_zero                   
+	Load gp0 @8388608  #smallest value of the fraction
+	Load PC FP.normalise_stage_4
 
-	Call FP.normalise
-	Call FP.float_to_Dword
-	Return
-
-
-
-
-	Move One gp7					  %FP.ADD.negative_fraction                 #invert sign
-	SUB gp7 gp6
-	Move gp7 gp6 
-
-	Move Zero gp5 #invert fraction
-	SUB gp5 gp4
-	Move gp5 gp4
+	XOR gp4 @2147483648	  %FP.ADD.negative_fraction                 #invert sign
+					
+	Move Zero gp1 #invert fraction
+	SUB gp1 gp0
+	Move gp1 gp0
 	Load PC FP.ADD.return 
 
-	ADD gp4 gp5						 %FP.ADD.Equal_signs
+	ADD gp0 gp1						 %FP.ADD.Equal_signs
 	Load PC FP.ADD.return
 
 
@@ -221,5 +242,23 @@ Move gp1 gp3
 	Move gp5 gp4
 	Move gp6 gp5
 
-	Move Jump PC
+	Load PC FP.ADD.swapped
 
+
+
+<<Float MUL>>
+<getgp1><getgp0>
+Goto FP.MUL 										#FLOAT MULTIPLY
+<storegp0>
+<<Float DIV >>
+<getgp1><getgp0>
+Goto FP.DIV 										#FLOAT DIVIDE
+<storegp0>
+<<Float ADD>>
+<getgp1><getgp0>
+Goto FP.ADD 										#FLOAT ADD
+<storegp0>
+<<Float SUB>>
+<getgp1><getgp0>
+Goto FP.SUB 										#FLOAT SUB
+<storegp0>

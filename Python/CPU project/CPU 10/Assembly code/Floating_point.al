@@ -167,7 +167,7 @@ Push float
 Return
 
 Load exponent @255 %normalise_return_infinity
-Load fraction 16777215   #biggest possible value of the fraction
+Load fraction @16777215   #biggest possible value of the fraction
 Load PC FP.normalise_stage_4
 
 Move Zero exponent  %normalise_return_zero                   
