@@ -299,10 +299,14 @@ StoreByte gp0 0 [gp6]
 << get index integer >>
 <index expr>
 <pop index>
-MUL gp6 @4 														   #INDEXING FOR @INT
+MUL gp6 @4 												   #INDEXING FOR @INT
 << get index char >>
 <index expr>
 <pop index>
+<< get index general >>
+<index expr>
+<pop index>
+MUL gp6 @<size> 											#INDEXING FOR @<type>
 <<junk>>
 
 #____________ type casting operations ____________

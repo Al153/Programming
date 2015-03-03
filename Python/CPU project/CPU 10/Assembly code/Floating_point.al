@@ -212,7 +212,7 @@ Float FP.ADD.float2 0 0 0
 	Compare gp4 gp5
 	if Less then Goto FP.ADD.swap_floats
 
-	StoreByte gp4 1 [result_pointer]   #the exponent of the rewsult is the same a that of float1
+	StoreByte gp4 1 [result_pointer]   #the exponent of the result is the same a that of float1
 	SUB gp4 gp5                        #exponent_difference ==> gp4
 	Load gp5 2 [float1]                #fetch fractions
 	Load gp6 2 [float2]     

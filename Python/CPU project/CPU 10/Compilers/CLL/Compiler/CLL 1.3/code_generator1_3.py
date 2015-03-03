@@ -3,6 +3,9 @@
 #	- calculate struct offsets
 #	- get hold of values from structs
 #	- write floating point library
+#		- basic operations
+#		- comparisons
+#		- converting floats to ints and vice versa
 #	- write casting operations - woop woop -Assembly!
 #	- Reoranise snippets - also eed to rorganise code generator for multiple snippet files 
 # 	- conditional import snippet files - such as floating point
@@ -24,6 +27,28 @@
 #
 #
 #
+#	+ Addition
+# 	- deletion
+#	~ change
+#__________________________________ changes 03/03 _________________________________________________
+# + type indexing snippet
+# + starting float comparison snippets
+# + started snippets index
+
+
+#__________________________to do: _________________________
+
+# + unify typing in code generator
+# + add signed/unsigned and float type comparisons
+# + add signed/unsigned/float conversions
+# + add signed/unsigned/float operations
+# ~ update signed multiplication and division
+# + retrieving from structs
+# ~ signed comparison snippets
+# + continue snippets index
+
+# ~ sizeof operator
+
 
 import sys
 import optimiser1_3 as optimiser
@@ -837,5 +862,9 @@ def print_parse_tree(parse_tree_node,offset = ''):
 
 import os
 CURRENT_DIR = os.path.dirname(__file__)
-file_path = os.path.join(CURRENT_DIR, "code_snippets.al")
-snippets = process_snippets(file_path)
+snippet_files = ["arithmetic_snippets.al","comparison and boolean.al","float_snippets.al","runtime.al"]
+snippet_files = ["snippets\\"+file_name for file_name in snippet_files]
+file_paths = [os.path.join(CURRENT_DIR, snippet_file) for snippet_file in snippet_files] 
+snippets = {}
+for path in file_paths:
+	snippets.update(process_snippets(path))
