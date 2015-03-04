@@ -352,13 +352,59 @@
 
 #______________________________________ Comparisons ______________________________________
 
+	#just does compare, lets the rest alling code handle the stack
+	 
+	Load gp4 @2147483648			%FP.Compare	#gets signs				
+	Load gp5 @2147483648
+	AND gp4 gp0 						#gets signs
+	AND gp5 gp1
+	Compare gp5 gp4
+	if Equal then Load PC FP.Compare.exponent
+	Move Jump PC
 
 
+	Move gp0 gp2 		 			%FP.Compare.exponent
+	Move gp1 gp3
+		
+	AND gp2 @2139095040 			#gp2 and gp3 are the respective exponents, - bit mask to expose just exponent
+	AND gp3 @2139095040
+	if gp4 then Load PC FP.Compare.Negative
+	Compare gp2 gp3
+	if Equal then Load PC FP.Compare.Positive.fractions
+	Move Jump PC
+
+	Compare gp3 gp2		%FP.Compare.Negative
+	if Equal then Load PC FP.Compare.Negative.fractions
+	Move Jump PC
 
 
+	AND gp0 @8388607	%FP.Compare.Positive.fractions
+	AND gp1 @8388607
+	Compare gp0 gp1
+	Move Jump PC
 
+	AND gp0 @8388607	%FP.Compare.Negative.fractions
+	AND gp1 @8388607
+	Compare gp1 gp0
+	Move Jump PC
 
+#______________________________________ Casting operations ______________________________________
+	in casting operations, gp0 is mantissa, gp1 the exponent, gp2 the sign
+	#Float to unsigned
+	%FP.to_unsigned
 
+	#unsigned to float
+	Move Zero gp2 %FP.from_unsigned
+
+	#float to signed
+
+	Load gp2 @2147483648	%FP.to_signed
+	AND gp2 gp0 
+
+	#signed to float
+
+	Load gp2 @2147483648	%FP.from_signed
+	AND gp2 gp0 
 
 
 
@@ -382,31 +428,50 @@ Goto FP.ADD 										#FLOAT ADD
 <getgp1><getgp0>
 Goto FP.SUB 										#FLOAT SUB
 <storegp0>
-<<Float equal>>
-<getgp1><getgp0>
-Goto FP.EQU 										#FLOAT COMPARE (IS EQUAL)
-<storegp0>
-<<Float less>>
-<getgp1><getgp0>
-Goto FP.LES 										#FLOAT COMPARE (IS LESS)
-<storegp0>
-<<Float greater>>
-<getgp1><getgp0>
-Goto FP.GRE 										#FLOAT COMPARE (IS GREATER)
-<storegp0>
-<Float not greater>>
-<getgp1><getgp0>
-Goto FP.NGE											#FLOAT COMPARE NOT GREATER)
-<storegp0>
-<<Float not less>> 
-<getgp1><getgp0>
-Goto FP.NLE 										#FLOAT COMPARE (NOT LESS)
-<storegp0>
-<<Float equal>>
-<getgp1><getgp0>
-Goto FP.NEQ 										#FLOAT COMPARE (NOT EQUAL)
-<storegp0>
-<<Float is true>>
+
+<<FLOAT is equal>>
+<getgp0><getgp1>
+Move Zero gp2 														#FLOAT COMPARE (IS EQUAL)
+Goto FP.Compare
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+<Push gp0>
+<<FLOAT is greater>>
+<getgp0><getgp1>
+Move Zero gp2 														#FLOAT COMPARE (IS GREATER)
+Goto FP.Compare
+if Greater then Load gp2 @4294967295
+Move gp2 gp0
+<Push gp0>
+<<FLOAT is less>>
+<getgp0><getgp1>
+Move Zero gp2 														#FLOAT COMPARE (IS LESS)
+Goto FP.Compare
+if Less then Load gp2 @4294967295
+Move gp2 gp0
+<Push gp0>
+<<FLOAT not equal>>
+<getgp0><getgp1>
+Load  gp2 @4294967295 												#FLOAT COMPARE (NOT EQUAL)
+Goto FP.Compare
+if Equal then Move Zero gp2
+Move gp2 gp0
+<Push gp0>
+<<FLOAT not greater>>
+<getgp0><getgp1>
+Load gp2 @4294967295 												#FLOAT COMPARE (NOT GREATER)
+Goto FP.Compare
+if Greater then Move Zero gp2
+Move gp2 gp0
+<Push gp0>
+<<FLOAT not less>>
+<getgp0><getgp1>
+Load gp2 @4294967295  												#FLOAT COMPARE (NOT LESS)
+Goto FP.Compare
+if Less then Move Zero gp2
+Move gp2 gp0
+<Push gp0>
+<<FLOAT is true>>
 <getgp0>
-Goto FP.TRU 										#FLOAT COMPARE (IS TRUE)
-<storegp0>
+if gp0 then Load gp0 @4294967295 									#FLOAT COMPARE (IS TRUE)
+<Push gp0>

@@ -36,16 +36,24 @@
 # + started snippets index
 
 
+#__________________________________ 04/03 ________________________________
+# + float comparison snippets complete
+# + started float conversion functions
+#
+
+
 #__________________________to do: _________________________
 
 # + unify typing in code generator
-# + add signed/unsigned and float type comparisons
+# + add signed/unsigned comparisons
 # + add signed/unsigned/float conversions
 # + add signed/unsigned/float operations
 # ~ update signed multiplication and division
 # + retrieving from structs
+# + retrieving through  multiple layers of pointers
 # ~ signed comparison snippets
 # + continue snippets index
+# ~ test first pass of compiler
 
 # ~ sizeof operator
 
