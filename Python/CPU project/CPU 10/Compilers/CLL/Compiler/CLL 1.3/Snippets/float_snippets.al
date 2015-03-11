@@ -352,14 +352,16 @@
 
 #______________________________________ Comparisons ______________________________________
 
-	#just does compare, lets the rest alling code handle the stack
+	#just does the comparison - lets the code which calls it do the stack manipulation
 	 
 	Load gp4 @2147483648			%FP.Compare	#gets signs				
 	Load gp5 @2147483648
 	AND gp4 gp0 						#gets signs
 	AND gp5 gp1
 	Compare gp5 gp4
+	Move Flags_set gp5					#saves flags register
 	if Equal then Load PC FP.Compare.exponent
+	Move gp5 Flags_set 					#reinstates flags register
 	Move Jump PC
 
 
@@ -370,11 +372,15 @@
 	AND gp3 @2139095040
 	if gp4 then Load PC FP.Compare.Negative
 	Compare gp2 gp3
+	Move Flags_set gp5
 	if Equal then Load PC FP.Compare.Positive.fractions
+	Move gp5 Flags_set
 	Move Jump PC
 
 	Compare gp3 gp2		%FP.Compare.Negative
+	Move Flags_set gp5
 	if Equal then Load PC FP.Compare.Negative.fractions
+	Move gp5 Flags_set
 	Move Jump PC
 
 
@@ -390,23 +396,133 @@
 
 #______________________________________ Casting operations ______________________________________
 	in casting operations, gp0 is mantissa, gp1 the exponent, gp2 the sign
-	#Float to unsigned
-	%FP.to_unsigned
+	#_______________float to unsigned_______________________
 
-	#unsigned to float
+		Move gp0 gp1 			%FP.to_unsigned 			#extract to registerss
+		AND gp1 @2139095040 			#gp1 is exponent - bit mask to expose just exponent
+		Load gp2 @2147483648				#sign goes to gp2s		
+		AND gp2 gp0 						#gets signs
+		AND gp0 @8388607
+		OR gp0 @8388608 				#adds implied bit
+
+		Compare gp1 @159
+		if Greater then Load PC FP.to_unsigned.return_inf 	#too big exponent means return infinity
+		Compare gp1 @127
+		if Less then Load PC FP.to_unsigned.return_zero 	#too small means return zero
+
+		Compare gp1 @151 		%FP.to_unsigned.0 					#scale up if exponent too big
+		if Less then Load PC FP.to_unsigned.1
+			SHL gp0 One
+			SUB gp1 One
+		Load PC FP.to_unsigned.0
+
+		Compare gp1 @149 %FP.to_unsigned.1
+		if Greater then Load PC FP.to_unsigned.2 					#scale down if exponent too small
+			SHR gp0 One
+			ADD gp1 One
+		if gp2 then Load PC FP.to_unsigned.invert				%FP.to_unsigned.2
+		Move Jump PC 											#if not negative then return, result in gp0
+		Move Zero gp1 											%FP.to_unsigned.invert #if negative then invert
+		SUB gp1 gp0
+		Move gp1 gp0
+		Move Jump PC
+
+
+		Load gp0 @4294967295 %FP.to_unsigned.return_inf
+		Move Jump PC
+
+		Move Zero gp0 %FP.to_unsigned.return_zero
+		Move Jump PC
+	#_______________unsigned to float_______________________
 	Move Zero gp2 %FP.from_unsigned
+	Compare gp0 Zero
+	if Equal then Load PC FP.from_unsigned.2 						#if zero then return 0
+	Load gp1 @150 													#23 + 127
+	Compare gp0 @16777216 				%FP.from_unsigned.0
+	if Less then Load PC FP.from_unsigned.1 						#while greater than 2**24-1 normalise down
+		SHR gp0 One
+		ADD gp1 One
+		Load PC FP.from_unsigned.0
 
-	#float to signed
+	Compare gp0 @8388607	%FP.from_unsigned.1 					#while smaller than 2**23 normalise up
+	if Greater then Load PC FP.from_unsigned.2
+		SHL gp0 One
+		SUB gp1 One
+		Load PC FP.from_unsigned.1
+	SHR gp1 @23 %FP.from_unsigned.2
+	AND gp0 @8388607 			#removes assumed bit
+	OR gp0 gp1
+	Move Jump PC
 
-	Load gp2 @2147483648	%FP.to_signed
-	AND gp2 gp0 
+	#_______________float to signed_______________________
 
-	#signed to float
+		Load Move gp0 gp1 %FP.to_signed #extract to registers
+
+		AND gp1 @2139095040 			#gp1 is exponent - bit mask to expose just exponent
+		Load gp2 @2147483648				#sign goes to gp2s		
+		AND gp2 gp0 						#gets signs
+		AND gp0 @8388607
+		OR gp0 @8388608 				#adds implied bit
+
+		Compare gp1 @159
+		if Greater then Load PC FP.to_signed.return_inf 	#too big exponent means return infinity
+		Compare gp1 @127
+		if Less then Load PC FP.to_signed.return_zero 	#too small means return zero
+
+		Compare gp1 @151 		%FP.to_signed.0 					#scale up if exponent too big
+		if Less then Load PC FP.to_signed.1
+			SHL gp0 One
+			SUB gp1 One
+		Load PC FP.to_unsigned.0
+
+		Compare gp1 @149 %FP.to_signed.1
+		if Greater then Load PC FP.to_signed.2 					#scale down if exponent too small
+			SHR gp0 One
+			ADD gp1 One
+		if gp2 then Load PC FP.to_signed.invert				%FP.to_signed.2
+		Move Jump PC 											#if not negative then return, result in gp0
+		Move Zero gp1 											%FP.to_signed.invert #if negative then invert
+		SUB gp1 gp0
+		Move gp1 gp0
+		Move Jump PC
+
+
+		Load gp0 @4294967295 %FP.to_signed.return_inf
+		Move Jump PC
+
+		Move Zero gp0 %FP.to_signed.return_zero
+		Move Jump PC
+
+	#_______________signed to float_______________________
 
 	Load gp2 @2147483648	%FP.from_signed
-	AND gp2 gp0 
+	AND gp2 gp0
+	if gp0 then Load PC FP.from_signed.invert
 
+	Compare gp0 Zero 												%FP.from_signed.convert
+	if Equal then Load PC FP.from_signed.2 						#if zero then return 0
+	Load gp1 @150 													#23 + 127
+	Compare gp0 @16777216 				%FP.from_signed.0
+	if Less then Load PC FP.from_signed.1 						#while greater than 2**24-1 normalise down
+		SHR gp0 One
+		ADD gp1 One
+		Load PC FP.from_signed.0
 
+	Compare gp0 @8388607	%FP.from_signed.1 					#while smaller than 2**23 normalise up
+	if Greater then Load PC FP.from_signed.2
+		SHL gp0 One
+		SUB gp1 One
+		Load PC FP.from_signed.1
+	SHR gp1 @23 %FP.from_signed.2
+	AND gp0 @8388607 			#removes assumed bit
+	OR gp0 gp1
+	Move Jump PC
+
+	
+	Move Zero gp3		%FP.from_signed.invert
+	SUB gp3 gp0
+	Move gp3 gp0
+	Load PC FP.from_signed.convert
 
 
 
@@ -474,4 +590,20 @@ Move gp2 gp0
 <<FLOAT is true>>
 <getgp0>
 if gp0 then Load gp0 @4294967295 									#FLOAT COMPARE (IS TRUE)
+<Push gp0>
+<<FLOAT to unsigned>>
+<getgp0>
+Goto FP.to_unsigned													#CASTING FLOAT TO UNSIGNED INT
+<Push gp0>
+<<unsigned to FLOAT>>
+<getgp0>
+Goto FP.from_unsigned 												#CASTING UNSIGNED INT TO FLOAT
+<Push gp0>
+<<FLOAT to signed>>
+<getgp0>
+Goto FP.to_signed 													#CASTING FLOAT TO SIGNED INT
+<Push gp0>
+<<signed to FLOAT>>
+<getgp0>
+Goto FP.from_signed 												#CASTING SIGNED INT TO FLOAT
 <Push gp0>

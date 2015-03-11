@@ -1,1 +1,70 @@
 List of all snippets and their functions (hopefully)
+
+
+Default
+	- Runtime
+		- " setup routines "
+			- no arguments
+			- 
+		- " function call routine "
+			- "Push args" - Code to push arguments of th called function onto the expression stack
+			- "Call_address" - Address label of the function to be called
+			-
+		- " function startup routine "
+			- "function_name" - name of this function
+			- "new_length" - length of the local variables of this function
+			- "get_parameters" - code to pop this argument\'s aruments off of the expression stack
+			-
+		- " return routine "
+			- no arguments
+			-
+		- " while loop code "
+			- "number" - keeps track of which loop this is, so jumps go to the right labels
+			- "Calculate_condition" - the condition expression which is executed with each iteration
+			- "Popgp0" - gets the condition expression result into gp0 
+			- "looped_code" - the statements which are repeated multiple times
+			-
+		- " for loop code "
+			- "assignment1" - the preliminary assignment that occurs once
+			- "number" - keeps track of which loop this is, so jumps to right label
+			- "Calculate_condition" - the condition which is evaluated at the start each iteration
+			- "Popgp0" - gets result of condition evaluation into gp0
+			- "assignment2" - the internal assignment that takes place at the end of eac iteration
+			- 
+		- " if statement code "
+			- "Calculate_condition" - condition expression which is evaluated with each iteration
+			- "Popgp0" - gets result of evaluation into gp0
+			- "number" - used to keep track of which if this is and where to jump
+			- "conditional_code" - code that is executed if the condition is true
+			- 
+		- " if-else statement code "
+			- "Calculate_condition" - conditional expression which controls the program flow here
+			- "Popgp0" - gets result of condition evaluation into gp0
+			- "number" - keeps track of which if this is and where jumps go to
+			- "false_code" - code exected if the condition is false
+			- "true_code" - code executed if the condition is true
+		- "Popgp0"
+			- no arguments
+			-
+		- "Popgp1"
+			- no arguments
+			-
+		- "Popindex"
+			- no arguments
+			-
+		- "Pushgp0"
+			- no arguments
+			-	
+		- " load "
+			- "absolute_address" - the address of the variable with respect to the stack pointer
+			- "Pushgp0" - stores to the stack
+			- Loads a single signed or unsigned integer variable onto the stack
+			- optimiser changes this to a load to a register
+		- " load relative "
+			- "get_index" - code to place an indexing value into gp6
+			- "absolute_address" - address to be indexed (address[get_index])
+			- Loads a signle signed or unsigned int from an indexed address onto the stack
+			
+	- Arithmetic
+	- Comparison and Boolean
+	- Floating Point

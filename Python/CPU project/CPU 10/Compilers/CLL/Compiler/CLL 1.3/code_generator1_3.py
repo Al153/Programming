@@ -39,15 +39,29 @@
 #__________________________________ 04/03 ________________________________
 # + float comparison snippets complete
 # + started float conversion functions
-#
+
+
+#__________________________________ 08/03 ____________________________
+# + completed float conversions to and from unsigned and fromsigned
+
+
+#__________________________________ 09/03 ____________________________
+# + Completed all float conversions 
+
+
+#__________________________________ 11/03 ____________________________
+# ~ Fixed Float comparison subroutine
+# + signed comparision subroutines
+# + worked on snippets index
+# + added much of the Runtime snippets to the index
 
 
 #__________________________to do: _________________________
 
 # + unify typing in code generator
 # + add signed/unsigned comparisons
-# + add signed/unsigned/float conversions
-# + add signed/unsigned/float operations
+# + add signed operations - especially MUL and divide
+# + snippets/code generation for passing strucs to functions (push and pop entire structs onto and off the stack)
 # ~ update signed multiplication and division
 # + retrieving from structs
 # + retrieving through  multiple layers of pointers

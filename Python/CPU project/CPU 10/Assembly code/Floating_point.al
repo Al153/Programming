@@ -631,6 +631,9 @@ Float FP.Divide.float2 0 0 0
 #_________________________________ compare _________________________________
 #compares a pair of floats
 
+
+################## INCOMPLETE #####################
+
 def float1 gp1
 def float2 gp2
  
@@ -659,7 +662,9 @@ Float FP.Compare.float2 0 0 0
 	LoadByte gp4 1 [float2]
 
 	Compare gp3 gp4
+	Move Flags_set gp5
 	if Equal then Load PC FP.Compare.Positive.fractions
+	Move gp5 Flags_set
 	Return
 
 	Load gp3 2 [float1] %FP.Compare.Positive.fractions
