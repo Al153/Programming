@@ -55,6 +55,12 @@
 # + worked on snippets index
 # + added much of the Runtime snippets to the index
 
+#_________________________________ 12/03 _____________________________
+# + finished adding run time snippets to snippet index
+
+#_________________________________ 14/03 _____________________________
+# + adding arithmetic snippets
+
 
 #__________________________to do: _________________________
 
@@ -403,7 +409,7 @@ class code_generator:
 	
 	def generate_for_loop(self,for_parse_tree): 
 		assign_1 = self.generate_assignment_code(for_parse_tree.children[0]) 		#2 assignments are an initial assignment and a repeated assignment
-		if for_parse_tree.children[1].children[0].type == "bool_factor":
+		if for_parse_tree.children[1].children[0].type == "<bool_factor>":
 			condition = self.generate_boolean_factor(for_parse_tree.children[1].children[0])
 		else:
 			condition = self.generate_comparison(for_parse_tree.children[1].children[0])
@@ -690,7 +696,7 @@ class code_generator:
 			false_code = self.generate_expression_code(expression_parse_tree.children[4])
 
 
-			if expression_parse_tree.children[2].children[0].type == "bool_factor":
+			if expression_parse_tree.children[2].children[0].type == "<bool_factor>":
 				condition_code = self.generate_boolean_factor(expression_parse_tree.children[2].children[0])
 			else:
 				condition_code = self.generate_comparison(expression_parse_tree.children[2].children[0])

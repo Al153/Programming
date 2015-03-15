@@ -329,7 +329,7 @@ class code_generator:
 	
 	def generate_for_loop(self,for_parse_tree): 
 		assign_1 = self.generate_assignment_code(for_parse_tree.children[0]) 		#2 assignments are an initial assignment and a repeated assignment
-		if for_parse_tree.children[1].children[0].type == "bool_factor":
+		if for_parse_tree.children[1].children[0].type == "<bool_factor>":
 			condition = self.generate_boolean_factor(for_parse_tree.children[1].children[0])
 		else:
 			condition = self.generate_comparison(for_parse_tree.children[1].children[0])
@@ -610,13 +610,12 @@ class code_generator:
 				return expression_code + self.cast(start_type,destination_type)
 			else:
 				print "ERROR(29): cannot handle node of type: "+expression_parse_tree.type
+				print_parse_tree(expression_parse_tree)
 				quit()
 		elif expression_parse_tree.type == "<ternary_op>":
 			true_code = self.generate_expression_code(expression_parse_tree.children[0])
 			false_code = self.generate_expression_code(expression_parse_tree.children[4])
-
-
-			if expression_parse_tree.children[2].children[0].type == "bool_factor":
+			if expression_parse_tree.children[2].children[0].type == "<bool_factor>":
 				condition_code = self.generate_boolean_factor(expression_parse_tree.children[2].children[0])
 			else:
 				condition_code = self.generate_comparison(expression_parse_tree.children[2].children[0])

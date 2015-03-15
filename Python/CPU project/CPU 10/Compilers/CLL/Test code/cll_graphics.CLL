@@ -1,0 +1,47 @@
+@char 4000 CLL_SCREEN;
+void displayScreen()
+	int x;
+	int y;
+	for (y=0, y<50, y += 1)
+		for (x=0, x<80, x+=1)
+			putc(CLL_SCREEN[(y*80)+x]);
+		loop;
+	loop;
+end;
+
+void main()
+	int x = 0;
+	int y = 0;
+	while(1) do
+		CLL_SCREEN[(y*80)+x] = 0;
+		char i = getw();
+		if (i == 'x') then break; endif;
+		if (i == 'a') then
+			x -= 1;
+			if (x>80) then
+				x = 79;
+			endif;
+		else if (i == 's') then
+			y += 1;
+			if (y==50) then
+				y = 0;
+			endif;
+		else if (i == 'd') then
+			x += 1;
+			if (x==80) then 		//loops around, can't quite use mod here
+				x = 0;
+			endif;
+		else if (i == 'w') then
+			y -= 1;
+			if (y>50) then
+				y = 49;
+			endif;
+		endif;
+		endif;
+		endif;	
+		endif;
+
+		CLL_SCREEN[(y*80)+x] = '0';
+		displayScreen();
+	loop;
+end;

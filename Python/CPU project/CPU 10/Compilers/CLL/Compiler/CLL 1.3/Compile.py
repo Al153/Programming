@@ -540,6 +540,7 @@ class function:
 		if parse_tree.type == "<ternary_op>": 				#ternary op must check that the types of the true expression and false expression are the same
 			true_type = self.check_typing(parse_tree.children[0]) 			# the rest is fairly self explanatory
 			false_type = self.check_typing(parse_tree.children[4])
+			self.check_function_typing(parse_tree.children[2])
 			if true_type != false_type:
 				print "ERROR(44): Types of the two results in a ternary statement must be the same"
 				quit()

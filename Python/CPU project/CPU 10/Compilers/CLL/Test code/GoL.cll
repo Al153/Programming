@@ -1,0 +1,176 @@
+//game of life implemented in CLL
+
+@char 4000 grid1;
+@char 4000 grid2;
+
+void display_grid(int selector)
+	int x;
+	int y;
+	if (selector == 1) then
+		for (y=0, y<50, y += 1)
+			for (x=0, x<80, x+=1)
+				putc(grid1[(y*80)+x]);
+			loop;
+		loop;
+	else
+		for (y=0, y<50, y += 1)
+			for (x=0, x<80, x+=1)
+				putc(grid2[(y*80)+x]);
+			loop;
+		loop;
+	endif;
+end;
+
+
+
+void main()
+	golSetup(); 			//lets player place dots
+	golSimulate();
+end;
+
+void golSetup()
+	//allows user to setup grid
+	int x = 0;
+	int y = 0;
+	char temp = 0;
+	while(1) do
+
+		grid1[(y*80)+x] = temp;
+		char i = getw();
+		if (i == 'x') then break; endif; //exit
+
+		if (i == 'i') then //set cell on
+			grid1[(y*80)+x] = '0';
+		else if (i == 'o') then 		//set cell dead
+			grid1[(y*80)+x] = 0;
+		else if (i == 'a') then
+			x -= 1;
+			if (x>80) then
+				x = 79;
+			endif;
+		else if (i == 's') then
+			y += 1;
+			if (y==50) then
+				y = 0;
+			endif;
+		else if (i == 'd') then
+			x += 1;
+			if (x==80) then 		//loops around, can't quite use mod here
+				x = 0;
+			endif;
+		else if (i == 'w') then
+			y -= 1;
+			if (y>50) then
+				y = 49;
+			endif;
+		endif;
+		endif;
+		endif;	
+		endif;
+
+		endif;
+		endif;
+		temp = grid1[x+ 80*y];
+		grid1[x+80*y] = '#';
+		display_grid(1);
+	loop;
+end;
+
+void golSimulate()
+	int x;
+	int y;
+	while(1) do 				//loops indefinitely
+		//stage 1
+		for (y = 0, y<50, y += 1) //check everycell to see if it is alive or dead
+			for (x = 0, x<80, x += 1)
+				int count = count_neighbours(1,x,y);
+				if (grid1[x+80*y]) then //if alive
+					if ((count==2) or (count == 3)) then //if then stays alive
+						grid2[x+80*y] = '0';
+					else
+						grid2[x+80*y] = 0;
+					endif;
+				else 					// if dead
+					if (count==3) then //if 3 neighbours then cell becomes alive
+						grid2[x+80*y] = '0';
+					else
+						grid2[x+80*y] = 0; 	//otherwise stays dead
+					endif;
+				endif; 
+			loop;
+		loop;
+		display_grid(2); 		//show the results
+		char cont = getw();
+		if (cont == 'x') then break; endif;
+		//stage 2
+		for (y = 0, y<50, y += 1) //check everycell to see if it is alive or dead
+			for (x = 0, x<80, x += 1)
+				int count = count_neighbours(2,x,y);
+				if (grid2[x+80*y]) then //if alive
+					if ((count==2) or (count == 3)) then //if then stays alive
+						grid1[x+80*y] = '0';
+					else
+						grid1[x+80*y] = 0;
+					endif;
+				else 					// if dead
+					if (count==3) then //if 3 neighbours then cell becomes alive
+						grid1[x+80*y] = '0';
+					else
+						grid1[x+80*y] = 0; 	//otherwise stays dead
+					endif;
+				endif; 
+			loop;
+		loop;
+		display_grid(1);
+		cont = getw();
+		if (cont == 'x') then break; endif;
+	loop;
+
+end;
+
+int count_neighbours(int selector,int x, int y)
+	//counts the living neighbors of the cell
+	int count = 0;
+	if (selector == 1) then //selector chooses which grid to look at
+ 		count += (1 if (grid1[wraparoundx(x+1)+ 80*y]) else 0); 		//counts neighbours one by one
+  		count += (1 if (grid1[wraparoundx(x-1)+ 80*y]) else 0);
+ 		count += (1 if (grid1[x+ 80*wraparoundy(y+1)]) else 0);
+  		count += (1 if (grid1[x+ 80*wraparoundy(y-1)]) else 0);
+  		count += (1 if (grid1[wraparoundx(x+1)+ 80*wraparoundy(y+1)]) else 0);
+  		count += (1 if (grid1[wraparoundx(x-1)+ 80*wraparoundy(y+1)]) else 0);
+ 		count += (1 if (grid1[wraparoundx(x+1)+ 80*wraparoundy(y-1)]) else 0);
+  		count += (1 if (grid1[wraparoundx(x-1)+ 80*wraparoundy(y-1)]) else 0);
+	else
+ 		count += (1 if (grid2[wraparoundx(x+1)+ 80*y]) else 0);
+  		count += (1 if (grid2[wraparoundx(x-1)+ 80*y]) else 0);
+ 		count += (1 if (grid2[x+ 80*wraparoundy(y+1)]) else 0);
+  		count += (1 if (grid2[x+ 80*wraparoundy(y-1)]) else 0);
+  		count += (1 if (grid2[wraparoundx(x+1)+ 80*wraparoundy(y+1)]) else 0);
+  		count += (1 if (grid2[wraparoundx(x-1)+ 80*wraparoundy(y+1)]) else 0);
+ 		count += (1 if (grid2[wraparoundx(x+1)+ 80*wraparoundy(y-1)]) else 0);
+  		count += (1 if (grid2[wraparoundx(x-1)+ 80*wraparoundy(y-1)]) else 0);
+	endif;
+	return count;
+end;
+
+int wraparoundx(int x)
+	if (x>80) then
+		x = 79;
+	else
+		if (x==80) then
+			x = 0;
+		endif;
+	endif;
+	return x;
+end;
+
+int wraparoundy(int y)
+	if (y>50) then
+		y = 49;
+	else
+		if (y==50) then
+			y = 0;
+		endif;
+	endif;
+	return y;
+end;

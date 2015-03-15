@@ -59,12 +59,177 @@ Default
 			- "absolute_address" - the address of the variable with respect to the stack pointer
 			- "Pushgp0" - stores to the stack
 			- Loads a single signed or unsigned integer variable onto the stack
-			- optimiser changes this to a load to a register
+			- optimiser can change this to a load to a register
+			- loads the integer at an address relative to the stack frame onto the expression stack
+			-
 		- " load relative "
 			- "get_index" - code to place an indexing value into gp6
 			- "absolute_address" - address to be indexed (address[get_index])
-			- Loads a signle signed or unsigned int from an indexed address onto the stack
-			
+			- Loads a single signed or unsigned int from an indexed address relative to the stack frame onto the expression stack
+			-
+		- " store "
+			- "Popgp0" - gets top of stack into gp0
+			- "absolute_address" - address relative to the stack pointer for the data to be stored into
+			- stores a single integer from the expression stack to an address relative to the stack frame
+			-
+		- " store relative "
+			- "get_index" - code to place the indexing value into gp6
+			- "Popgp0" - ges top of stack into gp0
+			- "absolute_address" - address relative to stack pointer which derefenced to become a pointer
+			- stores a single integer from the expression stack into an address pointed to by a variable relative to he stack frame which ish indexed by and indexing expression7
+			-
+		- " load char "
+			- "absolute_address" - the address of the variable with respect to the stack pointer
+			- "Pushgp0" - stores to the stack
+			- Loads a single signed or unsigned integer variable onto the stack
+			- optimiser can change this to a load to a register
+			- loads the char at an address relative to the stack frame onto the expression stack
+			-
+		- " load relative char "
+			- "get_index" - code to place an indexing value into gp6
+			- "absolute_address" - address to be indexed (address[get_index])
+			- Loads a single char from an indexed address relative to the stack frame onto the expressions stack
+			-
+		- " store char "
+			- "Popgp0" - gets top of stack into gp0
+			- "absolute_address" - address relative to the stack pointer for the data to be stored into
+			- stores a single char from the expression stack to an address relative to the stack frame
+			-
+		- " store relative char "
+			- "get_index" - code to place the indexing value into gp6
+			- "Popgp0" - ges top of stack into gp0
+			- "absolute_address" - address relative to stack pointer which derefenced to become a pointer
+			- stores a single char from the expression stack to an the address pointed to by the value at address relative to the stack frame indexed by an indexing expression
+			-
+		- " load global "
+			- "absolute_address" - the address of the variable with respect to the stack pointer
+			- "Pushgp0" - stores to the stack
+			- Loads a single signed or unsigned integer variable onto the stack
+			- optimiser can change this to a load to a register
+			- loads the integer at an absolute_address onto the expression stack
+			-
+		- " load relative global "
+			- "get_index" - code to place an indexing value into gp6
+			- "absolute_address" - address to be indexed (address[get_index])
+			- Loads a single signed or unsigned int from an indexed address contained by an absolute address onto the expression stack
+			-
+		- " store global "
+			- "Popgp0" - gets top of stack into gp0
+			- "absolute_address" - address relative to the stack pointer for the data to be stored into
+			- stores a single integer from the expression stack to an absolute address
+			-
+		- " store relative global "
+			- "get_index" - code to place the indexing value into gp6
+			- "Popgp0" - ges top of stack into gp0
+			- "absolute_address" - address relative to stack pointer which derefenced to become a pointer
+			- stores a single integer from the expression stack into an address pointed to by an absolute addressed variable which is indexed by an indexing expression7
+			-
+		- " load char global "
+			- "absolute_address" - the address of the variable with respect to the stack pointer
+			- "Pushgp0" - stores to the stack
+			- Loads a single signed or unsigned integer variable onto the stack
+			- optimiser can change this to a load to a register
+			- loads the char at an absolute address onto the expression stack
+			-
+		- " load relative char global "
+			- "get_index" - code to place an indexing value into gp6
+			- "absolute_address" - address to be indexed (address[get_index])
+			- Loads a single char from an indexed absolute address onto the expressions stack
+			-
+		- " store char global "
+			- "Popgp0" - gets top of stack into gp0
+			- "absolute_address" - address relative to the stack pointer for the data to be stored into
+			- stores a single char from the expression stack to an absolute address
+			-
+		- " store relative char global"
+			- "get_index" - code to place the indexing value into gp6
+			- "Popgp0" - ges top of stack into gp0
+			- "absolute_address" - address relative to stack pointer which derefenced to become a pointer
+			- stores a single char from the expression stack to an the address pointed to by the value at an absolute address indexed by an indexing expression
+			-
+		- " get index integer "
+			- "index expr" - expression which calculates index
+			- "pop index" - code to pop off of the stack and into gp6 (the index register)
+			-
+		- " get index char "
+			- "index expr" - expression which calculates index
+			- "pop index" - code to pop off of the stack and into gp6 (the index register)
+			-		
+		- " get index general "
+			- "index expr" - expression which calculates index
+			- "pop index" - code to pop off of the stack and into gp6 (the indsex register)
+			- "size" - byte width of the data stucture being indexed
+			-
+		- " cast int to char "
+			- "Popgp0" - Pops off expression stack into gp0
+			- "Push gp0" - after conversion, push back onto stack
+			- 
+		- " cast char to int"
+			- no arguments
+			-
+		- " get ptr "
+			- "absolute_address" - absolute address of the variable relative to the stack frame
+			- "Push gp0" - pushes the ptr value onto the expression stack
+		- " get ptr global "
+			- "absolute_address" - address (name) of the variable to get a pointer of 
+			- "Push gp0" - pushes value onto the expression stack
 	- Arithmetic
+		- Almost all have the typical arguments:
+			- "getgp0" - pops off expression stack to gp0
+			- "getgp1" - pops off expression stack to gp1
+			- "storegp0" - pushes gp0 to expression stack
+		- " ADD "
+			- ADDS top two values on stack, with no carry. treated as unsigned ints
+		- " SUB "
+			- ADDS top two values on stack, with no borrow treated as unsigned ints
+		- " SHR "
+			- does a SHR with 
+		- " SHL "
+			-
+		- " ADD char "
+			-
+		- " SUB char "
+			-
+		- " SHR char "
+			-
+		- " SHL char "
+			-
+		- " MUL "
+			-
+		- " DIV "
+			-
+		- " MOD "
+			-
+		- " AND "
+			-
+		- " OR "
+			-
+		- " XOR "
+			-
+		- " MUL char "
+			-
+		- " DIV char "
+			-
+		- " MOD char "
+			-
+		- " AND char "
+			-
+		- " OR char "
+			-
+		- " XOR char "
+			-
+		- " NOT "
+			-
+		- " UNARY SUB "
+			-
+		- " NOT char "
+			-
+		- " UNARY SUB char "
+			-
+
+
+
+
+
 	- Comparison and Boolean
 	- Floating Point
