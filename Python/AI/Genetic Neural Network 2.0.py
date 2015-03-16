@@ -1,7 +1,8 @@
 import random
+import math
 
 class GeneticSolver:
-	def __init__(self,problem_function,output_ticks = 50,genetic_drift = 250):
+	def __init__(self,problem_function,output_ticks = 32,genetic_drift = 250):
 		self.output_ticks = output_ticks 
 		self.genetic_drift = genetic_drift   #average number of mutations per genome per generation
 		self.problem_function = problem_function #problem function should take the output vector as an input and produce a tuple containing the next input vector or the score
@@ -11,13 +12,16 @@ class GeneticSolver:
 		genomes = [self.random_genome() for i in xrange(20)]
 		best_genomes = [('',0),('',0),('',0),('',0),('',0)]
 		best_genome_threshold = 0.0
+		count = 0
 		while 1:
+			#if count == 0: raw_input('')
+			#count = (count + 1)%200
 			print "generation",generations,", best score = ", best_genomes[0][1]
 			#cont = raw_input('')
 			for genome in genomes:
 				#print genome[:20]
 				input_vector = [1,1,1,1,1,1,1,1]
-				test_network = Neural_Network(genome,range(8),range(8,16),self.output_ticks) #sets up a neural network
+				test_network = Neural_Network(genome,range(120,128),range(8),self.output_ticks) #sets up a neural network
 				while 1: #now run the neural network
 					input_vector = self.problem_function(test_network.tick(input_vector))
 					#print input_vector
@@ -25,15 +29,14 @@ class GeneticSolver:
 						if input_vector[0] > best_genome_threshold:  #if good enough to be in the best genome
 							#print "new best genome"
 							best_genome_threshold = self.insert_best_genome(best_genomes,genome,input_vector[0])
-
 						break
 			# now picks the best 5 genomes and breeds each with all others, and randomly mutates al five to give 20 new genomes
 			#print best_genomes
 			genomes = self.choose_new_genomes(best_genomes)
 			generations += 1
 			print "Best result: ",
-			input_vector = [0,0,0,0,0,0,0,0]
-			test_network = Neural_Network(best_genomes[0][0],[0]*8,[0]*8,self.output_ticks) #sets up a neural network
+			input_vector = [1,1,1,1,1,1,1,1]
+			test_network = Neural_Network(best_genomes[0][0],range(120,128),range(8),self.output_ticks) #sets up a neural network
 			while 1: #now run the neural network
 				input_vector = self.problem_function(test_network.tick(input_vector))
 				if len(input_vector) == 1:
@@ -81,14 +84,14 @@ class GeneticSolver:
 	def random_genome(self):
 		#creates a random genome
 		genome = ''
-		for i in xrange(7168):
+		for i in xrange(5120):
 			genome+= chr(random.randrange(256))
 		return genome
 	def mutate_genome(self,genome):
 		#mutates a genome slightly
 		new_genome = ''
-		mutate_probability = self.genetic_drift/7168.0
-		for i in xrange(7168): 								#each base has a small chance to mutate
+		mutate_probability = self.genetic_drift/5120.0
+		for i in xrange(5120): 								#each base has a small chance to mutate
 			if random.random()<mutate_probability:
 				new_genome += chr(random.randrange(256))
 			else:
@@ -98,7 +101,7 @@ class GeneticSolver:
 	def breed_genomes(self,genome1,genome2):
 		#breeds genome then mutates it
 		new_genome = ''
-		for i in xrange(7168):
+		for i in xrange(5120):
 			#print i
 			if random.random()>0.5:
 				new_genome += genome1[i]
@@ -111,27 +114,39 @@ class GeneticSolver:
 
 class Neuron:
 	def __init__(self,grid,weight_vector,connection_vector,start_value,threshold):
-		#chromose is 8*2 bytes for weight vector, 8*1 byte for connection vector, 2 bytes for start value, 2 bytes for threshold = 28 bytes
+		#chromosome is 8*2 bytes for weight vector, 8*1 byte for connection vector, 2 bytes for start value, 2 bytes for threshold = 28 bytes
 		self.weight_vector = self.unpack_weights(weight_vector) 			#weight vector gives the weightings for each of the sample points
-		self.output = self.unpack(start_value) 			#output starts at the start value
+		self.output = abs(self.unpack(start_value) )			#output starts at the start value
 		self.connection_vector = connection_vector
+		#print self.weight_vector
 		self.threshold = self.unpack(threshold)
 		self.grid = grid
+		self.new_output = self.output
 
-	def tick(self):
-		self.output = sum([self.weight_vector[i]*self.grid[self.connection_vector[i]].output for i in range(8)])
-		self.output = self.output if(self.output > self.threshold)else 1.0
-		#print self.output
+	def tick1(self):
+		self.new_output = self.output
+		for i in xrange(8):
+			self.new_output += self.weight_vector[i]*self.grid[self.connection_vector[i]].output
+		self.new_output -= self.threshold
+		self.new_output = sigmoid(self.new_output)
+		#self.new_output = 1/(1+math.exp(-0.5*self.new_output))
+
+	def tick2(self):
+		self.output  = self.new_output
+		#print self.output, self.new_output
+
+
 
 	def unpack(self,byte_pair):
 		#creates a float from a pair of bytes:
-		#SFFFFFFF FFFEEEEE, exponent excess 16, where there is an assumed 11th bit on the fraction parts
+		#SFFFFFFF FFFFFFFF
+		#where s is the sign and F the fraction
 		#print byte_pair
 		integer_form = (byte_pair[0]<<8)|(byte_pair[1])
 		sign = integer_form>>15
-		fraction = (integer_form>>5)&1023
-		exponent = (integer_form&31)-16
-		float_form = ((-1)**sign)*((1024+fraction)/1024.0)*(2.0**exponent)
+		fraction = integer_form&32767
+		float_form = ((-1)**sign)*((fraction)/32768.0)
+		#print float_form
 		return float_form
 
 	def unpack_weights(self,weight_vector):
@@ -143,7 +158,7 @@ class Neuron:
 
 class Neural_Network:
 	def __init__(self,genome,output_indices,input_indices,output_ticks):
-		#genome must be of size 7168 bytes
+		#genome must be of size 5120 bytes
 		#input and output_indices are the indices of the neurons to add values to and read from respectively
 		#output_ticks is the number of ticks between inputs and outputs
 		genome = self.pad(genome)
@@ -154,21 +169,21 @@ class Neural_Network:
 
 		self.grid = []
 		for i in xrange(256):
-			self.grid.append(self.createNeuron(genome[28*i:28*(i+1)]))
+			self.grid.append(self.createNeuron(genome[20*i:20*(i+1)],i))
 
 
 	def pad(self,genome):
-		#pads genome to 7168 bytes
+		#pads genome to 5120 bytes
 		length = len(genome)
-		genome += '\x00' * (7168-length)
+		genome += '\x00' * (5120-length)
 		return genome
 
-	def createNeuron(self,genome_fragment):
+	def createNeuron(self,genome_fragment,index):
 		#breaks a genome fragment into a series of fields, then generates a neuron
 		weight_vector = [ord(char) for char in genome_fragment[0:16]]
-		connection_vector = [ord(char) for char in genome_fragment[16:24]]
-		start_value = [ord(char) for char in genome_fragment[24:26]]
-		threshold = [ord(char) for char in genome_fragment[26:28]]
+		connection_vector = self.get_connections(index)
+		start_value = [ord(char) for char in genome_fragment[16:18]]
+		threshold = [ord(char) for char in genome_fragment[18:20]]
 		return Neuron(self.grid,weight_vector,connection_vector,start_value,threshold)
 
 
@@ -176,15 +191,38 @@ class Neural_Network:
 		#adds input values to input nodes
 		#carries out output_ticks number of ticks across the network, then reads out off of output nodes
 		output_vector = []
-		for i in xrange(8):
-			self.grid[self.input_indices[i]].output += inputs[i]
 		for i in xrange(self.output_ticks):
+			for j in xrange(8):
+				self.grid[self.input_indices[j]].output += inputs[j]
+			#print "\n\n\n\n", i
+			#raw_input('')
 			for j in xrange(256):
-				self.grid[j].tick()
+				self.grid[j].tick1()
+			for j in xrange(256):
+				self.grid[j].tick2()
 		for i in xrange(8):
-			output_vector.append(self.grid[i].output)
+			output_vector.append(self.grid[self.output_indices[i]].output)
+			#print self.output_indices[i]
+			#print self.grid[self.output_indices[i]].new_output,
 		#print output_vector
+		#raw_input('')
 		return output_vector
+
+	def get_connections(self,index):
+		#gets the neighbors of an index (8 surrounding indices)
+		x = index//16
+		y = index%16
+		vector = [
+			(x,(y+1)%16),
+			(x,(y-1)%16),
+			((x+1)%16,y),
+			((x-1)%16,y),
+			((x+1)%16,(y+1)%16),
+			((x+1)%16,(y-1)%16),
+			((x-1)%16,(y+1)%16),
+			((x-1)%16,(y-1)%16),
+		]
+		return [(xy[0]<<4) + xy[1] for xy in vector]
 
 
 
@@ -205,18 +243,17 @@ class hello_world_test:
 			self.previous_character = '\x00'
 			return [score]
 		else:
-			try:
-				chosen_character = int(input_vector[0])%256
-			except OverflowError:
-				chosen_character = 255
+			chosen_character = 0
+			for i in range(8):
+				chosen_character <<= 1
+				chosen_character += self.round(input_vector[i])
+			#print input_vector
 			print chr(chosen_character),
-			dscore =  0.001 * (256-(abs(ord(self.target[self.state])-chosen_character)))**2
+			dscore = (8 - self.hamming_distance(chosen_character,ord(self.target[self.state])))**2
 			if chosen_character == self.previous_character and chr(chosen_character) != self.target[self.state]:
 				dscore *= 0.1
-			if chr(chosen_character) == self.target[self.state]:
-				dscore += 100
 			if chr(chosen_character) in "abcdefghijklmnopqrstuvwxyz" or chr(chosen_character) == ' ':
-				dscore += 10
+				dscore += 1
 			self.score += dscore
 			self.state += 1
 			self.previous_character = chosen_character
@@ -225,6 +262,19 @@ class hello_world_test:
 	def test(self):
 		self.GeneticSolver = GeneticSolver(self.score_function)
 		self.GeneticSolver.solve()
+	def round(self,number):
+		if number > 0.5:
+			return 1
+		else:
+			return 0
+
+	def hamming_distance(self,x,y):
+		difference = x^y
+		return sum([(difference>>i)&1 for i in range(8)])#
+
+def sigmoid(x):
+	return math.tanh(x)
+
 
 test = hello_world_test()
 test.test()
