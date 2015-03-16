@@ -13,34 +13,39 @@ class GeneticSolver:
 		best_genomes = [('',0),('',0),('',0),('',0),('',0)]
 		best_genome_threshold = 0.0
 		count = 0
-		while 1:
-			#if count == 0: raw_input('')
-			#count = (count + 1)%200
-			print "generation",generations,", best score = ", best_genomes[0][1]
-			#cont = raw_input('')
-			for genome in genomes:
-				#print genome[:20]
+		try:
+			while 1:
+				#if count == 0: raw_input('')
+				#count = (count + 1)%200
+				print "generation",generations,", best score = ", best_genomes[0][1]
+				#cont = raw_input('')
+				for genome in genomes:
+					#print genome[:20]
+					input_vector = [1,1,1,1,1,1,1,1]
+					test_network = Neural_Network(genome,range(120,128),range(8),self.output_ticks) #sets up a neural network
+					while 1: #now run the neural network
+						input_vector = self.problem_function(test_network.tick(input_vector))
+						#print input_vector
+						if len(input_vector) == 1: #if program fails, input vector becoems a tuple of the score
+							if input_vector[0] > best_genome_threshold:  #if good enough to be in the best genome
+								#print "new best genome"
+								best_genome_threshold = self.insert_best_genome(best_genomes,genome,input_vector[0])
+							break
+				# now picks the best 5 genomes and breeds each with all others, and randomly mutates al five to give 20 new genomes
+				#print best_genomes
+				genomes = self.choose_new_genomes(best_genomes)
+				generations += 1
+				print "Best result: ",
 				input_vector = [1,1,1,1,1,1,1,1]
-				test_network = Neural_Network(genome,range(120,128),range(8),self.output_ticks) #sets up a neural network
+				test_network = Neural_Network(best_genomes[0][0],range(120,128),range(8),self.output_ticks) #sets up a neural network
 				while 1: #now run the neural network
 					input_vector = self.problem_function(test_network.tick(input_vector))
-					#print input_vector
-					if len(input_vector) == 1: #if program fails, input vector becoems a tuple of the score
-						if input_vector[0] > best_genome_threshold:  #if good enough to be in the best genome
-							#print "new best genome"
-							best_genome_threshold = self.insert_best_genome(best_genomes,genome,input_vector[0])
-						break
-			# now picks the best 5 genomes and breeds each with all others, and randomly mutates al five to give 20 new genomes
-			#print best_genomes
-			genomes = self.choose_new_genomes(best_genomes)
-			generations += 1
-			print "Best result: ",
-			input_vector = [1,1,1,1,1,1,1,1]
-			test_network = Neural_Network(best_genomes[0][0],range(120,128),range(8),self.output_ticks) #sets up a neural network
-			while 1: #now run the neural network
-				input_vector = self.problem_function(test_network.tick(input_vector))
-				if len(input_vector) == 1:
-					break		
+					if len(input_vector) == 1:
+						break		
+		except KeyboardInterrupt:
+			store_file = open("Best genome.txt","w")
+			store_file.write(best_genomes[0][0])
+
 
 	def insert_best_genome(self,best_genomes,new_genome,score):
 		#inserts new_best_genome, removes worst best genome and returns the threshold score to be a best genome
@@ -270,11 +275,64 @@ class hello_world_test:
 
 	def hamming_distance(self,x,y):
 		difference = x^y
-		return sum([(difference>>i)&1 for i in range(8)])#
+		return sum([(difference>>i)&1 for i in range(8)])
+
+
+class Sprint_program_test:
+	def __init__(self):
+		self.timer = 20
+		self.distance = 0
+		self.state = 0
+
+	def score_function(self,input_vector):
+		#how far can the brain "sprint" by outputting [1,0...] then [0,1...]?
+		input_vector = [self.round(bit) for bit in input_vector] 
+		if self.timer == 0:
+			print "			", self.distance
+			score = self.distance
+			self.distance = 0
+			self.timer = 20
+			self.state = 0
+			return [score]
+		else:
+			self.timer -= 1
+			if self.state == 0:
+				if input_vector[0] and not input_vector[1]:
+					print 1,
+					self.distance +=1
+					self.state = 1
+					return [0,1,0,0,0,0,0,0]
+				else:
+					print 0,
+					return [1,0,0,0,0,0,0,0]
+			else:
+				if input_vector[1] and not input_vector[0]:
+					self.distance +=1
+					self.state = 0
+					print 2,
+					return [1,0,0,0,0,0,0,0]
+				else:
+					print 0,
+					return [0,1,0,0,0,0,0,0]		
+	def test(self):
+		self.GeneticSolver = GeneticSolver(self.score_function)
+		self.GeneticSolver.solve()			
+	def round(self,number):
+		if number > 0.5:
+			return 1
+		else:
+			return 0	
+
+
+
 
 def sigmoid(x):
 	return math.tanh(x)
 
 
 test = hello_world_test()
+test.test()
+
+
+test = Sprint_program_test()
 test.test()
