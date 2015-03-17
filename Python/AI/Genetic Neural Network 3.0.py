@@ -2,15 +2,27 @@ import random
 import math
 
 class GeneticSolver:
-	def __init__(self,problem_function,output_ticks = 32,genetic_drift = 250):
+	def __init__(self,problem_function,using_graphics = 0,output_ticks = 32,genetic_drift = 250):
 		self.output_ticks = output_ticks 
 		self.genetic_drift = genetic_drift   #average number of mutations per genome per generation
 		self.problem_function = problem_function #problem function should take the output vector as an input and produce a tuple containing the next input vector or the score
 		self.best_result = ''
+		self.using_graphics = using_graphics
+		if using_graphics:
+			import pygame
+			global PYGAME 
+			PYGAME = pygame
+			pygame.init()
+			global screen
+			screen = pygame.display.set_mode((256,256))
+			global PIXEL_ARRAY
+			PIXEL_ARRAY = pygame.PixelArray(screen)
+
+
 	def solve(self):
 		generations = 0
 		genomes = [self.random_genome() for i in xrange(20)]
-		best_genomes = [('',-1),('',-1),('',-1),('',-1),('',-1)]
+		best_genomes = [('',0),('',0),('',0),('',0),('',0)]
 		best_genome_threshold = 0.0
 		count = 0
 		try:
@@ -22,7 +34,7 @@ class GeneticSolver:
 				for genome in genomes:
 					#print genome[:20]
 					input_vector = [1,1,1,1,1,1,1,1]
-					test_network = Neural_Network(genome,range(120,128),range(8),self.output_ticks) #sets up a neural network
+					test_network = Neural_Network(genome,range(120,128),range(8),self.output_ticks,self.using_graphics) #sets up a neural network
 					while 1: #now run the neural network
 						input_vector = self.problem_function(test_network.tick(input_vector))
 						#print input_vector
@@ -162,7 +174,7 @@ class Neuron:
 		return new_weights
 
 class Neural_Network:
-	def __init__(self,genome,output_indices,input_indices,output_ticks):
+	def __init__(self,genome,output_indices,input_indices,output_ticks,display = 0):
 		#genome must be of size 5120 bytes
 		#input and output_indices are the indices of the neurons to add values to and read from respectively
 		#output_ticks is the number of ticks between inputs and outputs
@@ -171,6 +183,7 @@ class Neural_Network:
 		self.input_indices = input_indices
 		self.output_indices = output_indices
 		self.output_ticks = output_ticks
+		self.display = display
 
 		self.grid = []
 		for i in xrange(256):
@@ -195,10 +208,35 @@ class Neural_Network:
 	def tick(self,inputs):
 		#adds input values to input nodes
 		#carries out output_ticks number of ticks across the network, then reads out off of output nodes
+		if self.display:
+			return self.tick_with_display(inputs)
+		else: 
+			return self.tick_no_display(inputs)
+
+	def tick_with_display(self,inputs):
 		output_vector = []
 		for j in xrange(8):
 			self.grid[self.input_indices[j]].output += inputs[j]
 		for i in xrange(self.output_ticks):
+
+			#print "\n\n\n\n", i
+			#raw_input('')
+			for j in xrange(256):
+				self.grid[j].tick1()
+			for j in xrange(256):
+				self.grid[j].tick2()
+				self.display_network(self.grid[j].output,j)
+			PYGAME.display.update()
+		for i in xrange(8):
+			output_vector.append(self.grid[self.output_indices[i]].output)
+		return output_vector
+
+	def tick_no_display(self,inputs):
+		output_vector = []
+		for j in xrange(8):
+			self.grid[self.input_indices[j]].output += inputs[j]
+		for i in xrange(self.output_ticks):
+
 			#print "\n\n\n\n", i
 			#raw_input('')
 			for j in xrange(256):
@@ -207,10 +245,6 @@ class Neural_Network:
 				self.grid[j].tick2()
 		for i in xrange(8):
 			output_vector.append(self.grid[self.output_indices[i]].output)
-			#print self.output_indices[i]
-			#print self.grid[self.output_indices[i]].new_output,
-		#print output_vector
-		#raw_input('')
 		return output_vector
 
 	def get_connections(self,index):
@@ -228,6 +262,20 @@ class Neural_Network:
 			((x-1)%16,(y-1)%16),
 		]
 		return [(xy[0]<<4) + xy[1] for xy in vector]
+
+	def display_network(self,output_value,index):
+		#print index
+		x = index>>4
+		y = index &15
+		#print (x,y)
+		global PIXEL_ARRAY
+		PIXEL_ARRAY[16*x:16*(x+1),16*y:16*(y+1)] = self.get_colour(output_value)
+
+	def get_colour(self,value):
+		value = int(value*255) if value <1 else 255
+		return (value<<16)+(value<<8)+value
+
+
 
 
 
@@ -265,7 +313,7 @@ class hello_world_test:
 			return [1,1,1,1,1,1,1,1]
 
 	def test(self):
-		self.GeneticSolver = GeneticSolver(self.score_function)
+		self.GeneticSolver = GeneticSolver(self.score_function,1)
 		self.GeneticSolver.solve()
 	def round(self,number):
 		if number > 0.5:
@@ -315,7 +363,7 @@ class Sprint_program_test:
 					print 0,
 					return [0,1,0,0,0,0,0,0]		
 	def test(self):
-		self.GeneticSolver = GeneticSolver(self.score_function)
+		self.GeneticSolver = GeneticSolver(self.score_function,1)
 		self.GeneticSolver.solve()			
 	def round(self,number):
 		if number > 0.5:
