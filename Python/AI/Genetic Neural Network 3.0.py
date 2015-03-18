@@ -1,10 +1,12 @@
 import random
 import math
+import time
 
 class GeneticSolver:
-	def __init__(self,problem_function,using_graphics = 0,output_ticks = 32,genetic_drift = 250):
+	def __init__(self,problem_function,using_graphics = 0,output_ticks = 32,genetic_drift = 250,min_genetic_drift = 20):
 		self.output_ticks = output_ticks 
 		self.genetic_drift = genetic_drift   #average number of mutations per genome per generation
+		self.min_genetic_drift = min_genetic_drift ##,inimun average number of mutations per genome per generation
 		self.problem_function = problem_function #problem function should take the output vector as an input and produce a tuple containing the next input vector or the score
 		self.best_result = ''
 		self.using_graphics = using_graphics
@@ -16,6 +18,7 @@ class GeneticSolver:
 			global screen
 			screen = pygame.display.set_mode((256,256))
 			global PIXEL_ARRAY
+			PYGAME.display.set_caption("Genetic Neural Network v3.0")
 			PIXEL_ARRAY = pygame.PixelArray(screen)
 
 
@@ -25,11 +28,14 @@ class GeneticSolver:
 		best_genomes = [('',0),('',0),('',0),('',0),('',0)]
 		best_genome_threshold = 0.0
 		count = 0
+		start = time.time()
 		try:
 			while 1:
 				#if count == 0: raw_input('')
 				#count = (count + 1)%200
 				print "generation",generations,", best score = ", best_genomes[0][1]
+				print "Time elapsed: ", time.time() - start
+				print "Genetic drift = ", self.genetic_drift
 				#cont = raw_input('')
 				for genome in genomes:
 					#print genome[:20]
@@ -45,11 +51,12 @@ class GeneticSolver:
 							break
 				# now picks the best 5 genomes and breeds each with all others, and randomly mutates al five to give 20 new genomes
 				#print best_genomes
+				self.genetic_drift = self.new_genetic_drift(self.genetic_drift)
 				genomes = self.choose_new_genomes(best_genomes)
 				generations += 1
 				print "Best result: ",
 				input_vector = [1,1,1,1,1,1,1,1]
-				test_network = Neural_Network(best_genomes[0][0],range(120,128),range(8),self.output_ticks) #sets up a neural network
+				test_network = Neural_Network(best_genomes[0][0],range(120,128),range(8),self.output_ticks,self.using_graphics) #sets up a neural network
 				while 1: #now run the neural network
 					input_vector = self.problem_function(test_network.tick(input_vector))
 					if len(input_vector) == 1:
@@ -83,17 +90,19 @@ class GeneticSolver:
 
 	def choose_new_genomes(self,best_genomes):
 		#generates a list of new genomes
-		#10 by breeding them, 10 by mutating
-		pairs = [(0,1),(0,2),(0,3),(0,4),
-				(1,2),(1,3),(1,4),
-				(2,3),(2,4),
-				(3,4)]
+#		#10 by breeding them, 10 by mutating
+#		pairs = [(0,1),(0,2),(0,3),(0,4),
+#				(1,2),(1,3),(1,4),
+#				(2,3),(2,4),
+#				(3,4)]
 		genomes = []
-		for pair in pairs:
-			genomes.append( self.breed_genomes(
-				best_genomes[pair[0]][0],best_genomes[pair[1]][0]
-				))
+#		for pair in pairs:
+#			genomes.append( self.breed_genomes(
+#				best_genomes[pair[0]][0],best_genomes[pair[1]][0]
+#				))
 		for i in xrange(5):
+			genomes.append(self.breed_genomes(best_genomes[i][0],self.random_genome()))
+			genomes.append(self.mutate_genome(best_genomes[i][0]))
 			genomes.append(self.breed_genomes(best_genomes[i][0],self.random_genome()))
 			genomes.append(self.mutate_genome(best_genomes[i][0]))
 		return genomes
@@ -125,6 +134,9 @@ class GeneticSolver:
 			else:
 				new_genome += genome2[i]
 		return self.mutate_genome(new_genome)
+
+	def new_genetic_drift(self,genetic_drift):
+		return max(genetic_drift*0.95, self.min_genetic_drift)
 
 
 
@@ -227,6 +239,7 @@ class Neural_Network:
 				self.grid[j].tick2()
 				self.display_network(self.grid[j].output,j)
 			PYGAME.display.update()
+			PYGAME.event.get()
 		for i in xrange(8):
 			output_vector.append(self.grid[self.output_indices[i]].output)
 		return output_vector
@@ -272,7 +285,7 @@ class Neural_Network:
 		PIXEL_ARRAY[16*x:16*(x+1),16*y:16*(y+1)] = self.get_colour(output_value)
 
 	def get_colour(self,value):
-		value = int(value*255) if value <1 else 255
+		value = int((value+1)*128) if value <1 else 255
 		return (value<<16)+(value<<8)+value
 
 
@@ -316,7 +329,7 @@ class hello_world_test:
 		self.GeneticSolver = GeneticSolver(self.score_function,1)
 		self.GeneticSolver.solve()
 	def round(self,number):
-		if number > 0.5:
+		if number > 0.0:
 			return 1
 		else:
 			return 0
@@ -375,7 +388,7 @@ class Sprint_program_test:
 
 
 def sigmoid(x):
-	return math.tanh(x)
+	return (math.tanh(x))
 
 
 test = hello_world_test()
