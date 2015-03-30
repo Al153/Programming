@@ -17,7 +17,7 @@
 
 <inargs> ::= <type> id | <inargs> "," <type> id
 
-<inside_struct> ::= <var_dec> | <inside_struct> <var_dec> 			-- inside a struct is just definitions
+<inside_struct> ::= <var_dec> ";" | <inside_struct> <var_dec> ";" 			-- inside a struct is just definitions
 
 
 <variable> ::= id | <variable> "[" <expr> "]"  | <variable> "." id 	--allows chaining of []s eg two_d_array[i][j], also added struct membership

@@ -51,7 +51,7 @@
 
 #__________________________________ 11/03 ____________________________
 # ~ Fixed Float comparison subroutine
-# + signed comparision subroutines
+# + signed comparison subroutines
 # + worked on snippets index
 # + added much of the Runtime snippets to the index
 
@@ -61,17 +61,16 @@
 #_________________________________ 14/03 _____________________________
 # + adding arithmetic snippets
 
-
+#__________________________ 29/03 ____________________________________
+# + fixed up signed arithmetic snippets
+# + tested and debugged fist pass of the compiler 
 #__________________________to do: _________________________
 
 # + unify typing in code generator
-# + add signed/unsigned comparisons
-# + add signed operations - especially MUL and divide
-# + snippets/code generation for passing strucs to functions (push and pop entire structs onto and off the stack)
+# + snippets/code generation for passing structs to functions (push and pop entire structs onto and off the stack)
 # ~ update signed multiplication and division
 # + retrieving from structs
 # + retrieving through  multiple layers of pointers
-# ~ signed comparison snippets
 # + continue snippets index
 # ~ test first pass of compiler
 

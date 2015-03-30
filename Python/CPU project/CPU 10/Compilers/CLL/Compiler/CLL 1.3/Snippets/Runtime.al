@@ -316,6 +316,15 @@ AND gp0 @255 													  #CASTING INT TO CHAR
 <Push gp0>
 << cast char to int >>
 Pass 															  #CASTING CHAR TO INT
+<< cast int to char signed >>
+<Popgp0>
+AND gp0 @255 													  #CASTING INT TO CHAR (SIGNED)
+<Push gp0>
+<< cast char to int signed >>
+<Popgp0>
+Load gp1 @128 													  #CASTING CHAR TO INT (SIGNED)
+if gp1 then OR gp0 @4294967168													 
+<Push gp0>
 <<junk>>
 #____________ ptr operations _________________________
 

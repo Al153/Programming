@@ -1,0 +1,8 @@
+@int 256 NEURAL_NETWORK_OUTPUTS;
+@int 2048 NEURAL_NETWORK_WEIGHTS;
+@int 256 NEURAL_NETWORK_THRESHOLD;
+
+void tick_network()
+	
+	
+end;

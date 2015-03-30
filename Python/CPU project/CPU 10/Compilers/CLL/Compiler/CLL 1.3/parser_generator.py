@@ -24,13 +24,15 @@ class Parser:
 		del self.rules["<ELEMENTARY_TOKENS>"]
 		self.to_ignore = [character[0][1:-1] for character in self.rules["<IGNORE>"].rhs]
 		del self.rules["<IGNORE>"]
-
+		print "Getting Terminals"
 		self.terminals = self.get_terminals()                                                #searches rules to get a list of terminal strings which are directly referenced in the grammar
 		self.grammar_symbols = [symbol for symbol in self.rules] + self.terminals                        #gets all grammar symbols
 		self.first_sets = {}                                                                     #used to speed up testing of first sets
+		print "Getting first sets"
 		self.initialise_first_sets()
-
+		print "Getting item sets"
 		self.item_set = self.get_item_sets()                                                        #finds all items reachable from "GOAL"
+		print "Getting parsing tables"
 		self.get_parsing_tables()
 
 #_________________________________________________ Parse related functions ______________________________________________
@@ -133,9 +135,9 @@ class Parser:
 		self.enumerated_states = {0:Finite_automaton_state(starting_state,0)}   #allows for creation of finite automaton
 		state_number = 1                                #counts number of states
 
-
-
+		i = 1
 		for item_set in C_set:
+			print "	 getting set",i, "of",len(C_set)
 			state_index = C_set.index(item_set)
 			for X in grammar_symbols:
 				goto_of_x = self.goto(item_set,X)
@@ -147,6 +149,7 @@ class Parser:
 					state_number += 1
 				elif len(goto_of_x)>0: #otherwise, link back
 					self.enumerated_states[state_index].goto_table[X] = index
+			i += 1
 		return frozenset(C_set)
 
 
@@ -352,7 +355,7 @@ class ABNF_parse_tree:
 				if character == "-":
 					break
 				else:
-					current_token] += "-"
+					current_token += "-"
 					commented = 0
 			if not string:                          #vanilla tokens
 				if character in whitespace:         #removes whitespace

@@ -7,8 +7,8 @@ end;
 void main()
 	record a;
 	a.number = 5;
-	a.yayFloats = 2.55
-	@record b = @a;
+	a.yayFloats = 2.55;
+	//@record b = @a;
 end;
 
 

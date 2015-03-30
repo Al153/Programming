@@ -43,17 +43,16 @@ class GeneticSolver:
 					test_network = Neural_Network(genome,range(120,128),range(8),self.output_ticks,self.using_graphics) #sets up a neural network
 					while 1: #now run the neural network
 						input_vector = self.problem_function(test_network.tick(input_vector))
-						#print input_vector
 						if len(input_vector) == 1: #if program fails, input vector becoems a tuple of the score
 							if input_vector[0] > best_genome_threshold:  #if good enough to be in the best genome
-								#print "new best genome"
 								best_genome_threshold = self.insert_best_genome(best_genomes,genome,input_vector[0])
 							break
 				# now picks the best 5 genomes and breeds each with all others, and randomly mutates al five to give 20 new genomes
 				#print best_genomes
-				self.genetic_drift = self.new_genetic_drift(self.genetic_drift)
+
 				genomes = self.choose_new_genomes(best_genomes)
 				generations += 1
+				self.genetic_drift = self.new_genetic_drift(self.genetic_drift)
 				print "Best result: ",
 				input_vector = [1,1,1,1,1,1,1,1]
 				test_network = Neural_Network(best_genomes[0][0],range(120,128),range(8),self.output_ticks,self.using_graphics) #sets up a neural network
@@ -101,7 +100,7 @@ class GeneticSolver:
 #				best_genomes[pair[0]][0],best_genomes[pair[1]][0]
 #				))
 		for i in xrange(5):
-			genomes.append(self.breed_genomes(best_genomes[i][0],self.random_genome()))
+			genomes.append(self.mutate_genome(best_genomes[i][0]))
 			genomes.append(self.mutate_genome(best_genomes[i][0]))
 			genomes.append(self.breed_genomes(best_genomes[i][0],self.random_genome()))
 			genomes.append(self.mutate_genome(best_genomes[i][0]))

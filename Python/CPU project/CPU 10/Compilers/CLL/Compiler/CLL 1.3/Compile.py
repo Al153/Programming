@@ -188,69 +188,73 @@ class Struct:
 	#class for objects to store information on structs
 	def __init__(self,line):
 		#an array called "has_array" is generated which lists the elements which must be set to equal arrays
+		#print_parse_tree(line)
 		self.name = line.children[1].string
 		self.declarations = self.linearise_declarations(line.children[3]) #identify var declarations
+		print "DECLARATIONS = ", self.declarations
 		self.var_types = self.get_var_types() 							  #work out the types of each variable - including the length of any arrays
 		self.var_sizes = self.get_var_sizes()							  #works out the size of each variable within the structure
 		self.var_offsets = self.get_var_offsets() 						  #works out the internal address offsets within the struct (ie the internal address of each variable)
 																		  #also works out the memory footprint of the struct and adds it to the global var size dict
-		self.startng_values = self.get_starting_values() 										  #works out if there are any starting values for variables within the struct
-
+		self.starting_values = self.get_starting_values() 										  #works out if there are any starting values for variables within the struct
+		raw_input('')
 
 	def get_var_types(self):
 		#produces a {name:type} dict of all the variables in the declarations
 		self.has_array = []
 		var_types = {}
 		for declaration in self.declarations:
+			print_parse_tree(declaration)
 			this_type = get_type(declaration.children[0]) #adds type is type
 			var_types[declaration.children[1].string] =  this_type
-			if len(declaration.children[0].children == 3): #if there is an array, create an entry for the array too
+			if len(declaration.children[0].children) == 3: #if there is an array, create an entry for the array too
 				self.has_array.append(declaration.children[1].string)
-				var_types["array_of_"+declaration.children.[1].string] = "ARRAY|"+this_type[1:]+"|"+declaration.children[0].children[2].string #adds an array type, the type reoves a singe pointer
+				var_types["array_of_"+declaration.children[1].string] = "ARRAY|"+this_type[1:]+"|"+declaration.children[0].children[2].string #adds an array type, the type reoves a singe pointer
+		print var_types
 		return var_types
 
 	def get_var_sizes(self):
 		var_sizes = {}
 		for var in self.var_types:
-			var_type = var_types[var]
+			var_type = self.var_types[var]
 			if len(var_type.split("|"))>1: #if an array
 				array_type = var_type.split("|")
 				try:
-					size = 4 if array_type[1][0] == '@' else program.var_sizes[array_type[1]] #he size of an @var is always 4
+					size = 4 if array_type[1][0] == '@' else program.type_sizes[array_type[1]] #he size of an @var is always 4
 					var_sizes[var] = size*int(array_type[2]) 
 				except KeyError:
 					print "ERROR(45): undefined type: "+array_type[1]
 					quit()
 			else:
 				try:
-					size = 4 if var_type[0] == '@' else program.var_sizes[var_type]
+					size = 4 if var_type[0] == '@' else program.type_sizes[var_type]
 					var_sizes[var] = size
 				except KeyError:
 					print "ERROR(45): undefined type: "+array_type[1]
 					quit()
-			var_sizes[var] = new_size
+			#var_sizes[var] = new_size
 		return var_sizes
 
-	def get_starting_values():
+	def get_starting_values(self):
 		#goes through the list of declarations checking for starting values
 		starting_values = {}
 		for declaration in self.declarations:
 			if len(declaration.children) == 4:
-			var = declaration.children[1].string
-			rhs = declaration.children[3]
-			if var in self.has_array: #if an array
-				if len(rhs.children) == 3: #if an array
-					star][var] = rhs.children[1]
+				var = declaration.children[1].string
+				rhs = declaration.children[3]
+				if var in self.has_array: #if an array
+					if len(rhs.children) == 3: #if an array
+						starting_values[var] = rhs.children[1]
+					else:
+						#raise an error an array must have an array asignment
+						print "ERROR(47): arrays only have array assignments"
 				else:
-					#raise an error an array must have an array asignment
-					print "ERROR(47): arrays oonly have array "
-			else:
-				if len(rhs.children) == 3: #if an array assignment, raise an error
-					print "ERROR(46): arrays can only be assigned to array types"
-					quit()
-				else:
-					#add the value to the dict
-					starting_values[var] = rhs
+					if len(rhs.children) == 3: #if an array assignment, raise an error
+						print "ERROR(46): arrays can only be assigned to array types"
+						quit()
+					else:
+						#add the value to the dict
+						starting_values[var] = rhs
 
 
 
@@ -262,15 +266,17 @@ class Struct:
 			var_offsets[var] = offset
 			offset += self.var_sizes[var]
 		self.size = offset #remaining offset is the entrire size of the struct
-		program.var_sizes[self.name] = self.size 		#updaes the external struct dict
+		program.type_sizes[self.name] = self.size 		#updaes the external struct dict
 		return var_offsets
 
 	def linearise_declarations(self,inside_struct):
 		#recursive unary tree structure => array
 		declarations = []
-		while len(inside_struct.children) >1:
+	#	print inside_struct
+	#	print inside_struct.type
+		while len(inside_struct.children) == 3:
 			declarations.append(inside_struct.children[1])
-			inside_struct = inside_struct.children[1]
+			inside_struct = inside_struct.children[0]
 		declarations.append(inside_struct.children[0])
 		declarations.reverse()
 		return declarations
@@ -491,7 +497,7 @@ class function:
 		#reduces ints, chars, pointers etc to what they can be treated as, ie an @int is basically an int in terms of arithmetic
 		if specific_type[0] == "@":
 			return "int"
-		return specific_typess
+		return specific_type
 
 	def check_function_typing(self,parse_tree):
 		#searches whole parse tree looking for expressions to check
@@ -529,6 +535,7 @@ class function:
 		#to the extent of checking overall type - ie @int =~= @char =~= int
 		#very large function - should probably be cut down into smaller pieces
 		#runs recursively 
+		print parse_tree.type
 		if parse_tree.type == "<type_cast>": #casting type expressions always return the destination type, but need to check the tyhping of the expression to be cast
 			resultant_type = get_type(parse_tree.children[0])#get the two types
 			source_type = self.check_typing(parse_tree.children[2])
@@ -563,6 +570,7 @@ class function:
 			parse_tree.children[0].type = "<"+parse_tree.children[0].type[1:-1]+input_type+">" #fixes the operator to a specific type, as above
 			return input_type
 		elif len(parse_tree.children) == 1: 													#skips ahead if one of these
+			print "here"
 			if parse_tree.children[0].type in ("<type_cast>","<term>","<factor>","<ternary_op>"):
 				input_type =  self.check_typing(parse_tree.children[0])
 				return input_type
@@ -574,8 +582,8 @@ class function:
 
 
 			elif parse_tree.children[0].type == "<variable>": #for variables
-
-
+				print "here"
+				print_parse_tree(parse_tree.children[0])
 				variable_parse_tree = parse_tree.children[0]
 				if len(variable_parse_tree.children) == 1: #simple variable (not a pointer or a struct)
 					if variable_parse_tree.children[0].string in self.variables:
@@ -623,9 +631,11 @@ class function:
 						print "ERROR(3): Unrecognised variable: \""+variable_parse_tree.children[0].string + "\""
 						quit()
 				elif len(variable_parse_tree.children) == 3: #if a struct reference
-					struct_type = self.check_typing(variable_parse_tree.children[0])
+					print "structing"
+					struct_type = self.check_typing(Non_terminal_parse_tree_node("<dummy>",[variable_parse_tree.children[0]]))
 					if (struct_type in program.structs): #if a struct
 						possible_member = variable_parse_tree.children[2].string
+						print program.structs[struct_type].var_types
 						if possible_member in program.structs[struct_type].var_types:  #if the struct contains a value of the right type
 							return program.structs[struct_type].var_types[possible_member] #finds ype of the member
 						else:
@@ -640,7 +650,7 @@ class function:
 				if len(parse_tree.children[0].children) == 3: #floats are num . num
 					return "float"
 				return "int"  #other constants are either numbers or pointers (ints)
-			else: #unkonown node - ore for debugging the compiler than debugging CLL code
+			else: #unkonown node - more for debugging the compiler than debugging CLL code
 				print "ERROR(39): incorrect node passed: "+ parse_tree.children[0].type
 				print_parse_tree(parse_tree)
 				quit()
@@ -842,12 +852,13 @@ def write_to_file(assembly_code):
 def get_source_file():
 	'''gets source text from the requested file'''
 	file_name = sys.argv[1]
+	print file_name
 	return open(file_name,"r").read()
 
 def get_parse_tree(source_text):
 	'''uses parser file to get a parse tree of the program'''
 	CURRENT_DIR = os.path.dirname(__file__)
-	file_path = os.path.join(CURRENT_DIR, 'CLL1_2.parse')
+	file_path = os.path.join(CURRENT_DIR, 'CLL1_3.parse')
 	local_parser = LR1_parser.Parser(file_path,tokenise) #replace built in function in parser
 	parse_tree = local_parser.parse(source_text)
 	return parse_tree
@@ -907,6 +918,9 @@ def store_parse_tree(parse_tree_node,offset = ''):
 		return return_string
 
 def get_type(type_tree):
+#	print type_tree.type
+	if type_tree.terminal:
+		return type_tree.string
 	if len(type_tree.children) == 1: #primitive
 		return type_tree.children[0].string
 	elif len(type_tree.children) >= 2: #@pointer
