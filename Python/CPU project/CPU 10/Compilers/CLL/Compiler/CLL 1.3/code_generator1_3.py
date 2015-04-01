@@ -64,9 +64,22 @@
 #__________________________ 29/03 ____________________________________
 # + fixed up signed arithmetic snippets
 # + tested and debugged fist pass of the compiler 
+
+#__________________________ 31/03 ____________________________________
+# + put in framework for new variables
+
+#__________________________ 1/04 _____________________________________
+# + Planning for new variable system - framework probably redundant - requires reworking on pushing and pulling
+# + The type checking in the main compiler file now stores a variable's type in its parse tree node, and trivial vars get a local? signifier ==> makes life easier
+# + code to generate floats from value parse tree nodes
+# + added new framework again
+
 #__________________________to do: _________________________
 
 # + unify typing in code generator
+# + new indexing - can index multiple times so needs to get the first variable then act on it
+# + all getting variables needs overhauling to be able to get at non trivial variables (use check typing maybe)
+# + create algorithm to partition structs to be placed on hte stack and to recover a struct
 # + snippets/code generation for passing structs to functions (push and pop entire structs onto and off the stack)
 # ~ update signed multiplication and division
 # + retrieving from structs
@@ -218,24 +231,6 @@ class code_generator:
 		self.assembly = self.generate_function_code(function_object.parse_tree,self.input_variables,self.simplified_variable_types,self.stack_frame_size)
 		self.assembly = optimiser.assembly_optimise(self.assembly)
 
-	#Code generation code to write:
-	#	expression generation code
-	#	boolean expression generation code 						DONE	
-	# 		- Bool factor, bool_expr
-	#	for loop code 											DONE
-	#	while loop code 										DONE
-	#	if statement, if - else code 							DONE
-	#	block code 												DONE
-	#	function call, and function execution code  			DONE
-	#	variable fetching and storing code 						DONE
-	
-	#	assignments 											DONE
-	
-
-	#############################
-	# 		   MISC TO DO 		#
-	#############################
-	#- fix global variable addressing - allow assembler to do heavy lifting 
 	
 
 	def get_var_addresses(self,var_sizes):
@@ -450,6 +445,35 @@ class code_generator:
 			quit()	
 	
 	#___________________________________________ getting and storing variables _______________________
+	#How variables are going to be handled:
+	#	- Parse and semantic checking:
+	#		- Struct definitions will be singled out.
+	# 			- Each struct type has an object generated for it stored in program.structs {struct_name:struct_object}
+	# 				- contains variable types (Struct.var_types)
+	# 				- the parse trees for declarations of values within the struct (Struct.declarations)
+	#				- size of each variable 	(Struct.var_sizes)
+	# 				- address offset for each variable (Struct.var_offsets)
+	#				- starting value parse tree for each variable in the struct (Struct.var_starting_values)
+	#		- in type checking
+	#			- sets out the type of the variable in every variable parse tree node (VPTN.var_type)
+	#			- if a struct's value is called, check that that the struct contains that variable
+	#	- in Code Generator
+	#			- simple variables ==> call by address
+	#			- define trivial as having no pointer resolution higher up the chain
+	#			- pointer resolution is generating a value by resolving a[x]
+	#			- trivial pointers - old fashioned style
+	#			- non trivial pointers - eg a[x][y] needs to load from a, apply index of x, load from new value and apply index of y to generate address
+	#			- trivial structs: generate static address then add offsets as needed
+	# 			- non trivial structs - generate address using pointer resolution then add offset
+	#
+	#	- introduce a "resolve_variable" function
+	# 			- (parse_tree) ==> code for fetching the variable
+	#
+	#
+	#
+	#
+	#
+
 	
 	def generate_get_value(self,value_parse_tree):
 		#generates either loading a variable or a constant
@@ -462,6 +486,28 @@ class code_generator:
 			print "ERROR(15): incorrect value node type: ",
 			print value_parse_tree.type
 			quit()
+
+	def generate_get_variable(self,variable_parse_tree):
+		if len(variable_parse_tree.children) == 1: #trivial variables
+			if variable_parse_tree.local: #locals 
+
+
+			else: #globals
+		elif len(variable_parse_tree.children) == 3: #struct member -gets address of the struct and adds offset
+													 # 				-needs to check the chain for pointers
+			struct_type = variable_parse_tree.children[0].var_type
+			address_offset = program.structs[struct_type].var_offsets[variable_parse_tree.children[2].string]
+			if self.is_struct_local(variable_parse_tree.children[0]):	
+
+			else:
+		elif len(variable_parse_tree.children == 4): #pointer resolution
+			#pointers need to get the value of the variable in children[0], pop into gp0, evaluate the index and multiply by the width of the indexed type
+			#then add the two and place in gp6 for indexing - simples
+		else:
+			#error
+
+	def generate_store_variable(Self,variable_parse_tree):
+
 
 	def generate_get_variable(self,variable_parse_tree):
 		variable_name = variable_parse_tree.children[0].string
@@ -479,6 +525,9 @@ class code_generator:
 		if len(constant_parse_tree.children) == 1 and constant_parse_tree.children[0].type == "num":
 			#if a numerical constant
 			return "Load gp0 @"+constant_parse_tree.children[0].string+"\n"+self.snippets["Pushgp0"].generate_code({})
+		elif len(constant_parse_tree.children) == 3 and constant_parse_tree.children[0].type == ".":
+			#if a float
+			return "Load gp0 @"+generate_float_value(constant_parse_tree.children[0].string+"."+constant_parse_tree.children[0].string) +"\n"+self.snippets["Pushgp0"].generate_code({})
 		elif len(constant_parse_tree.children) == 2 and constant_parse_tree.children[1].type == "id":
 			#if a pointer
 			variable_name = constant_parse_tree.children[1].string
@@ -508,129 +557,198 @@ class code_generator:
 		variable_name = variable_parse_tree.children[0].string
 		variable_type = self.variable_types[variable_name]
 		variable_address = str(self.variable_address_dict[variable_name])
-		if len(variable_parse_tree.children) == 1:
-			if variable_type == "int":
+		#######################################################
+		# bit above needs overhall, massively 				  #
+		#######################################################
+		if len(variable_parse_tree.children) == 1:  							#raw variables
+			if variable_type in ("int","float","signedInt") or variable_type[0] == "@": 					#integer sized
 				return self.snippets[" load "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
-			elif variable_type == "char":
+			elif variable_type in ("char",signedChar): 							#char sized things
 				return self.snippets[" load char "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})		
-			elif variable_type == "@int":
-				return self.snippets[" load "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
-			elif variable_type == "@char":
-				return self.snippets[" load "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})			
+			elif variable_type in program.structs: 								#programmer defined structures
+				###################################################
+				# run routine to get the struct onto the stack 	  #
+				###################################################
 			print "ERROR(20): uncrecognised type: "+variable_type
 			quit()
-		else:
-			if variable_type == "@int":
+		elif len(variable_parse_tree.children) == 4: 																	#indexed variables
+			if variable_type[1:] in ("int","float","signedInt") or variable_type[1] == "@":
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" load relative "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
-			elif variable_type == "@char":
+			elif variable_type[1:] in ("char","signedChar"):
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" load relative char "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
+			elif variable_type[1:] in program.structs:
+				###################################################
+				# routine to index the struct 					  #
+				###################################################
 			else:
 				print "ERROR(21): unexpected variable type for relative addressing: "+variable_type
 				quit()
+		elif len(variable_parse_tree.children) == 3:
+			##############################################
+			# - code to get members of a struct  		 #
+			# - essentially needs to get address of the  # 
+			#	struct then add the offset 				 # 
+			#	(precalculated before code generation)	 #
+			##############################################
+
+		else:
+			print "ERROR(50): unrecognised variable parse tree"
+			print_parse_tree(variable_parse_tree)
+			quit()
 	
 	
 	def generate_store_local_variable(self,variable_parse_tree):
 		variable_name = variable_parse_tree.children[0].string
 		variable_type = self.variable_types[variable_name]
 		variable_address = str(self.variable_address_dict[variable_name])
-		if len(variable_parse_tree.children) == 1:
-			if variable_type == "int":
+		if len(variable_parse_tree.children) == 1: 										#raw variables (unindexed)
+			if variable_type in ("int","signedInt","float") or variable_type[0] == "@": #integer sized things
 				return self.snippets[" store "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})}) 
-			elif variable_type == "char":
+			elif variable_type in ("char","signedChar"): 								#char sized things
 				return self.snippets[" store char "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})}) 			
-			elif variable_type == "@int":
-				return self.snippets[" store "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
-			elif variable_type == "@char":
-				return self.snippets[" store "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})}) 
+			elif variable_type in program.structs: 										#user defined variables
+				######################################################
+				# code to recover a struct from teh stack and store  #
+				######################################################
 			else:
 				print "ERROR(22): unexpected variable type for relative addressing: "+variable_type
 				quit()	
 	
-		else:
-			if variable_type == "@int":
+		elif len(variable_parse_tree.children) == 4: 				#indexed variables
+			if variable_type[1:]  in ("int","signedInt","float") or variable_type[1] == "@":  #integer sized things
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" store relative "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
-			elif variable_type == "@char":
+			elif variable_type[1:]  in ("char","signedChar"): 						#byte sized things
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" store relative char "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
+			elif variable_type[1:] in program.structs:
+				#########################################################
+				# code to store structs to an index 					#
+				#########################################################
 			else:
 				print "ERROR(23): unexpected variable type for relative addressing: "+variable_type
-				quit()	
-	
+				quit()
+		elif len(variable_parse_tree.children) == 3:
+			##############################################
+			# - code to get members of a struct  		 #
+			# - essentially needs to get address of the  # 
+			#	struct then add the offset 				 # 
+			#	(precalculated before code generation)	 #
+			##############################################
+
+		else:
+			print "ERROR(50): unrecognised variable parse tree"
+			print_parse_tree(variable_parse_tree)
+			quit()
+
 	def generate_get_global_variable(self,variable_parse_tree):
 		#gets a variable's value onto the stack
 		variable_name = variable_parse_tree.children[0].string
 		variable_type = self.global_variable_type_dict[variable_name]
 		variable_address = str(self.global_variable_address_dict[variable_name])
-		if len(variable_parse_tree.children) == 1:
-			if variable_type == "int":
+		if len(variable_parse_tree.children) == 1: 											#raw variables
+			if variable_type in ("int","signedInt","float") or variable_type[0] == "@": 		#int sized values
 				return self.snippets[" load global "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
-			elif variable_type == "char":
+			elif variable_type in ("char","signedChar"): 										#byte sized values
 				return self.snippets[" load char global "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})			
-			elif variable_type == "@int":
-				return self.snippets[" load global "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
-			elif variable_type == "@char":
-				return self.snippets[" load global "].generate_code({"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})			
+			elif variable_type in program.structs: 												#user defined
+				#####################################
+				# code to get and push a struct 	#
+				#####################################
 			else:
 				print "ERROR(24): unexpected variable type for relative addressing: "+variable_type
 				quit()	
 		
-		else:
-			if variable_type == "@int":
+		elif len(variable_parse_tree.children) == 4: 																				#indexed variables
+			if variable_type[1:] in ("int","signedInt","float") or variable_type[1] == "@": 		#int sized 
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" load relative global "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
-			elif variable_type == "@char":
+			elif variable_type[1:] in ("char","signedChar"): 											#byte sized
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" load relative char global "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Pushgp0":self.snippets["Pushgp0"].generate_code({})})
+			elif variable_type[1:] in program.structs: 													#user defined
+				#########################
+				# code to index structs #
+				#########################
+
 			else:
 				print "ERROR(25): unexpected variable type for relative addressing: "+variable_type
 				quit()
+		elif len(variable_parse_tree.children) == 3:
+			##############################################
+			# - code to get members of a struct  		 #
+			# - essentially needs to get address of the  # 
+			#	struct then add the offset 				 # 
+			#	(precalculated before code generation)	 #
+			##############################################
+
+		else:
+			print "ERROR(50): unrecognised variable parse tree"
+			print_parse_tree(variable_parse_tree)
+			quit()
 	
 	def generate_store_global_variable(self,variable_parse_tree):
 		variable_name = variable_parse_tree.children[0].string
 		variable_type = self.global_variable_type_dict[variable_name]
 		variable_address = str(self.global_variable_address_dict[variable_name])
-		if len(variable_parse_tree.children) == 1:
-			if variable_type == "int":
+		if len(variable_parse_tree.children) == 1: #not indexed
+			if variable_type in ("int","signedInt","float") or variable_type[0] == "@": #int sized
 				return self.snippets[" store global "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
-			elif variable_type == "char":
+			elif variable_type in ("char","signedChar"): 								#byte sized
 				return self.snippets[" store char global "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})			
-			elif variable_type == "@int":
-				return self.snippets[" store global "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
-			elif variable_type == "@char":
-				return self.snippets[" store global "].generate_code({"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
+			elif variable_type in program.structs: 										#user defined
+				#########################
+				# code to store structs #
+				#########################
 			else:
 				print "ERROR(26): unexpected variable type: "+variable_type
 				quit()
-		else:
-			if variable_type == "@int":
+		elif len(variable_parse_tree.children) == 4: 												#indexed variables
+			if variable_type[1:]  in ("int","signedInt","float") or variable_type[0] == "@":
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index integer "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" store relative global "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
-			elif variable_type == "@char":
+			elif variable_type[1:] in ("char","signedChar"):
 				index_expr = self.generate_expression_code(variable_parse_tree.children[2])
 				pop_index = self.snippets["Popindex"].generate_code({})
 				get_index = self.snippets[" get index char "].generate_code({"index expr":index_expr,"pop index":pop_index})
 				return self.snippets[" store relative char global "].generate_code({"get_index":get_index,"absolute_address":variable_address,"Popgp0":self.snippets["Popgp0"].generate_code({})})
+			elif variable_type[1:] in program.structs: 
+				#####################################
+				# obligatory code to store structs  #
+				#####################################
 			else:
 				print "ERROR(27): unexpected variable type for relative addressing: "+variable_type
-				quit()	
+				quit()
+		elif len(variable_parse_tree.children) == 3:
+			##############################################
+			# - code to get members of a struct  		 #
+			# - essentially needs to get address of the  # 
+			#	struct then add the offset 				 # 
+			#	(precalculated before code generation)	 #
+			##############################################
+
+		else:
+			print "ERROR(50): unrecognised variable parse tree"
+			print_parse_tree(variable_parse_tree)
+			quit()
 	
+
 	#______________________________________________ Line types _________________________________
 	def generate_assignment_code(self,assignment_parse_tree):
 		lhs = assignment_parse_tree.children[0]
@@ -885,6 +1003,25 @@ def print_parse_tree(parse_tree_node,offset = ''):
 			print_parse_tree(child,offset+"  ")
 		print offset+")"
 
+
+def generate_float_value(float_string):
+	#convertsa string of a float into a 32bit CLL float value
+	value = float(floatstring)
+	if value == 0: return '0' #zero is the same in float and int forms
+	sign = 0 if value>=0 else 1
+	value = abs(value)  #gets the sign and sets value to its own magnitude
+	mantissa = value
+	exponent = 0
+	while mantissa>=2: #while too ig increase size of exponent and decrease the size of the mantissa
+		mantissa /= 2.0
+		exponent += 1
+		if exponent>128:
+			return str(sign<<31 +(2**31 -1)) # too big== return infinity
+	while mantissa <1:
+		mantissa *=2.0
+		exponent -= 1
+		if exponent<127: return '0' #if too small return 0
+	return str((sign<<31)+(int(mantissa*(2**23))&(2**23 - 1))+((exponent+127)<<24))
 
 
 import os

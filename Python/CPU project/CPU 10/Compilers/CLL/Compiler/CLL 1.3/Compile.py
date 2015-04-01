@@ -570,7 +570,6 @@ class function:
 			parse_tree.children[0].type = "<"+parse_tree.children[0].type[1:-1]+input_type+">" #fixes the operator to a specific type, as above
 			return input_type
 		elif len(parse_tree.children) == 1: 													#skips ahead if one of these
-			print "here"
 			if parse_tree.children[0].type in ("<type_cast>","<term>","<factor>","<ternary_op>"):
 				input_type =  self.check_typing(parse_tree.children[0])
 				return input_type
@@ -582,13 +581,16 @@ class function:
 
 
 			elif parse_tree.children[0].type == "<variable>": #for variables
-				print "here"
 				print_parse_tree(parse_tree.children[0])
 				variable_parse_tree = parse_tree.children[0]
 				if len(variable_parse_tree.children) == 1: #simple variable (not a pointer or a struct)
-					if variable_parse_tree.children[0].string in self.variables:
+					if variable_parse_tree.children[0].string in self.variables: #if local
+						variable_parse_tree.var_type = self.variables[variable_parse_tree.children[0].string]
+						variable_parse_tree.local = True
 						return self.get_overall_type(self.variables[variable_parse_tree.children[0].string]) #gets overall type
-					elif variable_parse_tree.children[0].string in program.global_var_types:
+					elif variable_parse_tree.children[0].string in program.global_var_types: #if global
+						variable_parse_tree.var_type = program.global_var_types[variable_parse_tree.children[0].string]
+						variable_parse_tree.local = False
 						return self.get_overall_type(program.global_var_types[variable_parse_tree.children[0].string])
 					else:
 						print "ERROR(0): Unrecognised variable: "+ variable_parse_tree.children[0].string + " in function "+self.name
@@ -598,7 +600,9 @@ class function:
 				elif len(variable_parse_tree.children) == 4: #if getting a value with respect to a pointer then
 					#needs to be a pointer
 					#print "POINTER"
+					variable_parse_tree.local = None 				#variables accessed via pointers do not hae to be local or global
 					if variable_parse_tree.children[0].string in self.variables: #if local
+						variable_parse_tree.var_type = self.variables[variable_parse_tree.children[0].string]
 						if self.variables[variable_parse_tree.children[0].string][0] == "@":
 							#if the variable type is a pointer
 							type_to_return = self.get_overall_type(self.variables[variable_parse_tree.children[0].string][1:]) #gets the pointed to type
@@ -613,7 +617,8 @@ class function:
 							#raise an error
 							print "ERROR(1): variable "+variable_parse_tree.children[0].string+" of type "+self.variables[variable_parse_tree.children[0].string]+" cannot be used as a pointer"
 							quit()
-					elif variable_parse_tree.children[0].string in program.global_var_types:
+					elif variable_parse_tree.children[0].string in program.global_var_types: #if global
+						program.global_var_types[variable_parse_tree.children[0].string]
 						if program.global_var_types[variable_parse_tree.children[0].string][0] == "@":
 							#if the variable type is a pointer
 							type_to_return = program.global_var_types[variable_parse_tree.children[0].string][1:] #gets the pointed to type
@@ -632,12 +637,15 @@ class function:
 						quit()
 				elif len(variable_parse_tree.children) == 3: #if a struct reference
 					print "structing"
+					variable_parse_tree.local = None
 					struct_type = self.check_typing(Non_terminal_parse_tree_node("<dummy>",[variable_parse_tree.children[0]]))
+
 					if (struct_type in program.structs): #if a struct
 						possible_member = variable_parse_tree.children[2].string
 						print program.structs[struct_type].var_types
 						if possible_member in program.structs[struct_type].var_types:  #if the struct contains a value of the right type
-							return program.structs[struct_type].var_types[possible_member] #finds ype of the member
+							variable_parse_tree.var_type = program.structs[struct_type].var_types[possible_member]  #finds type of the member
+							return self.get_overall_type(variable_parse_tree.var_type)
 						else:
 							print "ERROR(49): struct of type: ",struct_type," does not have member: ",possible_member," in function: ",self.name
 							quit()
