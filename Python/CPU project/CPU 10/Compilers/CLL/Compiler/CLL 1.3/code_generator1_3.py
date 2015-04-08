@@ -473,6 +473,10 @@ class code_generator:
 	#
 	#
 	#
+	def generate_push(self,type,address):
+		#for default var types simple push
+		#recurse for structs
+	def generate_pop(self,type,address):
 
 	
 	def generate_get_value(self,value_parse_tree):
@@ -506,7 +510,11 @@ class code_generator:
 		else:
 			#error
 
-	def generate_store_variable(Self,variable_parse_tree):
+	def generate_store_variable(self,variable_parse_tree):
+
+
+	def resolve_value(self,variable_parse_tree):
+		#places value of variable onto the stack
 
 
 	def generate_get_variable(self,variable_parse_tree):
