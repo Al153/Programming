@@ -1,0 +1,68 @@
+// code to take assembly language, assemble it into AIF (assembler intermediate form) and then render that form into memory and execute it
+
+
+///////////////////////////////////////////////////////////////////////////////
+//Loader section
+// Assembly reduced to intermediate tree form, which is now loaded into memory and offsets added
+
+
+
+// structure of the tree is a linked list of line objects
+//line objects have 4 fields:
+//	- Address 			- address of line - the offset is added to this and the contents of the line is stored into memory at that points
+//	- Line link 		- pointer to rest of the line (a one or two int section containing the data of the line)
+//	- next link 		- pointer to the next line, if zero then termiate loading and execute
+//	- apply offset 		- if true then the offset is also added to the specific field of the intruction (or data)
+//  - type				- type of line:
+// 							- 0: error
+//							- 1: instruction
+//							- 2: data - int
+//							- 3: data - byte  -ignoring words in this
+
+#include allocation.cll
+//does the allocation
+
+void Load(@int AIF_tree, @char offset)
+	//progress through tree, rendering it to memory starting at offset
+	//the entire tree should be malloc-ed so that it can be dalloc-ed
+	while (AIF_tree != 0) do //loops through all of tree
+		render(AIF_tree,offset); //render function will render the line
+		@int new_AIF_tree = AIF_tree[2];	//gets the next line
+		dalloc(AIF_tree); AIF_tree = new_AIF_tree;
+	loop;
+	//tree now rendered into memory, now uses HAX to execute the machine code
+	HAX(offset); //Hardware Assembly eXecution  :)
+end;
+
+void render(@int AIF_tree, @char offset)
+	@int address = AIF_tree[0];
+	@int line_pointer = AIF_tree[1];
+	int type = AIF_tree[4];
+	int do_offset = AIF_tree[3];
+	if ((type == 0)or(type>3)) then
+		 //invalid; raise error
+		printf("ERROR: tried to process unknown tree node");
+		quit();
+	endif;
+	if (type == 1) then
+		//regular instruction; 8 bytes worth of information. Do offset refers to second int
+		address += offset; 					//address now points to the correct location
+		address[0] = line_pointer[0];
+		address[1] = line_pointer[1]+(offset if do_offset else 0);		//if offset flag is true then add an offset to the address part
+	else if (type == 2) then
+		address += offset;
+		address[0] = line_pointer[0]+ (offset if do_offset else 0); 	//if offset flag is true then add an offset to the data
+	else
+		//byte data
+		//do_offset has no effect
+		@char byte_address = address + offset;
+		byte_address[0] = char(line_pointer[0];)
+	endif; endif;
+	dalloc(line_pointer); //deallocates the line
+end;
+
+void HAX(int address_to_execute)
+	@int anchor = @address_to_execute; //gets anchor to the address to execute
+	anchor[-12] = address_to_execute;
+	anchor[-8] = address_to_execute; // don't know which position the address to execute variable will be in so spams both possible offsets to put new address into the return address
+end; //this return reads the edited  return address and jumps to an arbitary address (address to execute)
