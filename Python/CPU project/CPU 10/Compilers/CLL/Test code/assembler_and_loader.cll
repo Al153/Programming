@@ -20,6 +20,7 @@
 //							- 3: data - byte  -ignoring words in this
 
 #include allocation.cll
+#include hashTable.cll
 //does the allocation
 
 void Load(@int AIF_tree, @char offset)
@@ -66,3 +67,135 @@ void HAX(int address_to_execute)
 	anchor[-12] = address_to_execute;
 	anchor[-8] = address_to_execute; // don't know which position the address to execute variable will be in so spams both possible offsets to put new address into the return address
 end; //this return reads the edited  return address and jumps to an arbitary address (address to execute)
+
+
+
+////////////////////////////////////////////////////////// ASSEMBLER PART ////////////////////////////////////////////////////////////////
+@int definedDict; 			//global vars
+@int variableDict;
+
+void init()
+	malloc_init();
+	definedDict = newDict("ROOT","ROOT");
+	variableBDict = newDict("ROOT","ROOT")
+end;
+
+#define EXECUTE 1
+#define DUMP 2
+
+void assemble(@char source_text, int mode)
+	init();
+	@int tokens = parse(source_text);
+	second_pass(tokens);
+	@int AIF = generate_intermediate(tokens);
+
+	if (mode == EXECUTE) then 
+		Load(AIF,END_OF_PROGRAM); //need to look into output to find a way to calculate end of program - failing that we can just produce a large array to write to
+	endif;
+
+end;
+
+#define START 1
+#define NEW_TOKEN 2
+#define IN_TOKEN 3
+#define END 4
+
+@int Parse(@char source_text)
+	@int top;
+	//parser basics:
+		// tokens are letters or numbers, separated by spaces or tabs. Lines are separated by \n or ;
+		// @ [ ] % $ all cause new tokens to be formed
+		//token object is
+		// ________________
+		// | Forward link |
+		// |--------------|
+		// | backward link|
+		// |--------------|
+		// | tokentext ptr|
+		// |--------------|
+		// | Token type   |
+		// |--------------|
+		// | Token length |
+		// |--------------|
+
+		// malloc size = 5
+
+		// Line object is
+		// _________________
+		// | Forward link  |
+		// -----------------
+		// | Line link 	   |
+		// -----------------
+		// | Line type 	   |
+		// -----------------
+		// | line size 	   |
+		// -----------------
+		// malloc size = 4
+	@int current_line = malloc(4);
+	top = current_line;
+	@int parent = current_line;
+	int i;
+
+	int parse_state = START;  //start is at the beginning of a line
+
+	for (i = 0, 1 , i += 1)
+		char character = source_text[i];
+		// state = START
+			// character = "\t", ", "\n", ";" ==> START ()
+			// character = "@", "[", "]", "%", "$" ==> NEW_TOKEN (create new token object; put character into it; length = 1; link current line and this token; create second token - empty; link two tokens)
+			// character = 0x00 ==> END (delete current line node; deallocate parent)
+			// character = else ==> IN_TOKEN (create new token object; put token text_ptr; leave length empty; link to current line)
+
+		// state = NEW_TOKEN
+			// character = " ", "\t" ==> NEW_TOKEN ()
+			// character = "@", "[", "]", "%", "$" ==> NEW_TOKEN (store character into current token; kength = 1; create new empty token; link tokens )
+			// character = ";","\n" ==> START ( new line object; update parent; do line linkage)
+			// character = 0x00 ==> END (delete current token; current line.forward link = 0; delete current token, previous token.forward_link = 0)
+			// character = else ==> IN_TOKEN (character's address goes into current token.text_ptr)
+
+		// state == IN_TOKEN
+			// character = " ", "\t" ==> NEW_TOKEN(current_token.length = address_of_character - current_token.text_ptr; create new token object; do linkage)
+			// character = "@", "[", "]", "%", "$" ==> NEW_TOKEN ( current_token.length = address_of_character - current_token.text_ptr; create new token object; do linkage; create new current token; store character into current token; kength = 1; create new empty token; link tokens )
+			// character = ";", "\n" ==> START (current_token.length = address_of_character - current_token.text_ptr; current_token.next = 0; create new line object; do line linkage; )
+			// character = 0x00 ==> END (current_token.length = address_of_character - current_token.text_ptr; current_token.next = 0; current_line.next = 0)
+			// character = else ==> IN_TOKEN ()
+
+		// state = END
+			// break ()
+
+
+	loop;
+
+
+
+	//generates a tree form for code
+	//line object <--> token <--> token <--> token -->|
+	//    ||
+	//   ||
+	//   \/
+	//line object <--> token <--> token <--> token -->|
+	//	||
+	//	||
+	//	\/
+	//	__ 
+	//checks for definitions and intLiterals
+	// if a definition, then it should delete line and add definition to the defined dictionary
+	// int literal, just add a variable definition at the top of the code
+	// expands goto macro
+	return top;
+end;
+
+void second_pass(@int tokens)
+	//tries to replace all tokens from dictionary
+	// reorders if .. then ..s to ... if ...
+	// checks for labels - creates label variables too - add direct to dict
+	// checks for variables - add to dict
+end;
+
+@int generate_intermediate(@int tokens)
+	// takes a token list
+	// renders into machine code fragments (line by line)
+	// replaces variables and adds line numbers (generates addresses)
+	// places offsets
+	// deallocates token tree
+end;

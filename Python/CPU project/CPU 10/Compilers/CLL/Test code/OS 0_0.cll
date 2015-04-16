@@ -1,0 +1,22 @@
+//#hackYourOwnLanguage
+
+void runProgram(int handover_program_address)
+	//runs a program by  utilising a return exploit to execute arbitary code
+	// execution goes:
+		// various OS tasks ==> runProgram ==> runProgramExploit  >?> exploit handover ==> exploited program >> OS
+		// ==> is calling
+		// >> is returning
+		// >?> is the exploited return
+		
+		//run program and the exploit handover share a stack frame
+	runProgramExploit(handover_program_address);  
+end;
+
+void runProgramExploit(int handover_program_address)
+	@int stack_anchor  = @handover_program_address; //gets a pointer to a point on the stack
+	stack_anchor[-12] = handover_program_address;    //indexes relative to place the handover_program_address in the return field - need to check actual index amount
+end;
+ 
+
+// a handover program is the other end of the exploit's handover function
+// it is a short piece of assembly code that catches the program counter and sends it off to the program that is to be run - it has a single variable stack frame and is very light weight
