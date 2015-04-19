@@ -16,7 +16,7 @@
 @int MALLOC_TREE;
 int MALLOC_POOL = MALLOC_TREE_PARTITION; //top of the pool
 
-
+//____________________________ External function wrappers __________________
 void malloc_init()
 	//formats tree partition into a long linked list
 	// the [0] member of each node in the linked list is the next list
@@ -50,32 +50,6 @@ int isAllocated(int address)
 	return __isAllocated(address,MALLOC_TREE);
 end;
 
-int __isAllocated(int address, @int parent_node)
-	int parent_size = parent_node[3];
-	int parent_allocate = parent_node[1];
-	int child_size = parent_size/2;
-	@int left_child = parent_node[4]; 
-	@int right_child = parent_node[5];
-	if ((address => parent_node[2])and(address<parent_node[2]+parent_size*MALLOC_BLOCK_SIZE)) then //if valid address
-		if (left_child == 0)then
-			if (address == parent_node[2]) then //if  node has no children and has correct address for node then deallocate and return 1 (success)
-				return 1;
-			else 	//if node has no children but incorrect address then return 0 (failure)
-				return 0;
-			endif;
-		endif;
-
-		if (address < parent_node[2]+child_size*MALLOC_BLOCK_SIZE) then //if in left hand child, try to deallocate left hand child
-			return __isAllocated(address,left_child);
-		else 										  //try to deallocate right hand side
-			return __dalloc(address,right_child);
-		endif;
-	else
-		return 0;
-	endif;
-end;
-	
-
 void dalloc(@int address)
 	//deallocates memory
 	int success = __dalloc(address,MALLOC_TREE);
@@ -85,47 +59,8 @@ void dalloc(@int address)
 	endif;
 end;
 
-int __dalloc(int address, @int parent_node)
-	int parent_size = parent_node[3];
-	int parent_allocate = parent_node[1];
-	int child_size = parent_size/2;
-	@int left_child = parent_node[4]; 
-	@int right_child = parent_node[5];
-	int return_value;
-	if ((address => parent_node[2])and(address<parent_node[2]+parent_size*MALLOC_BLOCK_SIZE)) then //if valid address
-		if (left_child == 0)then
-			if (address == parent_node[2]) then //if  node has no children and has correct address for node then deallocate and return 1 (success)
-				parent_node[1] = 0; //no longer allocated
-				return 1;
-			else 	//if node has no children but incorrect address then return 0 (failure)
-				return 0;
-			endif;
-		endif;
 
-		if (address < parent_node[2]+child_size*MALLOC_BLOCK_SIZE) then //if in left hand child, try to deallocate left hand child
-			return_value = __dalloc(address,left_child);
-		else 										  //try to deallocate right hand side
-			return_value = __dalloc(address,right_child);
-		endif;
-		if (not((left_child[1]) or (right_child[1]))) then //if neither right or left child is allocated
-			if (not((left_child[4])or(right_child[4]))) then 	//if neither left nor left child has children (ie both are empty) then delete children, comine nodes
-				delete_tree_node(left_child);
-				delete_tree_node(right_child);
-				parent_node[4] = 0;
-				parent_node[5] = 0;
-				parent_node[1] = 0;
-			endif;
-		else
-			parent_node[1] = (left_child[1]&right_child[1]);
-  		endif;
-  		return return_value;
-	else
-		printf("RUNTIME ERROR: Tried to deallocate invalid address\n"); //raise an erro
-		quit();
-	endif;
-end;
-
-
+//_____________________________________ Under the hood functions _______________________________________
 int __malloc(@int node,int size)
 	//search through the malloc tree. If a spare partition of the right size is found, fill it, else split the partition and check that. If the size is too small then dont't split
 	//size is in terms of blocks ie size of 5 = 5 ints = 20 bytes
@@ -171,6 +106,71 @@ int __malloc(@int node,int size)
 			return 0; //if both left and right mallocs fail then return fail
 		endif;
 		return 0; 			//return a fail if node cannot be split
+	endif;
+end;
+
+int __dalloc(int address, @int parent_node)
+	int parent_size = parent_node[3];
+	int parent_allocate = parent_node[1];
+	int child_size = parent_size/2;
+	@int left_child = parent_node[4]; 
+	@int right_child = parent_node[5];
+	int return_value;
+	if ((address => parent_node[2])and(address<parent_node[2]+parent_size*MALLOC_BLOCK_SIZE)) then //if valid address
+		if (left_child == 0)then
+			if (address == parent_node[2]) then //if  node has no children and has correct address for node then deallocate and return 1 (success)
+				parent_node[1] = 0; //no longer allocated
+				return 1;
+			else 	//if node has no children but incorrect address then return 0 (failure)
+				return 0;
+			endif;
+		endif;
+
+		if (address < parent_node[2]+child_size*MALLOC_BLOCK_SIZE) then //if in left hand child, try to deallocate left hand child
+			return_value = __dalloc(address,left_child);
+		else 										  //try to deallocate right hand side
+			return_value = __dalloc(address,right_child);
+		endif;
+		if (not((left_child[1]) or (right_child[1]))) then //if neither right or left child is allocated
+			if (not((left_child[4])or(right_child[4]))) then 	//if neither left nor left child has children (ie both are empty) then delete children, comine nodes
+				delete_tree_node(left_child);
+				delete_tree_node(right_child);
+				parent_node[4] = 0;
+				parent_node[5] = 0;
+				parent_node[1] = 0;
+			endif;
+		else
+			parent_node[1] = (left_child[1]&right_child[1]);
+  		endif;
+  		return return_value;
+	else
+		printf("RUNTIME ERROR: Tried to deallocate invalid address\n"); //raise an erro
+		quit();
+	endif;
+end;
+
+int __isAllocated(int address, @int parent_node)
+	int parent_size = parent_node[3];
+	int parent_allocate = parent_node[1];
+	int child_size = parent_size/2;
+	@int left_child = parent_node[4]; 
+	@int right_child = parent_node[5];
+	if ((address => parent_node[2])and(address<parent_node[2]+parent_size*MALLOC_BLOCK_SIZE)) then //if valid address
+		if (left_child == 0)then
+			if (address == parent_node[2]) then //if  node has no children and has correct address for node then deallocate and return 1 (success)
+				return 1;
+			else 	//if node has no children but incorrect address then return 0 (failure)
+				return 0;
+			endif;
+		endif;
+
+		if (address < parent_node[2]+child_size*MALLOC_BLOCK_SIZE) then //if in left hand child, try to deallocate left hand child
+			return __isAllocated(address,left_child);
+		else 										  //try to deallocate right hand side
+			return __dalloc(address,right_child);
+		endif;
+	else
+		return 0;
 	endif;
 end;
 

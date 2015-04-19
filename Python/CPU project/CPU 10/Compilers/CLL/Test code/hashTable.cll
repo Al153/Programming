@@ -14,7 +14,7 @@
 
 #include allocation.cll
 
-//____________________________________ DICT TREE EDITING ALGORITHMS _____________________________________________
+//____________________________________ externally visible functions _____________________________________________
 
 @int newDict(@char keyString,@int dataPTR)
 	//initialises a dictionary using a root (root can be changed afterwards)
@@ -41,6 +41,112 @@ void deleteDict(@int dict)
 		entry = entry[2];
 	loop;
 end;
+
+void insertToDict(@int dict, @char keyString, int dataPTR)
+	//generates a dictionary entry corresponding to the tree string
+	TREEOPCOUNT = TREEOPCOUNT - 1;
+	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
+	int key = simpleHash(keyString);
+	@int entryAddress = findKey(key,dict); //gets address of a data ptr
+	if (entryAddress) then
+		if (checkKey(entryAddress[0],keyString)) then 
+			//if the same, then just  change dict pointer
+			entryAddress[1] = dataPTR;
+			return;
+		else //need to add to linked list
+			while(entryAddress[2])do
+				entryAddress = entryAddress[2];  //gets to the end of the linked list
+				if (checkKey(keyString,entryAddress[0])) then 		//if matching key string
+					entryAddress[1] = dataPTR;
+					return;
+				endif;
+			loop;
+			entryAddress[2] = createNewDataEntry(keyString,dataPTR);
+		endif;
+	else
+		editDict(key,createNewDataEntry(keyString,dataPTR),dict); //if not in tree, create a new node in the tree
+	endif;
+end;
+
+@int retrieveFromDict(@int dict, @char keyString)
+	//returns the data pointer in a dictionary entry
+	int key = simpleHash(keyString);
+	@int entryAddress = findKey(key,dict); //gets address of a data ptr
+	if (entryAddress) then
+
+		if (checkKey(entryAddress[0],keyString)) then 
+			//if the same, then return dict pointer
+			return entryAddress[1];
+		else //need to add to linked list
+			while(entryAddress[2])do
+				entryAddress = entryAddress[2];  //gets to the end of the linked list
+				if (checkKey(keyString,entryAddress[0])) then 		//if matching key string
+					return entryAddress[1]; 							//return ptr
+				endif;
+			loop;
+			return 0; //if gets to end without finding matching key string, then return 0
+		endif;
+	else
+		return 0; //if not in tree, return failure
+	endif;
+end;
+
+int deleteFromDict(@int dict, @char keyString)
+	//returns 1 for success, 0 for fail
+	TREEOPCOUNT = TREEOPCOUNT - 1;
+	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
+	int key = simpleHash(keyString);
+	@int treeNodeAddress = findTreeNode(key,dict);
+	@int entryAddress = treeNodeAddress[3]; //gets address of a data ptr
+
+	if (entryAddress) then
+		if (checkKey(entryAddress[0],keyString)) then 
+			//if the same, then delete node
+			if (entryAddress[2]) then 
+				//needs to change pointer in tree
+				treeNodeAddress[3] = entryAddress[2]; //changes tree pointer
+				dalloc(entryAddress);
+			else
+				treeNodeAddress[3] = 0;
+			endif;
+			@char entryString = entryAddress[1];
+			dalloc(entryAddress[0]);
+			dalloc(entryAddress);
+			return 1; //success
+		else //need to delete from linked list
+			while (entryAddress[2]) do
+				@int previousEntryAdrress = entryAddress;
+				entryAddress = entryAddress[2];
+				if (checkKey(entryAddress[0],keyString)) then
+					previousEntryAdrress[2] = entryAddress[2];
+					dalloc(entryAddress);
+				endif;
+			loop;
+			return 0; 		//failed
+		endif;
+	else
+		return 0; //if not in tree, return failure
+	endif;
+end;
+
+void dumpDict(@int dict)
+	if (dict[1]) then dumpDict(dict[1]); endif;
+	if (dict[2]) then dumpDict(dict[2]); endif;
+	@int entry = dict[3];
+	while (entry) do
+		printf(entry[0]);
+		printf(":");
+		printf(entry[1]);
+		printf("\n");
+		entry = entry[2];
+	loop;
+end;
+
+
+
+
+
+//_________________________ Under the hood _________________________________
 
 void editDict(int key, @int dataPTR,@int dict)
 
@@ -246,108 +352,7 @@ end;
 //
 
 
-//_________________________________________ DICT SPECIFiC FUNCTIONS ______________________________
 
-void insertToDict(@int dict, @char keyString, int dataPTR)
-	//generates a dictionary entry corresponding to the tree string
-	TREEOPCOUNT = TREEOPCOUNT - 1;
-	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
-	int key = simpleHash(keyString);
-	@int entryAddress = findKey(key,dict); //gets address of a data ptr
-	if (entryAddress) then
-		if (checkKey(entryAddress[0],keyString)) then 
-			//if the same, then just  change dict pointer
-			entryAddress[1] = dataPTR;
-			return;
-		else //need to add to linked list
-			while(entryAddress[2])do
-				entryAddress = entryAddress[2];  //gets to the end of the linked list
-				if (checkKey(keyString,entryAddress[0])) then 		//if matching key string
-					entryAddress[1] = dataPTR;
-					return;
-				endif;
-			loop;
-			entryAddress[2] = createNewDataEntry(keyString,dataPTR);
-		endif;
-	else
-		editDict(key,createNewDataEntry(keyString,dataPTR),dict); //if not in tree, create a new node in the tree
-	endif;
-end;
-
-@int retrieveFromDict(@int dict, @char keyString)
-	//returns the data pointer in a dictionary entry
-	int key = simpleHash(keyString);
-	@int entryAddress = findKey(key,dict); //gets address of a data ptr
-	if (entryAddress) then
-
-		if (checkKey(entryAddress[0],keyString)) then 
-			//if the same, then return dict pointer
-			return entryAddress[1];
-		else //need to add to linked list
-			while(entryAddress[2])do
-				entryAddress = entryAddress[2];  //gets to the end of the linked list
-				if (checkKey(keyString,entryAddress[0])) then 		//if matching key string
-					return entryAddress[1]; 							//return ptr
-				endif;
-			loop;
-			return 0; //if gets to end without finding matching key string, then return 0
-		endif;
-	else
-		return 0; //if not in tree, return failure
-	endif;
-end;
-
-int deleteFromDict(@int dict, @char keyString)
-	//returns 1 for success, 0 for fail
-	TREEOPCOUNT = TREEOPCOUNT - 1;
-	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
-	int key = simpleHash(keyString);
-	@int treeNodeAddress = findTreeNode(key,dict);
-	@int entryAddress = treeNodeAddress[3]; //gets address of a data ptr
-
-	if (entryAddress) then
-		if (checkKey(entryAddress[0],keyString)) then 
-			//if the same, then delete node
-			if (entryAddress[2]) then 
-				//needs to change pointer in tree
-				treeNodeAddress[3] = entryAddress[2]; //changes tree pointer
-				dalloc(entryAddress);
-			else
-				treeNodeAddress[3] = 0;
-			endif;
-			@char entryString = entryAddress[1];
-			dalloc(entryAddress[0]);
-			dalloc(entryAddress);
-			return 1; //success
-		else //need to delete from linked list
-			while (entryAddress[2]) do
-				@int previousEntryAdrress = entryAddress;
-				entryAddress = entryAddress[2];
-				if (checkKey(entryAddress[0],keyString)) then
-					previousEntryAdrress[2] = entryAddress[2];
-					dalloc(entryAddress);
-				endif;
-			loop;
-			return 0; 		//failed
-		endif;
-	else
-		return 0; //if not in tree, return failure
-	endif;
-end;
-
-//__________________________________ Dump dict ______________________________
-void dumpDict(@int dict)
-	if (dict[1]) then dumpDict(dict[1]); endif;
-	if (dict[2]) then dumpDict(dict[2]); endif;
-	@int entry = dict[3];
-	while (entry) do
-		printf(entry[0]);
-		printf(":");
-		printf(entry[1]);
-		printf("\n");
-		entry = entry[2];
-	loop;
-end;
 
 void dumpList(@int dict)
 	@int node = dict;
