@@ -377,5 +377,35 @@ void remove_comments(@int line, @int previous_line)
 end;
 
 void scan_definitions(@int line)
-	
+	//checks if token_0 is "def";
+	//if so then create the dictionary entry copy_of(token_1):copy_of(token_2) (copy_of()s nullify the ends of the strings)
+	@int token = line[1];
+	if (token[4]) == 3) then //token length == 3
+		@char text = token[1];
+		if (text[0] == 'd') then
+			if (text[1] == 'e') then
+				if (text[2] == 'f') then
+					token = token[0]; //token 1
+					@char temp_string = copy_of(token[3],token[4]);
+					token = token[0];
+					@char result_string = copy_of(token[3],token[4]);
+					insertToDict(definedDict,temp_string,result_string);
+					dalloc(temp_string); //prevents memory leaks from too many undeallocated malloc partitions
+				endif;
+			endif;
+		endif;
+	endif;
+end;
+
+@char copy_of(@char string_pointer,int length)
+	char byte_length = length;
+	length += 1;
+	length = 1 +(length>>2) if length&3 else length>>2;
+	if (keyStringLength&3) then keyStringLength = 1 + (keyStringLength>>2); else keyStringLength = keyStringLength>>2; endif; 
+	@char return_string = malloc(length);
+	int i;
+	for (i = 0, i<byte_length, i += 1)
+		return_string[i] = string_pointer[i];
+	loop;
+	return return_string;
 end;

@@ -23,6 +23,25 @@
 	return createNewTreeNode(key,0,0,data);
 end;
 
+void deleteDict(@int dict)
+	//deallocates the whole dict and all of its malloc alocated data pointers
+	@int left = dict[1];
+	@int right = dict[2];
+	if (left) then deleteDict(left);endif;
+	if (right) then deleteDict(right);endif;
+	dalloc(dict);
+	@int entry = dict[3]; //dict now represents the entry
+	dict[3] = 0; //remove links for good riddance - prevents dict from being resused after deallocation
+	dict[1] = 0;
+	dict[2] = 0;
+	while (entry) do
+		dalloc(entry);
+		dalloc(entry[0]);
+		if (isAllocated(entry[1])) then dalloc(entry[1]);endif;
+		entry = entry[2];
+	loop;
+end;
+
 void editDict(int key, @int dataPTR,@int dict)
 
 	if (key == dict[0]) then //needs to change dict
@@ -101,8 +120,6 @@ int TREEOPCOUNT = 32; //counts number of tree insertions and deletions, after 32
 	else
 		return 0;
 	endif;
-
-
 end;
 
 @int pruneTree(@int bottom)
