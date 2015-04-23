@@ -120,8 +120,10 @@ end;
 	for (line = top, line != 0, line = line[0])
 		//check for comments
 		remove_comments(line,previous_line);
-		scan_definitions(line);
+		line = previous_line[0];
 		check_int_literals(line);
+		scan_definitions(line,previous_line);
+
 
 
 
@@ -376,12 +378,12 @@ void remove_comments(@int line, @int previous_line)
 	loop;
 end;
 
-void scan_definitions(@int line)
+void scan_definitions(@int line, @int previous_line)
 	//checks if token_0 is "def";
 	//if so then create the dictionary entry copy_of(token_1):copy_of(token_2) (copy_of()s nullify the ends of the strings)
 	@int token = line[1];
 	if (token[4]) == 3) then //token length == 3
-		@char text = token[1];
+		@char text = token[2];
 		if (text[0] == 'd') then
 			if (text[1] == 'e') then
 				if (text[2] == 'f') then
@@ -391,6 +393,17 @@ void scan_definitions(@int line)
 					@char result_string = copy_of(token[3],token[4]);
 					insertToDict(definedDict,temp_string,result_string);
 					dalloc(temp_string); //prevents memory leaks from too many undeallocated malloc partitions
+					
+					//delete line
+					token = line[1];
+					while (token) do  //delete 
+						dalloc(token);
+						token = token[0];
+					loop;
+					previous_line[0] = line[0];
+					line[0] = 0; 		
+					line[1] = 0;
+					dalloc(line);
 				endif;
 			endif;
 		endif;
