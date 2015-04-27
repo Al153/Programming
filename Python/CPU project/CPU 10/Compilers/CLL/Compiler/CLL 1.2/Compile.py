@@ -614,6 +614,11 @@ def tokenise(self,source_text):
 			string_counter += 1
 		elif current_token[0] == current_token[-1] == "'":
 			string_token_list[i] = str(ord(current_token[1]))
+			token_list += [
+				self.get_parse_tree_node("char"),
+				self.get_parse_tree_node("(")
+				]
+			string_token_list.insert(i+1,")")
 		if current_token not in self.to_ignore:
 			if current_token in macro_replace_dict:
 				string_token_list[i] = macro_replace_dict[current_token]

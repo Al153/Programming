@@ -48,7 +48,7 @@ void setInsert(@int set,int data)
 end;
 
 void setRemove(@int set, int data)
-	__setRemove(set-4,set[0],data)
+	__setRemove(set-4,set[0],data);
 end;
 
 void setUnion(@int set1, @int set2)
@@ -60,7 +60,7 @@ void setSubtract(@int set1, @int set2)
 end;
 
 @int setCopy(@int set)
-	return_set = set();
+	@int return_set = set();
  	__setCopy(set[0], return_set-4);	
  	return return_set;
 end;
@@ -89,7 +89,7 @@ void __setInsert(@int parent, @int set, int data)
 		parent[1] = new_set_node(data);
 	else
 		if (set[0] != data) then
-			setInsert(set,set[1],data);
+			__setInsert(set,set[1],data);
 		endif;
 	endif;
 end;
@@ -132,18 +132,20 @@ end;
 
 void __setDelete(@int node)
 	if (node) then
-		setDelete(node[1]);
+		__setDelete(node[1]);
 		node[1] = 0;
 		dalloc(node);
 	endif;
 end;
 
-void __setPrint(@int node)
+void __printSet(@int node)
 	if (node) then
 		print_i(node[0]);
-		putc(',');
-		putc(' ');
-		__setPrint(node[1]);
+		if (node[1]) then
+			putc(',');
+			putc(' ');
+		endif;
+		__printSet(node[1]);
 	endif;
 end;
 
@@ -162,4 +164,26 @@ end;
 	new_node[0] = data;
 	new_node[1] = 0;
 	return new_node;
+end;
+
+
+
+// testing
+#include allocation.cll
+
+
+void main()
+	malloc_init();
+	@int myset = set();
+	@int set2 = set();
+	printSet(myset);
+	int i;
+	for (i = 0, i<5,i+=1)
+		setInsert(myset,i);
+		//printSet(myset);
+	loop;
+	for (i = 0, i<10000,i+=1)
+		@int newSet = setCopy(myset);
+		setDelete(newSet);
+	loop;
 end;

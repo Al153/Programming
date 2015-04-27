@@ -21,6 +21,7 @@
 
 #include allocation.cll
 #include hashTable.cll
+#include set.cll
 //does the allocation
 
 void Load(@int AIF_tree, @char offset)
@@ -74,10 +75,18 @@ end; //this return reads the edited  return address and jumps to an arbitary add
 @int definedDict; 			//global vars
 @int variableDict;
 
+@int registerDict;
+@int instructionDict;
+@int flagDict;
+
+
 void init()
 	malloc_init();
 	definedDict = newDict("ROOT","ROOT");
-	variableBDict = newDict("ROOT","ROOT")
+	variableBDict = newDict("ROOT","ROOT");
+	init_registerDict();
+	init_instructionDict();
+	init_flagDict();
 end;
 
 #define EXECUTE 1
@@ -421,4 +430,69 @@ end;
 		return_string[i] = string_pointer[i];
 	loop;
 	return return_string;
+end;
+
+void init_flagDict()
+	flagDict = newDict()
+	///////////////
+	// finish it //
+	///////////////
+
+end;
+
+void init_instructionDict()
+	instructionDict = newDict("Halt",0);
+	insertToDict(instructionDict,"Pass",1);
+	insertToDict(instructionDict,"Move",2);
+	insertToDict(instructionDict,"Load",3);
+	insertToDict(instructionDict,"Store",4);
+	insertToDict(instructionDict,"CompareReg",5);
+	insertToDict(instructionDict,"CompareAddr",6);
+	insertToDict(instructionDict,"OutReg",7);
+	insertToDict(instructionDict,"OutAddr",8);
+	insertToDict(instructionDict,"OutdReg",9);
+	insertToDict(instructionDict,"OutdAddr",10);
+	insertToDict(instructionDict,"LoadByte",11);
+	insertToDict(instructionDict,"StoreByte",12);
+	insertToDict(instructionDict,"LoadWord",13);
+	insertToDict(instructionDict,"StoreWord",14);
+	insertToDict(instructionDict,"ADDReg",16);
+	insertToDict(instructionDict,"SUBReg",17);
+	insertToDict(instructionDict,"MULReg",18);
+	insertToDict(instructionDict,"DIVReg",19);
+	insertToDict(instructionDict,"MODReg",20);
+	insertToDict(instructionDict,"ANDReg",21);
+	insertToDict(instructionDict,"ORReg",22);
+	insertToDict(instructionDict,"XORReg",23);
+	insertToDict(instructionDict,"NOTReg",24);
+	insertToDict(instructionDict,"NANDReg",25);
+	insertToDict(instructionDict,"NORReg",26);
+	insertToDict(instructionDict,"XNORReg",27);
+	insertToDict(instructionDict,"SHLReg",28);
+	insertToDict(instructionDict,"SHRReg",29);
+	insertToDict(instructionDict,"ADDcReg",30);
+	insertToDict(instructionDict,"SUBbReg",31);
+	insertToDict(instructionDict,"ADDAddr",32);
+	insertToDict(instructionDict,"SUBAddr",33);
+	insertToDict(instructionDict,"MULAddr",34);
+	insertToDict(instructionDict,"DIVAddr",35);
+	insertToDict(instructionDict,"MODAddr",36);
+	insertToDict(instructionDict,"ANDAddr",37);
+	insertToDict(instructionDict,"ORAddr",38);
+	insertToDict(instructionDict,"XORAddr",39);
+	insertToDict(instructionDict,"NOTAddr",40);
+	insertToDict(instructionDict,"NANDAddr",41);
+	insertToDict(instructionDict,"NORAddr",42);
+	insertToDict(instructionDict,"XNORAddr",43);
+	insertToDict(instructionDict,"SHLAddr",44);
+	insertToDict(instructionDict,"SHRAddr",45);
+	insertToDict(instructionDict,"ADDcAddr",46);
+	insertToDict(instructionDict,"SUBbAddr",47);
+	insertToDict(instructionDict,"InReg",48);
+	insertToDict(instructionDict,"InAddr",49);
+
+end;
+
+void init_registerDict()
+
 end;
