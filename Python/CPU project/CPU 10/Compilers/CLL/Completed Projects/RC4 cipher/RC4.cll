@@ -1,4 +1,4 @@
-#include string_tools.cll
+#include STD:string_tools.cll
 
 void key_schedule(@char S, @char key, int keylength)
 	int i;

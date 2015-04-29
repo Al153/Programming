@@ -1,0 +1,200 @@
+//FSM tokeniser
+
+
+int get_character_type(char character)
+	#define SPACING 1
+	#define ELEMENT 2
+	#define LINE_MARK 3
+	#define EOF 4
+	#define ID 5
+
+	if (character == 0) then return EOF; endif;
+	if (((character == '\n') or (character == ';'))or (character == ',')) then return LINE_MARK; endif;
+	if ((character== ' ') or (character == '\t')) then return SPACING; endif;
+	if  ((character == '#') or
+		(((character == '$')or (character == '%')) or
+		((character == '@') or (character == '\'') or
+		((character == '[') or(character == ']'))
+		))) then return ELEMENT; endif;
+	return ID;
+end;
+
+@int tokenise(@char source_text)
+	#define START 1
+	#define NEW_TOKEN 2
+	#define IN_TOKEN 3
+	#define END 4
+	@int top;
+	//parser basics:
+		// tokens are letters or numbers, separated by spaces or tabs. Lines are separated by \n or ;
+		// @ [ ] % $ all cause new tokens to be formed
+		//token object is
+		// ________________
+		// | Forward link |
+		// |--------------|
+		// | backward link|
+		// |--------------|
+		// | tokentext ptr|
+		// |--------------|
+		// | type | length| --length is bottom byte, type is top byte, lines up to 256 chars
+		// |--------------|
+
+		// malloc size = 4
+
+		// Line object is
+		// _________________
+		// | Forward link  |
+		// -----------------
+		// | Line link 	   |
+		// -----------------
+		// | Line type 	   |
+		// -----------------
+		// | line size 	   |
+		// -----------------
+		// malloc size = 4
+	//malloc has space for about 1000 lines
+	@int current_line = malloc(4);
+	top = current_line;
+	@int current_token;
+	@int new_token 
+	@int parent = @top;
+	int i;
+
+	int parse_state = START;  //start is at the beginning of a line
+
+	for (i = 0, 1 , i += 1)
+		char character = source_text[i];
+		character_type = get_character_type(character)
+		// state = START
+			// character = "\t", ", "\n", ";" ==> START ()
+			// character = "@", "[", "]", "%", "$","'","#" ==> NEW_TOKEN (create new token object; put character into it; length = 1; link current line and this token; create second token - empty; link two tokens)
+			// character = 0x00 ==> END (delete current line node; parent's forward link = 0)
+			// character = else ==> IN_TOKEN (create new token object; put token text_ptr; leave length empty; link to current line)
+		if (state == START) then
+			if ((character_type == SPACING) or (character_type == LINE_MARK)) then
+				continue;
+			else if (character_type == ELEMENT) then
+				current_token = malloc(4);
+				current_token[[1]] = 0;
+				current_token[2] = source_text + i;
+				current_token[3] = 1;
+				current_line[1] = current_token;
+				new_token = malloc(4);
+				current_token[0] = new_token;
+				new_token[1] = current_token;
+				current_token = new_token
+
+
+				state = NEW_TOKEN;
+			else if (character_type == EOF) then
+				dalloc(current_line);
+				parent[0] = 0;
+				state = END;
+			else
+				current_token = malloc(4);
+				current_token[[1]] = 0;
+				current_token[2] = source_text + i;
+				current_line[1] = current_token;
+				state = IN_TOKEN;
+			endif; endif; endif;
+
+
+		// state = NEW_TOKEN
+			// character = " ", "\t" ==> NEW_TOKEN ()
+			// character = "@", "[", "]", "%", "$","'","#" ==> NEW_TOKEN (store character into current token; kength = 1; create new empty token; link tokens )
+			// character = ";","\n" ==> START (delete current token, set previous token's ppointer to 0; new line object; update parent; do line linkage)
+			// character = 0x00 ==> END (current line.forward link = 0; delete current token, previous token.forward_link = 0)
+			// character = else ==> IN_TOKEN (character's address goes into current token.text_ptr)
+		else if (state == NEW_TOKEN) then
+			if (character_type == SPACING) then
+				continue;
+			else if (character_type == ELEMENT) then
+				current_token[2] = source_text + i;
+				current_token[3] = 1;
+				new_token = malloc(4);
+				current_token[0] = new_token;
+				new_token[1] = current_token;
+				current_token = new_token;
+				state = new_token;
+
+			else if (character_type == LINE_MARK) then
+				new_token = current_token[1];  //new token is a stand in for previous token
+				new_token[0] = 0;
+				dalloc(current_token);
+				parent = current_line;
+				current_line = malloc(4);
+				parent[0] = current_line;
+
+				state = START
+			else if (character_type == EOF) then
+				current_line[0] = 0;
+				new_token = current_token[1]; //new token is a stand in for previous token
+				dalloc(current_token);
+				new_token[0] = 0;
+				state = END;
+			else
+				current_token[2] = source_text + i;
+				state = IN_TOKEN;
+			endif; endif; endif; endif;
+
+		// state == IN_TOKEN
+			// character = " ", "\t" ==> NEW_TOKEN(current_token.length = address_of_character - current_token.text_ptr; create new token object; do linkage)
+			// character = "@", "[", "]", "%", "$","'","#" ==> NEW_TOKEN ( current_token.length = address_of_character - current_token.text_ptr; create new token object; do linkage; create new current token; store character into current token; kength = 1; create new empty token; link tokens )
+			// character = ";", "\n" ==> START (current_token.length = address_of_character - current_token.text_ptr; current_token.next = 0; create new line object; do line linkage; )
+			// character = 0x00 ==> END (current_token.length = address_of_character - current_token.text_ptr; current_token.next = 0; current_line.next = 0)
+			// character = else ==> IN_TOKEN ()
+		else if (state == IN_TOKEN) then
+			if (character_type == SPACING) then
+				current_token[3] = source_text + i - current_token[2];
+				new_token = malloc(4);
+				current_token[0] = new_token;
+				new_token[1] = current_token;
+				current_token = new_token;
+
+				state = NEW_TOKEN;
+			else if (character_type == ELEMENT) then
+				current_token[3] = source_text + i - current_token[2];
+				new_token = malloc(4);
+				current_token[0] = new_token;
+				new_token[1] = current_token;
+				current_token = new_token;
+
+				current_token[2] = source_text + i;
+				current_token[3] = 1;
+
+				new_token = malloc(4);
+				current_token[0] = new_token;
+				new_token[1] = current_token;
+				current_token = new_token;
+
+				state = NEW_TOKEN;
+			else if (character_type == LINE_MARK) then
+				current_token[3] = source_text + i - current_token[2];
+				current_token[0] = 0;
+				parent = current_line;
+				current_line = malloc(4);
+				parent[0] = current_line;
+
+
+				state = START;
+			else if (character_type == EOF) then
+				current_token[3] = source_text + i - current_token[2];
+				current_token[0] = 0;
+				current_line[0] = 0;
+
+				state = END;
+			else
+				continue;
+			endif; endif; endif; endif;
+		// state = END
+			// break ()
+		else
+			break;
+		endif; endif; endif;
+	loop;
+	return top;
+end;
+
+void delete_token(@int token)
+	dalloc(token);
+end;

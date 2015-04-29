@@ -1,0 +1,188 @@
+//requires allocation.cll
+
+
+//functions for set objects 
+
+// properties of a set are:
+
+	// - holds integers
+	// - any integer may only appear in the set once
+	// - uses a linear linked list so slow for large sizes
+
+
+//External functions
+
+//setInsert(set,int): inserts an int into the set if it is not already in the set
+//setRemove(set,int): removes an int if alredy in the set
+//setUnion(set,set): places every element in set2 into set1
+//setSubtract(set,set): remove every element in set2 from set1
+//setCopy(set): returns a new set object containing same elements as before
+//set(): returns a set object
+//setDelete(set): deletes the set
+//printSet(set): prints out the set
+//inSet(int,set): returns 1 is the int is in the set else 0
+
+
+//set object parts
+
+//   HEADER
+// ______________
+// | SET PTR 	|
+// --------------
+
+//  Set list
+// _________
+// | data  |
+// ---------
+// | next  |
+// ---------
+
+@int set()
+	@int thisSet = malloc(1);
+	thisSet[0] = 0;
+	return thisSet;
+end;
+
+void setInsert(@int set,int data)
+	__setInsert(set-4,set[0],data);
+end;
+
+void setRemove(@int set, int data)
+	__setRemove(set-4,set[0],data);
+end;
+
+void setUnion(@int set1, @int set2)
+	__setUnion(set1,set2[0]);
+end;
+
+void setSubtract(@int set1, @int set2)
+	__setSubtract(set1,set2[0]);
+end;
+
+@int setCopy(@int set)
+	@int return_set = set();
+ 	__setCopy(set[0], return_set-4);	
+ 	return return_set;
+end;
+
+void setDelete(@int set)
+	__setDelete(set[0]);
+	set[0] = 0;
+	dalloc(set);
+end;
+
+void printSet(@int set)
+	putc('[');
+	__printSet(set[0]);
+	putc(']');
+end;
+
+int inSet(int data, @int set)
+	return __inSet(data,set[0]);
+end;
+
+
+
+
+void __setInsert(@int parent, @int set, int data)
+	if (set == 0) then
+		parent[1] = new_set_node(data);
+	else
+		if (set[0] != data) then
+			__setInsert(set,set[1],data);
+		endif;
+	endif;
+end;
+
+void __setRemove(@int parent, @int set, int data)
+	if (set != 0) then
+		if (set[0] == data) then
+			parent[1] = set[1];
+			set[1] = 0;
+			dalloc(set);
+		else
+			__setRemove(set,set[1],data);
+		endif;
+	endif;
+end;
+
+void __setUnion(@int set1, @int set2_node)
+	if (set2_node) then
+		setInsert(set1,set2_node[0]);
+		__setUnion(set1,set2_node[1]);
+	endif;
+end;
+
+void __setSubtract(@int set1, @int set2_node)
+	if (set2_node) then
+		setRemove(set1,set2_node[0]);
+		__setSubtract(set1,set2_node[1]);
+	endif;
+end;
+
+void __setCopy(@int setNode, @int setTarget)
+	if (setNode) then
+		@int new_node = malloc(2);
+		new_node[0] = setNode[0];
+		new_node[1] = 0;
+		setTarget[1] = new_node;
+		__setCopy(setNode[1],new_node);
+	endif;
+end;
+
+void __setDelete(@int node)
+	if (node) then
+		__setDelete(node[1]);
+		node[1] = 0;
+		dalloc(node);
+	endif;
+end;
+
+void __printSet(@int node)
+	if (node) then
+		print_i(node[0]);
+		if (node[1]) then
+			putc(',');
+			putc(' ');
+		endif;
+		__printSet(node[1]);
+	endif;
+end;
+
+int __inSet(int data, @int node)
+	if (node) then
+		if (node[0] == data) then return 1; endif;
+		return __inSet(data,node[1]);
+	else
+		return 0;
+	endif;
+end;
+
+
+@int new_set_node(int data)
+	@int new_node = malloc(2);
+	new_node[0] = data;
+	new_node[1] = 0;
+	return new_node;
+end;
+
+
+
+
+
+
+void SET_TEST_RUN()
+	malloc_init();
+	@int myset = set();
+	@int set2 = set();
+	printSet(myset);
+	int i;
+	for (i = 0, i<5,i+=1)
+		setInsert(myset,i);
+		//printSet(myset);
+	loop;
+	for (i = 0, i<10000,i+=1)
+		@int newSet = setCopy(myset);
+		setDelete(newSet);
+	loop;
+end;

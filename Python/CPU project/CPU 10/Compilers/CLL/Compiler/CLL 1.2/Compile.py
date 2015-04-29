@@ -18,6 +18,7 @@ import code_generator1_2 as code_generator
 #- run type and parameter checking (for each function call, make sure the types and number of parameters passed to it is correct)
 #begin code generation - lots of mutually recursive functions
 
+CURRENT_DIR = os.path.dirname(__file__)
 
 
 class Program:
@@ -702,8 +703,12 @@ def pretokenise(source_text,path):
 		if len(line) and line[0] == "#":
 			if line[:9] == "#include ":
 				#print line
-				file_path = path+[line[9:]]
-				included = pretokenise(open("\\".join(file_path),"r").read(),file_path[-1])
+				if line[9:13] == "STD:":
+					file_path = os.path.join(CURRENT_DIR,"standard library\\"+line[13:])
+					included = pretokenise(open(file_path,"r").read(),file_path[-1])
+				else:
+					file_path = path+[line[9:]]
+					included = pretokenise(open("\\".join(file_path),"r").read(),file_path[-1])
 				lines[i] = included[0]
 				replace_dict.update(included[1])
 			elif line.split(" ")[0] == "#define": #defines token to be changed for another

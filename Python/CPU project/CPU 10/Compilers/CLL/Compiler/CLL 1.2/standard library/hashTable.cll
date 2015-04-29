@@ -1,3 +1,4 @@
+//header file for hash tables - uses my tree database code
 // database entry format:
 
 
@@ -11,121 +12,7 @@
 // Data pointer     //
 //////////////////////
 
-#include allocation.cll
-
-
-void main()
-	malloc_init();
-	@int myDict = newDict("Hello","world");
-	demoSystem();
-end;
-
-// ____________________________________ Demonstrations _____________________________
-char demoBUFPTR = 0;
-@char 255 BUF;
-
-
-#define EXIT 1
-#define ADD 2
-#define REMOVE 3
-#define RETRIEVE 4
-#define REBALANCE 5
-#define DUMP 6
-#define PASS 7
-
-void demoSystem()
-	@int demoDict = newDict("ROOT","ROOT");
-	printf("_________________STARTING SYSTEM_______________________\n");
-	while (1) do
-		readIn();
-		int op = getDemoOp();
-		if (op == EXIT) then break; endif;
-		if (op == ADD) then insertToDict(demoDict,getWord(),newString(getWord()));
-		else if (op == REMOVE) then
-			@char keyWord = getWord();
-			if (deleteFromDict(demoDict,keyWord)) then printf("SUCCESS\n"); else printf("FAILURE\n"); endif;
-		else if (op == RETRIEVE) then
-			@char result = retrieveFromDict(demoDict,getWord());
-			if (result) then
-				printf(result);
-				printf("\n");
-			else
-				printf("ERROR: KEY DOES NOT EXIST\n");
-			endif;
-		else if (op == REBALANCE) then reBalanceDictTree(@demoDict);
-		else if (op == DUMP) then dumpDict(demoDict);
-		endif;endif;endif;endif;endif;
-		printf("Ok\n");
-	loop;
-end;
-
-void readIn()
-	demoBUFPTR = 0;
-	char character;
-	printf(">>>");
-	char lineFeed = 10;
-	char blank = 0;
-	char backSpace = 8;
-	while (1) do
-		character = getw();
-		putc(character);
-		if (character == 13) then
-			BUF[demoBUFPTR] = 0; //nullifies string
-			putc(lineFeed);
-			break;
-		else
-			if (character == 8) then
-				BUF[demoBUFPTR] = 0;
-				demoBUFPTR = demoBUFPTR - 1;
-				putc(blank);
-				putc(backSpace);
-				continue;
-			endif;
-			BUF[demoBUFPTR] = character;
-			demoBUFPTR = demoBUFPTR + 1;
-		endif;
-	loop;
-	while (demoBUFPTR) do 
-		BUF[demoBUFPTR] = 0; //clear rest of buffer
-		demoBUFPTR = demoBUFPTR + 1;
-	loop;
-end;
-
-int getDemoOp()
-	@char opWord = getWord();
-	if (checkKey(opWord,"ADD")) then return ADD;
-	else if (checkKey(opWord,"EXIT")) then return EXIT;
-	else if (checkKey(opWord,"REMOVE")) then return REMOVE;
-	else if (checkKey(opWord,"RETRIEVE")) then return RETRIEVE;
-	else if (checkKey(opWord,"REBALANCE")) then return REBALANCE;
-	else if (checkKey(opWord,"DUMP")) then return DUMP;
-	else if (checkKey(opWord,"PASS")) then return PASS;
-	endif;endif;endif;endif;endif;endif;endif;
-	printf("ERROR: UNRECOGNISED INSTRUCTION\n");
-	return PASS;
-end;
-
-@char getWord()
-	while((not(BUF[demoBUFPTR]))or(BUF[demoBUFPTR] == 32)) do
-		demoBUFPTR = demoBUFPTR + 1;
-	loop;
-	@char return_value = BUF+demoBUFPTR;
-	while((BUF[demoBUFPTR])and(BUF[demoBUFPTR] != 32)) do
-		demoBUFPTR = demoBUFPTR + 1;
-	loop;
-	BUF[demoBUFPTR] = 0; 		//nullifies
-	demoBUFPTR = demoBUFPTR + 1;
-	return return_value;
-end;
-
-@char newString(@char string)
-	int stringLength = getLength(string);
-	if (stringLength&3) then stringLength = 1 + (stringLength>>2); else stringLength = stringLength>>2; endif;  //pads if needed, uses &3 and <<2 for %4 and *4 respectively
-	@char stringCopy = malloc(stringLength); 					//allocates a section of memory of desired length
-	copyString(string,stringCopy,stringLength<<2);  		//copies key string
-	return stringCopy;
-end;
-//____________________________________ DICT TREE EDITING ALGORITHMS _____________________________________________
+//____________________________________ externally visible functions _____________________________________________
 
 @int newDict(@char keyString,@int dataPTR)
 	//initialises a dictionary using a root (root can be changed afterwards)
@@ -133,6 +20,131 @@ end;
 	@int data = createNewDataEntry(keyString,dataPTR);
 	return createNewTreeNode(key,0,0,data);
 end;
+
+void deleteDict(@int dict)
+	//deallocates the whole dict and all of its malloc alocated data pointers
+	@int left = dict[1];
+	@int right = dict[2];
+	if (left) then deleteDict(left);endif;
+	if (right) then deleteDict(right);endif;
+	dalloc(dict);
+	@int entry = dict[3]; //dict now represents the entry
+	dict[3] = 0; //remove links for good riddance - prevents dict from being resused after deallocation
+	dict[1] = 0;
+	dict[2] = 0;
+	while (entry) do
+		dalloc(entry);
+		dalloc(entry[0]);
+		if (isAllocated(entry[1])) then dalloc(entry[1]);endif;
+		entry = entry[2];
+	loop;
+end;
+
+void insertToDict(@int dict, @char keyString, int dataPTR)
+	//generates a dictionary entry corresponding to the tree string
+	TREEOPCOUNT = TREEOPCOUNT - 1;
+	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
+	int key = simpleHash(keyString);
+	@int entryAddress = findKey(key,dict); //gets address of a data ptr
+	if (entryAddress) then
+		if (checkKey(entryAddress[0],keyString)) then 
+			//if the same, then just  change dict pointer
+			entryAddress[1] = dataPTR;
+			return;
+		else //need to add to linked list
+			while(entryAddress[2])do
+				entryAddress = entryAddress[2];  //gets to the end of the linked list
+				if (checkKey(keyString,entryAddress[0])) then 		//if matching key string
+					entryAddress[1] = dataPTR;
+					return;
+				endif;
+			loop;
+			entryAddress[2] = createNewDataEntry(keyString,dataPTR);
+		endif;
+	else
+		editDict(key,createNewDataEntry(keyString,dataPTR),dict); //if not in tree, create a new node in the tree
+	endif;
+end;
+
+@int retrieveFromDict(@int dict, @char keyString)
+	//returns the data pointer in a dictionary entry
+	int key = simpleHash(keyString);
+	@int entryAddress = findKey(key,dict); //gets address of a data ptr
+	if (entryAddress) then
+
+		if (checkKey(entryAddress[0],keyString)) then 
+			//if the same, then return dict pointer
+			return entryAddress[1];
+		else //need to add to linked list
+			while(entryAddress[2])do
+				entryAddress = entryAddress[2];  //gets to the end of the linked list
+				if (checkKey(keyString,entryAddress[0])) then 		//if matching key string
+					return entryAddress[1]; 							//return ptr
+				endif;
+			loop;
+			return 0; //if gets to end without finding matching key string, then return 0
+		endif;
+	else
+		return 0; //if not in tree, return failure
+	endif;
+end;
+
+int deleteFromDict(@int dict, @char keyString)
+	//returns 1 for success, 0 for fail
+	TREEOPCOUNT = TREEOPCOUNT - 1;
+	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
+	int key = simpleHash(keyString);
+	@int treeNodeAddress = findTreeNode(key,dict);
+	@int entryAddress = treeNodeAddress[3]; //gets address of a data ptr
+
+	if (entryAddress) then
+		if (checkKey(entryAddress[0],keyString)) then 
+			//if the same, then delete node
+			if (entryAddress[2]) then 
+				//needs to change pointer in tree
+				treeNodeAddress[3] = entryAddress[2]; //changes tree pointer
+				dalloc(entryAddress);
+			else
+				treeNodeAddress[3] = 0;
+			endif;
+			@char entryString = entryAddress[1];
+			dalloc(entryAddress[0]);
+			dalloc(entryAddress);
+			return 1; //success
+		else //need to delete from linked list
+			while (entryAddress[2]) do
+				@int previousEntryAdrress = entryAddress;
+				entryAddress = entryAddress[2];
+				if (checkKey(entryAddress[0],keyString)) then
+					previousEntryAdrress[2] = entryAddress[2];
+					dalloc(entryAddress);
+				endif;
+			loop;
+			return 0; 		//failed
+		endif;
+	else
+		return 0; //if not in tree, return failure
+	endif;
+end;
+
+void dumpDict(@int dict)
+	if (dict[1]) then dumpDict(dict[1]); endif;
+	if (dict[2]) then dumpDict(dict[2]); endif;
+	@int entry = dict[3];
+	while (entry) do
+		printf(entry[0]);
+		printf(":");
+		printf(entry[1]);
+		printf("\n");
+		entry = entry[2];
+	loop;
+end;
+
+
+
+
+
+//_________________________ Under the hood _________________________________
 
 void editDict(int key, @int dataPTR,@int dict)
 
@@ -212,8 +224,6 @@ int TREEOPCOUNT = 32; //counts number of tree insertions and deletions, after 32
 	else
 		return 0;
 	endif;
-
-
 end;
 
 @int pruneTree(@int bottom)
@@ -340,108 +350,7 @@ end;
 //
 
 
-//_________________________________________ DICT SPECIFiC FUNCTIONS ______________________________
 
-void insertToDict(@int dict, @char keyString, int dataPTR)
-	//generates a dictionary entry corresponding to the tree string
-	TREEOPCOUNT = TREEOPCOUNT - 1;
-	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
-	int key = simpleHash(keyString);
-	@int entryAddress = findKey(key,dict); //gets address of a data ptr
-	if (entryAddress) then
-		if (checkKey(entryAddress[0],keyString)) then 
-			//if the same, then just  change dict pointer
-			entryAddress[1] = dataPTR;
-			return;
-		else //need to add to linked list
-			while(entryAddress[2])do
-				entryAddress = entryAddress[2];  //gets to the end of the linked list
-				if (checkKey(keyString,entryAddress[0])) then 		//if matching key string
-					entryAddress[1] = dataPTR;
-					return;
-				endif;
-			loop;
-			entryAddress[2] = createNewDataEntry(keyString,dataPTR);
-		endif;
-	else
-		editDict(key,createNewDataEntry(keyString,dataPTR),dict); //if not in tree, create a new node in the tree
-	endif;
-end;
-
-@int retrieveFromDict(@int dict, @char keyString)
-	//returns the data pointer in a dictionary entry
-	int key = simpleHash(keyString);
-	@int entryAddress = findKey(key,dict); //gets address of a data ptr
-	if (entryAddress) then
-
-		if (checkKey(entryAddress[0],keyString)) then 
-			//if the same, then return dict pointer
-			return entryAddress[1];
-		else //need to add to linked list
-			while(entryAddress[2])do
-				entryAddress = entryAddress[2];  //gets to the end of the linked list
-				if (checkKey(keyString,entryAddress[0])) then 		//if matching key string
-					return entryAddress[1]; 							//return ptr
-				endif;
-			loop;
-			return 0; //if gets to end without finding matching key string, then return 0
-		endif;
-	else
-		return 0; //if not in tree, return failure
-	endif;
-end;
-
-int deleteFromDict(@int dict, @char keyString)
-	//returns 1 for success, 0 for fail
-	TREEOPCOUNT = TREEOPCOUNT - 1;
-	if (not(TREEOPCOUNT)) then TREEOPCOUNT = 32; reBalanceDictTree(@dict); endif;
-	int key = simpleHash(keyString);
-	@int treeNodeAddress = findTreeNode(key,dict);
-	@int entryAddress = treeNodeAddress[3]; //gets address of a data ptr
-
-	if (entryAddress) then
-		if (checkKey(entryAddress[0],keyString)) then 
-			//if the same, then delete node
-			if (entryAddress[2]) then 
-				//needs to change pointer in tree
-				treeNodeAddress[3] = entryAddress[2]; //changes tree pointer
-				dalloc(entryAddress);
-			else
-				treeNodeAddress[3] = 0;
-			endif;
-			@char entryString = entryAddress[1];
-			dalloc(entryAddress[0]);
-			dalloc(entryAddress);
-			return 1; //success
-		else //need to delete from linked list
-			while (entryAddress[2]) do
-				@int previousEntryAdrress = entryAddress;
-				entryAddress = entryAddress[2];
-				if (checkKey(entryAddress[0],keyString)) then
-					previousEntryAdrress[2] = entryAddress[2];
-					dalloc(entryAddress);
-				endif;
-			loop;
-			return 0; 		//failed
-		endif;
-	else
-		return 0; //if not in tree, return failure
-	endif;
-end;
-
-//__________________________________ Dump dict ______________________________
-void dumpDict(@int dict)
-	if (dict[1]) then dumpDict(dict[1]); endif;
-	if (dict[2]) then dumpDict(dict[2]); endif;
-	@int entry = dict[3];
-	while (entry) do
-		printf(entry[0]);
-		printf(":");
-		printf(entry[1]);
-		printf("\n");
-		entry = entry[2];
-	loop;
-end;
 
 void dumpList(@int dict)
 	@int node = dict;

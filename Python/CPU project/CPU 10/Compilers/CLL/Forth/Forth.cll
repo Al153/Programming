@@ -106,7 +106,7 @@ end;
 
 char dontBreak = 1;
 
-#include allocation.cll
+#include STD:allocation.cll
 void init_primitives()
 	//sets up dictionary etc
 	malloc_init();

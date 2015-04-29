@@ -1,4 +1,4 @@
-#include string_tools.cll  
+#include STD:string_tools.cll  
 int count_block_palindromes(@char word, int length)  //this is a comment
 	int limit = (length>>1) + 1;
 	int total = 0;

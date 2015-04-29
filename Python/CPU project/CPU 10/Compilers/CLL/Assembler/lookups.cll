@@ -1,0 +1,116 @@
+//will update for better (less malloced lookups)
+
+
+
+void init_flagDict()
+//	could be done without these dicts
+	flagDict = newDict("0",0);
+	insertToDict("1",1);
+	insertToDict("2",2);
+	insertToDict("3",3);
+	insertToDict("4",4);
+	insertToDict("5",5);
+	insertToDict("6",6);
+	insertToDict("7",7);
+	insertToDict("8",8);
+	insertToDict("9",9);
+	insertToDict("10",10);
+	insertToDict("11",11);
+	insertToDict("12",12);
+	insertToDict("13",13);
+	insertToDict("14",14);
+	insertToDict("15",15);
+	insertToDict("16",16);
+	insertToDict("17",17);
+	insertToDict("18",18);
+	insertToDict("19",19);
+	insertToDict("20",20);
+	insertToDict("21",21);
+	insertToDict("22",22);
+	insertToDict("23",23);
+	insertToDict("Equal",24);
+	insertToDict("Greater",25);
+	insertToDict("Less",26);
+	insertToDict("Carry",27);
+	insertToDict("Borrow",28);
+	insertToDict("DivByZero",29);
+	insertToDict("StackOverflow",30);
+	insertToDict("StackUnderflow",31);
+end;
+
+void init_instructionDict()
+	instructionDict = newDict("Halt",0);
+	insertToDict(instructionDict,"Pass",1);
+	insertToDict(instructionDict,"Move",2);
+	insertToDict(instructionDict,"Load",3);
+	insertToDict(instructionDict,"Store",4);
+	insertToDict(instructionDict,"CompareReg",5);
+	insertToDict(instructionDict,"CompareAddr",6);
+	insertToDict(instructionDict,"OutReg",7);
+	insertToDict(instructionDict,"OutAddr",8);
+	insertToDict(instructionDict,"OutdReg",9);
+	insertToDict(instructionDict,"OutdAddr",10);
+	insertToDict(instructionDict,"LoadByte",11);
+	insertToDict(instructionDict,"StoreByte",12);
+	insertToDict(instructionDict,"LoadWord",13);
+	insertToDict(instructionDict,"StoreWord",14);
+	insertToDict(instructionDict,"ADDReg",16);
+	insertToDict(instructionDict,"SUBReg",17);
+	insertToDict(instructionDict,"MULReg",18);
+	insertToDict(instructionDict,"DIVReg",19);
+	insertToDict(instructionDict,"MODReg",20);
+	insertToDict(instructionDict,"ANDReg",21);
+	insertToDict(instructionDict,"ORReg",22);
+	insertToDict(instructionDict,"XORReg",23);
+	insertToDict(instructionDict,"NOTReg",24);
+	insertToDict(instructionDict,"NANDReg",25);
+	insertToDict(instructionDict,"NORReg",26);
+	insertToDict(instructionDict,"XNORReg",27);
+	insertToDict(instructionDict,"SHLReg",28);
+	insertToDict(instructionDict,"SHRReg",29);
+	insertToDict(instructionDict,"ADDcReg",30);
+	insertToDict(instructionDict,"SUBbReg",31);
+	insertToDict(instructionDict,"ADDAddr",32);
+	insertToDict(instructionDict,"SUBAddr",33);
+	insertToDict(instructionDict,"MULAddr",34);
+	insertToDict(instructionDict,"DIVAddr",35);
+	insertToDict(instructionDict,"MODAddr",36);
+	insertToDict(instructionDict,"ANDAddr",37);
+	insertToDict(instructionDict,"ORAddr",38);
+	insertToDict(instructionDict,"XORAddr",39);
+	insertToDict(instructionDict,"NOTAddr",40);
+	insertToDict(instructionDict,"NANDAddr",41);
+	insertToDict(instructionDict,"NORAddr",42);
+	insertToDict(instructionDict,"XNORAddr",43);
+	insertToDict(instructionDict,"SHLAddr",44);
+	insertToDict(instructionDict,"SHRAddr",45);
+	insertToDict(instructionDict,"ADDcAddr",46);
+	insertToDict(instructionDict,"SUBbAddr",47);
+	insertToDict(instructionDict,"InReg",48);
+	insertToDict(instructionDict,"InAddr",49);
+
+end;
+
+void init_registerDict()
+	registerDict = newDict("Zero",0);
+	insertToDict("One",1);
+	insertToDict("Accumulator",2);
+	insertToDict("Jump",3);
+	insertToDict("PC",4);
+	insertToDict("Flags_set",5);
+	insertToDict("Flags_reset",6);
+	insertToDict("Stack_pointer",7);
+	insertToDict("gp0",8);
+	insertToDict("gp1",9);
+	insertToDict("gp2",10);
+	insertToDict("gp3",11);
+	insertToDict("gp4",12);
+	insertToDict("gp5",13);
+	insertToDict("gp6",14);
+	insertToDict("gp7",15);
+end;
+
+void init_literals()
+	literals_set = set();
+	setInsert(literals_set,16);   		//adds @16 for gotos
+end;

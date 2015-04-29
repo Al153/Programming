@@ -1,0 +1,139 @@
+////////////////////////////////////////// GENERAL STRING TOOLS /////////////////////////////////////////////////
+
+int check_if_equal(@char word1, @char word2, int len)
+	int i;
+	for(i = 0, i<len,i = i + 1)
+		if (not(word1[i] == word2[i])) then
+			return 0;
+		endif;
+	loop;
+	return 1;
+end;
+
+void int_to_string(int number, @char string_buffer)
+//doesnt seem to work
+	@char lookup = "0123456789";
+	int i;
+	int reduced;
+	@char 10 digit_stack;
+	int digit_stack_pointer = 0;
+	for(number = number, number>0,number = number/10)  //utilising for loop functionality to reduce number
+		reduced = number/10;
+		digit_stack[digit_stack_pointer] = reduced; //puts decimal digits into stack
+		digit_stack_pointer = digit_stack_pointer + 1;
+	loop;
+
+	while (digit_stack_pointer >0) do
+		digit_stack_pointer = digit_stack_pointer-1;
+		string_buffer[i] = lookup[digit_stack[digit_stack_pointer]];
+		i = i + 1;
+	loop;
+end;
+
+int string_to_int(@char number)
+	int dec = 0;
+	int i;
+	for(i=0, number[i] ,i = i+1)
+		if ((number[i]=<'9') and (number[i]>= '0')) then
+			dec = dec * 10 + ( number[i] - '0' );
+		else
+			break;
+		endif;
+	loop;
+	return dec;
+end;
+
+void strcpy(@char string1, @char string2)
+	//copies string 2 into string 1
+	int i = 0;
+	while (1) do
+		string1[i] = string2[i];
+		if (not(string2[i])) then break; endif; //if end of string, stop
+		i = i + 1;
+	loop;
+end;
+
+void strcat(@char string1, @char string2)
+	//appends string 2 to string 1
+	int i = 0;
+	int copying = 0;
+	while(1)do
+		if (string1[i]) then pass; //scans through string1 until the null terminal is found. then string2 is copied into string 1 at that point
+		else strcpy(string1+i,string2); break; 
+		endif;
+		i = i + 1;
+	loop;
+end;
+
+////////////////////////////// IO /////////////////////////////////////////////
+void print_hex(@char string, int size)
+
+
+	@char lookup = "0123456789ABCDEF"; //prints the hex of a string 
+	@char 3 buf = [0,0,0];
+	int i;
+	char high;
+	char low;
+
+
+	for (i = 0, i<size, i = i + 1)
+		high = string[i]>>4;
+		low = string[i]&15;
+		buf[0] = lookup[high];
+		buf[1] = lookup[low];
+		printf(buf);
+	loop;
+end;
+/////////////////////////////// IO ////////////////////////////////////////////
+void in(@char buf)
+	int i = 0;
+	char character;
+	while (1) do
+		character = getw();
+		if (character == 13) then
+			buf[i] = 0; //nullifies string
+			break;
+		else
+			buf[i] = character;
+			i = i+1;
+		endif;
+	loop;
+end;
+
+void in_echo(@char buf)
+	int i = 0;
+	char character;
+	while (1) do
+		character = getw();
+		putc(character);
+		if (character == 13) then
+			buf[i] = 0; //nullifies string
+			break;
+		else
+			buf[i] = character;
+			i = i+1;
+		endif;
+	loop;
+end;
+
+//CLL printf (implemented in assembly as a built_in)
+void printf_CLL(@char buf)
+	int i = 0;
+	char character;
+	while (1) do
+		character = buf[i];
+		putc(character);
+		if (character == 0) then
+			break; //breaks
+		endif;
+		i = i+1;
+	loop;
+end;
+
+void get_response(@char prompt,@char response)
+	printf(prompt);
+	in_echo(response);
+end;
+
+
+//////////////////////////////////////////////////////////////////////////////
