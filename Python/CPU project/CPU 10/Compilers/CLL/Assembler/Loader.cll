@@ -53,7 +53,7 @@ void render(@int AIF_tree, @char offset)
 		//byte data
 		//do_offset has no effect
 		@char byte_address = address + offset;
-		byte_address[0] = char(line_pointer[0];)
+		byte_address[0] = char(line_pointer[0]);
 	endif; endif;
 	dalloc(line_pointer); //deallocates the line
 end;

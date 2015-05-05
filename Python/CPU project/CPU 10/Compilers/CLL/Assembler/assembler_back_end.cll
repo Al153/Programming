@@ -14,7 +14,7 @@
 void init()
 	malloc_init();
 	definedDict = newDict("ROOT","ROOT");
-	variableBDict = newDict("ROOT","ROOT");
+	variableDict = newDict("ROOT","ROOT");
 	//init_registerDict();  //might rearrange so initialised when needed
 	//init_instructionDict();
 	//init_flagDict();
@@ -22,10 +22,12 @@ void init()
 end;
 
 
-@int Parse(@char source_text)
+@int parse(@char source_text)
+	printf("Parsing\n");
 	@int top = tokenise(source_text);
 	@int line;
 	@int previous_line = @top;
+	print_tokens(top);
 
 
 
@@ -47,7 +49,7 @@ end;
 		//check for comments
 		remove_comments(line,previous_line);
 		line = previous_line[0];
-		check_char_literals(line);
+		//check_char_literals(line);
 		check_int_literals(line);
 		scan_definitions(line,previous_line);
 
@@ -66,6 +68,7 @@ void second_pass(@int tokens)
 	// checks for variables - add to dict
 	// adds line types
 	// adds line sizes
+	pass;
 end;
 
 @int generate_intermediate(@int tokens)
@@ -74,6 +77,7 @@ end;
 	// replaces variables and adds line numbers (generates addresses)
 	// places offsets
 	// deallocates token tree
+	pass;
 end;
 
 
@@ -82,8 +86,8 @@ void remove_comments(@int line, @int previous_line)
 	@int token;
 	int state =0;
 	for (token = line[1], token, token = token[0])
-		if (token[3] == 1) then 		//only looks at tokens of length 1
-			char character = token[2];
+	//	if (token[3] == 1) then 		//only looks at tokens of length 1
+			@char character = token[2];
 			if (character[0] == '\'') then state ^= 1;
 			else if (character[0] == '#') then
 					if (state == 0) then 			//if not a literal and a # is found then remove the # and anything after it
@@ -104,9 +108,9 @@ void remove_comments(@int line, @int previous_line)
 							loop;
 						endif;
 					endif;
-				endif
+				endif;
 			endif;
-		endif;
+	//	endif;
 	loop;
 end;
 
@@ -114,11 +118,11 @@ void check_int_literals(@int line)
 	@int token;
 	@int state = START;
 	for (token = line[1], token, token = token[0])
-		char text = token[2];
+		@char text = token[2];
 		if (text[0] == '@') then
 			@int next_token = token[0];
 			if (token) then
-				setInsert(literals_set,intify(next_token[2]),next_token[3]);
+				setInsert(literals_set,intify(next_token[2],next_token[3]));
 				token[3] = 1 + next_token[3]; //merge tokens into token
 				token[0] = next_token[0];
 				next_token = token[0];
@@ -126,6 +130,7 @@ void check_int_literals(@int line)
 			else
 				printf("SYNTAX ERROR: @ at the end of a line\n");
 				quit();
+			endif;
 		endif;
 	loop;
 end;
@@ -135,7 +140,7 @@ void scan_definitions(@int line, @int previous_line)
 	//checks if token_0 is "def";
 	//if so then create the dictionary entry copy_of(token_1):copy_of(token_2) (copy_of()s nullify the ends of the strings)
 	@int token = line[1];
-	if (token[4]) == 3) then //token length == 3
+	if (token[4] == 3) then //token length == 3
 		@char text = token[2];
 		if (text[0] == 'd') then
 			if (text[1] == 'e') then
@@ -167,7 +172,6 @@ end;
 	char byte_length = length;
 	length += 1;
 	length = 1 +(length>>2) if length&3 else length>>2;
-	if (keyStringLength&3) then keyStringLength = 1 + (keyStringLength>>2); else keyStringLength = keyStringLength>>2; endif; 
 	@char return_string = malloc(length);
 	int i;
 	for (i = 0, i<byte_length, i += 1)
@@ -180,12 +184,39 @@ int intify(@char text, int length)
 	int i;
 	int total;
 	for (i = 0, i<length, i += 1)
-		if ((text[i]<='9')and (text[i]>='0')) then
-		total = total * 10 + (text[i] - '0' );
+		if ((text[i]<='9')and (text[i]>='0')) then total = total * 10 + (text[i] - '0' ); endif;
 	loop;
 	return total;
 end;
 
 @char stringify(int integer)
+pass;
+end;
 
+
+void print_tokens(@int line)
+	printf("printing tokens\n");
+	@int token;
+	int length;
+	@char text;
+	int i;
+	int line_count = 0;
+	print_i(line);
+	printf(" ");
+	print_i(line[0]);
+
+	putc('\n');
+	while (line) do
+		print_i(line_count); printf(" : ");
+		line_count += 1;
+		token = line[1];
+		while (token) do
+			text = token[2];
+			length = token[3]&65535;  // gets lower word
+			for (i = 0, i<length, i += 1) putc(text[i]); loop;
+			token = token[0];
+		loop;
+		putc('\n');
+		line = line[0];
+	loop;
 end;

@@ -32,7 +32,7 @@ class Program:
 	def compile(self):
 		print "Creating built in functions = ",
 		CURRENT_DIR = os.path.dirname(__file__)
-		self.built_in_functions = [
+		self.built_in_functions = [  #sets up the built in functions
 			built_in_function([("@char","word")],"void","printf", open(os.path.join(CURRENT_DIR, 'BuiltIns\\printf.al'),"r").read()),
 			built_in_function([("int","number")],"void","print_i",open(os.path.join(CURRENT_DIR, 'BuiltIns\\print_i.al'),"r").read()),
 			built_in_function([("int","number")],"char","char",open(os.path.join(CURRENT_DIR, 'BuiltIns\\char.al'),"r").read()),
@@ -127,12 +127,15 @@ class Program:
 			except ValueError:
 				type_string += node.string
 		return type_string
-	def parse_array(self,array_tree):
-		#print array_tree.type
-		if len(array_tree.children) == 1:
-			return [int(array_tree.children[0].string)]
-		else:
-			return self.parse_array(array_tree.children[0]) + [int(array_tree.children[2].string)]
+
+	def parse_array(self,array_tree): #non recursive since arrays can get large with big strings
+		array = []
+		while len(array_tree.children)>1:
+			array.append(int(array_tree.children[2].string))
+			array_tree = array_tree.children[0]
+		array.append(int(array_tree.children[0].string))
+		array.reverse()
+		return array
 
 	def generate_global_vars(self):
 		#creates assembly level variable definitions
@@ -569,6 +572,7 @@ class function:
 class built_in_function:
 	def __init__(self,arguments,return_type,name,assembly_equivalent):
 		self.built_in = 1
+		self.used = 0
 		self.return_type = return_type
 		self.input_parameters = arguments
 		self.name = name
@@ -591,6 +595,7 @@ def tokenise(self,source_text):
 	#tokeniser which handles strings and comments, deals with import directives etc
 	#source_text = fix_strings_and_comments(source_text)
 	#print "tokenising"
+	escaped_replace_dict = {"n":"\n",'"':'"',"\\":"\\","'":"'","t":"\t"}
 	source_text,macro_replace_dict = pretokenise(source_text,sys.argv[1].split("\\")[:-1])
 	#standard tokenizing routine
 	string_token_list = main_tokenise(self,source_text)
@@ -614,7 +619,10 @@ def tokenise(self,source_text):
 			#	cont = raw_input('')
 			string_counter += 1
 		elif current_token[0] == current_token[-1] == "'":
-			string_token_list[i] = str(ord(current_token[1]))
+			if current_token[1] != '\\':
+				string_token_list[i] = str(ord(current_token[1]))
+			else:
+				string_token_list[i] = str(ord(escaped_replace_dict[current_token[2]]))
 			token_list += [
 				self.get_parse_tree_node("char"),
 				self.get_parse_tree_node("(")
@@ -629,11 +637,18 @@ def tokenise(self,source_text):
 	#print [token.string for token in token_list]
 	return token_list
 
+def split(delimiters, string, maxsplit=0):
+    import re
+    regexPattern = '|'.join(map(re.escape, delimiters))
+    return [string for string in re.split(regexPattern, string, maxsplit) if string != '' ]
+
+
 def main_tokenise(self,text_file):
 	'''
 	Monolithic tokenizer
 	''' #replaces parser tokeniser
 	text_file = [line for line in text_file.split("\n")]
+	#print text_file
 	token_list = []
 	string = 0
 	escaped = 0
@@ -668,8 +683,17 @@ def main_tokenise(self,text_file):
 							current_token = ""
 						line_tokens.append(character)
 				else:
-					char_literal -= 1
-					current_token+=(character)
+					if not escaped:
+						if character == "\\":
+							escaped = 1
+							current_token+=(character)
+						else:
+							char_literal -= 1
+							current_token+=(character)
+					else:
+						char_literal -= 1
+						current_token += character
+						escaped = 0
 			elif string:
 				if not escaped:
 					if character == '"':
@@ -689,31 +713,36 @@ def main_tokenise(self,text_file):
 				line_tokens.append(current_token)
 			
 			token_list+=line_tokens
+		else:
+			current_token += "\n"
 		i +=1
 		line_tokens.append("\n")
 	return token_list
 
+import re
 def pretokenise(source_text,path):
-	#deals with import directives
+	#deals with import and define directives
+
 	lines = source_text.split("\n")
 	replace_dict = {}
 	i = 0
 	while i < len(lines):
 		line = lines[i]
-		if len(line) and line[0] == "#":
-			if line[:9] == "#include ":
+		split_line = split([" ","\t"],line)
+		if len(split_line)  and split_line[0][0] == "#":
+			if split_line[0] == "#include":
 				#print line
-				if line[9:13] == "STD:":
-					file_path = os.path.join(CURRENT_DIR,"standard library\\"+line[13:])
+				if split_line[1][:4] == "STD:":
+					file_path = os.path.join(CURRENT_DIR,"standard library\\"+split_line[1][4:])
 					included = pretokenise(open(file_path,"r").read(),file_path[-1])
 				else:
-					file_path = path+[line[9:]]
+					file_path = path+[split_line[1]]
 					included = pretokenise(open("\\".join(file_path),"r").read(),file_path[-1])
 				lines[i] = included[0]
 				replace_dict.update(included[1])
-			elif line.split(" ")[0] == "#define": #defines token to be changed for another
+			elif split_line[0] == "#define": #defines token to be changed for another
 				try:
-					replace_dict[line.split(" ")[1]] = line.split(" ")[2]
+					replace_dict[split_line[1]] = split_line[2]
 					lines = lines[:i]+lines[i+1:] #removes line 
 					i -=1 							#accounts for removal of line
 				except IndexError:
@@ -753,39 +782,6 @@ def find_functions(parse_tree):
 			i -=1
 		i +=1
 	return function_list
-
-
-#def find_functions(parse_tree,parent = None):
-#	'''recursively searches parse tree to find functions'''
-#	#print parse_tree.type
-#	if parse_tree.type == "<PROGRAM>":						#program is the top node of the tree
-#		return find_functions(parse_tree.children[0],parse_tree) #need to get functions lower down in the tree
-#	elif parse_tree.type == "<block>": 						#blocks contain another block and a line or just a line
-#		if len(parse_tree.children)>1:						#if the block has children
-#			if parse_tree.children[1].children[0].children[0].type == "<fun_dec>": 	#if the line child derives to a function declaration
-#	#			print "FOUND FUNCTION!"
-#				return_list =  [parse_tree.children[1].children[0].children[0]] + find_functions(parse_tree.children[0],parse_tree) #copies out a list to return
-#				parse_tree.children = parse_tree.children[:1] 									#chops out function definition
-#				return return_list
-#			else:
-#				return find_functions(parse_tree.children[0],parse_tree)
-#		elif len(parse_tree.children) == 1:											#if the end block:
-#			if parse_tree.children[0].children[0].children[0].type == "<fun_dec>":
-#	#			print "FOUND FUNCTION!"
-#				return_list =  [parse_tree.children[0].children[0].children[0]]
-#				parent.children = [] if parent.type == "<block>" else []
-#				return return_list
-#			elif parse_tree.children[0].type == "<block>":
-#				return find_functions(parse_tree.children[0],parse_tree)
-#			else:
-#				return []
-#			#print parse_tree.children[0].type
-#			quit()
-#		else:
-#			return []
-#	else:
-#		return []
-
 
 def linearise_code(parse_tree):
 	'''searches parse tree for line expressions and then adds them to a list'''

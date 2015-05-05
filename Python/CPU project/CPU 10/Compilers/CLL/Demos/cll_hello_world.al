@@ -1,47 +1,14 @@
-// code to take assembly language, assemble it into AIF (assembler intermediate form) and then render that form into memory and execute it
 
 
+############################################################################
+# 						SET UP ROUTINE
+############################################################################
+def STACK_SIZE 65536   						#makes stack sizes easy to change
 
-#include STD:allocation.cll
-#include STD:hashTable.cll
-#include STD:set.cll
-
-#include Loader.cll
-#include tokeniser.cll
-#include assembler_back_end.cll
-#include lookups.cll
-
-
-#define EXECUTE 1
-#define DUMP 2
-
-#define END_OF_PROGRAM 10000
-void assemble(@char source_text, int mode)
-	init();
-	@int tokens = parse(source_text);
-	//print_i(tokens);
-	print_tokens(tokens);
-	quit();
-	second_pass(tokens);
-	@int AIF = generate_intermediate(tokens);
-
-	if (mode == EXECUTE) then 
-		Load(AIF,END_OF_PROGRAM); //need to look into output to find a way to calculate end of program - failing that we can just produce a large array to write to
-	endif;
-end;
-
-
-void main()
-	assemble("
-############################################################################;
-#						SET UP ROUTINE;
-############################################################################;
-def STACK_SIZE 65536   						#makes stack sizes easy to change;
-
-array Callstack	STACK_SIZE []  				#initialise runtime variables;
-array Expression_stack STACK_SIZE [];
-int stack_length STACK_SIZE;
-int Callstack_ptr Callstack;
+array Callstack	STACK_SIZE []  				#initialise runtime variables
+array Expression_stack STACK_SIZE []
+int stack_length STACK_SIZE 				
+int Callstack_ptr Callstack 				
 
 Load Stack_pointer Callstack_ptr 				
 Load gp0 stack_length 						
@@ -144,11 +111,11 @@ int CLL.string0 CLL.array_of_string0
 
 Halt %function:quit
 
-#################################### Built in function print_al ####################################
+#################################### Built in function print_integer ####################################
 SUB gp7 @4 		 		 %function:print_i										#Pops into gp0
 Load gp0 Expression_stack [gp7]  				
 Outd gp0
-Move Jump PC  			#reads new top of stack from the stack frame
+Move Jump PC  			
 ####################################################################################################
 
 
@@ -169,7 +136,7 @@ Load gp0 Expression_stack [gp7]
 AND gp0 @255
 Store gp0 Expression_stack [gp7] 
 ADD gp7 @4
-Move Jump PC  			#reads new top of stack from the stack frame
+Move Jump PC 
 #######################################################################################
 
 ########################## PUTC (char) ########################################
@@ -228,9 +195,3 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Move Jump PC
 ###################################################################
-
-
-",EXECUTE);
-
-
-end;

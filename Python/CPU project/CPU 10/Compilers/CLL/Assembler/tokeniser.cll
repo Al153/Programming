@@ -9,8 +9,8 @@ int get_character_type(char character)
 	#define ID 5
 
 	if (character == 0) then return EOF; endif;
-	if (((character == '\n') or (character == ';'))or (character == ',')) then return LINE_MARK; endif;
-	if ((character== ' ') or (character == '\t')) then return SPACING; endif;
+	if (((character == '\n') or (character == ';'))or (character == 10)) then return LINE_MARK; endif;
+	if (((character== ' ') or (character == '\t'))or(character ==',')) then return SPACING; endif;
 	if  ((character == '#') or
 		(((character == '$')or (character == '%')) or
 		((character == '@') or (character == '\'') or
@@ -20,6 +20,7 @@ int get_character_type(char character)
 end;
 
 @int tokenise(@char source_text)
+printf("tokenising\n");
 	#define START 1
 	#define NEW_TOKEN 2
 	#define IN_TOKEN 3
@@ -54,17 +55,21 @@ end;
 		// malloc size = 4
 	//malloc has space for about 1000 lines
 	@int current_line = malloc(4);
+	//print_i(current_line);
 	top = current_line;
 	@int current_token;
-	@int new_token 
+	@int new_token;
 	@int parent = @top;
 	int i;
 
-	int parse_state = START;  //start is at the beginning of a line
+	int state = START;  //start is at the beginning of a line
 
 	for (i = 0, 1 , i += 1)
 		char character = source_text[i];
-		character_type = get_character_type(character)
+		//putc(character); print_i(int(character));
+		//putc('\n');
+		//a = getw();
+		int character_type = get_character_type(character);
 		// state = START
 			// character = "\t", ", "\n", ";" ==> START ()
 			// character = "@", "[", "]", "%", "$","'","#" ==> NEW_TOKEN (create new token object; put character into it; length = 1; link current line and this token; create second token - empty; link two tokens)
@@ -75,24 +80,25 @@ end;
 				continue;
 			else if (character_type == ELEMENT) then
 				current_token = malloc(4);
-				current_token[[1]] = 0;
+				current_token[1] = 0;
 				current_token[2] = source_text + i;
 				current_token[3] = 1;
 				current_line[1] = current_token;
 				new_token = malloc(4);
 				current_token[0] = new_token;
 				new_token[1] = current_token;
-				current_token = new_token
+				current_token = new_token;
 
 
 				state = NEW_TOKEN;
 			else if (character_type == EOF) then
 				dalloc(current_line);
 				parent[0] = 0;
+				//print_i(top);
 				state = END;
 			else
 				current_token = malloc(4);
-				current_token[[1]] = 0;
+				current_token[1] = 0;
 				current_token[2] = source_text + i;
 				current_line[1] = current_token;
 				state = IN_TOKEN;
@@ -115,7 +121,7 @@ end;
 				current_token[0] = new_token;
 				new_token[1] = current_token;
 				current_token = new_token;
-				state = new_token;
+				state = NEW_TOKEN;
 
 			else if (character_type == LINE_MARK) then
 				new_token = current_token[1];  //new token is a stand in for previous token
@@ -125,7 +131,7 @@ end;
 				current_line = malloc(4);
 				parent[0] = current_line;
 
-				state = START
+				state = START;
 			else if (character_type == EOF) then
 				current_line[0] = 0;
 				new_token = current_token[1]; //new token is a stand in for previous token
@@ -192,6 +198,8 @@ end;
 			break;
 		endif; endif; endif;
 	loop;
+	printf("tokenising complete\n");
+	char a = getw();
 	return top;
 end;
 
