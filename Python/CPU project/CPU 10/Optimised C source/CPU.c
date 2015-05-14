@@ -1,3 +1,11 @@
+//////////////////////////////////////////////////
+//												//
+// Compile at -O3 for 5x speed up 				//
+//												//
+//////////////////////////////////////////////////
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -14,38 +22,26 @@
 //C implementation of my CPU 10
 
 int step(unsigned int *registers, unsigned char *MEMORY){   //returns halt, carries out game logic
-	unsigned int instruction = 0;
-	unsigned int address = 0;
-	unsigned char decoded[4];
+	register unsigned int instruction = 0;
 
-	unsigned char instr;  //instruction data
-	unsigned char reg1;
-	unsigned char reg2;
-	unsigned char conditional;
+	register unsigned char instr;  //instruction data
+	register unsigned char reg1;
+	register unsigned char reg2;
+	register unsigned char conditional;
 
 	instruction = fetch_instruction(registers,MEMORY);
-	address = fetch_address(registers,MEMORY);
-
-	//decode_instruction(decoded,instruction);
-
-	//int i;
-	//for (i = 0; i<4;i++){
-	//	printf("%i   ", (int) decoded[i]);
-	//}
-	//printf("\n");
-	
+	//address = fetch_address(registers,MEMORY);
 	instr = (instruction&0xff000000)>>24;   //decoded[0];
-	reg1 =  (instruction&0x000f0000)>>16); //decoded[1]&15;
-	reg2 =  (instruction&0x00000f00)>>8);
+	reg1 =  ((instruction&0x000f0000)>>16); //decoded[1]&15;
+	reg2 =  ((instruction&0x00000f00)>>8);
 	conditional = instruction&0xff;
-	return execute(instr,reg1,reg2,conditional,address,registers,MEMORY);   //returned value is 1 if needs to return, otherwise false
+	return execute(instr,reg1,reg2,conditional,registers,MEMORY);   //returned value is 1 if needs to return, otherwise false
 
 }
 
 int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt? values, carries out logic
 	unsigned int instruction = 0;
 	unsigned int address = 0;
-	unsigned char decoded[4];
 
 	unsigned char instr;
 	unsigned char reg1;
@@ -53,33 +49,25 @@ int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt
 	unsigned char conditional;
 
 	instruction = fetch_instruction(registers,MEMORY);
-	address = fetch_address(registers,MEMORY);
 
-	decode_instruction(decoded,instruction);
+	instr = (instruction&0xff000000)>>24;   //decoded[0];
+	reg1 = ((instruction&0x000f0000)>>16); //decoded[1]&15;
+	reg2 = ((instruction&0x00000f00)>>8);
+	conditional = instruction&0xff;
 
-
-
-
-
-
-	
-	instr = decoded[0];
-	reg1 = decoded[1]&15;
-	reg2 = decoded[2]&15;
-	conditional = decoded[3];
-
-	printf("\n%u|  ",registers[4] - 8);  //prints out runtime data
+	printf("\n%u|  ",registers[4]-8);  //prints out runtime data
 
 	printf("%i   ", (int) instr);
 	printf("%i   ", (int) reg1);
 	printf("%i   ", (int) reg2);
 	printf("%i   ", (int) conditional);
 
-	printf(" address = %u\n", address);
+	printf(" address = %u", read_memory(registers[4]-4,MEMORY));
 	getchar();
 
-	return execute(instr,reg1,reg2,conditional,address,registers,MEMORY);   //returned value is 1 if needs to return, otherwise false
-
+	int result =  execute(instr,reg1,reg2,conditional,registers,MEMORY);   //returned value is 1 if needs to return, otherwise false
+	printf("gp0 = %u\n", registers[8]);
+	return result;
 }
 
 void init_memory(unsigned char *MEMORY, char *name){
@@ -87,6 +75,7 @@ void init_memory(unsigned char *MEMORY, char *name){
 	char state;   //uses a state machine to switch between address and data
 	unsigned int address;
 	unsigned char chr; 	//exctracted character
+	int i = 0;
 	FILE *fp = fopen(name, "rb");  //get file
 	if (fp == NULL){ 				//check valid file
 		printf("ERROR: Failed to open file \"%s\"\n",name);
@@ -149,9 +138,11 @@ void dumpMemory(unsigned char *MEMORY){
 	for (i = 0; i < 32;i++){printf("%u\t", (unsigned int)MEMORY[i]);}
 }
 
+
+
 int main(int argc, char *argv[]){
 	static unsigned char MEMORY[MEMORY_SIZE] = {0}; 					//setting up memory and registers
-	static unsigned int registers[16] = {0,1};
+	unsigned int registers[16] = {0,1};
 	int halt = 0;
 	long count = 0;
 

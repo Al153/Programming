@@ -1,0 +1,9 @@
+void main()
+	recurse(1);
+end;
+
+void recurse(int i)
+	print_i(i);
+	putc('\n');
+	recurse(i+1);
+end;

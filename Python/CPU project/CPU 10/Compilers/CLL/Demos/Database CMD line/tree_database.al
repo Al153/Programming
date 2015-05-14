@@ -165,6 +165,8 @@ byteArray CLL.array_of_string29 19 [10, 82, 69, 66, 65, 76, 65, 78, 67, 73, 78, 
 int CLL.string29 CLL.array_of_string29
 byteArray CLL.array_of_string28 33 [69, 82, 82, 79, 82, 58, 32, 85, 78, 82, 69, 67, 79, 71, 78, 73, 83, 69, 68, 32, 73, 78, 83, 84, 82, 85, 67, 84, 73, 79, 78, 10, 0]
 int CLL.string28 CLL.array_of_string28
+byteArray CLL.array_of_string44 10 [65, 83, 83, 69, 82, 84, 73, 78, 71, 0]
+int CLL.string44 CLL.array_of_string44
 byteArray CLL.array_of_string21 4 [65, 68, 68, 0]
 int CLL.string21 CLL.array_of_string21
 byteArray CLL.array_of_string20 4 [62, 62, 62, 0]
@@ -183,6 +185,8 @@ byteArray CLL.array_of_string26 5 [68, 85, 77, 80, 0]
 int CLL.string26 CLL.array_of_string26
 byteArray CLL.array_of_string41 17 [78, 85, 76, 76, 32, 82, 73, 71, 72, 84, 32, 76, 73, 78, 75, 10, 0]
 int CLL.string41 CLL.array_of_string41
+byteArray CLL.array_of_string46 2 [10, 0]
+int CLL.string46 CLL.array_of_string46
 byteArray CLL.array_of_string40 2 [10, 0]
 int CLL.string40 CLL.array_of_string40
 char CLL.demoBUFPTR 0
@@ -200,6 +204,8 @@ array CLL.array_of_MALLOC_HEAP 65536 []
 int CLL.MALLOC_HEAP CLL.array_of_MALLOC_HEAP
 byteArray CLL.array_of_string35 16 [78, 111, 100, 101, 32, 97, 100, 100, 114, 101, 115, 115, 32, 61, 32, 0]
 int CLL.string35 CLL.array_of_string35
+byteArray CLL.array_of_string45 7 [32, 61, 61, 61, 32, 32, 0]
+int CLL.string45 CLL.array_of_string45
 int CLL.MALLOC_POOL 0
 byteArray CLL.array_of_string32 2 [58, 0]
 int CLL.string32 CLL.array_of_string32
@@ -806,6 +812,61 @@ Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
 Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
+																	Scope assert
+def length gp4
+def expression_stack_ptr gp7
+def ret_addr Jump
+def previous_stack_ptr gp5
+Move Stack_pointer previous_stack_ptr								%function:assert
+SUB Stack_pointer @17 									#OVERHEAD FOR FUNCTION assert
+Compare Stack_pointer Callstack_ptr
+if Less then Load PC Recursion_limit_reached
+Store ret_addr 0 [Stack_pointer]
+Store previous_stack_ptr 4 [Stack_pointer]
+SUB gp7 @4 															#POP GP0
+Load gp0 Expression_stack [gp7]
+Store gp0 13 [Stack_pointer] 						#STORE GP0
+SUB gp7 @4 															#POP GP0
+Load gp0 Expression_stack [gp7]
+Store gp0 9 [Stack_pointer] 						#STORE GP0
+Load gp0 CLL.string44 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp0 9 [Stack_pointer] 						#LOAD GP0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp0 CLL.string45 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Load gp0 13 [Stack_pointer] 						#LOAD GP0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:print_i 												#CALLING print_i
+Load gp0 CLL.string46 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
+Goto function:getw 												#CALLING getw
+SUB gp7 @4 															#POP GP0
+Load gp0 Expression_stack [gp7]
+StoreByte gp0 8 [Stack_pointer] 					#STORE GP0 (CHAR)
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
 																	Scope isAllocated
 def length gp4
 def expression_stack_ptr gp7
@@ -845,11 +906,11 @@ Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
 
-#################################### Built in function print_al ####################################
+#################################### Built in function print_integer ####################################
 SUB gp7 @4 		 		 %function:print_i										#Pops into gp0
 Load gp0 Expression_stack [gp7]  				
 Outd gp0
-Move Jump PC  			#reads new top of stack from the stack frame
+Move Jump PC  			
 ####################################################################################################
 
 
@@ -1127,7 +1188,7 @@ Load gp0 Expression_stack [gp7]
 AND gp0 @255
 Store gp0 Expression_stack [gp7] 
 ADD gp7 @4
-Move Jump PC  			#reads new top of stack from the stack frame
+Move Jump PC 
 #######################################################################################
 																	Scope malloc_init
 def length gp4

@@ -15,10 +15,10 @@ void main()
 	int instructionCount = 0;
 	printf("\n\n__________________ EXECUTING __________________\n");
 	while (not(step())) do 
-		print_i(REGISTERS[5]);
-		printf("\n");
+		//print_i(REGISTERS[5]);
+		//printf("\n");
 		instructionCount = instructionCount +1;
-		char cont = getw();
+		//char cont = getw();
 	loop;
 	printf("\n__________________ ENDED ______________________\n");
 	printf("EXECUTED "); print_i(instructionCount); printf(" INSTRUCTIONS\n");
@@ -108,7 +108,7 @@ int step()
 	@char 4 instruction;
 	fetchInstruction(instruction);
 	int address = fetchAddress();
-	DumpInstruction(instruction,address);
+	//DumpInstruction(instruction,address);
 	return executeInstruction(instruction,address);
 end;
 
@@ -274,8 +274,8 @@ end;
     	int result = 0;
 		int top_of_result = 0;
 		int flags = 0;
-		printf("\nALUING: ");
-		print_i(int(op));
+		//printf("\nALUING: ");
+		//print_i(int(op));
 		if (op == 0) then 			//ADD
 			result = r1_value + r2_value;
 			if (result < r1_value) then	//if there is a carry
@@ -411,7 +411,7 @@ end;
 
 //________________ memory access functions ____________________	
 	void store_memory(int addr,int data)
-		printf("\nSTORING TO MEMORY:");print_i(addr);printf(" : ");print_i(data);
+		//printf("\nSTORING TO MEMORY:");print_i(addr);printf(" : ");print_i(data);
 		@char 4 data_bytes;
 		if (addr>MEMORY_LIMIT-3)then
 			printf("ADDRESS OVERFLOW) then "); print_i(addr); printf("\n");

@@ -1,0 +1,7 @@
+void main()
+	int i = 0;
+	while (i<100000000) do
+		i += 1;
+	loop;
+	print_i(i);
+end;

@@ -45,6 +45,7 @@ void demoSystem()
 			if (deleteFromDict(demoDict,keyWord)) then printf("SUCCESS\n"); else printf("FAILURE\n"); endif;
 		else if (op == RETRIEVE) then
 			@char result = retrieveFromDict(demoDict,getWord());
+			//print_i(result);
 			if (result) then
 				printf(result);
 				printf("\n");
@@ -134,17 +135,16 @@ end;
 end;
 
 void editDict(int key, @int dataPTR,@int dict)
-
 	if (key == dict[0]) then //needs to change dict
 		dict[3] = dataPTR;	
 	else
 		if (key>dict[0]) then
 			if (dict[2]) then editDict(key,dataPTR,dict[2]); //if there is a node to the right, try to add relative to it
-			else dict[2] = createNewTreeNode(key,0,0,dataPTR); //otherwise fit in the new node here
+			else dict[2] = createNewTreeNode(key,0,0,dataPTR); //otherwise fit in the new node here			
 			endif;
 		else
 			if (dict[1]) then editDict(key,dataPTR,dict[1]); //if there is a node to the left, try to add relative to it
-			else dict[1] = createNewTreeNode(key,0,0,dataPTR); //otherwise fit in the new node here
+			else dict[1] = createNewTreeNode(key,0,0,dataPTR); //otherwise fit in the new node here			];						
 			endif;
 		endif;	 
 	endif;
@@ -350,7 +350,7 @@ void insertToDict(@int dict, @char keyString, int dataPTR)
 	if (entryAddress) then
 		if (checkKey(entryAddress[0],keyString)) then 
 			//if the same, then just  change dict pointer
-			entryAddress[1] = dataPTR;
+			entryAddress[1] = dataPTR;		
 			return;
 		else //need to add to linked list
 			while(entryAddress[2])do
@@ -362,7 +362,7 @@ void insertToDict(@int dict, @char keyString, int dataPTR)
 			loop;
 			entryAddress[2] = createNewDataEntry(keyString,dataPTR);
 		endif;
-	else
+	else	
 		editDict(key,createNewDataEntry(keyString,dataPTR),dict); //if not in tree, create a new node in the tree
 	endif;
 end;
@@ -371,12 +371,12 @@ end;
 	//returns the data pointer in a dictionary entry
 	int key = simpleHash(keyString);
 	@int entryAddress = findKey(key,dict); //gets address of a data ptr
-	if (entryAddress) then
-
+	if (entryAddress) then	
 		if (checkKey(entryAddress[0],keyString)) then 
-			//if the same, then return dict pointer
+			//if the same, then return dict pointer		
+
 			return entryAddress[1];
-		else //need to add to linked list
+		else //need to add to linked list		
 			while(entryAddress[2])do
 				entryAddress = entryAddress[2];  //gets to the end of the linked list
 				if (checkKey(keyString,entryAddress[0])) then 		//if matching key string
@@ -433,7 +433,7 @@ void dumpDict(@int dict)
 	if (dict[1]) then dumpDict(dict[1]); endif;
 	if (dict[2]) then dumpDict(dict[2]); endif;
 	@int entry = dict[3];
-	while (entry) do
+	while (entry) do		
 		printf(entry[0]);
 		printf(":");
 		printf(entry[1]);
@@ -488,7 +488,7 @@ int checkKey(@char key1, @char key2)
 	//checks if two strigns are equal
 	//returns 1 for equal, 0 for not
 	int i = 0;
-	while(key1[i])do
+	while(key1[i])do	
 		if (key1[i] != key2[i]) then return 0; endif;
 		i = i + 1;
 	loop;
@@ -507,8 +507,9 @@ void copyString(@char source, @char destination, int total_length)
 			endif;
 		else
 			destination[i] = 0;
-		endif;
+		endif;		
 	loop;
+
 end;
 
 
@@ -518,3 +519,10 @@ int getLength(@char string)
 	for (count = 0, string[count], count = count + 1) continue; loop;
 	return count+1; //plus one to include null terminal
 end;
+
+
+void assert(@char name, int value)
+	//asserts a value for debug
+	printf("ASSERTING");printf(name);printf(" ===  ");print_i(value); printf("\n");
+	char asserted = getw();
+end;	
