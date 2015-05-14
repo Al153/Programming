@@ -1,0 +1,41 @@
+#random RAND_SEED
+
+int init = RANDOM_INIT();
+@int 624 RAND_STATE;
+int RAND_INDEX = 0;
+
+
+//mersenne twister
+
+int RANDOM_INIT()
+	RAND_STATE[0] = seed;
+	int i;
+	for (i = 1,i<624,i+=1)
+		RAND_STATE[i] = 1812433253*(RAND_STATE[i-1]^((MT[i-1])>>30));
+	loop;
+	return 0;
+end;
+
+int RANDOM_INT()
+	if (not(RAND_INDEX)) then RANDOM_REFRESH(); endif; //refresh every 624 generations
+
+	int y = RAND_STATE[RAND_INDEX];
+	y ^= y>>11;
+	y ^= (y<<7)&2636928640;
+	y ^= (y<<15)&4022730752;
+	y ^= y>>18;
+	RAND_INDEX = (RAND_INDEX+1)%624;
+	return y;
+end;
+
+void RANDOM_REFRESH()
+	int i;
+	for (i=0,i<624,i+=1)
+		int y = (RAND_STATE[i]&0x80000000)+(RAND_STATE[(i+1)%624]&0x7fffffff);
+		RAND_STATE[i] = RAND_STATE[(i+397)%624]^(y>>1);
+		if (y&1) then
+			RAND_STATE[i] = RAND_STATE[i]^2567483615;
+		endif;
+	loop;
+end;
+

@@ -730,7 +730,7 @@ def pretokenise(source_text,path):
 		line = lines[i]
 		split_line = split([" ","\t"],line)
 		if len(split_line)  and split_line[0][0] == "#":
-			if split_line[0] == "#include":
+			if split_line[0] == "#include":  #replaces this line with the code of the specified file
 				#print line
 				if split_line[1][:4] == "STD:":
 					file_path = os.path.join(CURRENT_DIR,"standard library\\"+split_line[1][4:])
@@ -748,6 +748,17 @@ def pretokenise(source_text,path):
 				except IndexError:
 					print "ERROR(43): not enough tokens for a #define in line "+str(i)
 					quit()
+			elif split_line[0] == "#random": #defines a token to be replaced by a random integer
+				try:
+					import random
+					replace_dict[split_line[1]] = str(random.randrange(0xffffffff))
+					lines = lines[:i]+lines[i+1:] #removes line 
+					i -=1 							#accounts for removal of line	
+				except IndexError:
+					print "ERROR(43): not enough tokens for a #random in line "+str(i)
+					
+
+
 		i += 1
 	return "\n".join(lines),replace_dict
 
