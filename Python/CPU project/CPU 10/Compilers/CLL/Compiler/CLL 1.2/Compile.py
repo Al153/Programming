@@ -751,7 +751,7 @@ def pretokenise(source_text,path):
 			elif split_line[0] == "#random": #defines a token to be replaced by a random integer
 				try:
 					import random
-					replace_dict[split_line[1]] = str(random.randrange(0xffffffff))
+					replace_dict[split_line[1]] = str(random.randrange(2**23))
 					lines = lines[:i]+lines[i+1:] #removes line 
 					i -=1 							#accounts for removal of line	
 				except IndexError:

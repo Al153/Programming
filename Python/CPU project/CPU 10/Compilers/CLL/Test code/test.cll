@@ -1,14 +1,10 @@
-struct record is
-	int number;
-	@char 5 string;
-	float yayFloats;
-end;
+#include STD:random.cll
 
 void main()
-	record a;
-	a.number = 5;
-	a.yayFloats = 2.55;
-	//@record b = @a;
+	int i;
+	for (i = 0, i<10, i+=1)
+		printf("\n");print_i(RANDOM_INT());
+	loop;
 end;
 
 

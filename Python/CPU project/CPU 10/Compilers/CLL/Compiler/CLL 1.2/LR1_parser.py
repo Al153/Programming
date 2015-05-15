@@ -115,7 +115,11 @@ class Parser:
 				int(current_token)
 				return Terminal_parse_tree_node("num",current_token)                                #if integerise-able then produce an integer token
 			except ValueError:
-				return Terminal_parse_tree_node("id",current_token)                                 #otherwise then produce an identifier
+				try:
+					hexa = int(current_token,16)
+					return Terminal_parse_tree_node("num",str(hexa))
+				except ValueError:
+					return Terminal_parse_tree_node("id",current_token)                                 #otherwise then produce an identifier
 
 	def print_parse_tree(self,parse_tree_node,offset = ''):
 		if parse_tree_node.terminal:

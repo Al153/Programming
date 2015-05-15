@@ -8,10 +8,10 @@ int RAND_INDEX = 0;
 //mersenne twister
 
 int RANDOM_INIT()
-	RAND_STATE[0] = seed;
+	RAND_STATE[0] = RAND_SEED;
 	int i;
 	for (i = 1,i<624,i+=1)
-		RAND_STATE[i] = 1812433253*(RAND_STATE[i-1]^((MT[i-1])>>30));
+		RAND_STATE[i] = 1812433253*(RAND_STATE[i-1]^((RAND_STATE[i-1])>>30));
 	loop;
 	return 0;
 end;
