@@ -1,0 +1,73 @@
+@int superInt(int sign, int value)
+	return superIntHead(sign,superIntList(value,0));
+end;
+
+@int superIntHead(int sign, @int list)
+	@int head = malloc(2);
+	head[0] = sign;
+	head[1] = list;
+	return head;
+end;
+
+@int superIntList(int value @int list)
+	@int body = malloc(2);
+	body[0] = value;
+	body[1] = list;
+	return body;
+end;
+
+void superIntDelete(@int si)
+	superIntDelete(si[1]);
+	dalloc(si);
+end;
+
+@int superIntAdd(@int si1, @int si2)
+	if (si1[0] == si2[0]) then
+ 		@int siNew = malloc(2);
+ 		siNew[0] = si1[0];
+ 		siNew[1] = __siADD(si1[1],si2[1],0);
+	else
+		
+	endif;
+	return siNew;
+end;
+
+@int superIntSubtract(@int si1, @int si2)
+
+end;
+
+
+int SUPER_INT_CARRY = 0;
+@int __siADD(@int si1, @int si2, int carry)
+	@int siNew = malloc(2);
+	if ((si1)or(si2)) then
+		si1_value = si1[0] if si1 else 0;
+		si2_value = si2[0] if si2 else 0;
+
+		siNew[0] = si1_value + si2_value + carry;
+		carry = 1 if (siNew[0]<si1_value) else 0; //calculate carry
+		siNew[1] = __siADD(si1[1],si2[1],carry);
+		return siNew;
+	else
+		siNew[0] = 1;
+		siNew[1] = 0;
+		return siNew; endif;
+end;
+
+@int __siSubtract(@int si1, @int si2, int borrow)
+	if ((si1)or(si2)) then
+		@int siNew = malloc(2);
+		si1_value = si1[0] if si1 else 0;
+		si2_value = si2[0] if si2 else 0;
+
+		siNew[0] = si1_value - si2_value - borrow;
+		carry = 1 if (siNew[0]>si1_value) else 0; //calculate borrow
+		siNew[1] = __siSubtract(si1[1],si2[1],borrow);
+		return siNew;
+	else
+		SUPER_INT_CARRY = borrows;
+		return 0; endif;
+end;
+
+
+

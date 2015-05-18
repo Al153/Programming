@@ -631,7 +631,13 @@ def tokenise(self,source_text):
 		if current_token not in self.to_ignore:
 			if current_token in macro_replace_dict:
 				string_token_list[i] = macro_replace_dict[current_token]
-			token_list.append(self.get_parse_tree_node(string_token_list[i]))
+			if '.' in string_token_list[i]:
+				if token_list[-1].string == '-':
+					token_list[-1] = self.get_parse_tree_node("-"+string_token_list[i])
+				else:
+					token_list.append(self.get_parse_tree_node(string_token_list[i]))
+			else:
+				token_list.append(self.get_parse_tree_node(string_token_list[i]))
 		i += 1
 	token_list.append(Terminal_parse_tree_node("END","END"))                                    #adds end symbol to end of code
 	#print [token.string for token in token_list]

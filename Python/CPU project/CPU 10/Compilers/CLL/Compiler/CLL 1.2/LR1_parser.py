@@ -115,7 +115,11 @@ class Parser:
 				int(current_token)
 				return Terminal_parse_tree_node("num",current_token)                                #if integerise-able then produce an integer token
 			except ValueError:
+				if "." in current_token:
+					return Terminal_parse_tree_node('num',str(float_to_raw_int(float(current_token))))
 				try:
+					if current_token[0:2] != '0x':
+						raise ValueError
 					hexa = int(current_token,16)
 					return Terminal_parse_tree_node("num",str(hexa))
 				except ValueError:
@@ -151,9 +155,16 @@ class EnumRule:
 		self.rhs = rhs
 		self.number = number
 
+
+import struct
+def float_to_raw_int(f):
+	return struct.unpack('<I',struct.pack('<f',f))[0]
+
+
 if __name__ == "__main__":
 	import sys
 	source_name = sys.argv[1]
 	grammar_name = sys.argv[2]
 	local_parser = Parser(grammar_name)
 	local_parser.print_parse_tree(local_parser.parse(open(source_name,"r").read()))
+

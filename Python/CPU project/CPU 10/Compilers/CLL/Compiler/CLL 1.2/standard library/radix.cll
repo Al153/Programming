@@ -1,0 +1,17 @@
+void print_h(int n)
+	@char lookup = "0123456789ABCDEF";
+	int i;
+	putc('0');putc('x');
+	for (i=28,i!=0,i-=4)
+		putc(lookup[(n>>i)&0xf]);
+	loop;
+	putc(lookup[(n>>i)&0xf]);
+end;
+
+void print_b(int n)
+	int i;
+	putc('0');putc('b');
+	for(i=31,i!=0xffffffff,i-=1)
+		putc('1' if (1&(n>>i)) else '0');
+	loop;
+end;

@@ -1,0 +1,123 @@
+#include STD:floats.cll
+
+#define PI 0x40490fdb
+#define TAU 0x40c90fdb
+
+int sqrt(int x)
+	int guess = FLOAT_2;
+	int i;
+	for (i = 0,i<20,i+=1)
+		guess = fDiv(fAdd(fDiv(x,guess),guess),FLOAT_2);
+	loop;
+	return guess;
+end;
+
+int exp(int x)
+	if (x==0) then return FLOAT_1; endif;
+	int numerator = FLOAT_1;
+	int denominator = FLOAT_1;
+	int total = FLOAT_1;
+	int i;
+	int float_i;
+	for (i = 1,i<20,i+=1)
+		float_i = float(i);
+		numerator = fMul(numerator,x);
+		denominator = fMul(denominator,float_i);
+		total = fAdd(total,fDiv(numerator,denominator));
+	loop;
+	return total;
+end;
+
+int sin(int x)
+
+	if (x==0) then return 0; endif;
+	int numerator = x;
+	int denominator = FLOAT_1;
+	int total = x;
+	int i;
+	int float_i;
+	for (i = 2,i<20,i+=2)
+		float_i = float(i*(i+1));
+		numerator = fNegate(fMul(x,fMul(x,numerator)));
+		denominator = fMul(denominator,float_i);
+		total = fAdd(total,fDiv(numerator,denominator));
+	loop;
+	return total;
+end;
+
+int cos(int x)
+	if (x==0) then return FLOAT_1; endif;
+	int numerator = FLOAT_1;
+	int denominator = FLOAT_1;
+	int total = FLOAT_1;
+	int i;
+	int float_i;
+	for (i = 2,i<20,i+=2)
+		float_i = float(i*(i-1));
+		numerator = fNegate(fMul(x,fMul(x,numerator)));
+		denominator = fMul(denominator,float_i);
+		total = fAdd(total,fDiv(numerator,denominator));
+	loop;
+	return total;
+end;
+
+int tan(int x)
+	return fDiv(sin(x),cos(x));
+end;
+
+int sec(int x)
+	return fDiv(FLOAT_1,cos(x));
+end;
+
+int cosec(int x)
+	return fDiv(FLOAT_1,sin(x));
+end;
+
+int cotan(int x)
+	return fDiv(cos(x),sin(x));
+end;
+
+int arcsin(int x)
+	if (x==0) then return 0; endif;
+	int numerator = x;
+	int denominator = FLOAT_1;
+	int front_fraction = FLOAT_1;
+	int total = x;
+	int x_squared = fMul(x,x);
+	int i;
+	int float_i;
+	for (i=3,i<20,i+=2)
+		front_fraction = fMul(front_fraction,fDiv(float(i-2),float(i-2)));
+		denominator = float(i);
+		numerator = fMul(x_squared,numerator);
+		total = fAdd(total,fMul(front_fraction,fDiv(numerator,denominator)));
+	loop;
+	return total;
+end;
+
+int arccos(int x)
+	return fSub(0x3fc90fdb,arcsin(x)); //0x3fc90fdb is pi/4
+end;
+
+int arctan(int x)
+	if (x==0) then return 0; endif;
+	int denominator = FLOAT_1;
+	int power = x;
+	int total = x;
+	int x_squared = fMul(x,x);
+	int i;
+	for (i=3,i<20,i+=2)
+		power = fNegate(fMul(x_squared,power));
+		denominator = float(denominator);
+		total = fAdd(total,fDiv(power,denominator));
+	loop;
+	return denominator;
+end;
+
+int arcsec(int x)
+	return arccos(fDiv(FLOAT_1,x));
+end;
+
+int arccosec(int x)
+	return arcsin(fDiv(FLOAT_1,x));
+end;

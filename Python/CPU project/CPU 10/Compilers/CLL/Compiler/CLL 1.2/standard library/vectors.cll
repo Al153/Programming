@@ -1,0 +1,160 @@
+//requires malloc
+
+
+
+
+// a vector is: (int length, int @(int data, int @(data, int ...)|0)|0)
+
+
+@int vector(@int array)
+	//creates a vector from an array of n+1 elements (first element is the length)
+	int length = array[0];
+	@int vector_head = malloc(2);
+	vector_head[0] = length;
+	@int last_node = vector_head;
+	int i;
+	array += 4;
+	for (i = 0, i<length, i+= 1)
+		last_node[1] = malloc(2);
+		last_node = last_node[1];
+		last_node[0] = array[i];
+	loop;
+	last_node[1] = 0;
+	return vector_head;
+end;
+
+void vDelete(@int vector)
+	if (vector) then 
+		vDelete(vector[1]);
+		vector[1] = 0;
+		dalloc(vector);
+	endif;
+end;
+
+void print_v(@int vector)
+	int length = vector[0];
+	vector = vector[1];
+	putc('[');
+	while (vector) do
+		print_i(vector[0]);
+		vector = vector[1];
+		if (vector)then
+			putc(',');putc(' ');
+		endif;
+	loop;
+	putc(']');
+end;
+
+int vAdd(@int vector1, @int vector2)
+	//add two vectors
+	if (vector1[0]!=vector2[0]) then
+		printf("ERROR: tried to add two vectors of different lengths\n");
+		return 0;
+	endif;
+	int length = vector1[0];
+	@int new_vector = malloc(2);
+	new_vector[0] = length;
+	@int last_node =new_vector;
+	vector1 = vector1[1]; vector2 = vector2[1];
+
+	int i;
+	for (i = 0, i<length, i+=1)
+		last_node[1] = malloc(2);
+		last_node = last_node[1];
+		last_node[0] = vector1[0] + vector2[0];
+		vector1 = vector1[1]; vector2 = vector2[1];		
+	loop;
+	last_node[1] = 0;
+	return new_vector;
+end;
+
+int vSub(@int vector1, @int vector2)
+	//subtract two vectors
+	if (vector1[0]!=vector2[0]) then
+		printf("ERROR: tried to subtract two vectors of different lengths\n");
+		return 0;
+	endif;
+	int length = vector1[0];
+	@int new_vector = malloc(2);
+	new_vector[0] = length;
+	@int last_node =  new_vector;
+	vector1 = vector1[1]; vector2 = vector2[1];
+
+	int i;
+	for (i = 0, i<length, i+=1)
+		last_node[1] = malloc(2);
+		last_node = last_node[1];
+		last_node[0] = vector1[0] - vector2[0];
+		vector1 = vector1[1]; vector2 = vector2[1];		
+	loop;
+	last_node[1] = 0;
+	return new_vector;
+end;
+
+int vDot(@int vector1, @int vector2)
+	//dot product of two vectors
+	if (vector1[0]!=vector2[0]) then
+		printf("ERROR: tried to dot two vectors of different lengths\n");
+	endif;
+	int total = 0;
+	vector1 = vector1[1]; vector2 = vector2[1];
+	while(vector1) do
+		total += vector1[0] * vector2[0];
+		vector1 = vector1[1]; vector2 = vector2[0];
+	loop;
+	return total;
+end;
+
+@int vMul(int scalar, @int vector)
+	@int new_vector_head = malloc(2);
+	@int new_vector = new_vector_head;
+	new_vector[0] = vector[0];
+	vector = vector[1];
+	while(vector)do
+		new_vector[1] = malloc(2);
+		new_vector = new_vector[1];
+		new_vector[0] = vector[0]*scalar;
+		vector = vector[1];
+	loop;
+	return new_vector_head;
+end;
+
+
+void vInc(@int vector1, @int vector2)
+	//add vector2 to vector 1 in place
+	if (vector1[0]!=vector2[0]) then
+		printf("ERROR: tried to add two vectors of different lengths\n");
+		return 0;
+	endif;
+	vector1 = vector1[1]; vector2 = vector2[1];
+	int i;
+	while(vector1)do
+		vector1[0] = vector1[0] + vector2[0];
+		vector1 = vector1[1]; vector2 = vector2[1];		
+	loop;
+end;
+
+
+void vDec(@int vector1, @int vector2)
+	//add vector2 from vector 1 in place
+	if (vector1[0]!=vector2[0]) then
+		printf("ERROR: tried to  subtract two vectors of different lengths\n");
+		return 0;
+	endif;
+	vector1 = vector1[1]; vector2 = vector2[1];
+	int i;
+	while(vector1)do
+		vector1[0] = vector1[0] - vector2[0];
+		vector1 = vector1[1]; vector2 = vector2[1];		
+	loop;
+end;
+
+
+
+void vScale(int scalar, @int vector)
+	vector = vector[1];
+	while(vector)do
+		vector[0] = vector[0]*scalar;
+		vector = vector[1];
+	loop;
+end;

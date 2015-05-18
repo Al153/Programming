@@ -1,0 +1,374 @@
+// sign exponent mantissa
+//   1b   8b   		23b (+1 implied)
+// exponent is excess 128
+
+int float(int integer)
+	//converts an integer to a float
+	int exponent = 127+23;
+	int sign = 0;
+	if (integer ==0) then return 0; endif;
+	while (integer>=(0x01000000)) do
+		integer>>=1;
+		exponent+=1;
+	loop;
+	while (integer<(0x00800000)) do 
+		integer<<=1;
+		exponent-=1;
+	loop;
+	integer &= 0x007fffff;
+	return integer|(sign<<31)|(exponent<<23);
+end;
+
+
+
+
+#define FLOAT_10 0x41200000
+#define FLOAT_0 0x00000000
+#define FLOAT_1 0x3f800000
+#define FLOAT_2 0x40000000
+#define FLOAT_3 0x40400000
+#define FLOAT_4 0x40800000
+#define FLOAT_5 0x40a00000
+#define FLOAT_6 0x40c00000
+#define FLOAT_7 0x40e00000
+#define FLOAT_8 0x41000000
+#define FLOAT_9 0x41100000
+
+void print_f(int n)
+	//very slow
+	if (n ==0) then printf("0 xE0"); return; endif;
+    if (n&0x80000000) then //handles sign
+    	putc('-');
+    	n ^= 0x80000000;
+    endif;
+
+    int whole = n;
+    int power = 40; //excess 40
+    int digit;
+
+    //convert to n * 10^b
+    while (not(fLess(whole,FLOAT_10))) do
+        whole = fDiv(whole,FLOAT_10);
+        power += 1;
+    loop;
+
+    while(fLess(whole,FLOAT_1)) do
+    	whole = fMul(whole,FLOAT_10);
+    	power -= 1;
+    loop;
+
+
+
+   	//print out the integer part
+    whole = put_digit(whole);
+    whole = fMul(whole,FLOAT_10);
+
+
+
+    //decimal point
+    putc('.');
+
+	int i;
+	for (i = 0, i<7,i+= 1)
+		whole = fMul(put_digit(whole),FLOAT_10);
+	loop;
+
+	putc(' ');putc('x');putc('E');
+	if (power>=40) then print_i(power-40);
+	else putc('-');print_i(40-power); endif;
+end;
+
+int put_digit(int float)
+	pass; //very slow
+	//outputs  the digit and returns the value without that digit
+	if (not(fLess(float,FLOAT_6))) then
+		if(not(fLess(float,FLOAT_8))) then
+			if(not(fLess(float,FLOAT_9))) then
+				putc('9');
+				return fSub(float,FLOAT_9);
+			else 
+				putc('8');
+				return fSub(float,FLOAT_8);
+			endif;
+		else 
+			if(not(fLess(float,FLOAT_7))) then
+				putc('7');
+				return fSub(float,FLOAT_7);
+			else 
+				putc('6');
+				return fSub(float,FLOAT_6);
+			endif;
+		endif;
+	else
+		if(not(fLess(float,FLOAT_4))) then
+			if(not(fLess(float,FLOAT_5))) then
+				putc('5');
+				return fSub(float,FLOAT_5);
+			else 
+				putc('4');
+				return fSub(float,FLOAT_4);
+			endif;
+		else 
+			if(not(fLess(float,FLOAT_2))) then
+				if(not(fLess(float,FLOAT_3))) then
+					putc('3');
+					return fSub(float,FLOAT_3);
+				else 
+					putc('2');
+					return fSub(float,FLOAT_2);	
+				endif;			
+			else 
+				if(not(fLess(float,FLOAT_1))) then
+					putc('1');
+					return fSub(float,FLOAT_1);
+				else 
+					putc('0');
+					return float; 
+
+				endif;
+			endif;
+		endif;
+	endif;
+end;
+
+int readf(@char float_string)
+	//reads in a string and converts to a float
+	pass;
+
+end;
+
+int fMul(int float1,int float2)
+	int sign1 = float1&0x80000000;
+	int sign2 = float2&0x80000000;
+
+	int exponent1 = float1&0x7f800000;
+	int exponent2 = float2&0x7f800000;
+
+	int mantissa1 = (float1&0x007fffff)|0x00800000;
+	int mantissa2 = (float2&0x007fffff)|0x00800000;
+
+	int sign_result = sign1^sign2;
+	if (exponent1+exponent2>0xbf000000) then
+		return sign_result|0x7fffffff;	//return infinity
+
+	endif;
+	int exponent_result = exponent1+exponent2-0x3f800000;
+
+	int mantissa_result = ((mantissa1>>12)*(mantissa2>>12)<<1)+((((mantissa1>>12)*(mantissa2&0xfff))+((mantissa2>>12)*(mantissa1&0xfff)))>>11);  //simulating multiplication shifted left by 24
+	if (mantissa_result>=0x01000000) then
+		mantissa_result>>=1;
+		exponent_result +=0x00800000;
+	else if (mantissa_result<0x00800000) then
+		mantissa_result<<=1;
+		exponent_result -=0x00800000;
+		endif;
+	endif;
+	if (exponent_result>=0x80000000) then  //overflow... return infinity
+		exponent_result = 0x7f800000;
+		mantissa_result = 0x00ffffff;
+	else if (exponent_result<0x00800000) then //too small... return zero
+		return 0;
+		endif;
+	endif;
+	return sign_result|exponent_result|(mantissa_result&0x007fffff);
+end;
+
+
+int fAdd(int float1, int float2)
+	int sign1 = float1&0x80000000;
+	int sign2 = float2&0x80000000;
+
+	if (sign1 == sign2) then
+		return __fAdd(float1,float2);
+	else
+		return __fSub(float1,float2);
+	endif;
+end;
+
+int fSub(int float1,int float2)
+	int sign1 = float1&0x80000000;
+	float2 ^= 0x80000000; //invert sign2
+	int sign2 = (float2&0x80000000); 
+	if (sign1 == sign2) then
+		return __fAdd(float1,float2);
+	else
+		return __fSub(float1,float2);
+	endif;
+end;
+
+
+int fDiv(int float1, int float2)
+	if (float2 ==0)then
+		printf("RUNTIME ERROR: division by ZERO\n");
+		return 0xffffffff;
+	endif;
+	int sign1 = float1&0x80000000;
+	int sign2 = float2&0x80000000;
+
+	int exponent1 = float1&0x7f800000;
+	int exponent2 = float2&0x7f800000;
+
+	int mantissa1 = (float1&0x007fffff)|0x00800000;
+	int mantissa2 = (float2&0x007fffff)|0x00800000;
+
+	int sign_result = sign1^sign2;
+	int exponent_result = exponent1+0x3f800000;
+	if (exponent_result<exponent2) then return 0; endif;
+	exponent_result -= exponent2;
+
+	int mantissa_result = (((mantissa1<<8)/mantissa2)<<15); //breaks up division to preserve acurracy
+	int remainder = (((mantissa1<<8)%mantissa2)<<8);
+	mantissa_result += (remainder/mantissa2)<<7;
+	remainder = (remainder %mantissa2)<<7;
+	mantissa_result += remainder/mantissa2;
+
+	//print_h(mantissa_result);
+
+	while (mantissa_result>=0x01000000) do
+		mantissa_result>>=1;
+		exponent_result +=0x00800000;
+	loop;
+	while(mantissa_result<0x00800000) do
+		mantissa_result<<=1;
+		exponent_result -=0x00800000;
+	loop;
+	if (exponent_result>=0x80000000) then  //overflow... return infinity
+		exponent_result = 0x7f800000;
+		mantissa_result = 0x00ffffff;
+	else if (exponent_result<0x00800000) then //too small... return zero
+		return 0;
+	endif; endif;
+	return sign_result|exponent_result|(mantissa_result&0x007fffff);
+end;
+
+int fGreater(int float1, int float2)
+	int sign1 = float1&0x80000000;
+	int sign2 = float2&0x80000000;
+
+	int exponent1 = float1&0x7f800000;
+	int exponent2 = float2&0x7f800000;
+
+	int mantissa1 = (float1&0x007fffff)|0x00800000;
+	int mantissa2 = (float2&0x007fffff)|0x00800000;
+	if (sign1>sign2) then return 0;endif;
+	if (sign2>sign1) then return 1;endif;
+	if (sign1) then 
+		if (exponent1<exponent2) then return 0;endif;
+		if (exponent2<exponent1) then return 1;endif;
+		if (mantissa1<mantissa2) then return 1;endif;
+	else	
+		if (exponent1>exponent2) then return 1; endif;
+		if (exponent2>exponent1) then return 0; endif;
+		if (mantissa1>mantissa2) then return 1; endif;
+		return 0;
+	endif;
+end;
+
+int fEqual(int float1, int float2)
+	return 1 if float1 == float2 else 0;
+end;
+
+int fLess(int float1, int float2)
+	int sign1 = float1&0x80000000;
+	int sign2 = float2&0x80000000;
+
+	int exponent1 = float1&0x7f800000;
+	int exponent2 = float2&0x7f800000;
+
+	int mantissa1 = (float1&0x007fffff)|0x00800000;
+	int mantissa2 = (float2&0x007fffff)|0x00800000;
+	if (sign1>sign2) then return 1;endif;
+	if (sign2>sign1) then return 0;endif;
+	if (sign1) then 
+		if (exponent1>exponent2) then return 0;endif;
+		if (exponent2>exponent1) then return 1;endif;
+		if (mantissa1>mantissa2) then return 1;endif;
+	else	
+		if (exponent1<exponent2) then return 1; endif;
+		if (exponent2<exponent1) then return 0; endif;
+		if (mantissa1<mantissa2) then return 1; endif;
+		return 0;
+	endif;
+end;
+
+
+int __fSub(int float1, int float2)
+	int exponent1 = float1&0x7f800000;
+	int exponent2 = float2&0x7f800000;
+
+	if (exponent2>exponent1) then //assume float1 is greater
+		int temp = float1;
+		float1 = float2;
+		float2 = temp;
+		exponent1 = float1&0x7f800000;
+		exponent2 = float2&0x7f800000;
+	endif;
+
+	int exponent_difference = (exponent1-exponent2)>>23;
+
+	int mantissa1 = (float1&0x007fffff)|0x00800000;
+	int mantissa2 = ((float2&0x007fffff)|0x00800000)>>exponent_difference;
+	
+	if (mantissa2<mantissa1)then
+		mantissa1 = mantissa1-mantissa2;
+	else
+		mantissa1 = mantissa2-mantissa1;
+		float1^=0x80000000; //invert sign
+	endif;
+
+
+	while (mantissa1>=0x01000000) do
+		mantissa1>>=1;
+		exponent1 += 0x00800000;
+		if (exponent1>=0x80000000) then
+			mantissa1 = 0x00ffffff;
+			exponent1 = 0x7f800000;
+			break;
+		endif;
+	loop;
+	while (mantissa1<0x00800000)do
+		mantissa1<<=1;
+		exponent1-= 0x00800000;
+		if (exponent1<0x00800000)then
+			return 0;
+		endif;
+	loop;
+	if (exponent1>=0x80000000)then //infinity
+		exponent1 = 0x7f800000;
+		mantissa1 = 0x00ffffff;
+	endif;
+	return (float1&0x80000000)|exponent1|(mantissa1&0x007fffff);
+end;
+
+
+int __fAdd(int float1,int float2)
+	int exponent1 = float1&0x7f800000;
+	int exponent2 = float2&0x7f800000;
+
+	if (exponent2>exponent1) then //assume floa1 is greater
+		int temp = float1;
+		float1 = float2;
+		float2 = temp;
+		exponent1 = float1&0x7f800000;
+		exponent2 = float2&0x7f800000;
+	endif;
+
+	int exponent_difference = (exponent1-exponent2)>>23;
+
+	int mantissa1 = (float1&0x007fffff)|0x00800000;
+	int mantissa2 = ((float2&0x007fffff)|0x00800000)>>exponent_difference;
+	mantissa1 += mantissa2;
+	while (mantissa1>=0x01000000) do
+		mantissa1>>=1;
+		exponent1 += 0x00800000;
+	loop;
+	if (exponent1>=0x80000000)then //infinity
+		exponent1 = 0x7f800000;
+		mantissa1 = 0x00ffffff;
+	endif;
+	return (float1&0x80000000)|exponent1|(mantissa1&0x007fffff);
+end;
+
+int fNegate(int float)
+	return float^0x80000000;
+end;

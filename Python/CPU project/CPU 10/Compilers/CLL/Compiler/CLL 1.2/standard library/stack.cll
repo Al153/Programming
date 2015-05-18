@@ -1,0 +1,21 @@
+@int stack(int n)
+	@int stack_head = malloc(4);
+	stack_head[0] = malloc(n);  //stack array
+	stack_head[1] = n; 		//n
+	stack_head[2] = 0; 		//stack pointer
+	return stack_head;
+end;
+
+void sPush(@int stack, int d)
+	int size = stack[1];
+	int sp = stack[2];
+	if(sp<size) then
+		@int stack_array = stack[0];
+		sp += 4
+		stack_array[sp] = d;
+		stack[2] = sp;
+	else
+		printf("ERROR: Library stack overflow\n");
+		quit()
+	endif;
+end;
