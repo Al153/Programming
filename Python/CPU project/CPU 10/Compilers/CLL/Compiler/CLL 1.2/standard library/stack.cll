@@ -11,11 +11,36 @@ void sPush(@int stack, int d)
 	int sp = stack[2];
 	if(sp<size) then
 		@int stack_array = stack[0];
-		sp += 4
+
 		stack_array[sp] = d;
+		sp += 1
 		stack[2] = sp;
 	else
 		printf("ERROR: Library stack overflow\n");
 		quit()
 	endif;
+end;
+
+int sPop(@int stack)
+	int d;
+	int sp = stack[2];
+	if (sp==0) then
+			printf("ERROR: Library stack underflow\n");
+			quit();
+	else
+		sp -= 1;
+		@int stack_array = stack[0];
+		d = stack_array[sp];
+		stack[2] = sp;
+		return d;
+	endif;	
+end;
+
+int sPeek(@int stack)
+	int d;
+	int sp = stack[2];
+	if (sp = 0) then return 0; endif;
+	@int stack_array = stack[0];
+	d = stack_array[sp-1];
+	return d;
 end;
