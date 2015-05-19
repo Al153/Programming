@@ -150,8 +150,8 @@ int fMul(int float1,int float2)
 	int sign_result = sign1^sign2;
 	if (exponent1+exponent2>0xbf000000) then
 		return sign_result|0x7fffffff;	//return infinity
-
 	endif;
+	if (exponent1+exponent2<0x3f800000) then return 0; endif;
 	int exponent_result = exponent1+exponent2-0x3f800000;
 
 	int mantissa_result = ((mantissa1>>12)*(mantissa2>>12)<<1)+((((mantissa1>>12)*(mantissa2&0xfff))+((mantissa2>>12)*(mantissa1&0xfff)))>>11);  //simulating multiplication shifted left by 24

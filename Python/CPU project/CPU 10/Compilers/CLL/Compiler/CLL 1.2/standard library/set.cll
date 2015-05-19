@@ -43,6 +43,10 @@
 	return thisSet;
 end;
 
+int setSize(@int set)
+	return __setSize(set[0]);
+end;
+
 void setInsert(@int set,int data)
 	__setInsert(set-4,set[0],data);
 end;
@@ -159,6 +163,10 @@ int __inSet(int data, @int node)
 end;
 
 
+int __setSize(@int set)
+	return __setSize(set[1]) + 1 if set else 0;
+end;
+
 @int new_set_node(int data)
 	@int new_node = malloc(2);
 	new_node[0] = data;
@@ -168,21 +176,3 @@ end;
 
 
 
-
-
-
-void SET_TEST_RUN()
-	malloc_init();
-	@int myset = set();
-	@int set2 = set();
-	printSet(myset);
-	int i;
-	for (i = 0, i<5,i+=1)
-		setInsert(myset,i);
-		//printSet(myset);
-	loop;
-	for (i = 0, i<10000,i+=1)
-		@int newSet = setCopy(myset);
-		setDelete(newSet);
-	loop;
-end;

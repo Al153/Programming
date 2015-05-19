@@ -23,6 +23,36 @@
 	return vector_head;
 end;
 
+@int emptyVector(int n)
+	//creates an empty vector of size n
+	@int vector_head = malloc(2);
+	vector_head[0] = n;
+	@int last_node = vector_head;
+	int i;
+	for (i = 0, i<n, i+= 1)
+		last_node[1] = malloc(2);
+		last_node = last_node[1];
+		last_node[0] = 0;
+	loop;
+	last_node[1] = 0;
+	return vector_head;
+end;
+
+@int presetVector(int n, int data)
+	//creates an empty vector of size n
+	@int vector_head = malloc(2);
+	vector_head[0] = n;
+	@int last_node = vector_head;
+	int i;
+	for (i = 0, i<n, i+= 1)
+		last_node[1] = malloc(2);
+		last_node = last_node[1];
+		last_node[0] = data;
+	loop;
+	last_node[1] = 0;
+	return vector_head;
+end;
+
 void vDelete(@int vector)
 	if (vector) then 
 		vDelete(vector[1]);
