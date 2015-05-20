@@ -14,7 +14,6 @@ void PartialDerivatives(@int model, @int training_set, @int gradient_vector)
 	//calculate the partial derivate with respect to a value
 	int number = 0;
 	int n = setSize(training_set);
-	print_i(n);
 	n = fDiv(-2.0,float(n));
 	int modelSize = model[0];
 	@int gradient_i;
@@ -26,33 +25,36 @@ void PartialDerivatives(@int model, @int training_set, @int gradient_vector)
 		training_example = training_example[1];
 		training_example = training_example[1];
 		for (gradient_i = gradient_vector[1], gradient_i, gradient_i = gradient_i[1])
+			//printf("PARTIAL DIFFERENTIATING\n");
 			gradient_i[0] = fAdd(gradient_i[0],fMul(training_example[0],error));
-			gradient_i = gradient_i[1];
 			training_example = training_example[1];
-		loop;			
+		loop;		
 	loop;
 
 
 	for (gradient_i = gradient_vector[1],gradient_i,gradient_i = gradient_i[1])
 		gradient_i[0] = fMul(n,gradient_i[0]);
 	loop;
+
 end;
 
 int error(@int model, @int training_set)
+	//print_vf(model);
 	int error = 0;
 	int n = setSize(training_set);
 	for (training_set = training_set[0],training_set,training_set = training_set[1])
 		@int training_example = training_set[0];
-		training_example = training_example[1];
-		error = fAdd(vfDot(training_example,model),error);
+		@int example_vector = training_example[1];
+		int partial_error = fSub(vfDot(example_vector,model),training_example[0]);
+		error = fAdd(
+			fMul(partial_error,partial_error),
+		error);
 	loop;
-	printf("HERE?\n");
 	return fDiv(error,float(n));
 end;
 
 void vfDiv(int scalar, @int vector)
 	vector = vector[1];
-	printf("\n\ndividing by scalar.. "); print_f(scalar);
 	while(vector)do
 		vector[0] = fDiv(scalar,vector[0]) if vector[0] else 0;
 		vector = vector[1];
@@ -61,9 +63,14 @@ end;
 
 void updateTheta( @int model ,@int training_set, int learning_rate, @int auxiliary_vector)
 	PartialDerivatives(model,training_set,auxiliary_vector);
-	vfScale(learning_rate,auxiliary_vector);
+	printf("\nGradients = "); print_vf(auxiliary_vector);
+
+	printf("\nGradients = "); print_vf(auxiliary_vector);
 	int error = error(model,training_set);
+	printf("\nError in model = "); print_f(error);
 	vfDiv(error,auxiliary_vector);
+	vfScale(learning_rate,auxiliary_vector);
+	printf("\nDelta vector = "); print_vf(auxiliary_vector);
 	vfDec(model,auxiliary_vector);
 end;
 
@@ -78,13 +85,13 @@ end;
 	int i; 
 	//temperature = fNegate(temperature);		//want to invert direction of gradient
 	for (i = 0, i<rounds,i += 1)  			//for specified number of rounds
-	printf("ROUND STARTS\n");
+		printf("\nROUND: ");print_i(i);printf(":\n");
 		updateTheta(model,training_set,temperature,gradient);
-		printf("\nROUND: ");print_i(i);
-		printf("\tModel = ");print_vf(model);
+		printf("\nModel = ");print_vf(model);
 		printf("\ttemperature");print_f(temperature);		
 		temperature = fMul(temperature,cool_rate); 				//decrease the temperature
-		char cont = getw();
+		printf("\n\n______________________________________________________________________\n\n");
+//		char cont = getw();
 	loop;
 	vDelete(gradient); 						//deallocate the gradient vector
 	return model; 
@@ -138,7 +145,7 @@ void main ()
 	printf("CREATED SET\n");
 
 //create the model
-	@int model = GradientDescent(training_set,20,0.1,1.0);
+	@int model = GradientDescent(training_set,50,1.0,0.8);
 
 	printf("\nModel = ");print_vf(model);
 
