@@ -45,7 +45,7 @@ int error(@int model, @int training_set)
 	for (training_set = training_set[0],training_set,training_set = training_set[1])
 		@int training_example = training_set[0];
 		@int example_vector = training_example[1];
-		int partial_error = fSub(vfDot(example_vector,model),training_example[0]);
+		int partial_error = fSub(training_example[0],vfDot(example_vector,model));
 		error = fAdd(
 			fMul(partial_error,partial_error),
 		error);
@@ -61,16 +61,22 @@ void vfDiv(int scalar, @int vector)
 	loop;
 end;
 
-void updateTheta( @int model ,@int training_set, int learning_rate, @int auxiliary_vector)
-	PartialDerivatives(model,training_set,auxiliary_vector);
-	printf("\nGradients = "); print_vf(auxiliary_vector);
+void reset_gradients(@int gradient_vector)
+	for (gradient_vector = gradient_vector[1],gradient_vector,gradient_vector = gradient_vector[1])
+		gradient_vector[0] = 0;
+	loop;
+end;
 
-	printf("\nGradients = "); print_vf(auxiliary_vector);
+void updateTheta( @int model ,@int training_set, int learning_rate, @int auxiliary_vector)
+	reset_gradients(auxiliary_vector);
+	PartialDerivatives(model,training_set,auxiliary_vector);
+	print_vf(auxiliary_vector); putc('\n');
+	print_vf(model);
 	int error = error(model,training_set);
 	printf("\nError in model = "); print_f(error);
 	vfDiv(error,auxiliary_vector);
 	vfScale(learning_rate,auxiliary_vector);
-	printf("\nDelta vector = "); print_vf(auxiliary_vector);
+
 	vfDec(model,auxiliary_vector);
 end;
 
@@ -85,20 +91,16 @@ end;
 	int i; 
 	//temperature = fNegate(temperature);		//want to invert direction of gradient
 	for (i = 0, i<rounds,i += 1)  			//for specified number of rounds
-		printf("\nROUND: ");print_i(i);printf(":\n");
+		printf("\nROUND: ");print_i(i);
 		updateTheta(model,training_set,temperature,gradient);
-		printf("\nModel = ");print_vf(model);
-		printf("\ttemperature");print_f(temperature);		
+		
 		temperature = fMul(temperature,cool_rate); 				//decrease the temperature
-		printf("\n\n______________________________________________________________________\n\n");
-//		char cont = getw();
+		
+				char cont = getw();
 	loop;
 	vDelete(gradient); 						//deallocate the gradient vector
 	return model; 
 end;
-
-
-
 
 
 
@@ -142,10 +144,9 @@ void main ()
 	@int 3 v31 = [2,1.0,15.7]; @int e31 = malloc(2); e31[0] = 9.0		; e31[1] = vector(v31);   setInsert(training_set,e31);
 	@int 3 v32 = [2,1.0,19.9]; @int e32 = malloc(2); e32[0] = 9.1		; e32[1] = vector(v32);   setInsert(training_set,e32);
 
-	printf("CREATED SET\n");
 
 //create the model
-	@int model = GradientDescent(training_set,50,1.0,0.8);
+	@int model = GradientDescent(training_set,200,0.01,0.9999);
 
 	printf("\nModel = ");print_vf(model);
 
