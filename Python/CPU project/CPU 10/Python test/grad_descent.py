@@ -80,6 +80,6 @@ training_set = [
 	[9.1	,[1.0,19.9]],
 ]
 
-model = GradientDescent(training_set,50,0.01,0.9999)
+model = GradientDescent(training_set,10000,0.005,1.0)
 
 print "model = ",model

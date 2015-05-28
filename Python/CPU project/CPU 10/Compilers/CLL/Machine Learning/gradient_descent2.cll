@@ -70,9 +70,11 @@ end;
 void updateTheta( @int model ,@int training_set, int learning_rate, @int auxiliary_vector)
 	reset_gradients(auxiliary_vector);
 	PartialDerivatives(model,training_set,auxiliary_vector);
-	print_vf(auxiliary_vector); putc('\n');
-	print_vf(model);
+	printf("\nGradients = ");  print_vf(auxiliary_vector);
+	printf("\nCurrent model = ");  print_vf(model);
+	old_error = new_error;
 	int error = error(model,training_set);
+	new_error = error;
 	printf("\nError in model = "); print_f(error);
 	vfDiv(error,auxiliary_vector);
 	vfScale(learning_rate,auxiliary_vector);
@@ -96,57 +98,58 @@ end;
 		
 		temperature = fMul(temperature,cool_rate); 				//decrease the temperature
 		
-				char cont = getw();
+				if (fGreater(new_error,old_error)) then char cont = getw();endif;
 	loop;
 	vDelete(gradient); 						//deallocate the gradient vector
 	return model; 
 end;
 
 
-
+int new_error = 0;
+int old_error = 0;
 
 void main ()
 // create the training set
 	malloc_init();
 	@int training_set = set();
 
-	@int 3 v0  = [2,1.0,3.0];  @int e0  = malloc(2); e0 [0] = 0.0		; e0 [1] = vector(v0 );   setInsert(training_set,e0 );
-	@int 3 v1  = [2,1.0,1.0];  @int e1  = malloc(2); e1 [0] = 0.5		; e1 [1] = vector(v1 );   setInsert(training_set,e1 );
-	@int 3 v2  = [2,1.0,1.1];  @int e2  = malloc(2); e2 [0] = 1.0		; e2 [1] = vector(v2 );   setInsert(training_set,e2 );
-	@int 3 v3  = [2,1.0,1.5];  @int e3  = malloc(2); e3 [0] = 1.0		; e3 [1] = vector(v3 );   setInsert(training_set,e3 );
-	@int 3 v4  = [2,1.0,2.3];  @int e4  = malloc(2); e4 [0] = 1.21	; e4 [1] = vector(v4 );   setInsert(training_set,e4 );
-	@int 3 v5  = [2,1.0,2.5];  @int e5  = malloc(2); e5 [0] = 1.9		; e5 [1] = vector(v5 );   setInsert(training_set,e5 );
-	@int 3 v6  = [2,1.0,2.7];  @int e6  = malloc(2); e6 [0] = 2.3		; e6 [1] = vector(v6 );   setInsert(training_set,e6 );
-	@int 3 v7  = [2,1.0,3.0];  @int e7  = malloc(2); e7 [0] = 2.5		; e7 [1] = vector(v7 );   setInsert(training_set,e7 );
-	@int 3 v8  = [2,1.0,2.9];  @int e8  = malloc(2); e8 [0] = 2.5		; e8 [1] = vector(v8 );   setInsert(training_set,e8 );
-	@int 3 v9  = [2,1.0,3.1];  @int e9  = malloc(2); e9 [0] = 2.7		; e9 [1] = vector(v9 );   setInsert(training_set,e9 );
-	@int 3 v10 = [2,1.0,3.0];  @int e10 = malloc(2); e10[0] = 2.7		; e10[1] = vector(v10);   setInsert(training_set,e10);
-	@int 3 v11 = [2,1.0,3.6];  @int e11 = malloc(2); e11[0] = 2.6		; e11[1] = vector(v11);   setInsert(training_set,e11);
-	@int 3 v12 = [2,1.0,3.7];  @int e12 = malloc(2); e12[0] = 2.7		; e12[1] = vector(v12);   setInsert(training_set,e12);
-	@int 3 v13 = [2,1.0,4.4];  @int e13 = malloc(2); e13[0] = 2.7		; e13[1] = vector(v13);   setInsert(training_set,e13);
-	@int 3 v14 = [2,1.0,4.1];  @int e14 = malloc(2); e14[0] = 3.7		; e14[1] = vector(v14);   setInsert(training_set,e14);
-	@int 3 v15 = [2,1.0,3.9];  @int e15 = malloc(2); e15[0] = 6.7		; e15[1] = vector(v15);   setInsert(training_set,e15);
-	@int 3 v16 = [2,1.0,4.7];  @int e16 = malloc(2); e16[0] = 7.8		; e16[1] = vector(v16);   setInsert(training_set,e16);
-	@int 3 v17 = [2,1.0,4.6];  @int e17 = malloc(2); e17[0] = 4.5		; e17[1] = vector(v17);   setInsert(training_set,e17);
-	@int 3 v18 = [2,1.0,4.8];  @int e18 = malloc(2); e18[0] = 4.6		; e18[1] = vector(v18);   setInsert(training_set,e18);
-	@int 3 v19 = [2,1.0,5.1];  @int e19 = malloc(2); e19[0] = 5.6		; e19[1] = vector(v19);   setInsert(training_set,e19);
-	@int 3 v20 = [2,1.0,5.5];  @int e20 = malloc(2); e20[0] = 5.43	; e20[1] = vector(v20);   setInsert(training_set,e20);
-	@int 3 v21 = [2,1.0,5.6];  @int e21 = malloc(2); e21[0] = 7.8		; e21[1] = vector(v21);   setInsert(training_set,e21);
-	@int 3 v22 = [2,1.0,5.7];  @int e22 = malloc(2); e22[0] = 5.9		; e22[1] = vector(v22);   setInsert(training_set,e22);
-	@int 3 v23 = [2,1.0,6.3];  @int e23 = malloc(2); e23[0] = 6.21	; e23[1] = vector(v23);   setInsert(training_set,e23);
-	@int 3 v24 = [2,1.0,6.1];  @int e24 = malloc(2); e24[0] = 6.8		; e24[1] = vector(v24);   setInsert(training_set,e24);
-	@int 3 v25 = [2,1.0,6.9];  @int e25 = malloc(2); e25[0] = 7.1		; e25[1] = vector(v25);   setInsert(training_set,e25);
-	@int 3 v26 = [2,1.0,7.1];  @int e26 = malloc(2); e26[0] = 5.6		; e26[1] = vector(v26);   setInsert(training_set,e26);
-	@int 3 v27 = [2,1.0,7.9];  @int e27 = malloc(2); e27[0] = 8.1		; e27[1] = vector(v27);   setInsert(training_set,e27);
-	@int 3 v28 = [2,1.0,8.5];  @int e28 = malloc(2); e28[0] = 8.3		; e28[1] = vector(v28);   setInsert(training_set,e28);
-	@int 3 v29 = [2,1.0,11.6]; @int e29 = malloc(2); e29[0] = 8.4		; e29[1] = vector(v29);   setInsert(training_set,e29);
-	@int 3 v30 = [2,1.0,10.0]; @int e30 = malloc(2); e30[0] = 2.7		; e30[1] = vector(v30);   setInsert(training_set,e30);
-	@int 3 v31 = [2,1.0,15.7]; @int e31 = malloc(2); e31[0] = 9.0		; e31[1] = vector(v31);   setInsert(training_set,e31);
-	@int 3 v32 = [2,1.0,19.9]; @int e32 = malloc(2); e32[0] = 9.1		; e32[1] = vector(v32);   setInsert(training_set,e32);
+@int 3 v0 = [2, 1.0, 3.0]; @int e0 = malloc(2); e0[0] = 0.0;e0[1] = vector(v0); setInsert(training_set, e0);
+@int 3 v1 = [2, 1.0, 1.0]; @int e1 = malloc(2); e1[0] = 0.5;e1[1] = vector(v1); setInsert(training_set, e1);
+@int 3 v2 = [2, 1.0, 1.1]; @int e2 = malloc(2); e2[0] = 1.0;e2[1] = vector(v2); setInsert(training_set, e2);
+@int 3 v3 = [2, 1.0, 1.5]; @int e3 = malloc(2); e3[0] = 1.0;e3[1] = vector(v3); setInsert(training_set, e3);
+@int 3 v4 = [2, 1.0, 2.3]; @int e4 = malloc(2); e4[0] = 1.21;e4[1] = vector(v4); setInsert(training_set, e4);
+@int 3 v5 = [2, 1.0, 2.5]; @int e5 = malloc(2); e5[0] = 1.9;e5[1] = vector(v5); setInsert(training_set, e5);
+@int 3 v6 = [2, 1.0, 2.7]; @int e6 = malloc(2); e6[0] = 2.3;e6[1] = vector(v6); setInsert(training_set, e6);
+@int 3 v7 = [2, 1.0, 3.0]; @int e7 = malloc(2); e7[0] = 2.5;e7[1] = vector(v7); setInsert(training_set, e7);
+@int 3 v8 = [2, 1.0, 2.9]; @int e8 = malloc(2); e8[0] = 2.5;e8[1] = vector(v8); setInsert(training_set, e8);
+@int 3 v9 = [2, 1.0, 3.1]; @int e9 = malloc(2); e9[0] = 2.7;e9[1] = vector(v9); setInsert(training_set, e9);
+@int 3 v10 = [2, 1.0, 3.0]; @int e10 = malloc(2); e10[0] = 2.7;e10[1] = vector(v10);    setInsert(training_set, e10);
+@int 3 v11 = [2, 1.0, 3.6]; @int e11 = malloc(2); e11[0] = 2.6;e11[1] = vector(v11);    setInsert(training_set, e11);
+@int 3 v12 = [2, 1.0, 3.7]; @int e12 = malloc(2); e12[0] = 2.7;e12[1] = vector(v12);    setInsert(training_set, e12);
+@int 3 v13 = [2, 1.0, 4.4]; @int e13 = malloc(2); e13[0] = 2.7;e13[1] = vector(v13);    setInsert(training_set, e13);
+@int 3 v14 = [2, 1.0, 4.1]; @int e14 = malloc(2); e14[0] = 3.7;e14[1] = vector(v14);    setInsert(training_set, e14);
+@int 3 v15 = [2, 1.0, 3.9]; @int e15 = malloc(2); e15[0] = 6.7;e15[1] = vector(v15);    setInsert(training_set, e15);
+@int 3 v16 = [2, 1.0, 4.7]; @int e16 = malloc(2); e16[0] = 7.8;e16[1] = vector(v16);    setInsert(training_set, e16);
+@int 3 v17 = [2, 1.0, 4.6]; @int e17 = malloc(2); e17[0] = 4.5;e17[1] = vector(v17);    setInsert(training_set, e17);
+@int 3 v18 = [2, 1.0, 4.8]; @int e18 = malloc(2); e18[0] = 4.6;e18[1] = vector(v18);    setInsert(training_set, e18);
+@int 3 v19 = [2, 1.0, 5.1]; @int e19 = malloc(2); e19[0] = 5.6;e19[1] = vector(v19);    setInsert(training_set, e19);
+@int 3 v20 = [2, 1.0, 5.5]; @int e20 = malloc(2); e20[0] = 5.43;e20[1] = vector(v20);   setInsert(training_set, e20);
+@int 3 v21 = [2, 1.0, 5.6]; @int e21 = malloc(2); e21[0] = 7.8;e21[1] = vector(v21);    setInsert(training_set, e21);
+@int 3 v22 = [2, 1.0, 5.7]; @int e22 = malloc(2); e22[0] = 5.9;e22[1] = vector(v22);    setInsert(training_set, e22);
+@int 3 v23 = [2, 1.0, 6.3]; @int e23 = malloc(2); e23[0] = 6.21;e23[1] = vector(v23);   setInsert(training_set, e23);
+@int 3 v24 = [2, 1.0, 6.1]; @int e24 = malloc(2); e24[0] = 6.8;e24[1] = vector(v24);    setInsert(training_set, e24);
+@int 3 v25 = [2, 1.0, 6.9]; @int e25 = malloc(2); e25[0] = 7.1;e25[1] = vector(v25);    setInsert(training_set, e25);
+@int 3 v26 = [2, 1.0, 7.1]; @int e26 = malloc(2); e26[0] = 5.6;e26[1] = vector(v26);    setInsert(training_set, e26);
+@int 3 v27 = [2, 1.0, 7.9]; @int e27 = malloc(2); e27[0] = 8.1;e27[1] = vector(v27);    setInsert(training_set, e27);
+@int 3 v28 = [2, 1.0, 8.5]; @int e28 = malloc(2); e28[0] = 8.3;e28[1] = vector(v28);    setInsert(training_set, e28);
+@int 3 v29 = [2, 1.0, 11.6]; @int e29 = malloc(2); e29[0] = 8.4;e29[1] = vector(v29);   setInsert(training_set, e29);
+@int 3 v30 = [2, 1.0, 10.0]; @int e30 = malloc(2); e30[0] = 2.7;e30[1] = vector(v30);   setInsert(training_set, e30);
+@int 3 v31 = [2, 1.0, 15.7]; @int e31 = malloc(2); e31[0] = 9.0;e31[1] = vector(v31);   setInsert(training_set, e31);
+@int 3 v32 = [2, 1.0, 19.9]; @int e32 = malloc(2); e32[0] = 9.1;e32[1] = vector(v32);   setInsert(training_set, e32);
 
 
 //create the model
-	@int model = GradientDescent(training_set,200,0.01,0.9999);
+	@int model = GradientDescent(training_set,1000,0.005,1.0);
 
 	printf("\nModel = ");print_vf(model);
 

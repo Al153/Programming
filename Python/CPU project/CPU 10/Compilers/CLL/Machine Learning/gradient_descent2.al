@@ -124,7 +124,7 @@ byteArray CLL.array_of_string17 2 [10, 0]
 int CLL.string17 CLL.array_of_string17
 byteArray CLL.array_of_string18 2 [9, 0]
 int CLL.string18 CLL.array_of_string18
-byteArray CLL.array_of_string19 19 [10, 69, 114, 114, 111, 114, 32, 105, 110, 32, 109, 111, 100, 101, 108, 32, 61, 32, 0]
+byteArray CLL.array_of_string19 14 [10, 71, 114, 97, 100, 105, 101, 110, 116, 115, 32, 61, 32, 0]
 int CLL.string19 CLL.array_of_string19
 array CLL.array_of_MALLOC_TREE_PARTITION 61144 []
 int CLL.MALLOC_TREE_PARTITION CLL.array_of_MALLOC_TREE_PARTITION
@@ -148,11 +148,17 @@ byteArray CLL.array_of_string0 6 [48, 32, 120, 69, 48, 0]
 int CLL.string0 CLL.array_of_string0
 byteArray CLL.array_of_string1 33 [82, 85, 78, 84, 73, 77, 69, 32, 69, 82, 82, 79, 82, 58, 32, 100, 105, 118, 105, 115, 105, 111, 110, 32, 98, 121, 32, 90, 69, 82, 79, 10, 0]
 int CLL.string1 CLL.array_of_string1
-byteArray CLL.array_of_string21 10 [10, 77, 111, 100, 101, 108, 32, 61, 32, 0]
+int CLL.new_error 0
+byteArray CLL.array_of_string21 19 [10, 69, 114, 114, 111, 114, 32, 105, 110, 32, 109, 111, 100, 101, 108, 32, 61, 32, 0]
 int CLL.string21 CLL.array_of_string21
-byteArray CLL.array_of_string20 9 [10, 82, 79, 85, 78, 68, 58, 32, 0]
+byteArray CLL.array_of_string20 18 [10, 67, 117, 114, 114, 101, 110, 116, 32, 109, 111, 100, 101, 108, 32, 61, 32, 0]
 int CLL.string20 CLL.array_of_string20
+byteArray CLL.array_of_string23 10 [10, 77, 111, 100, 101, 108, 32, 61, 32, 0]
+int CLL.string23 CLL.array_of_string23
+byteArray CLL.array_of_string22 9 [10, 82, 79, 85, 78, 68, 58, 32, 0]
+int CLL.string22 CLL.array_of_string22
 int CLL.MALLOC_TREE 0
+int CLL.old_error 0
 array CLL.array_of_MALLOC_HEAP 65536 []
 int CLL.MALLOC_HEAP CLL.array_of_MALLOC_HEAP
 int CLL.MALLOC_POOL 0
@@ -705,6 +711,10 @@ Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]
 Load gp0 CLL.MALLOC_TREE_PARTITION 										#LOAD GP0 GLOBAL
 Store gp0 CLL.MALLOC_POOL 										#STORE GP0 GLOBAL
+Load gp0 @0
+Store gp0 CLL.new_error 										#STORE GP0 GLOBAL
+Load gp0 @0
+Store gp0 CLL.old_error 										#STORE GP0 GLOBAL
 Goto function:malloc_init 												#CALLING malloc_init
 Goto function:set 												#CALLING set
 SUB gp7 @4 															#POP GP0
@@ -2530,7 +2540,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 @200
+Load gp0 @1000
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -2549,7 +2559,7 @@ Goto function:GradientDescent 												#CALLING GradientDescent
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 Store gp0 672 [Stack_pointer] 						#STORE GP0
-Load gp0 CLL.string21 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string23 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -3889,7 +3899,7 @@ if Less then Load gp2 @4294967295
 Move gp2 gp0
 NOT gp0
 if gp0 then Load PC loopGradientDescent-0exit
-Load gp0 CLL.string20 										#LOAD GP0 GLOBAL
+Load gp0 CLL.string22 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -3936,10 +3946,27 @@ Goto function:fMul 												#CALLING fMul
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 Store gp0 17 [Stack_pointer] 						#STORE GP0
+Load gp0 CLL.new_error 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp0 CLL.old_error 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:fGreater 												#CALLING fGreater
+SUB gp7 @4 															#POP GP0
+Load gp0 Expression_stack [gp7]
+if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifGradientDescent-0endif
 Goto function:getw 												#CALLING getw
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 StoreByte gp0 12 [Stack_pointer] 					#STORE GP0 (CHAR)
+Pass										%ifGradientDescent-0endif
 Pass 										%loopGradientDescent-0continue
 Load gp1 8 [Stack_pointer] 						#LOAD GP0
 Load gp0 @1
@@ -9911,25 +9938,32 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:PartialDerivatives 												#CALLING PartialDerivatives
+Load gp0 CLL.string19 										#LOAD GP0 GLOBAL
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Goto function:printf 												#CALLING printf
 Load gp0 20 [Stack_pointer] 						#LOAD GP0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_vf 												#CALLING print_vf
-Load gp0 @10
-AND gp0 @255 													  #CASTING INT TO CHAR
+Load gp0 CLL.string20 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Goto function:putc 												#CALLING putc
+Goto function:printf 												#CALLING printf
 Load gp0 12 [Stack_pointer] 						#LOAD GP0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_vf 												#CALLING print_vf
+Load gp0 CLL.new_error 										#LOAD GP0 GLOBAL
+Store gp0 CLL.old_error 										#STORE GP0 GLOBAL
 Load gp0 12 [Stack_pointer] 						#LOAD GP0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -9944,7 +9978,9 @@ Goto function:error 												#CALLING error
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 Store gp0 24 [Stack_pointer] 						#STORE GP0
-Load gp0 CLL.string19 										#LOAD GP0 GLOBAL
+Load gp0 24 [Stack_pointer] 						#LOAD GP0
+Store gp0 CLL.new_error 										#STORE GP0 GLOBAL
+Load gp0 CLL.string21 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
