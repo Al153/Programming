@@ -1,0 +1,27 @@
+//types
+
+
+#define SUM 1
+#define SUBTRACT 2
+#define PRODUCT 3
+#define QUOTIENT 4
+#define CONST 5
+#define POLYNOMIAL 6
+#define EXP 7
+#define LOG 8
+#define SIN 9
+#define COS 10 
+#
+#
+#
+
+
+
+
+//function spec:
+
+//	type
+//	(param1)
+//	(param2)
+
+

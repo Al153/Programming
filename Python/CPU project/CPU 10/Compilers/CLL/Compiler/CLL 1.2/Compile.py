@@ -2,6 +2,7 @@ import LR1_parser
 import sys
 import os
 import code_generator1_2 as code_generator
+import preprocessor
 
 # CLL 1.1 adds direct casting support, and further underlying optimisations
 # CLL 1.2 adds the ternary expression and modifying assignments (a += b etc)
@@ -596,7 +597,7 @@ def tokenise(self,source_text):
 	#source_text = fix_strings_and_comments(source_text)
 	#print "tokenising"
 	escaped_replace_dict = {"n":"\n",'"':'"',"\\":"\\","'":"'","t":"\t"}
-	source_text,macro_replace_dict = pretokenise(source_text,sys.argv[1].split("\\")[:-1])
+	source_text,macro_replace_dict = preprocessor.pretokenise(source_text,sys.argv[1].split("\\")[:-1])
 	#standard tokenizing routine
 	string_token_list = main_tokenise(self,source_text)
 	token_list = []
@@ -643,10 +644,7 @@ def tokenise(self,source_text):
 	#print [token.string for token in token_list]
 	return token_list
 
-def split(delimiters, string, maxsplit=0):
-    import re
-    regexPattern = '|'.join(map(re.escape, delimiters))
-    return [string for string in re.split(regexPattern, string, maxsplit) if string != '' ]
+
 
 
 def main_tokenise(self,text_file):
@@ -725,48 +723,6 @@ def main_tokenise(self,text_file):
 		line_tokens.append("\n")
 	return token_list
 
-import re
-def pretokenise(source_text,path):
-	#deals with import and define directives
-
-	lines = source_text.split("\n")
-	replace_dict = {}
-	i = 0
-	while i < len(lines):
-		line = lines[i]
-		split_line = split([" ","\t"],line)
-		if len(split_line)  and split_line[0][0] == "#":
-			if split_line[0] == "#include":  #replaces this line with the code of the specified file
-				#print line
-				if split_line[1][:4] == "STD:":
-					file_path = os.path.join(CURRENT_DIR,"standard library\\"+split_line[1][4:])
-					included = pretokenise(open(file_path,"r").read(),file_path[-1])
-				else:
-					file_path = path+[split_line[1]]
-					included = pretokenise(open("\\".join(file_path),"r").read(),file_path[-1])
-				lines[i] = included[0]
-				replace_dict.update(included[1])
-			elif split_line[0] == "#define": #defines token to be changed for another
-				try:
-					replace_dict[split_line[1]] = split_line[2]
-					lines = lines[:i]+lines[i+1:] #removes line 
-					i -=1 							#accounts for removal of line
-				except IndexError:
-					print "ERROR(43): not enough tokens for a #define in line "+str(i)
-					quit()
-			elif split_line[0] == "#random": #defines a token to be replaced by a random integer
-				try:
-					import random
-					replace_dict[split_line[1]] = str(random.randrange(2**23))
-					lines = lines[:i]+lines[i+1:] #removes line 
-					i -=1 							#accounts for removal of line	
-				except IndexError:
-					print "ERROR(43): not enough tokens for a #random in line "+str(i)
-					
-
-
-		i += 1
-	return "\n".join(lines),replace_dict
 
 def write_to_file(assembly_code):
 	file_name = ".".join(sys.argv[1].split(".")[:-1]+["al"])
