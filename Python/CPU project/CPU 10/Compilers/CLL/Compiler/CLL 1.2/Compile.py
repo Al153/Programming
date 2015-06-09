@@ -3,6 +3,7 @@ import sys
 import os
 import code_generator1_2 as code_generator
 import preprocessor
+from globals import *
 
 # CLL 1.1 adds direct casting support, and further underlying optimisations
 # CLL 1.2 adds the ternary expression and modifying assignments (a += b etc)

@@ -1,6 +1,8 @@
 import re
 import json
 import random
+import os
+from globals import *
 
 def pretokenise(source_text,path):
 	#deals with import and define directives
@@ -42,33 +44,63 @@ def pretokenise(source_text,path):
 			elif split_line[0] == "#enum":
 				#ENUM followed by an identifier and a set in [], which represents the name of the class of defined values and individual macros within it
 				#numbers of the form 0x5555550000 - 0x555555ffff are used - so the enum values do not intefere with instructions etc
-				if len(split_line>2):
+				removed = 1
+				if len(split_line)>2:
 					enum_name = split_line[1]
-					if split_line[2] == "[" and split_line[-1][-1] == "]":
-						rest_of_string = ''.join(split_line[2:])
+					if split_line[2][0] == "[":
+						rest_of_string = ' '.join(split_line[2:])
+						try:
+							while rest_of_string[-1] == '\\':
+								rest_of_string =rest_of_string[:-1] + lines[i+removed]
+								removed += 1
+						except IndexError:
+							print "ERROR(46: ran out of lines for preprocessor enum statement"
+							quit()
+
+					enum_offset = 0
+					for token in tokenise_enum_set(rest_of_string):
+						replace_dict[enum_name + ':' + token] = str(0x50505050 + enum_offset)
+						enum_offset += 1
 
 
-					lines = lines[:i]+lines[i+1:] #removes line 
-					i -=1 							#accounts for removal of line
+
+					lines = lines[:i]+lines[i+removed:] #removes line 
+					i -= removed							#accounts for removal of line
 				else:
 
-					print "ERROR: not enough tokens for an enum statment"
+					print "ERROR(47): not enough tokens for an enum statment"
 					quit()
 		i += 1
 	return "\n".join(lines),replace_dict
 
 
-def tokenis_enum_set(string):
+def tokenise_enum_set(string):
 	state = "start"
 	tokens = []
-	seperators = (' ','\t',',')
+	token = ''
+	seperators = ('[,',' ','\t',',')
 	for character in string:
 		if state == "start":
 			if character in seperators:
 				pass
 			elif character == ']':
-				pass
-			pass
+				return tokens
+			else:
+				token += character
+				state = "in_token"
+		elif state == "in_token":
+			if character in seperators:
+				state = "start"
+				tokens.append(token)
+				token = ''
+			elif character == ']':
+				tokens.append(token)
+				return tokens
+			else:
+				token += character
+	print "ERROR(45): enumerated string not closed with a '']'"
+	quit()
+
 
 def split(delimiters, string, maxsplit=0):
     regexPattern = '|'.join(map(re.escape, delimiters))

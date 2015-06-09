@@ -1,0 +1,13 @@
+#include STD:radix.cll 
+#enum testing [ a b c d \
+e f g]
+
+void main()
+	print_h(testing:a);putc('\n');
+	print_h(testing:b);putc('\n');
+	print_h(testing:c);putc('\n');
+	print_h(testing:d);putc('\n');
+	print_h(testing:e);putc('\n');
+	print_h(testing:f);putc('\n');
+	print_h(testing:g);putc('\n');
+end;
