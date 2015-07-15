@@ -1,0 +1,80 @@
+#include STD:math.cll
+#include STD:allocation.cll
+
+void main()
+	malloc_init();
+	@int 8 data = [1.0,0,0,0,0,0,0,0];
+	@int 8 array;
+	@int 8 output;
+	init(data,array,output,8);
+
+
+	show(array,2);
+	putc('\n');
+
+	fft(array,output,2);
+	show(output,2);
+end;
+
+void show(@int array, int n)
+	putc('[');
+	int i;
+	for (i = 0, i <n, i+= 1)
+		print_c(array[i]);
+		if (i<n-1) then
+			printf(",\n"); endif;
+	loop;
+	putc(']');	putc('\n');
+
+end;
+
+void init(@int data, @int array, @int aux, int n)
+	int i;
+	for (i=0, i<n,i+=1)
+		array[i] = complex(data[i],0.0);
+		aux[i] = complex(0.0,0.0);
+	loop;
+end;
+
+
+void fft(@int in, @int out, int N)
+	int k;
+	@int ans = complex(0,0);
+	for (k=0,k<N,k+=1)
+		_fft(in,k,N,1,ans);
+		cCopy(out[k],ans);
+	loop;
+end;
+
+ void _fft(@int X, int k, int N, int step, @int ans)
+ 	@int spare = complex(0,0);
+	if (N>step) then
+		_fft(X,k,N,2*step,ans); //do evens
+		cCopy(spare,ans); 		//store on stack
+		_fft(X+step*4,k,N,2*step,ans); //do odds
+		cScale(
+			ans,
+			vPolar(
+				1.0,
+				fNegate(
+					fMul(
+						TAU,
+						fDiv(
+							float(k),
+							float(N)
+						)
+					)
+				)
+			)
+		);
+		if (k<(N/2)) then
+			cInc(ans,spare);
+		else
+			ans[1] = fSub(spare[1],ans[1]);
+			ans[2] = fSub(spare[2],ans[2]);
+		endif;
+		dalloc(spare);
+	else
+		cMov(ans,X[0]);
+	endif;
+end;

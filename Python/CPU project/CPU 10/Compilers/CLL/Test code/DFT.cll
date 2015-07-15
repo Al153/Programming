@@ -3,21 +3,19 @@
 
 void main()
 	malloc_init();
-	@int 8 data = [1.0,1.0,1.0,1.0,0,0,0,0];
+	@int 8 data = [1.0,0,0,0,0,0,0,0];
 	@int 8 array;
 	@int 8 output;
 	init(data,array,output,8);
 
 
-	show(array,8);
-	putc('\n');
-	show(output,8);
+	show(array,2);
 	putc('\n');
 
 
 
-	dft(array,output,8);
-	show(output,8);
+	dft(array,output,2);
+	show(output,2);
 end;
 
 
@@ -50,6 +48,8 @@ void dft(@int buf, @int output,int N)
 	@int term = complex(0,0);
 	for (k = 0, k<N,k+= 1)
 		sum[1] = 0; sum[2] = 0;
+		print_f(sum[1]);printf("    ");
+		print_f(sum[2]);putc('\n');
 		for (n = 0, n<N, n += 1)
 			cMov(term,cMul(
 				buf[n],

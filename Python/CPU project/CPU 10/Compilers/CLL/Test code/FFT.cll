@@ -1,0 +1,72 @@
+#include STD:math.cll
+#include STD:allocation.cll
+
+void main()
+	malloc_init();
+	@int 8 data = [1.0,0,0,0,0,0,0,0];
+	@int 8 array;
+	@int 8 output;
+	init(data,array,output,8);
+
+
+	show(array,4);
+	putc('\n');
+
+	fft(array,output,4);
+	show(output,4);
+end;
+
+
+void _fft(@int buf, @int out, int N, int step,@int t1,@int t2)
+	if (N==1)then
+		pass;
+	else
+		_fft(out, buf, N/2, step * 2, t1,t2);
+		_fft(out + 4*step, buf + 4*step, N/2, step * 2,t1,t2);
+ 		int k;
+		for ( k = 0, k<N/2, k += 1) 
+
+			cCopy(t1,buf[k]);
+			cMov(t2,
+				cMul(
+					vPolar(1.0,fNegate(fMul(TAU,fDiv(float(k),float(N))))),
+					buf[k+N/2]
+					)
+			);
+
+			cMov(out[k], cAdd(t1,t2));
+			cMov(out[k + N/2],cSub(t1,t2));
+		loop;
+	endif;
+end;
+ 
+void fft(@int buf, @int out, int n)
+	//
+	@int t1 = complex(0,0);
+	@int t2 = complex(0,0);
+	int i;
+	for (i = 0, i < n, i+=1) cCopy(out[i],buf[i]); loop;
+	_fft(buf, out, n, 1,t1,t2);
+end;
+
+void show(@int array, int n)
+	putc('[');
+	int i;
+	for (i = 0, i <n, i+= 1)
+		print_c(array[i]);
+		if (i<n-1) then
+			printf(",\n"); endif;
+	loop;
+	putc(']');	putc('\n');
+
+end;
+
+void init(@int data, @int array, @int aux, int n)
+	int i;
+	for (i=0, i<n,i+=1)
+		array[i] = complex(data[i],0.0);
+		aux[i] = complex(0.0,0.0);
+	loop;
+end;
+
+
