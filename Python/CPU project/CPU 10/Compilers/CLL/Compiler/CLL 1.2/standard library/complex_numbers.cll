@@ -1,0 +1,196 @@
+//requires floats
+//requires malloc
+//requires math
+
+//complex structure:
+
+
+//////////////////////
+//  Tag				//
+//////////////////////
+//  real			//
+//////////////////////
+//  imag			//	
+//////////////////////
+
+@int complex(int re, int im)     //non volatile complex number object
+	@int comp = malloc(3);
+	comp[0] = 0; 				//not volatile
+	comp[1] = re;
+	comp[2] = im;
+	return comp;
+
+end;
+
+@int vComplex(int re, int im)    //vComplexes are volatile complex numbers which are dalloced when used in an operation
+	@int comp = malloc(3);
+	comp[0] = 1; 				//volatile
+	comp[1] = re;
+	comp[2] = im;
+	return comp;		
+
+end;
+
+@int polar(int mod, int theta)
+	@int comp = malloc(3);
+	comp[0] = 0; 				//not volatile
+	comp[1] = fMul(mod,cos(theta)); //real
+	comp[2] = fMul(mod,sin(theta)); //imag
+	return comp;
+
+end;
+
+
+@int vPolar(int mod, int theta)
+	@int comp = malloc(3);
+	comp[0] = 1; 				//volatile
+	comp[1] = fMul(mod,cos(theta)); //real
+	comp[2] = fMul(mod,sin(theta)); //imag
+	return comp;
+
+end;
+
+
+@int cAdd(@int c1, @int c2)
+	if (c1[0]) then dalloc(c1); endif; //if either of the two complex numbers is volatile, then delete them
+	if (c2[0]) then dalloc(c2); endif;
+	if ((c1[0])and(c2[0])) then
+		return vComplex(fAdd(c1[1],c2[1]),fAdd(c1[2],c2[2]));  //if both inputs are volatile then the output is, too
+	else
+		return complex(fAdd(c1[1],c2[1]),fAdd(c1[2],c2[2]));
+	endif;
+end;
+
+@int cSub(@int c1, @int c2)
+	if (c1[0]) then dalloc(c1); endif; //if either of the two complex numbers is volatile, then delete them
+	if (c2[0]) then dalloc(c2); endif;
+	if ((c1[0])and(c2[0])) then
+		return vComplex(fSub(c1[1],c2[1]),fSub(c1[2],c2[2]));  //if both inputs are volatile then the output is, too
+	else
+		return complex(fSub(c1[1],c2[1]),fSub(c1[2],c2[2]));
+	endif;
+end;
+
+
+@int cMul(@int c1, @int c2)
+	if (c1[0]) then dalloc(c1); endif; //if either of the two complex numbers is volatile, then delete them
+	if (c2[0]) then dalloc(c2); endif;
+	int re = fSub(
+		fMul(c1[1],c2[1]),
+		fMul(c1[2],c2[2])
+	);
+	int im = fAdd(
+		fMul(c1[1],c2[2]),
+		fMul(c1[2],c2[1])
+	);
+	if ((c1[0])and(c2[0])) then
+		return vComplex(re,im);  //if both inputs are volatile then the output is, too
+	else
+		return complex(re,im);
+	endif;
+end;
+
+
+@int cDiv(@int c1, @int c2)
+	if (c1[0]) then dalloc(c1); endif; //if either of the two complex numbers is volatile, then delete them
+	if (c2[0]) then dalloc(c2); endif;
+	int denom = fAdd(
+		fMul(c2[1],c2[1]),
+		fMul(c2[2],c2[2])
+	);
+	int re = fDiv(
+		fAdd(
+			fMul(c1[1],c2[1]),
+			fMul(c1[2],c2[2])
+			),
+		denom
+		);
+	int im = fDiv(
+		fSub(
+			fMul(c1[2],c2[1]),
+			fMul(c1[1],c2[2])
+			),
+		denom
+		);
+	if ((c1[0])and(c2[0])) then
+		return vComplex(re,im);  //if both inputs are volatile then the output is, too
+	else
+		return complex(re,im);
+	endif;
+end;
+
+
+void cInc(@int c1, @int c2) //in place addition
+	if (c2[0]) then dalloc(c2); endif;
+	c1[1] = fAdd(c1[1],c2[1]);
+	c1[2] = fAdd(c1[2],c2[2]);
+end;
+
+
+void cDec(@int c1, @int c2) //in place subtraction
+	if (c2[0]) then dalloc(c2); endif;
+	c1[1] = fSub(c1[1],c2[1]);
+	c1[2] = fSub(c1[2],c2[2]);
+end;
+
+
+void cScale(@int c1, @int c2) //in place Multiplication
+	if (c2[0]) then dalloc(c2); endif;
+	int re = fSub(
+		fMul(c1[1],c2[1]),
+		fMul(c1[2],c2[2])
+	);
+	int im = fAdd(
+		fMul(c1[1],c2[2]),
+		fMul(c1[2],c2[1])
+	);
+	c1[1] = re;
+	c1[2] = im;
+end;
+
+
+void cReciprocal(@int c1, @int c2) //in place division
+	if (c2[0]) then dalloc(c2); endif;
+	int denom = fAdd(
+		fMul(c2[1],c2[1]),
+		fMul(c2[2],c2[2])
+	);
+	int re = fDiv(
+		fAdd(
+			fMul(c1[1],c2[1]),
+			fMul(c1[2],c2[2])
+			),
+		denom
+		);
+	int im = fDiv(
+		fSub(
+			fMul(c1[2],c2[1]),
+			fMul(c1[1],c2[2])
+			),
+		denom
+		);
+	c1[1] = re;
+	c1[2] = im;
+end;
+
+void cCopy(@int dest, @int source)
+	//sets one complex to the value of another
+	dest[0] = source[0];
+	dest[1] = source[1];
+	dest[2] = source[2];
+	if (source[0]) then dalloc(source);endif;
+end;
+
+void cMov(@int dest, @int source)
+	dest[0] = source[0];
+	dest[1] = source[1];
+	dest[2] = source[2];
+	dalloc(source); 		//always dallocs the source
+end;
+
+void print_c(@int c)
+	putc('(');print_f(c[1]);
+	printf(" + ");print_f(c[2]);
+	printf(" j)");
+	if (c[0]) then dalloc(c);endif;
+end;

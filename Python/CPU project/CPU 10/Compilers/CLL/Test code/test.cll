@@ -1,16 +1,76 @@
-#include STD:radix.cll
 #include STD:math.cll
 #include STD:allocation.cll
-#include STD:fp_vectors.cll
 
 void main()
 	malloc_init();
-	@int 4 v1 = [3,-53.4,0.43,12.4];
-	@int 4 v2 = [3,-43.4,16.0,23.4];
-	v1 = vector(v1);
-	v2 = vector(v2);
-	print_f(vfDot(v1,v2));
-	printf("\n");
+	@int 8 data = [1.0,1.0,1.0,1.0,0,0,0,0];
+	@int 8 array;
+	@int 8 output;
+	init(data,array,output,8);
+
+
+	show(array,8);
+	putc('\n');
+	show(output,8);
+	putc('\n');
+
+
+
+	fft(array,output,8);
+	show(output,8);
 end;
 
 
+void _fft(@int buf, @int out, int n, int step)
+	if (step < n) then
+		_fft(out, buf, n, step * 2);
+		_fft(out + 4*step, buf + 4*step, n, step * 2);
+ 		int i;
+		for ( i = 0, i < n, i += 2 * step) 
+			@int t = cMul(
+				vPolar(
+					1.0,
+					fMul(
+						PI,
+						fDiv(
+							float(i),
+							float(n)
+						)
+					)
+				),
+				out[i + step]
+			);
+
+			cMov(buf[i / 2], cAdd(out[i],t));
+			cMov(buf[(i + n)/2],cSub(out[i],t));
+			dalloc(t);
+		loop;
+	endif;
+end;
+ 
+void fft(@int buf, @int out, int n)
+	//
+	int i;
+	for (i = 0, i < n, i+=1) cCopy(out[i],buf[i]); loop;
+	_fft(buf, out, n, 1);
+end;
+
+void show(@int array, int n)
+	putc('[');
+	int i;
+	for (i = 0, i <n, i+= 1)
+		print_c(array[i]);
+		if (i<n-1) then
+			printf(",\n"); endif;
+	loop;
+	putc(']');	putc('\n');
+
+end;
+
+void init(@int data, @int array, @int aux, int n)
+	int i;
+	for (i=0, i<n,i+=1)
+		array[i] = complex(data[i],0.0);
+		aux[i] = complex(0.0,0.0);
+	loop;
+end;
