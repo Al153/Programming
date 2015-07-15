@@ -6837,6 +6837,7 @@ if Greater then Load PC Stack_overflow_error
 Goto function:float 												#CALLING float
 Goto function:fDiv 												#CALLING fDiv
 Goto function:fMul 												#CALLING fMul
+Goto function:fNegate 												#CALLING fNegate
 Goto function:vPolar 												#CALLING vPolar
 Load gp1 16 [Stack_pointer] 						#LOAD GP0
 Load gp0 8 [Stack_pointer] 						#LOAD GP0

@@ -30,11 +30,13 @@ void _fft(@int buf, @int out, int n, int step)
 			@int t = cMul(
 				vPolar(
 					1.0,
-					fMul(
-						PI,
-						fDiv(
-							float(i),
-							float(n)
+					fNegate(
+						fMul(
+							PI,
+							fDiv(
+								float(i),
+								float(n)
+							)
 						)
 					)
 				),
@@ -74,3 +76,5 @@ void init(@int data, @int array, @int aux, int n)
 		aux[i] = complex(0.0,0.0);
 	loop;
 end;
+
+

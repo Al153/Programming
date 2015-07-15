@@ -1,0 +1,72 @@
+#include STD:math.cll
+#include STD:allocation.cll
+
+void main()
+	malloc_init();
+	@int 8 data = [1.0,1.0,1.0,1.0,0,0,0,0];
+	@int 8 array;
+	@int 8 output;
+	init(data,array,output,8);
+
+
+	show(array,8);
+	putc('\n');
+	show(output,8);
+	putc('\n');
+
+
+
+	dft(array,output,8);
+	show(output,8);
+end;
+
+
+
+
+void show(@int array, int n)
+	putc('[');
+	int i;
+	for (i = 0, i <n, i+= 1)
+		print_c(array[i]);
+		if (i<n-1) then
+			printf(",\n"); endif;
+	loop;
+	putc(']');	putc('\n');
+
+end;
+
+void init(@int data, @int array, @int aux, int n)
+	int i;
+	for (i=0, i<n,i+=1)
+		array[i] = complex(data[i],0.0);
+		aux[i] = complex(0.0,0.0);
+	loop;
+end;
+
+void dft(@int buf, @int output,int N)
+	int k;
+	int n;
+	@int sum = complex(0,0);
+	@int term = complex(0,0);
+	for (k = 0, k<N,k+= 1)
+		sum[1] = 0; sum[2] = 0;
+		for (n = 0, n<N, n += 1)
+			cMov(term,cMul(
+				buf[n],
+				vPolar(1.0,
+					fNegate(
+						fMul(
+							TAU,
+							fMul(
+								float(k),
+								fDiv(float(n),float(N))
+								)
+							)
+						)
+				)
+			));
+			cInc(sum,term);
+		loop;
+		cCopy(output[k],sum);
+	loop;
+end;
