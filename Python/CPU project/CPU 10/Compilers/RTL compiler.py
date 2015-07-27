@@ -1,3 +1,6 @@
+RTL was a planned intermediate language before I developed CLL or forth
+I scrapped it soon after
+
 def RTL_to_AL_line(RTL):
 	'''converts a line of RTL to assembly'''
 	Function_list = {

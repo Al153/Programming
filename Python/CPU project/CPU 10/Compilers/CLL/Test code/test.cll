@@ -3,5 +3,5 @@
 
 void main()
 	malloc_init();
-	print_c(polar(2.0,fDiv(PI,3.0)));
+	print_c(polar(1.0,5.75958653158));
 end;

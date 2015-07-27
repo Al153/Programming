@@ -4633,17 +4633,17 @@ Load gp6 @0
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 112 [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load gp0 @0
+Load gp0 @1065353216
 Load gp6 @1
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 112 [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load gp0 @0
+Load gp0 @1065353216
 Load gp6 @2
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 112 [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load gp0 @0
+Load gp0 @1065353216
 Load gp6 @3
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 112 [Stack_pointer] 							#STORE GP0 RELATIVE
@@ -4700,7 +4700,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 @4
+Load gp0 @8
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4723,7 +4723,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 @4
+Load gp0 @8
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -4734,7 +4734,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp0 @4
+Load gp0 @8
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length

@@ -3,17 +3,17 @@
 
 void main()
 	malloc_init();
-	@int 8 data = [1.0,0,0,0,0,0,0,0];
+	@int 8 data = [1.0,1.0,1.0,1.0,0,0,0,0];
 	@int 8 array;
 	@int 8 output;
 	init(data,array,output,8);
 
 
-	show(array,4);
+	show(array,8);
 	putc('\n');
 
-	fft(array,output,4);
-	show(output,4);
+	fft(array,output,8);
+	show(output,8);
 end;
 
 

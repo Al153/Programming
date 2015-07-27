@@ -1,19 +1,21 @@
 #include STD:math.cll
 #include STD:allocation.cll
 
+//a fft which computes coefficients one by one
+
 void main()
 	malloc_init();
-	@int 8 data = [1.0,0,0,0,0,0,0,0];
+	@int 8 data = [1.0,1.0,1.0,1.0,0,0,0,0];
 	@int 8 array;
 	@int 8 output;
 	init(data,array,output,8);
 
 
-	show(array,2);
+	show(array,8);
 	putc('\n');
 
-	fft(array,output,2);
-	show(output,2);
+	fft(array,output,8);
+	show(output,8);
 end;
 
 void show(@int array, int n)
@@ -47,11 +49,11 @@ void fft(@int in, @int out, int N)
 end;
 
  void _fft(@int X, int k, int N, int step, @int ans)
- 	@int spare = complex(0,0);
-	if (N>step) then
-		_fft(X,k,N,2*step,ans); //do evens
+	if (N>1) then
+		@int spare = complex(0,0);
+		_fft(X,k,N/2,2*step,ans); //do evens
 		cCopy(spare,ans); 		//store on stack
-		_fft(X+step*4,k,N,2*step,ans); //do odds
+		_fft(X+step*4,k,N/2,2*step,ans); //do odds
 		cScale(
 			ans,
 			vPolar(
@@ -68,13 +70,14 @@ end;
 			)
 		);
 		if (k<(N/2)) then
-			cInc(ans,spare);
+			ans[1] = fAdd(spare[1],ans[1]);
+			ans[2] = fAdd(spare[2],ans[2]);
 		else
 			ans[1] = fSub(spare[1],ans[1]);
 			ans[2] = fSub(spare[2],ans[2]);
 		endif;
 		dalloc(spare);
 	else
-		cMov(ans,X[0]);
+		cCopy(ans,X[0]);
 	endif;
 end;
