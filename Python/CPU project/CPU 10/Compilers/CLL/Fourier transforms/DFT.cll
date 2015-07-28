@@ -44,8 +44,8 @@ end;
 void dft(@int buf, @int output,int N)
 	int k;
 	int n;
-	@int sum = complex(0,0);
-	@int term = complex(0,0);
+	@int 3 sum = [0,0,0];
+	@int 3 term = [0,0,0];
 	for (k = 0, k<N,k+= 1)
 		sum[1] = 0; sum[2] = 0;
 		print_f(sum[1]);printf("    ");
