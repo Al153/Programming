@@ -48,9 +48,16 @@ void Dup() // stack: . . . ==> . . . object
 end;
 
 void Swap()
+	int Mode1 = Pop();
+	int top1 = Pop();
+	int Mode2 = Pop();
+	int top2 = Pop();
 
+	Push(top1);Push(Mode1);
+	Push(top2);Push(Mode2);
 end;
 
 void Drop()
-
+	int Mode = Pop();
+	int Mode = Pop();
 end;

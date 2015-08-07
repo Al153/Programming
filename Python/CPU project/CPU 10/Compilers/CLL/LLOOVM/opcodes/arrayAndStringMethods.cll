@@ -1,13 +1,25 @@
 //methods for array and string ops (especially arrays, which are dynamic)
 
-void ArrayIndex()
+void ArrayIndex() //stack: . . . ArrayObj index ==> . . . ArrayObj[index]
 
 end;
 
-void ArrayInsert()
+void ArrayInsert() //Stack: . . . ArrayObj ==> . . . 
 
 end;
 
-void ArrayAppend()
+void ArrayAppend() //Stack: . . . ArrayObj obj ==> . . . 
+
+end;
+
+void ArrayPop() //Stack: . . . ArrayObj ==> . . . obj
+
+end;
+
+void ArraySplice() //Stack . . . ArrayObj start end step ==> . . . ArrayObj[start:end:step]
+
+end;
+
+void ArrayLen() //Stack: . . . ArrayObj ==> . . . AciveLenOfArray
 
 end;

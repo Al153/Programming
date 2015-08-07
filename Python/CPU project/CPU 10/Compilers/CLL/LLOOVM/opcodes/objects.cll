@@ -125,7 +125,8 @@ void GetValueLeave() // stack . . . valuedOject ==> . . . value valuedObject
 	endif;
 end;
 
-void Copy()
+void Copy() //stack: . . . obj ==> . . . copyOfObj
+	//copies an object's entire structure
 
 end;
 
@@ -133,26 +134,31 @@ void New()  //codestream: namestring [codestring] stack: . . . class ==> . . . o
 
 end;
 
-void Del()		//codestream
-	//removes the 
+void DelRef()		//codestream: int Stack: . . . obj ==> . . . 
+	//removes the reference in an object, does not automatically call GC 
 end;
 
-void Collect()
-
-end;
-
-void Template()
+void DelName() //codestream: string Stack . . . obj ==> . . . 
+	//removes the reference in anobject's attrs, does not automatically call GC
 
 end;
 
-void StoreName()
+void Collect() // runs a forced garbage collection
 
 end;
 
-void StoreRef()
+void Template()	//not sure what this does....
 
 end;
 
-void StoreValue()
+void StoreName() //Codestream: string stack: . . . objParent objChild ==> . . . 
+
+end;
+
+void StoreRef() //Codestream: int stack: . . . objParent objChild ==> . . . 
+
+end;
+
+void StoreValue() //stack: . . . objParent value ==> . . . 
 
 end;
