@@ -1,0 +1,66 @@
+//folder of globals
+
+//sets up the expression and execution stacks 
+
+@int 65536 EXPR_STACK;
+@int 20480 CALL_STACK; 			//contains 10 int frames (8ints for local, 1 for return, 1 for the caller reference)
+int EXPR_STACK_PTR = 0;
+int CALL_STACK_PTR = 0;
+@int 8 LOCAL_TEMPLATE;
+@int 8 MAIN;
+
+@char PC;
+@int objectDict = 0; 			//pointer to a linked list of pointers to objects
+@int FRAME
+
+void init(@char bytecode)
+	//sets up main object and local template
+
+	malloc_init();
+
+	//set up the MAIN namespace
+	MAIN[OBJ_TYPE] = LLOOVM_MAIN;
+	MAIN[OBJ_NAME] = "MAIN";
+	MAIN[OBJ_TRACE_COLOUR] = getHash(MAIN);
+	MAIN[OBJ_TRACE_COLOUR] = COLOUR:GREY;
+	
+	MAIN[OBJ_SUPER] = 0;
+	MAIN[OBJ_CLASS] = 0;
+	MAIN[OBJ_META] = 0;
+
+	//adds the bytecode
+	@int main_code = newObj(LLOOVM_FUNCTION,"main",0,MAIN,functionClass,bytecode);
+	MAIN[OBJ_ATTR] = newAttr("main",0,main_code);
+	@int lastMainAttr = MAIN[OBJ_ATTR];  //pointer to last main ATTR
+	//set up the LOCAL namespace template
+
+	LOCAL_TEMPLATE[OBJ_TYPE] = LLOOVM_LOCAL;
+	LOCAL_TEMPLATE[OBJ_NAME] = "LOCAL";
+	LOCAL_TEMPLATE[OBJ_TRACE_COLOUR] = COLOUR:GREY;
+	LOCAL_TEMPLATE[OBJ_ATTR] = 0;
+	LOCAL_TEMPLATE[OBJ_SUPER] = 0;
+	LOCAL_TEMPLATE[OBJ_CLASS] = 0;
+	LOCAL_TEMPLATE[OBJ_META] = 0; //used as a return Value
+
+	// sets up classes
+
+
+	//classes are the meta class, and require the attributes for 
+	//int
+	//float
+	//array
+	//function
+	//string
+	//bool
+	//module
+
+	//set up metaclass
+
+	//use metaclass to create classes
+
+			////////////////////////////////////////////////////
+			// need to work out how classes are to be created //
+			////////////////////////////////////////////////////
+
+
+end;

@@ -1,0 +1,24 @@
+#include STD:allocation.cll
+#include stack.cll
+#include init.cll
+#include Errors.cll
+#include OOsys.cll
+#include opcodes.cll
+#include tools.cll
+#include definitions.cll
+
+
+//main file for the low level OO virtual machine
+
+
+
+void LLOOVM(@char bytecode)
+
+		//bytecode is the code to be executed
+		init(bytecode); //preinitialisation
+
+		while(1)do
+			char op = PC[0];
+
+		loop;
+end;

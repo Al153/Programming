@@ -1,0 +1,13 @@
+//methods for array and string ops (especially arrays, which are dynamic)
+
+void ArrayIndex()
+
+end;
+
+void ArrayInsert()
+
+end;
+
+void ArrayAppend()
+
+end;

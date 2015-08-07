@@ -10,10 +10,10 @@ from globals import *
 
 ###________________________ Compiling Strategy ____________________________
 
-#-get primary source code
+#-get primary source code - preprocess for definitions, includes, enumerates and different representations
 #-run parser on it
 #-extract functions from files and store them in a list
-#-the functionless code should now consist of purely variable definitions (and import statements?)
+#-the functionless code should now consist of purely variable definitions
 #-linearise the functionless code: reduce to a list of parse trees for each line
 #- for each function, generate a name_space object, containing the code of that function
 #- for each function namespace: linearise the code: create a single list containing the parse trees for each line
@@ -24,7 +24,7 @@ CURRENT_DIR = os.path.dirname(__file__)
 
 
 class Program:
-	def __init__(self): 		#is main argument is to tell ow much setup should occur
+	def __init__(self): 		
 		print "getting source = ",			
 		self.source = get_source_file()
 		print "DONE!\nParsing = ",

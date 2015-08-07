@@ -211,8 +211,6 @@ int TREEOPCOUNT = 32; //counts number of tree insertions and deletions, after 32
 	else
 		return 0;
 	endif;
-
-
 end;
 
 @int pruneTree(@int bottom)

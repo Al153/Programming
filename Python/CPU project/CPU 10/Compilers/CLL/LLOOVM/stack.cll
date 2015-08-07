@@ -1,0 +1,22 @@
+void Push(int value)
+	EXPR_STACK[EXPR_STACK_PTR] = value;
+	EXPR_STACK_PTR += 1;
+	if (EXPR_STACK_PTR == 65536) then
+		raise("STACK","Stack overflow");
+	endif;
+end;
+
+
+int Pop()
+	if (EXPR_STACK_PTR == 0) then
+		raise("STACK","Stack underflow");
+	else
+		EXPR_STACK_PTR -= 1;
+		return EXPR_STACK[EXPR_STACK_PTR];
+	endif;
+end;
+
+
+int Peek()
+	return EXPR_STACK[EXPR_STACK_PTR];
+end;

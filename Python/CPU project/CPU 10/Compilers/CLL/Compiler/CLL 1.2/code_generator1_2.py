@@ -1,5 +1,7 @@
 import sys
 import optimiser1_2 as optimiser
+#snippets are pieces of assembly code with mutatble fields
+
 def process_snippets(filename):
 	'''generates a list of snippets objects'''
 	snippet_text = open(filename,"r").read()
@@ -140,9 +142,9 @@ class code_generator:
 		self.assembly = optimiser.assembly_optimise(self.assembly)
 
 	#Code generation code to write:
-	#	expression generation code
+	#	expression generation code 								DONE
 	#	boolean expression generation code 						DONE	
-	# 		- Bool factor, bool_expr
+	# 		- Bool factor, bool_expr 							DONE
 	#	for loop code 											DONE
 	#	while loop code 										DONE
 	#	if statement, if - else code 							DONE
@@ -156,7 +158,7 @@ class code_generator:
 	#############################
 	# 		   MISC TO DO 		#
 	#############################
-	#- fix global variable addressing - allow assembler to do heavy lifting 
+	#- fix global variable addressing - allow assembler to do heavy lifting DONE
 	
 
 	def get_var_addresses(self,var_sizes):

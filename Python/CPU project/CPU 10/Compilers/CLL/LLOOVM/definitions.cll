@@ -1,0 +1,46 @@
+//object object offsets
+#define OBJ_TYPE 0
+#define OBJ_NAME 1
+#define OBJ_ATTR 2
+#define OBJ_SUPER 3
+#define OBJ_CLASS 4
+#define OBJ_META 5
+#define OBJ_TRACE_COLOUR 6
+#define OBJ_SPARE 7
+
+//offsets for the attr object
+
+#define ATTR_NAME 0
+#define ATTR_REF 1
+#define ATTR_OBJPTR 2
+#define ATTR_NEXT 3
+
+//object types
+#define LLOOVM_MAIN 1
+#define LLOOVM_LOCAL 2
+#define LLOOVM_CLASS 3
+#define LLOOVM_FUNCTION 4
+#define LLOOVM_PLACEHOLDER1 5
+#define LLOOVM_PLACEHOLDER2 6
+
+#define LLOOVM_INT 7
+#define LLOOVM_CHAR 8
+#define LLOOVM_FLOAT 9
+#define LLOOVM_BOOL 10
+#define LLOOVM_ARRAY 11
+#define LLOOVM_STRING 12
+
+
+//offsets for the stack frame
+#define FRAME_RETURN 8
+#define FRAME_CALLER 9
+
+//offsets for the object dict objects
+#define OBJDICT_NEXT 0;
+#define OBJDICT_PREV 1;
+#define OBJDICT_OBJ 2;
+
+//stack/object mode types
+#enum MODE [OBJ,INT,CHAR,FLOAT,BOOL]
+//tracing colours (for garbage collection)
+#enum COLOUR [WHITE,BLACK,GREY]

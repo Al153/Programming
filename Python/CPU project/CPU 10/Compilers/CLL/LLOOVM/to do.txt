@@ -1,0 +1,28 @@
+- main
+	- create main loop
+	- designate opcodes
+	- create opcodes
+	- ignore nulls - all strings and functions are defined by a length parameter
+	- figure out how to create classes from meta classes
+	- function calling - how to deal with function lengths - and called functions editing uncalled functions
+		- don't deallocate the function/code object until the function's nolonger referenced
+		- check when returning
+	- add support for external opcodes - ie complex maths etc
+	- add extra methods for some types
+		- ie built ins
+- stack
+	- 
+
+- init
+	- initialise classes
+	- if I keep the curent string length convention, then the strings in init need to be changed to fit
+- errors
+	- flesh out error types
+	- flesh out error handling/message
+	- rollback
+
+- OOsys
+	- deal with reference counting/ create garbage collection
+
+- Opcodes
+	- create all opcode functions

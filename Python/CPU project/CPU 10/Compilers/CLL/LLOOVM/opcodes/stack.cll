@@ -1,0 +1,56 @@
+void pushInt() //codestream: int. stack: . . . ==> . . . int
+	@int val = PC;
+	val = val[0];
+	PC += 4;  //increments PC to the end of the name
+	Push(val);Push(MODE:INT);
+end;
+
+void pushFloat()
+	@int val = PC;
+	val = val[0];
+	PC += 4;  //increments PC to the end of the name
+	Push(val);Push(MODE:FLOAT);	
+end;
+
+void pushChar()
+	@int val = PC;
+	val = val[0];
+	PC += 4;  //increments PC to the end of the name
+	Push(val&255);Push(MODE:CHAR);
+end;
+
+void pushBool()
+	@int val = PC;
+	val = val[0];
+	PC += 4;  //increments PC to the end of the name
+	Push(val&1);Push(MODE:BOOL);
+end;
+
+void PushCurrent() // stack: . . . ==> . . . object
+	//like self in python, pushes the owner of the currently executing function
+	Push(FRAME[FRAME_CALLER]);Push(MODE:OBJ);
+end;
+
+void PushMain()  // stack: . . . ==> . . . object
+	//pushes the main namespace onto the stack
+	Push(MAIN);Push(MODE:OBJ);
+end;
+
+void PushLocal()
+	Push(FRAME);Push(MODE:OBJ);
+end;
+
+void Dup() // stack: . . . ==> . . . object
+	//pushes the local namespace onto the stack
+	int mode = Pop();
+	int top = Peek();
+	Push(mode);Push(top);Push(mode) 
+end;
+
+void Swap()
+
+end;
+
+void Drop()
+
+end;

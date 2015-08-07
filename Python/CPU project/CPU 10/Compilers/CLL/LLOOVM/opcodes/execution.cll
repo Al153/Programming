@@ -1,0 +1,27 @@
+void Call()
+
+end;
+
+void Return()
+
+end;
+
+void Halt()
+
+end;
+
+void Branch()
+
+end;
+
+void BranchTrue()
+
+end;
+
+void BranchGZ()
+
+end;
+
+void BranchNeg()
+
+end;

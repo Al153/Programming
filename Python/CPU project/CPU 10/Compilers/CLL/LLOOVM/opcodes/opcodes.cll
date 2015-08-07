@@ -1,0 +1,9 @@
+// imports functions for every op in the LLOOVM
+#include arrayAndStringMethods.cll
+#include execution.cll
+#include maths.cll
+#include objects.cll
+#include stack.cll
+
+
+
