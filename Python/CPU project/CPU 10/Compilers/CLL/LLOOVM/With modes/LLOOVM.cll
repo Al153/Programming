@@ -3,7 +3,7 @@
 #include init.cll
 #include Errors.cll
 #include OOsys.cll
-#include opcodes.cll
+#include opcodes\opcodes.cll
 #include tools.cll
 #include definitions.cll
 

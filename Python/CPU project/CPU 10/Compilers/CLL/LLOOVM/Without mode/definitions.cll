@@ -40,7 +40,11 @@
 #define OBJDICT_PREV 1;
 #define OBJDICT_OBJ 2;
 
-//stack/object mode types
-#enum MODE [OBJ,INT,CHAR,FLOAT,BOOL]
+//offsets for an array header object
+#define ARRAY_LENGTH 0
+#define ARRAY_ALLOCED_LENGTH 1
+#define ARRAY_SUPER 2
+#define ARRAY_ARRAY 3
+
 //tracing colours (for garbage collection)
 #enum COLOUR [WHITE,BLACK,GREY]

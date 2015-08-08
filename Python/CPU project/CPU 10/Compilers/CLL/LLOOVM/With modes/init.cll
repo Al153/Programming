@@ -11,7 +11,7 @@ int CALL_STACK_PTR = 0;
 
 @char PC;
 @int objectDict = 0; 			//pointer to a linked list of pointers to objects
-@int FRAME
+@int FRAME;
 
 void init(@char bytecode)
 	//sets up main object and local template
@@ -33,6 +33,12 @@ void init(@char bytecode)
 	MAIN[OBJ_ATTR] = newAttr("main",0,main_code);
 	@int lastMainAttr = MAIN[OBJ_ATTR];  //pointer to last main ATTR
 	//set up the LOCAL namespace template
+
+	//prepares the object dict
+	objectDict = malloc(4);
+	objectDict[OBJDICT_OBJ] = MAIN;
+	objectDict[OBJDICT_NEXT] = objectDict;
+	objectDict[OBJDICT_PREV] = objectDict;  
 
 	LOCAL_TEMPLATE[OBJ_TYPE] = LLOOVM_LOCAL;
 	LOCAL_TEMPLATE[OBJ_NAME] = "LOCAL";

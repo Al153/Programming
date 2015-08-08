@@ -1,0 +1,105 @@
+//methods for array and string ops (especially arrays, which are dynamic)
+//Arrays consist of special two objects
+	// Header
+	//		- pointed to by meta field of an array obj
+	//		- has 4 fields
+	//			- active length
+	//			- total length
+	// 			- pointer to array object
+	//			- super field
+
+	// array object
+	//		- pointed to by array object field of array header
+	//		- contains data
+
+void ArrayIndex() //stack: . . . ArrayObj index ==> . . . ArrayObj[index]
+	//can index either arrays or strings
+	//O(1)
+	//get required data and pointers
+	@int indexVal = Pop();
+	@int arrayObj = Pop();
+	if ((indexVal[OBJ_TYPE] != LLOOVM_INT)
+		AND (indexVal[OBJ_TYPE] != LLOOVM_CHAR)) then
+		raise("TYPE","Attemped to use non integer value as an index.");
+	endif;
+	indexVal = indexVal[OBJ_META];
+	@int header = arrayObj[OBJ_META];
+	if (arrayObj[OBJ_TYPE]==LLOOVM_ARRAY) then
+		//index an array
+		if (indexVal<header[ARRAY_LENGTH]) then
+			@int arrayMem = header[ARRAY_ARRAY];
+			Push(arrayMem[indexVal]);
+		else
+			raise("Index","List index out of range.");
+		endif;
+	else if (arrayObj[OBJ_TYPE]==LLOOVM_STRING) then
+		//index a string
+			@char arrayMem = header[ARRAY_ARRAY];
+			Push(int(arrayMem[indexVal]));
+	else
+		//raise an error
+		raise("TYPE",nonIndexableObj(arrayObj));
+	endif; endif;
+end;
+
+void ArrayStoreIndex() //Stack: . . . arrayObj obj index ==> . . .
+	//O(1)
+	//arrays only
+	//get required data and pointers
+	@int indexVal = Pop();
+	@int obj = Pop();
+	@int arrayObj = Pop();
+	if ((indexVal[OBJ_TYPE] != LLOOVM_INT)
+		AND (indexVal[OBJ_TYPE] != LLOOVM_CHAR)) then
+		raise("TYPE","Attemped to use non integer value as an index.");
+	endif;
+	indexVal = indexVal[OBJ_META];
+	@int header = arrayObj[OBJ_META];
+	if (arrayObj[OBJ_TYPE]==LLOOVM_ARRAY) then
+		//index an array
+		if (indexVal<header[ARRAY_LENGTH]) then
+			@int arrayMem = header[ARRAY_ARRAY];
+			arrayMem[indexVal] = obj;
+		else
+			raise("Index","List index out of range.");
+		endif;
+	else if (arrayObj[OBJ_TYPE]==LLOOVM_STRING) then
+		//index a string
+			raise("Type","Strings are not mutable");
+	else
+		//raise an error
+		raise("TYPE",nonIndexableObj(arrayObj));
+	endif; endif;
+end;
+
+void ArrayInsert() //Stack: . . . ArrayObj ==> . . . 
+	//O(N)
+end;
+
+void ArrayAppend() //Stack: . . . ArrayObj obj ==> . . . 
+	//best case: O(1), worst case O(N) - depends on how full array is and 
+end;
+
+void ArrayPop() //Stack: . . . ArrayObj ==> . . . obj
+	//O(1)
+	//arrays only
+end;
+
+void ArrayDel() //Stack: . . . ArrayObj index ==> . . .
+	//O(N)
+	//array only
+end;
+
+void ArraySplice() //Stack . . . ArrayObj start end step ==> . . . ArrayObj[start:end:step]
+	//O(N)
+	//arrays or strings
+end;
+
+void ArrayLen() //Stack: . . . ArrayObj ==> . . . AciveLenOfArray
+	//O(1)
+	//arrays or strings
+end;
+
+
+//need to add string methods    
+

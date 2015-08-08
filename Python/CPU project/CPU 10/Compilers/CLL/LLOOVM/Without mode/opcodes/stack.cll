@@ -1,0 +1,62 @@
+//opcodes to manipulate the stack
+
+void pushInt() //codestream: int. stack: . . . ==> . . . int
+	//creates an int object with the required value
+	@int val = PC;
+	val = val[0];
+	PC += 4;  //increments PC to the end of the name
+	Push(newVal(val),LLOOVM_INT);
+end;
+
+void pushFloat()
+	@int val = PC;
+	val = val[0];
+	PC += 4;  //increments PC to the end of the name
+	Push(newVal(val),LLOOVM_FLOAT);
+end;
+
+void pushChar()
+	@int val = PC;
+	val = val[0];
+	PC += 4;  //increments PC to the end of the name
+	Push(newVal(val&255),LLOOVM_CHAR);
+end;
+
+void pushBool()
+	@int val = PC;
+	val = val[0];
+	PC += 4;  //increments PC to the end of the name
+	Push(newVal(val&1),LLOOVM_BOOL);
+end;
+
+void PushCurrent() // stack: . . . ==> . . . object
+	//like self in python, pushes the owner of the currently executing function
+	Push(FRAME[FRAME_CALLER]);
+end;
+
+void PushMain()  // stack: . . . ==> . . . object
+	//pushes the main namespace onto the stack
+	Push(MAIN);
+end;
+
+void PushLocal()
+	Push(FRAME);
+end;
+
+void Dup() // stack: . . . ==> . . . object
+	//pushes the local namespace onto the stack
+	int top = Peek();
+	Push(top); 
+end;
+
+void Swap()
+	int top1 = Pop();
+	int top2 = Pop();
+
+	Push(top1);
+	Push(top2);
+end;
+
+void Drop()
+	int obj = Pop();
+end;

@@ -1,6 +1,7 @@
 void raise(@char type, @char reason)
 	printf(type);printf(" ERROR: ");printf("reason");
 	rollback();
+	quit();
 end;
 
 void rollback()
@@ -10,4 +11,8 @@ end;
 @char noAttr(@int obj, @char attrName)
 	//produces an error string - finds path for obj and produces
 	// "Object <path> has no attribute called <name>"
+end;
+
+@char nonIndexableObj(@int obj)
+	//produces error string - prnts out stuff about an object
 end;

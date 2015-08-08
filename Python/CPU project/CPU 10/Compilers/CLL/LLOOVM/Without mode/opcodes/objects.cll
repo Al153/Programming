@@ -1,0 +1,169 @@
+//opcodes to do with objec navigation etc
+
+void GetName()  //codestream: name string  stack: . . . object ==> . . . object.name
+	//gets the object
+	int obj = Pop();
+	@char name = PC;
+	@int len = name;
+	len = len[0];
+	PC += len + 4;  //increments PC to the end of the name
+
+	//now we need to find in the object's attributes an attribute wih that name
+	@int new = __getAttrName(obj[OBJ_ATTR],name);
+	if (new) then Push(new);Push(MODE:OBJ);
+	else
+		raise("RUNTIME",noRef(obj,name));
+	endif;
+end;
+
+void GetNameLeave()  //codestream: name string  stack: . . . object ==> . . . object.name, object
+	//gets the object
+	@int obj = Pop();
+	@char name = PC;
+	@int len = name;
+	len = len[0];
+	PC += len + 4;  //increments PC to the end of the name
+
+	//now we need to find in the object's attributes an attribute wih that name
+	@int new = __getAttrName(obj[OBJ_ATTR],name);
+	if (new) then Push(new);Push(obj);
+	else
+		raise("RUNTIME",noAttrName(obj,name));
+	endif;
+end;
+
+void GetRef() //codestream: int stack: . . . object ==> . . . object[ref]
+	@int obj = Pop();
+	@int ref = PC;
+	ref = ref[0];
+	PC += 4;  //increments PC to the end of the name
+
+	//now we need to find in the object's attributes an attribute wih that name
+	@int new = __getAttref(obj[OBJ_ATTR],ref);
+	if (new) then Push(new);
+	else
+		raise("RUNTIME",noAttrRef(obj,ref));
+	endif;
+end;
+
+void GetRefLeave() //codestream: int stack: . . . object ==> . . . object[ref] object	@int obj = Pop();
+	@int obj = Pop();
+	@int ref = PC;
+	ref = ref[0];
+	PC += 4;  //increments PC to the end of the name
+
+	//now we need to find in the object's attributes an attribute wih that name
+	@int new = __getAttref(obj[OBJ_ATTR],ref);
+	if (new) then Push(new);
+				  Push(obj);
+	else
+		raise("RUNTIME",noAttrRef(obj,ref));
+	endif;
+end;
+
+//void GetValue() // stack . . . valuedOject ==> . . . value
+//	@int obj = Pop();
+//	int type = obj[OBJ_TYPE];
+//	if ((type>=LLOOVM_INT)and(type<=LLOOVM_BOOL)) then
+//		//list of ifs since CLL does not support branch tables - maybe a future update
+
+//		if (type == LLOOVM_INT) then
+//			Push(obj[OBJ_META]);Push(MODE:INT);
+//			return;
+//		endif;
+//		if (type == LLOOVM_CHAR) then
+//			Push(obj[OBJ_META]);Push(MODE:CHAR);
+//			return;
+//		endif;
+//		if (type == LLOOVM_FLOAT) then
+//			Push(obj[OBJ_META]);Push(MODE:FLOAT);
+//			return;
+//		endif;
+//		if (type == LLOOVM_BOOL) then
+//			Push(obj[OBJ_META]);Push(MODE:BOOL);
+//			return;
+//		endif;
+//	else
+//		raise("TYPING","attempted to access teh value of an oject without a value field.");
+//	endif;
+//end;
+
+//void GetValueLeave() // stack . . . valuedOject ==> . . . value valuedObject
+//	int mode = Pop();
+//	if (mode!=MODE:OBJ) then raise("RUNTIME","Attempted to treat non-reference value as an object.");endif;
+//	@int obj = Pop();
+//	int type = obj[OBJ_TYPE];
+//	if ((type>=LLOOVM_INT)and(type<=LLOOVM_BOOL)) then
+//		//list of ifs since CLL does not support branch tables - mayeb a future update//
+
+//		if (type == LLOOVM_INT) then
+//			Push(obj[OBJ_META]);Push(MODE:INT);
+//			return;
+//		endif;
+//		if (type == LLOOVM_CHAR) then
+//			Push(obj[OBJ_META]);Push(MODE:CHAR);
+//			return;
+//		endif;
+//		if (type == LLOOVM_FLOAT) then
+//			Push(obj[OBJ_META]);Push(MODE:FLOAT);
+//			return;
+//		endif;
+//		if (type == LLOOVM_BOOL) then
+//			Push(obj[OBJ_META]);Push(MODE:BOOL);
+//			return;
+//		endif;
+//	else
+//		raise("TYPING","attempted to access the value of an oject without a value field.");
+//	endif;
+//end;
+
+void Copy() //stack: . . . obj ==> . . . copyOfObj
+	//copies an object's entire structure
+
+end;
+
+void New()  //codestream: namestring [codestring] stack: . . . class ==> . . . obj (new object of type class)
+
+end;
+
+void DelRef()		//codestream: int Stack: . . . obj ==> . . . 
+	//removes the reference in an object, does not automatically call GC 
+end;
+
+void DelName() //codestream: string Stack . . . obj ==> . . . 
+	//removes the reference in an object's attrs, does not automatically call GC
+
+end;
+
+void Collect() // runs a forced garbage collection
+	traceObjects();
+end;
+
+void Template()	//not sure what this does....
+
+end;
+
+void StoreName() //Codestream: string stack: . . . objParent objChild ==> . . . 
+
+end;
+
+void StoreRef() //Codestream: int stack: . . . objParent objChild ==> . . . 
+
+end;
+
+void moveValue() //Stack: . . . obj1 obj2 ==> . . . 
+	//moves value from obj1 to obj2
+	@int obj2 = Pop();
+	@int obj1 = Pop();
+	int type1 = obj1[OBJ_TYPE];
+	int type2 = obj2[OBJ_TYPE]; 
+	if ((type1>=LLOOVM_INT)and(type1<=LLOOVM_BOOL)) then
+		if (type1 == type2) then
+			obj2[OBJ_META] = obj1[OBJ_META];
+		else
+			raise("TYPE","Tried to move value of two objects of different types");
+		endif;
+	else
+		raise("TYPE","tried to move value of object type without value");
+	endif;
+end;

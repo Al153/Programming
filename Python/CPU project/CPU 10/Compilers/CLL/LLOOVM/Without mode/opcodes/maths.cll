@@ -1,0 +1,67 @@
+void Add()
+
+end;
+
+void Subtract()
+
+end;
+
+void Multiply()
+
+end;
+
+void Divide()
+
+end;
+
+void Mod()
+
+end;
+
+void AND()
+
+end;
+
+void OR()
+
+end;
+
+void XOR()
+
+end;
+
+void Greater()
+
+end;
+
+void Equal()
+
+end;
+
+void Less()
+
+end;
+
+void NotGreater()
+
+end;
+
+void NotEqual()
+
+end;
+
+void NotLess()
+
+end;
+
+void sin()
+
+end;
+
+void cos()
+
+end;
+
+void exp()
+
+end;

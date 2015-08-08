@@ -10,6 +10,7 @@
 	- add support for external opcodes - ie complex maths etc
 	- add extra methods for some types
 		- ie built ins
+	- design call stack
 - stack
 	- 
 
@@ -18,11 +19,12 @@
 	- if I keep the curent string length convention, then the strings in init need to be changed to fit
 - errors
 	- flesh out error types
-	- flesh out error handling/message
+	- flesh out error handling/messages
 	- rollback
 
 - OOsys
-	- deal with reference counting/ create garbage collection
-
+	- 
 - Opcodes
 	- create all opcode functions
+	- type conversions
+	- io

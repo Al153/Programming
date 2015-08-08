@@ -1,0 +1,191 @@
+//file which deals with creating and deleting new objects
+// - should have garbage collection at some point
+// needs create, delete
+
+// - garbage collection by tricolour tracing
+
+@int newAttr(@char name, int ref, @int obj)
+	@int new = malloc(4);
+	new[ATTR_NAME] = name;
+	new[ATTR_REF] = ref;
+	new[ATTR_OBJPTR] = obj;
+	new[ATTR_NEXT] = 0;
+	return new;
+end;
+
+@int newObj(int type, @char name, @int super, @int class, int meta)
+	@int new = malloc(8);
+	new[OBJ_TYPE] = type;
+	new[OBJ_NAME] = name;
+	new[OBJ_TRACE_COLOUR] = COLOUR:GREY;
+	new[OBJ_SELF] = new;
+	new[OBJ_ATTR] = 0;
+	new[OBJ_SUPER] = super;
+	new[OBJ_CLASS] = class;
+	new[OBJ_META] = meta;
+	addToObjDict(new);
+	return new;
+end;
+
+
+@int newArray(int size,@int super)
+	//needs produce header and allocate a section of memory for the array
+	@int header = malloc(4);
+	int allocedSize = nextPowerOfTwo(size);
+	header[ARRAY_LENGTH] = size;
+	header[ARRAY_ALLOCED_LENGTH] = allocedSize;
+	header[ARRAY_ARRAY] = malloc(allocedSize);
+	header[ARRAY_SUPER] = super;
+	return header;
+end;
+
+@int newVal(int val, int type)
+	//vals are intended to be used then destroyed soon after so don't have much in their fields
+	return newObj(type,0,0,0,val);
+end;
+
+@int __getAttrName(@int AttrList, @char name)
+	//gets a pointer to an object which is in the attribute list and otherwise reutrns 0
+	while (AttrList) do
+		if (stringCompare(name,AttrList[ATTR_NAME])) then
+			return AttrList[ATTR_OBJPTR];
+		else
+			AttrList = AttrList[ATTR_NEXT];
+		endif;
+	loop;
+	return 0;
+end;
+
+@int __getAttrRef(@int AttrList, int ref)
+	//gets pointer to an object, otherwhise returns 0
+	while (AttrList)do
+		if (ref == AttrList[ATTR_REF]) then
+			return AttrList[ATTR_OBJPTR];
+		else
+			AttrList = AttrList[ATTR_NEXT];
+		endif;
+	loop;
+	return 0;
+end;
+
+
+
+
+void addToObjDict(@int obj)
+	//the top of the object dict is always main
+	//adds a recently created object to the object linked list
+	@int newEntry = malloc(4);
+	newEntry[OBJDICT_OBJ] = obj;
+	@int top = objectDict;
+	@int prev = top[OBJDICT_PREV];
+	newEntry[OBJDICT_PREV] = prev;
+	newEntry[OBJDICT_NEXT] = top;
+	top[OBJDICT_PREV] = newEntry;
+	prev[OBJDICT_NEXT] = newEntry;
+end;
+
+void traceObjects()
+	//carry out tracing routines to colour all objects
+	//tricolour system (but not the normal kind)
+
+	//default colour is grey
+
+	//safe colour is black
+
+	//non safe colour is white
+
+	//goes through root objects (main, those on eiher stack), changing the colours of them and all objects reachable from them from grey to black
+	//goes through object list, all those still grey get changed to white - can be deleted
+	__trace(MAIN);
+	@int root;
+	for (root = CALL_STACK[CALL_STACK_PTR], root, root = root[FRAME_RETURN])
+		__trace(root);
+	loop;
+	traceStack();
+	whitenObjects();
+	collectObjects();
+end;
+
+void traceStack()
+	int i; //traces all objects 
+	for (i=0,i<EXPR_STACK_PTR,i+=1)
+		__trace(EXPR_STACK[i]);
+	loop;
+end;
+
+void collectObjects()
+	//dalloc all condemned objects, turn all objects grey again
+	@int obj;
+	for (obj = objectDict, obj != 0, obj = obj) 
+		@int pointed = obj[OBJDICT_OBJ];
+		if (pointed[OBJ_TRACE_COLOUR] == COLOUR:WHITE) then
+			//if the trace colour is white then delete the object
+			__deleteObj(pointed); 					//runs a __deleteObj algorithm to delete the entire tree of the object
+			@int next = obj[OBJDICT_NEXT]; 			//
+			@int prev = obj[OBJDICT_PREV];
+			next[OBJDICT_PREV] = prev;
+			prev[OBJDICT_NEXT] = next;
+			dalloc(obj);
+			obj = next;
+		else
+			pointed[OBJ_TRACE_COLOUR] == COLOUR:GREY;
+			obj = obj[OBJDICT_NEXT];
+		endif;
+		if (obj == objectDict) then break; endif;
+	loop;
+end;
+
+void __trace(@int obj)
+	if (obj[OBJ_TRACE_COLOUR] != COLOUR:BLACK) then
+		obj[OBJ_TRACE_COLOUR] = COLOUR:BLACK;
+		@int attr;
+		for (attr = obj[OBJ_ATTR],attr,attr = AttrList[ATTR_NEXT])
+			__trace(attr[ATTR_OBJPTR]);
+		loop;
+		__trace(obj[OBJ_SUPER]);
+		if (obj[OBJ_TYPE] == LLOOVM_ARRAY) then 
+			__traceArray(obj[OBJ_META]);
+		endif;
+	endif;
+end;
+
+void __traceArray(@int arrayHeader) //traces all objects in an array
+	@int array = arrayHeader[ARRAY_ARRAY];
+	@int length = arrayHeader[ARRAY_LENGTH];
+	int i;
+	for (i = 0,i<length,i+=1)
+		__trace(array[i]);
+	loop;
+end;
+
+void __deleteObj(@int obj)
+	//checks if an object's colour is white then deletes it. does not need to recurse
+	if (obj[OBJ_TRACE_COLOUR] == COLOUR:WHITE) then
+		@int attr;
+		for (attr = obj[OBJ_ATTR],attr,attr = attr[ATTR_NEXT])
+			dalloc(attr);
+		loop;
+		if (obj[OBJ_TYPE] == LLOOVM_ARRAY) then //if object is an array then GC needs to delete the array
+			@int header = obj[OBJ_META];
+			dalloc(header[ARRAY_ARRAY]);
+			dalloc(header);
+		end;
+		dalloc(obj);
+	endif;
+end;
+
+void whitenObjects()
+	@int obj;
+	for (obj = objectDict, obj != 0, obj = obj) 
+		@int pointed = obj[OBJDICT_OBJ];
+		if (pointed[OBJ_TRACE_COLOUR]!= COLOUR:BLACK) then
+			pointef[OBJ_TRACE_COLOUR] = COLOUR:WHITE;
+		endif;
+
+		obj = obj[OBJDICT_NEXT];
+		if (obj == objectDict) then break; endif;
+	loop;
+end;
+
+
+

@@ -1,0 +1,15 @@
+void CastCharInt()
+
+end;
+
+void CastIntChar()
+
+end;
+
+void CastIntFloat()
+
+end;
+
+void CastFloatInt()
+
+end;

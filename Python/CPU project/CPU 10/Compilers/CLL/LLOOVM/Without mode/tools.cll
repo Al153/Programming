@@ -1,0 +1,29 @@
+int stringComp(@int word1, @int word2)
+	//compares two strings in LLOOVM form
+	//(ie LLLL SSSSSSSSS...) LLLL is the length of the string in bytes, S represent byes of the string
+	//gets length
+	int l = word1[0];
+	if (l != word2[0]) then return 0; //different length = different strings
+	else 							  //otherwise checks the rest of the strings
+		int i;
+		@char w1 = word1 + 4; 		  //needs an @char and to get the start of the words
+		@char w2 = word2 + 4;
+		for(i = 0, i<l,i = i + 1)
+			if (w1[i] != w2[i]) then
+				return 0;
+			endif;
+		loop;
+	endif;
+	return 1;
+end;
+
+int nextPowerOfTwo(int n)
+	n-=1;
+	n |= n>>1;
+	n |= n>>2;
+	n |= n>>4;
+	n |= n>>8;
+	n |= n>>16;
+	n+=1;
+	return n;
+end;
