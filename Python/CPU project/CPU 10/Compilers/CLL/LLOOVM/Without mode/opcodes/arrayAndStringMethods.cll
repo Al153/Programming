@@ -12,7 +12,7 @@
 	//		- pointed to by array object field of array header
 	//		- contains data
 
-void ArrayIndex() //stack: . . . ArrayObj index ==> . . . ArrayObj[index]
+void ArrayIndex() //stack: . . . arrayObj index ==> . . . arrayObj[index]
 	//can index either arrays or strings
 	//O(1)
 	//get required data and pointers
@@ -34,8 +34,10 @@ void ArrayIndex() //stack: . . . ArrayObj index ==> . . . ArrayObj[index]
 		endif;
 	else if (arrayObj[OBJ_TYPE]==LLOOVM_STRING) then
 		//index a string
-			@char arrayMem = header[ARRAY_ARRAY];
-			Push(int(arrayMem[indexVal]));
+			@char arrayMem = header[STRING_STRING];
+			Push(newVal(
+				int(arrayMem[indexVal])),LLOOVM_CHAR
+			);
 	else
 		//raise an error
 		raise("TYPE",nonIndexableObj(arrayObj));
@@ -72,34 +74,223 @@ void ArrayStoreIndex() //Stack: . . . arrayObj obj index ==> . . .
 	endif; endif;
 end;
 
-void ArrayInsert() //Stack: . . . ArrayObj ==> . . . 
+void ArrayInsert() //Stack: . . . arrayObj Obj index ==> . . . 
 	//O(N)
+	@int indexVal = Pop();										//get the index
+	if ((indexVal[OBJ_TYPE] != LLOOVM_INT)						//check the index is a type with an int value
+		AND (indexVal[OBJ_TYPE] != LLOOVM_CHAR)) then
+		raise("TYPE","Attemped to use non integer value as an index.");
+	endif;
+	@int obj = Pop();	
+	@int arrayObj = Pop();
+	if (arrayObj[OBJ_TYPE] != LLOOVM_ARRAY) then
+		raise("TYPE","Object cannot be appended to.");
+	endif;
+	arrayObj = arrayObj[OBJ_META];
+	@int old = arrayObj[ARRAY_ARRAY];
+	indexVal = indexVal[OBJ_META];
+	if (indexVal>arrayObj[ARRAY_LENGTH]) then 		//check the index isn't too big
+		raise("Index","Attemped to insert to an invalid index.");
+	endif;
+	int i;
+	int oldLen = arrayObj[ARRAY_LENGTH];
+	if (arrayObj[ARRAY_LENGTH]==arrayObj[ARRAY_ALLOCED_LENGTH])then
+		//of array is a maximum size, then a new array needs to be made
+		@int new = malloc(arrayObj[ARRAY_LENGTH]*2); //gets new larger array
+		arrayObj[ARRAY_ALLOCED_LENGTH] *= 2; 			//increases the size
+		int i;
+		int oldLen = arrayObj[ARRAY_LENGTH];
+		@int old = arrayObj[ARRAY_ARRAY];
+		for (i =0,i<indexVal,i+=1) //copies array
+			new[i] = old[i];
+		loop;
+		new[indexVal] = obj;
+		for (i = indexVal, i<oldLen, i+=1)
+			new[i+1] = old[i];
+		loop;
+		dalloc(old);
+		arrayObj[ARRAY_LENGTH] = oldLen + 1;
+		arrayObj[ARRAY_ARRAY] = new;
+	else
+		@int temp;
+		for (i=indexVal,i<oldLen,i+=1)	//loop which shifts array on by one
+			temp = old[i];
+			old[i] = obj;
+			obj = temp;
+		loop;
+		old[oldLen] = obj;
+		arrayObj[ARRAY_LENGTH] += 1;
+	endif;
 end;
 
-void ArrayAppend() //Stack: . . . ArrayObj obj ==> . . . 
+void ArrayAppend() //Stack: . . . arrayObj obj ==> . . . 
 	//best case: O(1), worst case O(N) - depends on how full array is and 
+	@int obj = Pop();	
+	@int arrayObj = Pop();
+	if (arrayObj[OBJ_TYPE] != LLOOVM_ARRAY) then
+		raise("TYPE","Object cannot be appended to.");
+	endif;
+	arrayObj = arrayObj[OBJ_META];
+	@int old = arrayObj[ARRAY_ARRAY];
+	if (arrayObj[ARRAY_LENGTH]==arrayObj[ARRAY_ALLOCED_LENGTH])then
+		//of array is a maximum size, then a new array needs to be made
+		@int new = malloc(arrayObj[ARRAY_LENGTH]*2); //gets new larger array
+		arrayObj[ARRAY_ALLOCED_LENGTH] *= 2; 			//increases the size
+		int i;
+		int oldLen = arrayObj[ARRAY_LENGTH];
+		@int old = arrayObj[ARRAY_ARRAY];
+		for (i =0,i<oldLen,i+=1) //copies array
+			new[i] = old[i];
+		loop;
+		dalloc(old);
+		new[oldLen] = obj;
+		arrayObj[ARRAY_LENGTH] = oldLen + 1;
+		arrayObj[ARRAY_ARRAY] = new;
+	else
+		old[arrayObj[ARRAY_LENGTH]] = obj;
+		arrayObj[ARRAY_LENGTH] += 1;
+	endif;
 end;
 
-void ArrayPop() //Stack: . . . ArrayObj ==> . . . obj
+void ArrayPop() //Stack: . . . arrayObj ==> . . . obj
 	//O(1)
 	//arrays only
+	@int arrayObj = Pop();
+	if (arrayObj[OBJ_TYPE] != LLOOVM_ARRAY) then
+		raise("TYPE","Object cannot be popped.");
+	endif;
+	arrayObj = arrayObj[OBJ_META];
+	if (arrayObj[ARRAY_LENGTH]==0)then
+		raise("Index","Empty array cannot be popped.");
+	end;
+	@int array = arrayObj[ARRAY_ARRAY];
+	Push(array[arrayObj[ARRAY_LENGTH]]);
+	arrayObj[ARRAY_LENGTH] -= 1;
 end;
 
-void ArrayDel() //Stack: . . . ArrayObj index ==> . . .
+void ArrayDel() //Stack: . . . arrayObj index ==> . . .
 	//O(N)
 	//array only
+	//deletes value at the index	@int indexVal = Pop();
+	@int indexVal = Pop();
+	@int arrayObj = Pop();
+	if ((indexVal[OBJ_TYPE] != LLOOVM_INT)
+		AND (indexVal[OBJ_TYPE] != LLOOVM_CHAR)) then
+		raise("TYPE","Attemped to use non integer value as an index.");
+	endif;
+	indexVal = indexVal[OBJ_META];
+	@int header = arrayObj[OBJ_META];
+	if (arrayObj[OBJ_TYPE]==LLOOVM_ARRAY) then
+		//index an array
+		if (indexVal<header[ARRAY_LENGTH]) then
+			int i;
+			int newLength = header[ARRAY_LENGTH] -1;
+			@int array = header[ARRAY_ARRAY];
+			for(i = indexVal,i<newLength,i+=1)
+				array[i] = array[i+1];
+			endif;
+			header[ARRAY_LENGTH] = newLength;
+		else
+			raise("Index","List index out of range.");
+		endif;
+	else
+		raise("Type","Tried to delete from an object which is not an array.");
+	endif;
 end;
 
-void ArraySplice() //Stack . . . ArrayObj start end step ==> . . . ArrayObj[start:end:step]
+void ArraySplice() //Stack . . . arrayObj start end step ==> . . . arrayObj[start:end:step]
 	//O(N)
 	//arrays or strings
+
+	//first pop all indexes
+	@int step = Pop();
+	@int end = Pop();
+	@int start = Pop();
+	if ((step[OBJ_TYPE] != LLOOVM_INT)
+		AND (step[OBJ_TYPE] != LLOOVM_CHAR)) then
+		raise("TYPE","Attemped to use non integer value as step index.");
+	endif;
+	if ((end[OBJ_TYPE] != LLOOVM_INT)
+		AND (end[OBJ_TYPE] != LLOOVM_CHAR)) then
+		raise("TYPE","Attemped to use non integer value as end index.");
+	endif;
+	if ((start[OBJ_TYPE] != LLOOVM_INT)
+		AND (start[OBJ_TYPE] != LLOOVM_CHAR)) then
+		raise("TYPE","Attemped to use non integer value as start index.");
+	endif;
+	step = step[OBJ_META];	start = start[OBJ_META]; end = end[OBJ_META];
+	if (step == 0) then raise("Index","A splice cannot have a step of 0.");endif;
+
+
+	@int arrayObj = Pop();
+	if (arrayObj[OBJ_TYPE] == LLOOVM_ARRAY) then
+
+		@int header = arrayObj[OBJ_META];
+		int len = header[ARRAY_LENGTH];
+		if ((end<=len)and(start<=len)) then
+			@int newArrayObj = newObj(LLOOVM_ARRAY,0,0,0,0) 
+			if (end>=start) then //forwards splice
+				int resultLength = (1+((end-start)/step)) if start!=end else 0;
+				@int new = newArray(resultLength,newArrayObj);
+				newArrayObj[OBJ_META] = new;
+				new = new[ARRAY_ARRAY];
+				@int old = header[ARRAY_ARRAY];
+
+				int i;
+				int j = 0;
+				for (i = start,i<end,i += step)
+					if (i<start) then break; endif;
+					new[j] = old[i];
+					j += 1;
+				loop;
+				Push(newArrayObj);
+			else //backwards splice
+				int resultLength = (start-end)/step;
+				@int new = newArray(resultLength,newArrayObj);
+				newArrayObj[OBJ_META] = new;
+				new = new[ARRAY_ARRAY];
+				@int old = header[ARRAY_ARRAY];
+
+				int i;
+				int j = 0;
+				for (i = end,i>start,i -= step)
+					if (i<start) then break; endif;
+					new[j] = old[i];
+					j += 1;
+				loop;
+				Push(newArrayObj);
+			endif;
+		else
+			raise("Index","To splice a list, both indices must be in the range of the list.")
+		endif;
+	else if (arrayObj[OBJ_TYPE] == LLOOVM_STRING) then
+
+	else
+		raise("Type","Tried to splice non spliceable object")
+	endif; endif;
 end;
 
-void ArrayLen() //Stack: . . . ArrayObj ==> . . . AciveLenOfArray
+void ArrayLen() //Stack: . . . arrayObj ==> . . . AciveLenOfArray
 	//O(1)
 	//arrays or strings
+	arrayObj = Pop();
+
+	if (arrayObj[OBJ_TYPE] == LLOOVM_ARRAY) then
+		arrayObj = arrayObj[OBJ_META];
+		Push(newVal(arrayObj[ARRAY_LENGTH],LLOOVM_INT));
+	else if (arrayObj[OBJ_TYPE] == LLOOVM_STRING) then
+		arrayObj = arrayObj[OBJ_META];
+		Push(newVal(arrayObjSTRING_LENGTH],LLOOVM_INT));
+
+	else
+		raise("Type","Only array and string objects can have a length");
+	endif; endif;
 end;
 
+
+void ArrayIsIn()
+
+end;
 
 //need to add string methods    
 

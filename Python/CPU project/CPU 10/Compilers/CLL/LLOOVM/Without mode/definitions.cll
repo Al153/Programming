@@ -46,5 +46,9 @@
 #define ARRAY_SUPER 2
 #define ARRAY_ARRAY 3
 
+//offsets for string headers
+#define STRING_LENGTH 0
+#define STRING_STRING 1
+
 //tracing colours (for garbage collection)
 #enum COLOUR [WHITE,BLACK,GREY]

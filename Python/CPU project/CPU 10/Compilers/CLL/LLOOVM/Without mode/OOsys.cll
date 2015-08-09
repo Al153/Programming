@@ -31,7 +31,7 @@ end;
 @int newArray(int size,@int super)
 	//needs produce header and allocate a section of memory for the array
 	@int header = malloc(4);
-	int allocedSize = nextPowerOfTwo(size);
+	int allocedSize = nextPowerOfTwo(size) if size>8 else 8;
 	header[ARRAY_LENGTH] = size;
 	header[ARRAY_ALLOCED_LENGTH] = allocedSize;
 	header[ARRAY_ARRAY] = malloc(allocedSize);
@@ -136,6 +136,7 @@ void collectObjects()
 end;
 
 void __trace(@int obj)
+	if (not(obj)) then return; endif;
 	if (obj[OBJ_TRACE_COLOUR] != COLOUR:BLACK) then
 		obj[OBJ_TRACE_COLOUR] = COLOUR:BLACK;
 		@int attr;
