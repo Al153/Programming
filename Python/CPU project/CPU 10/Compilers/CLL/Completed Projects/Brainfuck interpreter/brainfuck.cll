@@ -1,4 +1,4 @@
-//brainfuck interpreter
+ //brainfuck interpreter
 #include STD:string_tools.cll
 
 @char 65536 data_array;
