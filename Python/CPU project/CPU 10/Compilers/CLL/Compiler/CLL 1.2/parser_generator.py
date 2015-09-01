@@ -3,6 +3,7 @@ import sys
 
 def generate_parser(name,ABNF_grammar):
 	parser = Parser(ABNF_grammar)
+	print "Writing to file ...",	
 	parser_summary =  {
 						"lookahead_action_table":parser.lookahead_action_table,
 						"goto_table":parser.LHS_goto_table,
@@ -14,11 +15,13 @@ def generate_parser(name,ABNF_grammar):
 	parser_summary_string = json.dumps(parser_summary)
 	output_file = open(name+".parse","w")
 	output_file.write(parser_summary_string)
-
+	print "Done!"
 class Parser:
 	def __init__(self,ABNF_grammar):
+		print "Extracting ABNF rules ...",
 		self.ABNF_tree = ABNF_parse_tree(ABNF_grammar)                                          #parses grammar specification
 		self.rules = self.get_rules_table()                                             #gets a list of rules from the ABNF tree
+		print "Done!\nGetting grammar symbols ...",
 
 		self.elementary_tokens = [character[0][1:-1] for character in self.rules["<ELEMENTARY_TOKENS>"].rhs] 
 		del self.rules["<ELEMENTARY_TOKENS>"]
@@ -27,11 +30,14 @@ class Parser:
 
 		self.terminals = self.get_terminals()                                                #searches rules to get a list of terminal strings which are directly referenced in the grammar
 		self.grammar_symbols = [symbol for symbol in self.rules] + self.terminals                        #gets all grammar symbols
-		self.first_sets = {}                                                                     #used to speed up testing of first sets
+		#self.first_sets = {}                                                                     #used to speed up testing of first sets
+		print "Done!\nProducing first sets ...",
 		self.initialise_first_sets()
-
+		print "Done!\nProducing item sets ...",
 		self.item_set = self.get_item_sets()                                                        #finds all items reachable from "GOAL"
+		print "Done!\nExtracting parsing tables ...",
 		self.get_parsing_tables()
+		print "Done!"
 
 #_________________________________________________ Parse related functions ______________________________________________
 
@@ -51,7 +57,7 @@ class Parser:
 					self.LHS_goto_table[state][symbol] = self.enumerated_states[state].goto_table[symbol]       #once a reduction has occured, get the new state
 
 			for item in self.enumerated_states[state].own_set:
-				if item.rhs.index("BLOB")+1 == len(item.rhs): #reduce
+				if item.rhs.index("BLOB")+1 == item.length: #reduce
 					for rule in self.enum_rules:              #searching for acceptable rules
 						found = 0
 						if rule.lhs == item.lhs and rule.rhs == item.rhs[:-1]: #if rule is correct
@@ -79,11 +85,13 @@ class Parser:
 	def get_enumerated_rules_table(self,rules):                                                         #separates out rules into a version for each rhs an enumberates them
 		rules_to_ignore = ["<ELEMENTARY_TOKENS>","<IGNORE>"]
 		self.enum_rules = []                                                                        #new list
-		for rule in rules:                                                                     #cycles through rules
-			if rule not in rules_to_ignore:                                                   #not a real rule
-				rhs = rules[rule].rhs                                                               #gets rhs
+		rule_number = 0
+		for rule_name in rules:                                                                     #cycles through rules
+			if rule_name not in rules_to_ignore:                                                   #not a real rule
+				rhs = rules[rule_name].rhs                                                               #gets rhs
 				for rhs_part in rhs:                                                                    #iterates through patterns creating enumerated rules
-					self.enum_rules.append(EnumRule(rule,rhs_part,len(self.enum_rules)))
+					self.enum_rules.append(EnumRule(rule_name,rhs_part,rule_number))
+					rule_number += 1
 
 	def get_terminals(self):
 		#finds terminal expressions in the rules
@@ -101,7 +109,7 @@ class Parser:
 		items = list(input_items)
 
 		for item in items:
-			if item.rhs.index("BLOB") + 1 < len(item.rhs):
+			if item.rhs.index("BLOB") + 1 < item.length:
 				next_symbol = item.rhs[item.rhs.index("BLOB")+1]
 				if next_symbol not in self.terminals:
 					lookaheads = self.lookaheads(next_symbol,items)
@@ -118,7 +126,7 @@ class Parser:
 		for item in item_set:
 			if token in item.rhs:
 				blob_ptr = item.rhs.index("BLOB")
-				if blob_ptr+1 < len(item.rhs) and item.rhs[blob_ptr+1] == token:
+				if blob_ptr+1 < item.length and item.rhs[blob_ptr+1] == token:
 					token_ptr = blob_ptr + 1
 					try:
 						j_item_set |= set([Item(item.lhs, item.rhs[:blob_ptr]+[token,"BLOB"]+item.rhs[token_ptr+1:],item.lookahead)])
@@ -147,6 +155,7 @@ class Parser:
 					state_number += 1
 				elif len(goto_of_x)>0: #otherwise, link back
 					self.enumerated_states[state_index].goto_table[X] = index
+			print "\rNumber of states = ",len(C_set),
 		return frozenset(C_set)
 
 
@@ -209,7 +218,7 @@ class Parser:
 		return_set = set([])
 		item_sets = []
 		for item in item_set: 						#lookahead is the union of the follow sets of all items in the item set where the symbol is a immediately to the right of the blob
-			if item.rhs.index("BLOB")+1 <len(item.rhs) and item.rhs[item.rhs.index("BLOB")+1] == symbol:
+			if item.rhs.index("BLOB")+1 <item.length and item.rhs[item.rhs.index("BLOB")+1] == symbol:
 				return_set |= self.follow(item)
 		return return_set
 
@@ -228,32 +237,31 @@ class Parser:
 
 #________________________________________ functions for comparing and checking membership for items, itemsets etc ___________________
 
-	def compare_items(self,item1,item2):
-		#compares two items
-		return (item1.lhs == item2.lhs)and(item1.rhs == item2.rhs)and(item1.lookahead == item2.lookahead)
-
 	def compare_item_sets(self,item_set1,item_set2):
 		#sees if two item sets are the same
-		counting_item_set = set(item_set2)              #each time an item is matched, it is removed
+		#counting_item_set = set(item_set2)              #each time an item is matched, it is removed
+
+		if len(item_set1) != len(item_set2): #different lengths = different sets
+			return False
+
 		for item1 in item_set1:
 			found = 0
 			for item2 in item_set2:                     #tries to find each item in the second set, and removes it from the copy of the second set
-				if self.compare_items(item1,item2):
+				if (item1.lhs == item2.lhs)and(item1.rhs == item2.rhs)and(item1.lookahead == item2.lookahead):
 					found = 1
-					counting_item_set.remove(item2)
+					#counting_item_set.remove(item2)
 					break
 			if not found:
 				return False
-		if len(counting_item_set):                      #if there are additional items in the second set, then the copy set will still have items in it
-			return False
-		else: 
-			return True
+		return True
 
 	def is_in_item_set(self,item,item_set):
 		#checks if an item is in an item set
 		for item1 in item_set:
-			if self.compare_items(item,item1):
-				return True
+			if (item1.lhs == item.lhs):
+				if (item1.rhs == item.rhs):
+					if(item1.lookahead == item.lookahead):
+						return True
 		return False
 
 
@@ -319,7 +327,9 @@ class Item:
 	def __init__(self,lhs,rhs,lookahead):
 		self.lhs = lhs
 		self.rhs = rhs
+		self.length = len(rhs)
 		self.lookahead = lookahead
+		self.attrs = self.__dict__
 
 class Finite_automaton_state:
 	def __init__(self,own_set,number):

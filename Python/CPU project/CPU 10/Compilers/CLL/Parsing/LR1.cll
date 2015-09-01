@@ -1,0 +1,218 @@
+//incomplete
+//project to build a parser in CLL
+
+
+////////////////////////////////////////////////////
+//requires malloc to be imported and initialised  //
+////////////////////////////////////////////////////
+
+
+// parsing logic
+
+@int 1024 parseStack = [0];
+int parseStackPointer = 1;
+@int lookAhead;
+@int currentToken;
+
+@int enumeratedRules;
+@int actionTable;
+@int leftHandGotoTable;
+
+@int parse(@int tokens)
+	//LR1 parser:
+		//tokens passed as a linked list
+	
+	//set up tables using generated functions
+	enumeratedRules = getRules();
+	actionTable = getActionTable();
+	leftHandGotoTable = getGotoTable();
+
+
+
+	actionTable
+	lookAhead = tokens;
+	while(not(parseStep()))do
+		pass;
+	loop;
+	return parseStack[1];
+
+end;
+
+int parseStep()
+	int topState = parseStack[parseStackPointer];
+	int action = getNextAction(topState,lookAhead[TERMINAL_TYPE]); 
+	if (action&actionmask == ACTION_SHIFT) then
+		//shift: push token, push state, get new lookahead
+		pPush(lookahead);
+		pPush(parseAction&datamask);
+		lookahead = lookahead[TERMINAL_NEXT];
+		return 0;
+	else if (action&actionmask == ACTION_REDUCE) then
+		//find pop off the children (using the number of rule states)
+		//create a linked list of children
+		//add children to a new node
+		//push new node
+		//push state from lookup table
+		@int rule = enumeratedRules[pAction&datamask];
+		int length = rule[RULE_LENGTH];
+		@int top = createLinkedListFromStack(length); 
+		int newTopState = pPeek();
+		pPush(Non_terminal_parse_tree_node(rule[RULE_LHS],top,length));
+		pPush(leftHandGoto(newTopState,rule[RULE_LHS]));
+		return 0;
+	else if (action&actionmask == ACTION_DONE)
+
+		return 1;
+	else //error
+		printf("Error: Not expecting terminal: ");printf(lookahead[TERMINAL_STRING]);
+		quit();
+		return 1;
+	endif; endif; endif;
+end;
+
+@int createLinkedListFromStack(int length)
+	//recursive function creates a linked list of children from the stack
+	if (length) then
+		@int node = malloc(2);
+		node[CHILD_LIST_NEXT] = createLinkedListFromStack(length-1); //back recurses so the children are correctly ordered
+		int state = pPop(); //get rid of state value
+		node[CHILD_LIST_CHILD] = pPop();
+		return node;
+	else return 0;
+	endif;
+end;
+// set up rules
+#define ACTION_SHIFT  	0x40000000
+#define ACTION_REDUCE	0x80000000
+#define ACTION_DONE   	0xc0000000
+#define ACTION_ERROR  	0x00000000
+
+#define actionmask 		0xc0000000
+#define datamask 		0x3fffffff
+
+
+
+
+//classes for parse tree nodes
+
+@int Non_terminal_parse_tree_node(int node_type,@int children, int children_length)
+	@int node = malloc(4);
+	node[NT_TYPE] = node_type;
+	node[IS_TERMINAL] = 0;
+	node[NT_LENGTH] = length;
+end;
+
+@int Terminal_parse_tree_node(int node_type,@char token_string)
+	@int node = malloc(4);
+	node[TERMINAL_TYPE] = node_type;
+	node[IS_TERMINAL] = 0;
+	node[TERMINAL_NEXT] = 0;
+	node[TERMINAL_STRING] = newStringCopy(token_string);
+end;
+
+@int rule(int lhsType, int length)
+	//stripped down rule object
+	@int self = malloc(2);
+	self[RULE_LHS] = lhsType;
+	rule[RULE_LENGTH] = length;
+	return self;
+end;
+
+
+
+//Offsets for node classes
+#define IS_TERMINAL 0
+
+#define TERMINAL_TYPE 1
+#define TERMINAL_STRING 2
+#define TERMINAL_NEXT 3
+
+#define NT_TYPE 1
+#define NT_CHILDREN 2
+#define NT_LENGTH 3
+
+#define RULE_LHS 0
+#define RULE_LENGTH 1
+
+#define CHILD_LIST_CHILD 0
+#define CHILD_LIST_NEXT 1
+
+//string and stack tools
+
+@char newStringCopy(@char string)
+	//allocs a new space for a string and copies into it
+end;
+
+void pPush(int value)
+	parseStack[parseStackPointer] = value;
+	parseStackPointer += 1;
+	if (parseStackPointer==1024) then
+		//////////////////////////////////////////
+		// ADD error message here				//
+		//////////////////////////////////////////
+	endif;
+end;
+
+int pPop()
+	if (parseStackPointer == 0) then
+		//////////////////////////////////////////
+		// ADD error message here				//
+		//////////////////////////////////////////
+	endif;
+	parseStackPointer -= 1;
+	return parseStack[parseStackPointer];
+end;
+
+int pPeek()
+	if (parseStackPointer==0) then
+		//////////////////////////////////////////
+		// ADD error message here				//
+		//////////////////////////////////////////
+	endif;
+	return parseStack[parseStackPointer-1];
+end;
+
+// table lookup functions - to be generated
+void getNextAction(int state, int lookAhead_type)
+	//finds next action in the lookahead action table
+	//puts it into the parseAction array
+	if(state>MAX_STATE)then
+		return pAction:ERROR;
+	else
+		@int row = actionTable[state];
+		if (lookAhead_type > MAX_TYPE) then
+			return ACTION_ERROR;
+		else
+			return row[lookAhead_type];
+		endif;
+	endif;
+end;
+
+int leftHandGoto(int state,int LHS_type)
+	//generated function which looks up values in a goto table
+end;
+
+
+
+
+
+@int getRules()
+	//generated function which creates an array of pointers to rule objects
+end;
+
+@int getActionTable()
+	//generated function which produces a 
+end;
+
+//type definitions are generated by the parser generator
+
+//for example
+#define T_ID 1
+#define T_+ 2
+
+#define N_<SUM> 3
+
+//also needs to define
+	//the largest index for state and type
+#define MAX_STATE
+#define MAX_TYPE
