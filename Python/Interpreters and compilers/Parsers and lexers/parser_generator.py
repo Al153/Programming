@@ -29,6 +29,8 @@ class Parser:
 		del self.rules["<IGNORE>"]
 
 		self.terminals = self.get_terminals()                                                #searches rules to get a list of terminal strings which are directly referenced in the grammar
+		print self.terminals
+		raw_input('')
 		self.grammar_symbols = [symbol for symbol in self.rules] + self.terminals                        #gets all grammar symbols
 		#self.first_sets = {}                                                                     #used to speed up testing of first sets
 		print "Done!\nProducing first sets ...",
@@ -107,8 +109,8 @@ class Parser:
 	def closure(self,input_items):
 		#input is a set of items: item has lhs, rhs, and lookahead, where rhs contains 'blob'
 		items = list(input_items)
-
 		for item in items:
+			#self.print_item(item)
 			if item.rhs.index("BLOB") + 1 < item.length:
 				next_symbol = item.rhs[item.rhs.index("BLOB")+1]
 				if next_symbol not in self.terminals:
@@ -197,22 +199,22 @@ class Parser:
 		'''checks if the empty string can be derived from symbol. modified from http://www.andrews.edu/~bidwell/456'''
 		self.null_dict = {symbol:False for symbol in self.grammar_symbols}
 		if not '""' in self.null_dict:  #if no symbols can be null
-			return
-		changes = 1
-		while changes:
-			changes = 0
-			for i in self.enum_rules:
-				if not self.null_dict[i.lhs]: #otherwise get the new i
-					for j in i.rhs:
-						broken_out_oof_loop = 0
-						if not self.null_dict[j]:
-							broken_out_oof_loop = 1
-							break
+			pass
+		else:
+			changes = 1
+			while changes:
+				changes = 0
+				for i in self.enum_rules:
+					if not self.null_dict[i.lhs]: #otherwise get the new i
+						for j in i.rhs:
+							broken_out_oof_loop = 0
+							if not self.null_dict[j]:
+								broken_out_oof_loop = 1
+								break	
 
-					if broken_out_oof_loop:
-						self.null_dict[i.lhs] = True
-						changes = 1
-		return
+						if broken_out_oof_loop:
+							self.null_dict[i.lhs] = True
+							changes = 1
 
 	def lookaheads(self,symbol,item_set):			#calculate the lookahead of a set
 		return_set = set([])
@@ -349,7 +351,7 @@ class ABNF_parse_tree:
 	def tokenise_line(self,line):
 		#simple line tokeniser
 		whitespace = [' ','\t']
-		escaped_dict = {"n":"\n","t":"\t",'"':'"'}
+		escaped_dict = {"n":"\n","t":"\t",'"':'"',"\\":"\\"}
 		line_tokens = []
 		current_token = ''
 		string = 0
