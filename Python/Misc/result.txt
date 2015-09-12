@@ -1,0 +1,3 @@
+Apples: 12.75
+Oranges: 6.5
+Bananas: 2.0
