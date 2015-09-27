@@ -1,0 +1,37 @@
+
+let fib = fun: (int -> int);
+	fib(0) -> 1;
+	fib(n>0) -> fib(n-1) + fib(n-2);
+	fib(_) -> error;
+
+
+let stringDouble = fun: (str -> str);
+	stringDouble("") -> "";
+	stringDouble([x::xs]) -> [x:x:stringDouble(xs)];
+
+
+let opList = fun: (fun,list -> list);
+	opList(f,{}) -> {};
+	opList(f,{x::xs}) -> {f(x):xs};
+
+
+let nextState = fun:(chr,chr -> chr);
+	nextState()
+
+let fsm = fun: (chr,str -> str);
+		fsm(a,"")	-> "";
+		fsm(a,[i::is]) -> [output(a,i)::fsm(nextState(a,i),is)];
+
+
+let a = int: 1;
+
+
+fsm("s","htthhht");
+let myList = list: {1,2,3};
+let nextList = list: {::myList}
+
+
+(lambda x -> x+2)
+
+let compose = fun: (fun,fun -> fun);
+	compose(f,g) -> (lambda(x)-> f(g(x)));

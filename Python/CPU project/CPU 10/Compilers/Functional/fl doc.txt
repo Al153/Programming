@@ -1,0 +1,14 @@
+types:
+	int - 32bit signed integers
+	chr - 8bit unsigned int, but treated as a single letter only 
+	str - linked list of chrs
+	list - linked list of any type
+
+
+list syntax: 
+	{a:b:{1,2,3,4}} = {a,b,1,2,3,4}
+
+	{{a,b}:{a,b}:{c,d,e}} = {{a,b}, {a,b}, c, d ,e}
+
+
+lambda

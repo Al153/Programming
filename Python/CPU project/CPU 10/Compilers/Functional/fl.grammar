@@ -1,0 +1,46 @@
+<PROGRAM> ::= <block>
+<block> ::= <line> <block> | <line>
+<line> ::= <action> ";"
+
+<action> ::= <statement> | <fun-call> | <fun-pattern>
+
+<fun-pattern> ::=  <name> "(" <def-params> ")" "-" ">" <gen-expr> | <name> "(" ")" "-" ">" <gen-expr>
+<fun-call> ::= <fun> "(" <call-params> ")" | <fun> "(" ")"
+<statement> ::= "let" <name> "=" <statement-expr>
+
+
+<statement-expr> ::= "str" ":" <str-expr> | "list" ":" <list-expr> | "int" ":" <int-expr> | "char" <char-expr> | "fun" ":" "(" <fun-types> "-" ">" <fun-types> ")" | "fun" ":" <lambda-expr>
+
+
+<str-expr> ::= "[" <char-term> ":" <char-term> ":" <str-term> "]" | str | <char-expr> | <fun-call> 
+<list-expr> ::= "{" <list-item> ":" <list-item> ": <list-term> "}" | <fun-call> | "{" <list-items> "}" | "{" "}"
+<int-expr> ::= <int-expr> <addop> <int-term> | <unaryop> <int-term> | <int-term> 
+<char-expr> ::= char
+
+
+<char-term> ::= <char-expr> | ""
+<str-term> ::= <str-expr> | <char-expr> | ""
+<list-term> ::= <name> | <fun-call> | <list-expr>
+
+<list-item> ::= "" | <gen-expr>
+<list-items> ::= <list-items> <gen-expr> | <gen-expr>
+
+<gen-expr> ::= <int-expr> | <char-expr> | <list-expr> | <str-expr> | "error"
+
+<int-term> ::= <int-term> <mulop> <int-factor> | <int-factor>
+<int-factor> ::= <const> | <name> | <fun-call> | "(" <int-expr> ")"
+
+<call-params> ::= <call-params> <gen-expr> | <gen-expr>
+<def-params> ::= 
+<fun-types> ::=
+
+<fun> ::= <fun-call> | <name>
+<name> ::= id
+<const> ::= num
+
+<addop> ::= "+" | "-" | "<" "<" | ">" ">"
+<mulop> ::= "*" | "/" | "%" | "^" | "|" | "&"
+
+
+
+
