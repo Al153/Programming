@@ -1,14 +1,14 @@
 <PROGRAM> ::= <lines>
-<ELEMENTARY_TOKENS> ::= " "  | "a" | "b" | "c" | "d" | "e" | "f" | "g"  | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "\\" | "\"" | "!" | "$" | "%" | "^" | "&" | "_" | "=" | "{" | "}" | "/" | "<" | ">" | "'" | "@" | "#" | "~"
+<ELEMENTARY_TOKENS> ::= " "  | "a" | "b" | "c" | "d" | "e" | "f" | "g"  | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "\\" | "\"" | "!" | "$" | "%" | "^" | "&" | "_" | "=" | "{" | "}" | "/" | "<" | ">" | "'" | "@" | "#" | "~" | "." | "(" | ")" | "|" | "[" | "]" | "-" | "\\" | "*" | "+" | "?"
 <IGNORE> ::= " " | "\t"
 
 
 <lines> ::= <lines> <rule> | <rule>
-<rule> ::= <re> <name> "\n" | <re> <name>  "-" "-" <comment> "\n"
+<rule> ::= <re> "." <name> "\n" | <re> <name>  "-" "-" <comment> "\n"
 
 <name> ::= <name> <name_char> | <name_char>
 
-<re> ::= <expr> "."
+<re> ::= <expr> | <re> <expr>
 <expr> ::= <expr> "|" <term> | <term>
 <term> ::= <term> <factor> | <factor> 
 <factor> ::= <lit> <op> | <lit>
@@ -16,11 +16,11 @@
 
 <op> ::= "*" | "+" | "?"
 
-<character> ::= <character_class> | letter | num | <escaped>  | <symbol>  
+<character> ::= <character_class> | <letter> | <num> | <escaped>  | <symbol>  
 
 <escaped>  ::= "\\" <escapable>
 <symbol> ::= "!" | "$" | "%" | "^" | "&" | "_" | "=" | "{" | "}" | "/" | "<" | ">" | "'" | "@" | "#" | "~" | "\""
-<escapable> ::= letter | <op> | <reserved>
+<escapable> ::= <letter> | <op> | <reserved>
 
 <reserved> ::=  "." | "(" | ")" | "|" | "[" | "]" | "-" | "\\"
 
@@ -28,5 +28,10 @@
 <character_class> ::= "[" "a" "-" "z" "]" | "[" "A" "-" "Z" "]" | "[" "0" "-" "9" "]" | "[" "!" "-" "&" "]"
 
 <comment> ::= <comment> <comment_char> | ""
-<comment_char> ::= letter | num | <symbol> | <escapable> | <reserved> | <op>
-<name_char> ::= letter | num | <symbol> | <escapable> | <op> | "." | "(" | ")" | "|" | "[" | "]" | "\\"
+<comment_char> ::= <letter> | <num> | <symbol> | <escapable> | <reserved> | <op>
+<name_char> ::= <letter> | <num> | <symbol> | <escapable> | <op> | "." | "(" | ")" | "|" | "[" | "]" | "\\"
+
+<letter> ::= <cap> | <lower>
+<num> ::= "0" | "1" | "2"| "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<cap> ::=  "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+<lower> ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"

@@ -737,7 +737,7 @@ def get_source_file():
 def get_parse_tree(source_text):
 	'''uses parser file to get a parse tree of the program'''
 	CURRENT_DIR = os.path.dirname(__file__)
-	file_path = os.path.join(CURRENT_DIR, 'CLL1_2.parse')
+	file_path = os.path.join(CURRENT_DIR, 'CLL.parse')
 	local_parser = LR1_parser.Parser(file_path,tokenise) #replace built in function in parser
 	parse_tree = local_parser.parse(source_text)
 	return parse_tree

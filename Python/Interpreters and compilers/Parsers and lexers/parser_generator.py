@@ -2,23 +2,30 @@ import json
 import sys
 
 def generate_parser(name,ABNF_grammar):
-	parser = Parser(ABNF_grammar)
-	print "Writing to file ...",	
-	parser_summary =  {
-						"lookahead_action_table":parser.lookahead_action_table,
-						"goto_table":parser.LHS_goto_table,
-						"elementary_tokens":parser.elementary_tokens,
-						"to_ignore":parser.to_ignore,
-						"terminals":parser.terminals,
-						"rules":[(rule.lhs,rule.rhs,rule.number) for rule in parser.enum_rules]
-					}
-	parser_summary_string = json.dumps(parser_summary)
-	output_file = open(name+".parse","w")
-	output_file.write(parser_summary_string)
-	print "Done!"
+	try:
+		parser = Parser(ABNF_grammar)
+		print "Writing to file ...",	
+		parser_summary =  {
+							"lookahead_action_table":parser.lookahead_action_table,
+							"goto_table":parser.LHS_goto_table,
+							"elementary_tokens":parser.elementary_tokens,
+							"to_ignore":parser.to_ignore,
+							"terminals":parser.terminals,
+							"rules":[(rule.lhs,rule.rhs,rule.number) for rule in parser.enum_rules]
+						}
+		parser_summary_string = json.dumps(parser_summary)
+		output_file = open(name+".parse","w")
+		output_file.write(parser_summary_string)
+		print "Done! optcount = ",parser.opt_count
+	except KeyboardInterrupt:
+		pass
+
 class Parser:
 	def __init__(self,ABNF_grammar):
-		print "Extracting ABNF rules ...",
+		self.lookahead_memo = {}
+		self.opt_count = 0
+
+		print "Extracting ABNF rules ...\a",
 		self.ABNF_tree = ABNF_parse_tree(ABNF_grammar)                                          #parses grammar specification
 		self.rules = self.get_rules_table()                                             #gets a list of rules from the ABNF tree
 		print "Done!\nGetting grammar symbols ...",
@@ -29,8 +36,6 @@ class Parser:
 		del self.rules["<IGNORE>"]
 
 		self.terminals = self.get_terminals()                                                #searches rules to get a list of terminal strings which are directly referenced in the grammar
-		print self.terminals
-		raw_input('')
 		self.grammar_symbols = [symbol for symbol in self.rules] + self.terminals                        #gets all grammar symbols
 		#self.first_sets = {}                                                                     #used to speed up testing of first sets
 		print "Done!\nProducing first sets ...",
@@ -39,7 +44,7 @@ class Parser:
 		self.item_set = self.get_item_sets()                                                        #finds all items reachable from "GOAL"
 		print "Done!\nExtracting parsing tables ...",
 		self.get_parsing_tables()
-		print "Done!"
+		print "Done!\a"
 
 #_________________________________________________ Parse related functions ______________________________________________
 
@@ -59,10 +64,10 @@ class Parser:
 					self.LHS_goto_table[state][symbol] = self.enumerated_states[state].goto_table[symbol]       #once a reduction has occured, get the new state
 
 			for item in self.enumerated_states[state].own_set:
-				if item.rhs.index("BLOB")+1 == item.length: #reduce
+				if item.blob_index+1 == item.length: #reduce
 					for rule in self.enum_rules:              #searching for acceptable rules
 						found = 0
-						if rule.lhs == item.lhs and rule.rhs == item.rhs[:-1]: #if rule is correct
+						if rule.lhs == item.lhs and rule.rhs == list(item.rhs[:-1]): #if rule is correct
 							found = 1
 							rule_number = rule.number
 							break
@@ -109,17 +114,29 @@ class Parser:
 	def closure(self,input_items):
 		#input is a set of items: item has lhs, rhs, and lookahead, where rhs contains 'blob'
 		items = list(input_items)
+		added_lookaheads = {}
 		for item in items:
 			#self.print_item(item)
-			if item.rhs.index("BLOB") + 1 < item.length:
-				next_symbol = item.rhs[item.rhs.index("BLOB")+1]
+			if item.blob_index + 1 < item.length:
+				next_symbol = item.rhs[item.blob_index+1]
 				if next_symbol not in self.terminals:
-					lookaheads = self.lookaheads(next_symbol,items)
+
+					if next_symbol not in added_lookaheads:
+						added_lookaheads[next_symbol] = {}
+					
 					for production in self.rules[next_symbol].rhs:
+						t_production = tuple(production)
+						if t_production not in added_lookaheads[next_symbol]:
+							added_lookaheads[next_symbol][t_production] = set([])
+						
+						lookaheads = self.lookaheads(next_symbol,items) - added_lookaheads[next_symbol][t_production]
+						added_lookaheads[next_symbol][t_production] |= lookaheads
+
 						for terminal in lookaheads:
 							item_to_add = Item(next_symbol,["BLOB"]+production,terminal)
 							if not self.is_in_item_set(item_to_add,items):
 								items.append(item_to_add)
+						#print "\r",self.opt_count,
 		item_set = set(items)
 		return frozenset(item_set)
 
@@ -127,18 +144,20 @@ class Parser:
 		j_item_set = set([])
 		for item in item_set:
 			if token in item.rhs:
-				blob_ptr = item.rhs.index("BLOB")
+				blob_ptr = item.blob_index
 				if blob_ptr+1 < item.length and item.rhs[blob_ptr+1] == token:
 					token_ptr = blob_ptr + 1
 					try:
-						j_item_set |= set([Item(item.lhs, item.rhs[:blob_ptr]+[token,"BLOB"]+item.rhs[token_ptr+1:],item.lookahead)])
+						j_item_set |= set([Item(item.lhs, item.rhs[:blob_ptr]+(token,"BLOB")+item.rhs[token_ptr+1:],item.lookahead)])
 					except IndexError:
 						pass
 		return self.closure(j_item_set) if len(j_item_set) else frozenset(j_item_set)
 
 	def get_item_sets(self):
-		grammar_symbols = self.grammar_symbols
+		grammar_symbols = self.grammar_symbols 
+		print len(grammar_symbols)
 		starting_state = self.closure([Item("<GOAL>",["BLOB","<PROGRAM>"],"END")]) 
+		print "finished closure"
 		C_set = [starting_state]
 		self.enumerated_states = {0:Finite_automaton_state(starting_state,0)}   #allows for creation of finite automaton
 		state_number = 1                                #counts number of states
@@ -217,10 +236,11 @@ class Parser:
 							changes = 1
 
 	def lookaheads(self,symbol,item_set):			#calculate the lookahead of a set
+		
 		return_set = set([])
 		item_sets = []
 		for item in item_set: 						#lookahead is the union of the follow sets of all items in the item set where the symbol is a immediately to the right of the blob
-			if item.rhs.index("BLOB")+1 <item.length and item.rhs[item.rhs.index("BLOB")+1] == symbol:
+			if item.blob_index+1 <item.length and item.rhs[item.blob_index+1] == symbol:
 				return_set |= self.follow(item)
 		return return_set
 
@@ -228,7 +248,7 @@ class Parser:
 	def follow(self,item):
 		nullable = 1
 		lookaheads = set([])
-		for symbol in item.rhs[item.rhs.index("BLOB")+2:]: 		#iterates through symbols, follow of an item is the first set of the symbol to the right of the one to the rights of the blob, in the current context
+		for symbol in item.rhs[item.blob_index+2:]: 		#iterates through symbols, follow of an item is the first set of the symbol to the right of the one to the rights of the blob, in the current context
 			lookaheads |= set(self.first_sets[symbol])
 			if not self.null_dict[symbol]:
 				nullable = 0
@@ -328,7 +348,8 @@ class EnumRule:
 class Item:
 	def __init__(self,lhs,rhs,lookahead):
 		self.lhs = lhs
-		self.rhs = rhs
+		self.rhs = tuple(rhs)
+		self.blob_index = rhs.index("BLOB")
 		self.length = len(rhs)
 		self.lookahead = lookahead
 		self.attrs = self.__dict__

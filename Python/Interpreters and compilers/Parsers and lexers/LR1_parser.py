@@ -90,7 +90,7 @@ class Parser:
 
 	def tokenise(self,source_text):                                                                 #splits text according to elementary tokens - chars which indicate a new token
 		token_triggers =self.elementary_tokens	                                                    #fetch elementary tokens
-		print token_triggers
+		#print token_triggers
 		current_token = ''                                                                          #initialise current token and token list
 		token_list = []
 		for character in source_text:                                                               #iterate through source text
