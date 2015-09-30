@@ -16,7 +16,7 @@ def generate_parser(name,ABNF_grammar):
 		parser_summary_string = json.dumps(parser_summary)
 		output_file = open(name+".parse","w")
 		output_file.write(parser_summary_string)
-		print "Done! optcount = ",parser.opt_count
+		print "Done!"
 	except KeyboardInterrupt:
 		pass
 
@@ -155,9 +155,9 @@ class Parser:
 
 	def get_item_sets(self):
 		grammar_symbols = self.grammar_symbols 
-		print len(grammar_symbols)
+		#print len(grammar_symbols)
 		starting_state = self.closure([Item("<GOAL>",["BLOB","<PROGRAM>"],"END")]) 
-		print "finished closure"
+		#print "finished closure"
 		C_set = [starting_state]
 		self.enumerated_states = {0:Finite_automaton_state(starting_state,0)}   #allows for creation of finite automaton
 		state_number = 1                                #counts number of states

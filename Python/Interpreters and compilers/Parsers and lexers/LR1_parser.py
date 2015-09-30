@@ -54,6 +54,10 @@ class Parser:
 			if done:
 				return 1
 		elif next_action_tuple[0] == "error":                                                       #otherwise report an error
+
+			self.print_parse_tree(self.parse_tree_stack[-2])
+			self.print_parse_tree(self.parse_tree_stack[-4])
+			print top_state
 			self.error(next_action_tuple[1])
 
 	def shift(self,next_state):                                                                     #shift operation
