@@ -28,7 +28,7 @@ let a = int: 1;
 
 fsm("s","htthhht");
 let myList = list: {1,2,3};
-let nextList = list: {::myList}
+let nextList = list: 0::myList;
 
 
 (lambda x -> x+2)

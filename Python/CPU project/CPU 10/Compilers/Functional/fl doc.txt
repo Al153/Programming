@@ -1,14 +1,45 @@
 types:
-	int - 32bit signed integers
-	chr - 8bit unsigned int, but treated as a single letter only 
-	str - linked list of chrs
-	list - linked list of any type
+	definable types
 
+		int - 32bit signed integers
+		chr - 8bit unsigned int, but treated as a single letter only 
+		str - linked list of chrs
+		list - linked list of any type
+		real - 32bit float
+		bool - boolean value
+		fun - function object - contains a type list, and a lambda-list
+
+	hidden types
+		exp-list 		- list of expression code that can be executed  - the entire program is an exp list
+		type-list 		- list of type elements
+		type-element 	- contains simply a code for another type
+		pattern 		- two type lists
+		lambda-list 	- contains a pattern and an exp list
+		id				- has a string
+		num-id			- id with a numerical name
 
 list syntax: 
-	{a:b:{1,2,3,4}} = {a,b,1,2,3,4}
+	{a::{1,2,3,4}} = {a,1,2,3,4}
 
-	{{a,b}:{a,b}:{c,d,e}} = {{a,b}, {a,b}, c, d ,e}
+	{{a,b}::{c,d,e}} = {{a,b}, c, d ,e}
 
 
-lambda
+
+
+
+
+
+
+Stack implementation
+	16 byte slots
+
+Type implementation
+	Objects of all types have four word fields
+
+	type - numerical code for type
+	val1 - primary value (int,real,etc , pointer to value for lists)
+	val2 - secondary value - "next"
+	ref - number of references to object
+
+
+Call stack implementation
