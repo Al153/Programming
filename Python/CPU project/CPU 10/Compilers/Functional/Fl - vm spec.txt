@@ -1,0 +1,83 @@
+
+
+Statement ops
+	let
+	label
+	out
+
+typing ops
+	int, real, list, string, char, bool, fun -> push a particular code for each type
+	type@, type-> 							 -> constructors for typing - concat and becomes
+
+Expression eval ops
+	i+, i-, i*, i/, i%, i&, i|, i^ 				-> binary integer arithmetic and bitwise logic, 2s complement
+	i~, i! 										-> unary integer negate and Not
+	i<, i>, i=, i<=, i>=, i<> 					-> binary comparisons
+
+	r+, r-, r*, r/, (rsin, rcos, rexp, etc) 	-> real binary arithmetic
+	r~											-> real unary negate
+	r<, r>, r=, r<=, r>=, r<> 					-> real comparisons
+
+	b&, b|, b^, b!, b=, b<>						-> boolean ops
+
+	c=, c<> 									-> char comparisons
+	
+	l@ 											-> list add eg: 'a a, list L ==> a::L
+	lhd, ltl									-> gets the head element or tail list of a list
+
+	s@ 											-> string add eg: char a, string bbbbbb ==> abbbbbb
+	shd, stl 									-> gets the head or tail of a string
+
+	(true) (false) if   						-> two bracketed expressions on the stack, then preceded by a conditional
+													- evals the first if the top value is true
+													- evals the second otherwise
+
+	dup swp drp									-> duplicate, swap, drop
+
+	Elist, Estring 								-> empty list and string
+
+function declaration
+	
+	@pattern 									-> @s a pattern object
+	pattern-> 									-> stores a pattern and expression list
+	EPattern
+
+structure creation ops
+	(, )										-> stores the code in the middle in a list and pushes it onto the stack
+
+Execution
+	call 										-> . . . fun -> executes fun, calls with full type checking
+	eval 										-> evaluates an expression list
+
+
+
+
+
+Expression stack structure 
+
+
+
+Call Stack structure
+
+
+example
+
+let fact = fun: (int -> int);
+fact(0) = 1;
+fact(n) = fact(n-1)*n;
+
+let a = int: fact(5);
+
+becomes
+
+
+int int type-> fun "fact" let
+Epattern 0 @pattern ( 1 ) "fact" pattern->
+EPattern "n" @pattern ( "n" 1 i- fib call "n" i* ) "fact" pattern->
+
+5 fact call int "a" let
+
+
+
+
+	
