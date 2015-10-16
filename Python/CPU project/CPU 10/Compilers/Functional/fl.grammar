@@ -2,21 +2,32 @@
 <block> ::= <line> <block> | <line>
 <line> ::= <action> ";"
 
-<action> ::= <statement> | <fun-call> | <fun-pattern>
+<action> ::= <statement> | <fun-call> | <fun-pattern> | <gen-expr>
+
 
 <fun-pattern> ::=  <name> "(" <def-params> ")" "-" ">" <gen-expr> | <name> "(" ")" "-" ">" <gen-expr>
 <fun-call> ::= <fun> "(" <call-params> ")" | <fun> "(" ")"
 <statement> ::= "let" <name> "=" <statement-expr>
 
 
-<statement-expr> ::= "str" ":" <str-expr> | "list" ":" <list-expr> | "int" ":" <int-expr> | "char" <char-expr> | "fun" ":" "(" <fun-types> "-" ">" <fun-types> ")" | "fun" ":" <lambda-expr>
+<statement-expr> ::= "str" ":" <str-expr> | "list" ":" <list-expr> | "int" ":" <int-expr> | "char" ":" <char-expr> | "fun" ":" "(" <fun-types> "-" ">" <fun-types> ")" | "fun" ":" <lambda-expr> | "bool" ":" <bool-expr> | "real" : <real-expr>
 
 
-<str-expr> ::= "[" <char-term> ":" <char-term> ":" <str-term> "]" | str | <char-expr> | <fun-call> 
-<list-expr> ::= "{" <list-item> ":" <list-item> ": <list-term> "}" | <fun-call> | "{" <list-items> "}" | "{" "}"
+<str-expr> ::= "[" <char-term> ":" ":" <str-term> "]" | str | <char-expr> | <fun-call> 
+<list-expr> ::= "{" <list-item> ":" ":" <list-term> "}" | <fun-call> | "{" <list-items> "}" | "{" "}"
 <int-expr> ::= <int-expr> <addop> <int-term> | <unaryop> <int-term> | <int-term> 
 <char-expr> ::= char
 
+-- ___________________________Do Bool Bits______________________-
+<bool-expr> ::= "|"
+<bool-term> ::=
+<bool-factor> ::=
+
+
+--____________________________ Do real bits ____________________--
+<real-expr> ::=
+<real-term> ::=
+<real-factor> ::=
 
 <char-term> ::= <char-expr> | ""
 <str-term> ::= <str-expr> | <char-expr> | ""
@@ -25,14 +36,14 @@
 <list-item> ::= "" | <gen-expr>
 <list-items> ::= <list-items> <gen-expr> | <gen-expr>
 
-<gen-expr> ::= <int-expr> | <char-expr> | <list-expr> | <str-expr> | "error"
+<gen-expr> ::= <int-expr> | <char-expr> | <list-expr> | <str-expr> | "error" | <gen-expr> "if" <bool-expr> "else" <bool-expr> 
 
 <int-term> ::= <int-term> <mulop> <int-factor> | <int-factor>
 <int-factor> ::= <const> | <name> | <fun-call> | "(" <int-expr> ")"
 
 <call-params> ::= <call-params> <gen-expr> | <gen-expr>
 <def-params> ::= 
-<fun-types> ::=
+<fun-types> ::= --Needs to contain all types + possible functions
 
 <fun> ::= <fun-call> | <name>
 <name> ::= id
