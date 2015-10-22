@@ -1,0 +1,22 @@
+//operations for fl
+
+
+void OP_LET()
+	//(value, type, id =LET=> ) stores to local namespace
+end;
+
+void OP_OUT()
+	//(value =OUT=> ) formats and prints to screen
+end;
+
+
+
+void OP_LIST_APPEND()
+	@int current_list = exp_pop();
+	@int new_list = new_item(FL_TYPE_list,exp_pop(),current_list);
+	current_list[ITEM_REFS] += 1;
+	exp_push(new_list);
+end;
+
+void OP_INT_ADD()
+end;   

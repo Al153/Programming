@@ -1,0 +1,3 @@
+void FL_RAISE(@char type, @char reason)
+	pass;
+end;

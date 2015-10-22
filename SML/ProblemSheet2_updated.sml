@@ -9,6 +9,8 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 
 (*_________________________ Exercise 1 _________________________*)
 	(*returns true if the elements in x are found in y in order but not necessarily together *)
+	(*val sublist = fn: 'a list * 'a list -> bool, where 'a is comparable*)
+
 	fun sublist([],y) = true |
 		sublist(x,[]) = false |
 		sublist((x::xs),(y::ys)) = 	if (x = y) then
@@ -27,15 +29,21 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 	(*Only returns true if the elements in x are all in y in order and together *)
 
 	(* There are two functions - one scans for the first element, the second checks that the elements are together*)
-	fun sublist_found([],y) = true |
-		sublist_found(x,[]) = false |
-		sublist_found((x::xs),(y::ys)) = if (x = y) then
+	
+
+	(*val sublist_found = fn: 'a list * 'a list -> bool, where 'a is comparable*)
+	(*Checks elements are together*)
+	fun sublist_found([],_) = true | 
+		sublist_found(_,[]) = false |
+		sublist_found((x::xs),(y::ys)) = if (x = y) then 
 											sublist_found(xs,ys)
 										else
 											false;
 
-	fun sublist([],y) = true |  (*This function scans list until it finds the first value of x in y, then switches state to sublist found*)
-		sublist(x,[]) = false |
+	(*val sublist = fn: 'a list * 'a list -> bool, where 'a is comparable*)
+
+	fun sublist([],_) = true |  (*This function scans list until it finds the first value of x in y, then switches state to sublist found*)
+		sublist(_,[]) = false |
 		sublist((x::xs),(y::ys)) = if (x=y) then sublist_found(xs,ys) 
 									else sublist(x::xs,ys);
 
@@ -47,14 +55,20 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 	*)
 
 (*_________________________ Exercise 2 _________________________*)
-	fun reverse([],ys) = ys |
-		reverse(x::xs, ys) = reverse(xs, x::ys) ;
+	(*val reversei = fn: 'a list  * 'a list -> 'a list *)
+	fun reversei([],ys) = ys |
+		reversei(x::xs, ys) = reversei(xs, x::ys) ;
 
+	(*val reverse = fn: 'a list -> 'a list*)
+	fun reverse(l) = reversei(l,l);
+
+	(*val cmp_list = fn: 'a list * 'a list -> 'a list, when 'a is comparable*)
 	fun cmp_list([],[]) = true |
-		cmp_list(x,[]) = false |
-		cmp_list([],y) = false |
+		cmp_list(_,[]) = false |
+		cmp_list([],_) = false |
 		cmp_list(x::xs,y::ys) = if x = y then cmp_list(xs,ys) else false;
 
+	(*val is_palindrome = fn: 'a list -> 'a list, where 'a is comparable*)
 	fun is_palindrome(L) = cmp_list(L,reverse(L));
 
 
@@ -72,25 +86,29 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 	(* Several different functions *)
 
 	(* returns the minimum out of x and y *)
+	(* int * int -> int *)
 	fun smallest(x,y) = if (x<y) then x else y;
 
 	(* Finds the smallest integer in a list *)
+	(* int list -> int *) (*also works for real list *)
 	fun min([x]) = x |
 		min(x::xs) = smallest(x,min(xs));
 
 	(*given the smallest value in the list, removes the first instance of it from the list*)
+	(* 'a * 'a list -> 'a list where a is comparable*)
 	fun remove_min(m,[]) = [] |
 		remove_min(m,[x]) = if m = x then [] else [x] |
 		remove_min(m,x::xs) = if m = x then xs else x::remove_min(m,xs);
 
+	(*remove min (1,[3,2,4,1,5] -> [3,2,4,5]*)
 
-	(* Mutually recursive functions ( to get around calling min(L) twice *)
-	fun construct(m,L) = m::sel_sort(remove_min(m,L))
-	and sel_sort([]) = [] |
-		sel_sort(L) = construct(min(L),L);
+
+	(* 'a list -> 'a list *)
+	fun sel_sort([]) = [] |
+		sel_sort(L) = let val m = min(L) in  m::sel_sort(remove_min(m,L)) end;
 
 	(* 	Takes o(n) auxilary space
-		(the space used to construct the return list).
+		(the space used to construct the return list, and the min/remove runs).
 
 		Functions min and remove_min take O(n) time and are each called O(n) times
 		so the algorithm takes O(n^2) time.
@@ -107,14 +125,18 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 
 					 The last is a wrapper function
 	*)
-
+	
+	(*'a * 'a list -> 'a list, 'a is comparable*)
 	fun bubble_run(x,[]) = [x] |  (*Bubble run does a swapping pass*)
 		bubble_run(y,x::xs) = if x>y then x::bubble_run(y,xs) else (* Implicitly swaps x and y*)
 										  y::bubble_run(x,xs); 
 	
+	(* 'a list * 'a list -> 'a list, 'a is comparable*)
 	fun bubble_sort_i([],L) = L |    (* Takes two lists: the first represents a counter, so the algorithm stops when it's empty, the second is actually sorted *)
 		bubble_sort_i(x::xs,y::ys) = bubble_sort_i(xs,bubble_run(y,ys));
 
+
+	(*'a list -> 'a list, a is comparable*)
 	fun bubblesort (x) = bubble_sort_i(x,x); (* Wrapper *)
 
 
@@ -150,7 +172,7 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 	datatype month = 
 	 	january | february | march | april | may | june | july | august | september | october | november | december	
 	
-
+	 (*month * int -> int*)
 	fun to_day(january,day) = day |
 		to_day(february,day) = 31 + day |
 		to_day(march,day) = 59 + day |
@@ -164,6 +186,7 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 		to_day(november,day) = 304 + day |
 		to_day(december,day) = 334 + day;
 
+	(*int -> (month * int) *)
 	fun to_date(day) =  if day <= 31  then (january,day) else
 		 		if day <= 59   then (february,day-31) else
 		 		if day <= 90   then (march,day-59) else
@@ -182,27 +205,34 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 
 	datatype ’a mylist = Nil | Cons of ’a * ’a mylist;	
 
+	(* 'a mylist -> 'a *)
 	fun myhd Nil = raise Empty |
 		myhd (Cons(x,xs)) = x;	
 
+	(* 'a mylist -> 'a *)
 	fun mytl Nil = raise Empty |
 		mytl (Cons(x,xs)) = xs;
 
+	(* 'a mylist -> bool *)
 	fun mynull Nil = true |
 		mynull L = false;
 
+	(* 'a mylist * 'a mylist -> 'a mylist*)
 	fun myappend(Nil,ys) = ys |
 		myappend (Cons(x,xs),ys) = Cons(x,myappend(xs,ys));
 
-
-	fun myrevi(Nil,ys) = ys | (*Iterative witha wrapper*)
+	(* 'a mylist * 'a mylist -> 'a mylist*)
+	fun myrevi(Nil,ys) = ys | (*Iterative with a wrapper*)
 		myrevi(Cons(x,xs),ys) = myrevi(xs,Cons(x,ys));
 
+	(* 'a mylist -> 'a mylist *)
 	fun myrev(xs) = myrevi(xs,Nil);
 
+	(* 'a list -> 'a mylist *)
 	fun to_mylist [] = Nil |
 		to_mylist (x::xs) = Cons(x,to_mylist(xs));
 
+	(* 'a mylist -> 'a list *)
 	fun to_list Nil = [] |
 		to_list(Cons(x,xs)) = x::to_list(xs);
 
@@ -214,24 +244,34 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 		| And of Boolean * Boolean
 		| Or of Boolean * Boolean;
 
+	(*Examples*)
 	val c = And(Var("a"),Var("b"));
 	val d = Or(Not(And(c,Var("d"))),Var("d"));
 
+	(* Boolean -> string list *)
 	fun names (Var(s)) = [s] |  (* inefficient use of @, and will list names as many times as they are used*)
 		names(Not(b)) = names b |
 		names(And(a,b)) = names(a) @ names(b) |
 		names(Or(a,b)) = names(a) @ names(b);
 
+	(* eg names(d) -> a,b,d *)
+
 
 	(*Functions to deal with merging distinct elements *)
+
+		(* ''a * ''a list -> bool*)
 	fun is_in_list(a,[]) = false |
 		is_in_list(a,x::xs) = if a = x then true else is_in_list(a,xs);
 
+		(* appends only the element such that each element appears once*)
+		(* ''a list * ''a list -> ''a list*)
 	fun distinct_append(xs,[]) = xs |
 		distinct_append([],ys) = ys |
 		distinct_append(x::xs,ys) = if (is_in_list(x,ys)) then distinct_append(xs,ys) else x::distinct_append(xs,ys);
 
-	(*Very similar to names*)
+	(**)
+
+	(*Very similar to names - only picks out each name once *)
 
 	fun distinct_names(Var(s)) = [s] |
 		distinct_names(Not(b)) = distinct_names b |
@@ -239,6 +279,8 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 		distinct_names(Or(a,b)) = distinct_append(distinct_names a, distinct_names b);
 
 	(*Simple eval function*)
+
+	(*Boolean * string list -> bool *)
 	fun eval(Var(b),L) = is_in_list(b,L) |
 		eval(Not(b),L) = not(eval(b,L)) |
 		eval(And(a,b),L) = eval(a,L) andalso eval(b,L) |
@@ -247,19 +289,24 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 
 
 	(*given a list of lists, and element k, all cons appends k to all lists in the list of lists*)
-	fun allcons (k, []) = [] |
+	(* 'a * 'a list list -> 'a list list *)
+	fun allcons (_, []) = [] |
 		allcons(k, x::xs) = (k::x)::allcons(k,xs);
 
 	(*Given a list of names, create contexts creates a list of all contexts *)
+	(* 'a list -> 'a list list *)
 	fun createContexts([]) = [[]] | (*No names gives a single context, the empty list*)
-		createContexts(n::ns) = let val l = createContexts(ns) in l @ allcons(n,l) end;
+		createContexts(n::ns) = let val l = createContexts(ns) in l @ allcons(n,l) end; (*all possibilities without n @ all posibilities with n*)
 
+	(*Boolean * 'a list list -> bool*)
 	fun evalAll(E,[]) = true | (*If all contexts have been eval-ed and returned true then return true*)
 		evalAll(E,x::xs) = eval(E,x) andalso evalAll(E,xs);
 
 
 
 		(* evals all input combinations to see if they are all true*)
+
+	(*Boolean -> bool*)
 	fun allTrue(E) = evalAll(E,createContexts(distinct_names(E)));
 
 	val a = Or(Or(Or(Or(Var("a"),Not(Var("a"))),Var("b")),Var("c")),Var("d"));
@@ -277,8 +324,9 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 		Add of Expr * Expr |
 		Multi of Expr * Expr;
 
+	(*Expr -> int*)
 	fun eval(Int(a)) = a |
-		eval(Neg(a)) = 0 - eval(a) | (* SML didn't seem to like ~. it was throwing an overload conflict error*)
+		eval(Neg(a)) = 0 - eval(a) | (* SML/NJ didn't seem to like ~. it was throwing an overload conflict error*)
 		eval(Add(a,b)) = eval(a) + eval(b) |
 		eval(Multi(a,b)) = eval(a) * eval(b);
 
@@ -298,9 +346,11 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 	exception NotFoundInContext
 
 	(* Function to retrieve the value of a variable from a context*)
+	(*string * (string * int) list -> int*)
 	fun getValue(name:string,[]) = raise NotFoundInContext | 
 		getValue(name:string,(dict_name:string,value:int)::xs) = if name = dict_name then value else getValue(name,xs);
 
+	(*Expr -> int*)
 	fun eval(Int(a),context) = a |
 		eval(Var(name),context) = getValue(name,context) |
 		eval(Neg(a),context) = 0 - eval(a,context) | 

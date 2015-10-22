@@ -1,0 +1,39 @@
+
+//Lowest level code for memory allocation
+
+@int POOL_LENGTH FL_ITEM_POOL;
+@int POOL_HEAD = FL_ITEM_POOL;
+
+#define POOL_LENGTH 65536
+
+
+
+void POOL_INIT()
+	//creates linked list pool
+	@int i;
+	for(i=0,i<POOL_LENGTH,i+=4)
+		FL_ITEM_POOL[i] = FL_ITEM_POOL + 4*i + 4;
+	loop;
+	FL_ITEM_POOL[i] = 0;
+end;
+
+
+
+@int ITEM_ALLOC()
+	//allocates an item
+	@int top;
+	if (POOL_HEAD) then
+		top = POOL_HEAD;
+		POOL_HEAD = top[0];
+		return top;
+	else
+		FL_RAISE("RUNTIME","Not enough space in pool");
+	endif;
+end;
+
+
+void ITEM_DALLOC(@int item)
+	//Deallocates an item
+	item[0] = POOL_HEAD;
+	POOL_HEAD = item;
+end;

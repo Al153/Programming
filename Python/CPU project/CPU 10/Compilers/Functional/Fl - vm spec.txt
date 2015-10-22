@@ -35,6 +35,9 @@ Expression eval ops
 	dup swp drp									-> duplicate, swap, drop
 
 	Elist, Estring 								-> empty list and string
+	i1,f1.0, True,False,'c' 					-> literals
+	id:<name> 									-> pushes an id item with name
+	nid:<code> 									-> pushes an id item with a numerical code
 
 function declaration
 	

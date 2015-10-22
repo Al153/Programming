@@ -10,7 +10,8 @@ types:
 		fun - function object - contains a type list, and a lambda-list
 
 	hidden types
-		exp-list 		- list of expression code that can be executed  - the entire program is an exp list
+		exp-list 		- list of expression-atoms that can be executed  - the entire program is an exp list
+			exp-atom 	- object containing an instruction (one int), and a pointer to metadata
 		type-list 		- list of type elements
 		type-element 	- contains simply a code for another type
 		pattern 		- two type lists

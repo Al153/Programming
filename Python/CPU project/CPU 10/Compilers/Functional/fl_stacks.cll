@@ -1,0 +1,33 @@
+#define EXP_STACK_SIZE 4096
+#define CALL_STACK_SIZE 4096
+
+@int EXP_STACK_SIZE FL_CALL_STACK;  //Recursion distance
+@int CALL_STACK_SIZE FL_EXP_STACK;
+int EXP_STACK_POINTER = 0;
+
+// Expression stack
+
+void exp_push(@int item)
+	if(EXP_STACK_POINTER == EXP_STACK_SIZE) then
+		FL_RAISE("STACK","EXPRESSION STACK OVERFLOWED");
+	endif;
+	FL_EXP_STACK[EXP_STACK_POINTER] = item;
+	EXP_STACK_POINTER += 1;
+end;
+
+@int exp_pop()
+	if (EXP_STACK_POINTER ==0)then
+		FL_RAISE("STACK","Expression stack underflowed");
+	endif;
+	EXP_STACK_POINTER -= 1;
+	return FL_EXP_STACK[EXP_STACK_POINTER];
+end;
+
+
+// Call stack
+	// hijacks CLL's call stack
+
+
+
+
+

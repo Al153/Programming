@@ -1,0 +1,83 @@
+//First abstraction of allocation and deallocation
+//An item is a linked list element which can hold data
+
+
+
+
+//Item types
+
+	//numerical in order to allow quick testing
+	//numbers chose to diffrentiate from 0,1 etc
+#define FL_TYPE_int   33
+#define FL_TYPE_chr  34
+#define FL_TYPE_real  35
+#define FL_TYPE_bool  36
+#define FL_TYPE_str 37
+#define FL_TYPE_exp_atom 38
+#define FL_TYPE_type_element 39
+
+
+#define FL_TYPE_exp_list 59
+#define FL_TYPE_type_list 60	 
+#define FL_TYPE_pattern 61 
+#define FL_RT_TYPE_lambda_list 62 
+#define FL_TYPE_id	63
+#define FL_TYPE_num_id 64		 
+#define FL_TYPE_list  65
+#define FL_TYPE_fun  66
+#define FL_RT_TYPE_namespace 67
+#define FL_RT_TYPE_namespace_head 68
+
+
+
+//Item spec:
+
+#define ITEM_TYPE 0
+#define ITEM_VAL1 1
+#define ITEM_VAL2 2
+#define ITEM_REFS 3
+
+@int new_item(int type, int val1, int val2)
+	@int new = ITEM_ALLOC();
+	new[ITEM_TYPE] = type;
+	new[ITEM_VAL1] = val1;
+	new[ITEM_VAL2] = val2;
+	new[ITEM_REFS] = 1; //has one reference to start
+end;
+
+void remove_item(@int item)
+
+
+	//decrements the reference counts of child items and dallocs them too
+	if (item[ITEM_REFS] ==0) then
+
+		//doubly linked items (ie val1 and val2 are pointers to items)
+		if (item[ITEM_TYPE] >= FL_TYPE_exp_list) then removed_double_list_item(item); return; endif;
+
+		//strings are singly linked
+
+		if (item[ITEM_TYPE] >= FL_TYPE_str ) then remove_single_list_item(item); return; endif;
+
+		// Terminal items - no pointers to other items, 
+		ITEM_DALLOC(item);
+	endif;
+end;
+
+void remove_double_list_item(@int item)
+	if (item[ITEM_VAL2]) then
+		@int child = item[ITEM_VAL1];
+		child[ITEM_REFS] -= 1;
+		remove_item(child);  //only removes if the child's refs go to 0
+		child = item[ITEM_VAL2];
+		child[ITEM_REFS] -= 1;
+		remove_item(child);
+	endif;
+end;
+
+void remove_single_list_item(@int item)
+	if (item[ITEM_VAL2]) then
+		@int child = item[ITEM_VAL2];
+		child[ITEM_REFS] -= 1;
+		remove_item(child);
+	endif;
+end;

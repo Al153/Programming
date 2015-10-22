@@ -1,0 +1,54 @@
+@int global_namespace;
+
+void run_interpreter(@int code_list)
+	global_namespace = create_namespace();
+	EVAL_EXPR(code_list,global_namespace);
+end;
+
+void EVAL_EXPR(@int expr_tree, @int local_namespace)
+
+	//evals an expression tree
+	while (expr_tree) do
+		//loops around evaluating an instruction at a time
+		@int atom = expr_tree[ITEM_VAL1];
+
+		//picks right instruction to do....
+
+
+		if (instruction is eval from stack) then
+			EVAL_EXPR(exp_pop(),local_namespace);
+		endif;
+
+		if (instruction is call function from stack) then
+			CALL_FUN(exp_pop());
+		endif;
+
+		if (instruction is to return)then
+			return;
+		endif;
+
+		expr_tree = expr_tree[ITEM_VAL2];
+	loop;
+end;
+
+
+void CALL_FUN(@int function_pointer)
+	/////////////////////////
+	// do type check 	   //
+	/////////////////////////
+	/////////////////////////
+	//do pattern matching  //
+	/////////////////////////
+	@int expression;
+	///////////////////////////////////
+	// create namespace from pattern //
+	///////////////////////////////////
+
+	@int namespace = create_namespace();
+
+	EVAL_EXPR(expression,namespace);
+
+	
+end;
+
+
