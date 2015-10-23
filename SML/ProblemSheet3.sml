@@ -145,9 +145,8 @@ val b = Lf : Tree
 
 	(*'a fArray -> 'a' fArray*)
 	fun remove Lf = raise EmptyArray | (*Can't remove from an empty array*)
-		remove (Br(x,Lf,Lf))  = Lf | 		(*Removing from an array of size one gives a leaf*)
-		remove (Br(x,Br(y,t11,t12),t2))  = Br(y,t2,remove (Br(y,t11,t12)));  (*Complex recursive step*)
-		(*
+		remove (Br(x,t1,Lf))  = t1 | 		(*Removing from an array of size one gives a leaf*)
+		remove (Br(x,Br(y,t11,t12),t2))  = Br(y,t2,remove (Br(y,t11,t12)));  (*Complex recursive step*)		(*
 		All of the nodes on the right hand side have odd numbered indices eg bbbbbb1 - in binary.
 		To subtract one from these we just change the LSB to zero (bbbbbb0) , ie move the entire
 		right hand branch of the tree to the left hand side.
