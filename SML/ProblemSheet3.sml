@@ -7,10 +7,10 @@ Date/time of supervision: Wednesday 4th Nov, 1900-20:00
 
 (* ____________________ Exercise 2 ____________________ *)
 	datatype Tree = 
-		Lf | Br of ( int * string ) * Tree * Tree;
+		Lf | Br of ( string * int ) * Tree * Tree;
 	
-	(*Tree * int * string -> tree*)
-	fun update(Lf,b,y:string) = Br((b,y),Lf,Lf) |
+	(*Tree * string * int -> tree*)
+	fun update(Lf,b:string,y) = Br((b,y),Lf,Lf) |
 		update(Br((a,x),t1,t2),b,y) =
 		if (b<a) then (*Update on left hand child*)
 			Br((a,x),update(t1,b,y),t2)
@@ -20,9 +20,9 @@ Date/time of supervision: Wednesday 4th Nov, 1900-20:00
 			Br((b,y),t1,t2)
 	;
 	
-	exception Missing of int;
+	exception Missing of string;
 	
-	(*Tree * int -> string *)
+	(*Tree * string -> int *)
 	fun lookup (Br((a,x),t1,t2),b) = 
 		if b<a then (*Search left hand child*)
 			lookup(t1,b)
@@ -32,7 +32,7 @@ Date/time of supervision: Wednesday 4th Nov, 1900-20:00
 	
 		| lookup(Lf,b) = raise Missing b;
 	
-	exception CouldNotRemove of int;
+	exception CouldNotRemove of string;
 	
 	(*Auxilary function to merge two trees into one*)
 	(*Tree * Tree -> Tree*)
@@ -46,7 +46,7 @@ Date/time of supervision: Wednesday 4th Nov, 1900-20:00
 		;
 	
 	(*Tree * int -> Tree*)
-	fun remove(Lf,b:int)  = raise CouldNotRemove b |
+	fun remove(Lf,b:string)  = raise CouldNotRemove b |
 		remove(Br((a,x),t1,t2),b) =
 			if b<a then (*try to remove on left hand child*)
 				Br((a,x),remove(t1,b),t2)
@@ -62,50 +62,52 @@ Date/time of supervision: Wednesday 4th Nov, 1900-20:00
 	*)
 	
 	(*#
-	Examples
-	- val a = Lf;
-	val a = Lf : Tree
-	- a = update(a,8,"steph");
-	val it = false : bool
-	- val a = update(a,8,"steph");
-	val a = Br ((8,"steph"),Lf,Lf) : Tree
-	- val a = update(update(a,10,"sophie"),6,"tom");
-	val a = Br ((8,"steph"),Br ((#,#),Lf,Lf),Br ((#,#),Lf,Lf)) : Tree
-	- val a = update(update(a,11,"marge"),9,"beth");
-	val a = Br ((8,"steph"),Br ((#,#),Lf,Lf),Br ((#,#),Br #,Br #)) : Tree
-	- val a = update(update(a,1,"al"),7,"ciaran");
-	val a = Br ((8,"steph"),Br ((#,#),Br #,Br #),Br ((#,#),Br #,Br #)) : Tree
-	- lookup(a,9);
-	val it = "beth" : string
-	- lookup(a,10);
-	val it = "sophie" : string
-	- lookup(a,1);
-	val it = "al" : string
-	- lookup(a,2);
-	
-	uncaught exception Missing
-  	raised at: stdIn:75.25-75.34
-	
-	- val b = remove(a,8);
-	val b = Br ((6,"tom"),Br ((#,#),Lf,Lf),Br ((#,#),Lf,Br #)) : Tree
-	- val b = remove(b,10);
-	val b = Br ((6,"tom"),Br ((#,#),Lf,Lf),Br ((#,#),Lf,Br #)) : Tree
-	- lookup(b,9);
-	val it = "beth" : string
-	- lookup(b,7);
-	val it = "ciaran" : string
-	- val b = remove(remove(b,7),6);
-	val b = Br ((1,"al"),Lf,Br ((#,#),Lf,Br #)) : Tree
-	- val b = remove(b,1);
-	val b = Br ((9,"beth"),Lf,Br ((#,#),Lf,Lf)) : Tree
-	- val b = remove(b,9);
-	val b = Br ((11,"marge"),Lf,Lf) : Tree
-	- val b = remove(b,12);
-	
-	uncaught exception CouldNotRemove
-  	raised at: stdIn:90.31-90.47
-	- val b = remove(b,11);
-	val b = Lf : Tree
+- val a = Lf;
+val a = Lf : Tree
+- val a = update(a,"steph",8);
+val a = Br (("steph",8),Lf,Lf) : Tree
+- val a = update(update(a,"sophie",10),"tom",6);
+val a = Br (("steph",8),Br ((#,#),Lf,Lf),Br ((#,#),Lf,Lf)) : Tree
+- val a = update(update(a,"George",9),"beth",3);
+val a = Br (("steph",8),Br ((#,#),Br #,Lf),Br ((#,#),Lf,Lf)) : Tree
+- val a = update(update(a,"Al",1),"Jim",5);
+val a = Br (("steph",8),Br ((#,#),Br #,Lf),Br ((#,#),Lf,Lf)) : Tree
+- lookup(a,"steph");
+val it = 8 : int
+- lookup(a,"al");
+
+uncaught exception Missing
+  raised at: stdIn:218.26-218.35
+- lookup(a,"Al");
+val it = 1 : int
+- lookup(a,"George");
+val it = 9 : int
+-
+-
+- val b = remove(a,"steph");
+val b = Br (("sophie",10),Br ((#,#),Br #,Br #),Br ((#,#),Lf,Lf)) : Tree
+- val b = remove(a,"tom");
+val b = Br (("steph",8),Br ((#,#),Br #,Lf),Lf) : Tree
+- lookup(b,"Jim");
+val it = 5 : int
+- val b = remove(b,"steph")
+= ;
+val b = Br (("sophie",10),Br ((#,#),Br #,Br #),Lf) : Tree
+- val b = remove(b,"sophie")
+= ;
+val b = Br (("George",9),Br ((#,#),Lf,Lf),Br ((#,#),Br #,Lf)) : Tree
+- val b = remove(b,"Jim");
+val b = Br (("George",9),Br ((#,#),Lf,Lf),Br ((#,#),Lf,Lf)) : Tree
+- val b = remove(b,"beth");
+val b = Br (("George",9),Br ((#,#),Lf,Lf),Lf) : Tree
+- val b = remove(b,"George");
+val b = Br (("Al",1),Lf,Lf) : Tree
+- val b = remove(b,"George");
+
+uncaught exception CouldNotRemove
+  raised at: stdIn:234.35-234.51
+- val b = remove(b,"Al");
+val b = Lf : Tree
 	
 	
 	

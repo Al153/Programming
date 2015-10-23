@@ -195,7 +195,7 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 		myappend (Cons(x,xs),ys) = Cons(x,myappend(xs,ys));
 
 
-	fun myrevi(Nil,ys) = ys | (*Iterative witha wrapper*)
+	fun myrevi(Nil,ys) = ys | (*Iterative with a wrapper*)
 		myrevi(Cons(x,xs),ys) = myrevi(xs,Cons(x,ys));
 
 	fun myrev(xs) = myrevi(xs,Nil);
@@ -221,6 +221,8 @@ Date/time of supervision: Wednesday 28th October, 19: 00-20:00
 		names(Not(b)) = names b |
 		names(And(a,b)) = names(a) @ names(b) |
 		names(Or(a,b)) = names(a) @ names(b);
+
+
 
 
 	(*Functions to deal with merging distinct elements *)
