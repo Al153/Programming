@@ -1,4 +1,4 @@
-datatype 'a Tree = Lf | Br of 'a * 'a Tree * 'a Tree;
+datatype 'a tree = Lf | Br of 'a * 'a tree * 'a tree;
 
 fun insert (a:string, Lf) = Br(a,Lf,Lf) |
 	insert (a,(Br(b,t1,t2))) =	if a=b then Br(b,t1,t2) else

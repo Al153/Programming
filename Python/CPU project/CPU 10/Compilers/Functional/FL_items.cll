@@ -42,14 +42,14 @@
 	new[ITEM_TYPE] = type;
 	new[ITEM_VAL1] = val1;
 	new[ITEM_VAL2] = val2;
-	new[ITEM_REFS] = 1; //has one reference to start
+	new[ITEM_REFS] = 0; //has no reference to start
 end;
 
-void remove_item(@int item)
+void remove_reference(@int item)
 
-
+	item[ITEM_REFS] -= 1;
 	//decrements the reference counts of child items and dallocs them too
-	if (item[ITEM_REFS] ==0) then
+	if (item[ITEM_REFS] == 0)or(item[ITEM_REFS] = 0xffffffff) then
 
 		//doubly linked items (ie val1 and val2 are pointers to items)
 		if (item[ITEM_TYPE] >= FL_TYPE_exp_list) then removed_double_list_item(item); return; endif;
@@ -66,18 +66,15 @@ end;
 void remove_double_list_item(@int item)
 	if (item[ITEM_VAL2]) then
 		@int child = item[ITEM_VAL1];
-		child[ITEM_REFS] -= 1;
-		remove_item(child);  //only removes if the child's refs go to 0
+		remove_reference(child);  //only removes if the child's refs go to 0
 		child = item[ITEM_VAL2];
-		child[ITEM_REFS] -= 1;
-		remove_item(child);
+		remove_reference(child);
 	endif;
 end;
 
 void remove_single_list_item(@int item)
 	if (item[ITEM_VAL2]) then
 		@int child = item[ITEM_VAL2];
-		child[ITEM_REFS] -= 1;
-		remove_item(child);
+		remove_reference(child); //only removes if the child's refs go to 0
 	endif;
 end;

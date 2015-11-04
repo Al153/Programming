@@ -12,6 +12,7 @@ void exp_push(@int item)
 		FL_RAISE("STACK","EXPRESSION STACK OVERFLOWED");
 	endif;
 	FL_EXP_STACK[EXP_STACK_POINTER] = item;
+	item[ITEM_REFS]  += 1;  //item gains a reference for being on the stack
 	EXP_STACK_POINTER += 1;
 end;
 

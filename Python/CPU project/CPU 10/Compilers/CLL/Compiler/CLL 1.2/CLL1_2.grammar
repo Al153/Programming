@@ -25,7 +25,7 @@
 <term> ::= <term> <mulop> <factor> | <factor>
 <factor> ::= <const> | <variable> | <fun_call> | "(" <expr> ")" | <type_cast>
 
-<ternary_op> ::= <expr> "if" <for_bool_expr> "else" <expr>
+<ternary_op> ::= <expr> "if" <for_bool_expr> "else" <expr> 
 <modify_op> ::=  <addop> | <mulop>
 
 

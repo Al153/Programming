@@ -18,5 +18,262 @@ void OP_LIST_APPEND()
 	exp_push(new_list);
 end;
 
+
+
+
 void OP_INT_ADD()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = I1[ITEM_VAL1] + I2[ITEM_VAL1];
+
+		exp_push(new_item(FL_TYPE_int,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_ADD"); //may make more sophisticated later
+
+	endif;
 end;   
+
+void OP_INT_SUB()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = I2[ITEM_VAL1] - I1[ITEM_VAL1];
+
+		exp_push(new_item(FL_TYPE_int,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_SUB"); //may make more sophisticated later
+
+	endif;
+end;   
+
+void OP_INT_MUL()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = I1[ITEM_VAL1] * I2[ITEM_VAL1];
+
+		exp_push(new_item(FL_TYPE_int,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_MUL"); //may make more sophisticated later
+
+	endif;
+end;   
+
+void OP_INT_DIV()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		if (I1[ITEM_VAL1] == 0) then raise("Arithmetic Error","Attempted to divide by 0"); endif;
+		int result = I2[ITEM_VAL1] / I1[ITEM_VAL1];
+
+		exp_push(new_item(FL_TYPE_int,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_DIV"); //may make more sophisticated later
+
+	endif;
+end;   
+
+void OP_INT_MOD()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		if (I1[ITEM_VAL1] == 0) then raise("Arithmetic Error","Attempted to divide by 0"); endif;
+		int result = I2[ITEM_VAL1] % I1[ITEM_VAL1];
+
+		exp_push(new_item(FL_TYPE_int,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_MOD"); //may make more sophisticated later
+
+	endif;
+end;   
+
+void OP_INT_AND()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = I2[ITEM_VAL1] & I1[ITEM_VAL1];
+
+		exp_push(new_item(FL_TYPE_int,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_AND"); //may make more sophisticated later
+
+	endif;
+end;   
+
+void OP_INT_OR()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = I2[ITEM_VAL1] | I1[ITEM_VAL1];
+
+		exp_push(new_item(FL_TYPE_int,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_OR"); //may make more sophisticated later
+
+	endif;
+end;   
+
+void OP_INT_XOR()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = I2[ITEM_VAL1] ^ I1[ITEM_VAL1];
+
+		exp_push(new_item(FL_TYPE_int,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_XOR"); //may make more sophisticated later
+
+	endif;
+end;  
+
+void OP_INT_NEG()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int) then   // check type
+		int result = - I1[ITEM_VAL1];
+
+		exp_push(new_item(FL_TYPE_int,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+	else
+		raise("Type Error","Operand does dot match the type of INT_NEG"); //may make more sophisticated later
+	endif;
+end;   
+
+void OP_INT_NOT()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int) then   // check type
+		int result = ~I1[ITEM_VAL1];
+
+		exp_push(new_item(FL_TYPE_int,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+	else
+		raise("Type Error","Operand does dot match the type of INT_NOT"); //may make more sophisticated later
+	endif;
+end;   
+
+void OP_INT_GR()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = 1 if (I2[ITEM_VAL1] > I1[ITEM_VAL1]) else 0;
+
+		exp_push(new_item(FL_TYPE_BOOL,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_XOR"); //may make more sophisticated later
+
+	endif;
+end;  
+
+void OP_INT_GRE()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = 1 if (I2[ITEM_VAL1] >= I1[ITEM_VAL1]) else 0;
+
+		exp_push(new_item(FL_TYPE_BOOL,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_XOR"); //may make more sophisticated later
+
+	endif;
+end;  
+
+
+void OP_INT_LS()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = 1 if (I2[ITEM_VAL1] < I1[ITEM_VAL1]) else 0;
+
+		exp_push(new_item(FL_TYPE_BOOL,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_XOR"); //may make more sophisticated later
+
+	endif;
+end;  
+
+void OP_INT_LSE()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = 1 if (I2[ITEM_VAL1] <= I1[ITEM_VAL1]) else 0;
+
+		exp_push(new_item(FL_TYPE_BOOL,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_XOR"); //may make more sophisticated later
+
+	endif;
+end;  
+
+void OP_INT_EQ()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = 1 if (I2[ITEM_VAL1] == I1[ITEM_VAL1]) else 0;
+
+		exp_push(new_item(FL_TYPE_BOOL,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_XOR"); //may make more sophisticated later
+
+	endif;
+end;  
+
+void OP_INT_NEQ()
+	@int I1 = exp_pop();
+	@int I2 = exp_pop();
+	if ((I1[ITEM_TYPE] == FL_TYPE_int)and(I2[ITEM_TYPE] = FL_TYPE_int)) then   // check type
+		int result = 1 if (I2[ITEM_VAL1] != I1[ITEM_VAL1]) else 0;
+
+		exp_push(new_item(FL_TYPE_BOOL,result,0));
+		remove_reference(new);
+		remove_reference(I1);
+		remove_reference(I2);
+	else
+		raise("Type Error","Operands do not match the type of operator INT_XOR"); //may make more sophisticated later
+
+	endif;
+end;  
+
+ 

@@ -9,7 +9,7 @@ Date/time of supervision: Wednesday 4th Nov, 1900-20:00
 	datatype Tree = 
 		Lf | Br of ( string * int ) * Tree * Tree;
 	
-	(*Tree * string * int -> tree*)
+	(* (string * int) Tree * string * int -> tree*)
 	fun update(Lf,b:string,y) = Br((b,y),Lf,Lf) |
 		update(Br((a,x),t1,t2),b,y) =
 		if (b<a) then (*Update on left hand child*)
@@ -22,7 +22,7 @@ Date/time of supervision: Wednesday 4th Nov, 1900-20:00
 	
 	exception Missing of string;
 	
-	(*Tree * string -> int *)
+	(* (string * int) Tree * string -> int *)
 	fun lookup (Br((a,x),t1,t2),b) = 
 		if b<a then (*Search left hand child*)
 			lookup(t1,b)
@@ -35,7 +35,7 @@ Date/time of supervision: Wednesday 4th Nov, 1900-20:00
 	exception CouldNotRemove of string;
 	
 	(*Auxilary function to merge two trees into one*)
-	(*Tree * Tree -> Tree*)
+	(* (string * int) Tree * Tree -> Tree*)
 	fun mergeTrees(Lf,b) = b |
 		mergeTrees(a,Lf) = a |
 		mergeTrees(
@@ -45,7 +45,7 @@ Date/time of supervision: Wednesday 4th Nov, 1900-20:00
 				))
 		;
 	
-	(*Tree * int -> Tree*)
+	(* (string * int) Tree * int -> Tree*)
 	fun remove(Lf,b:string)  = raise CouldNotRemove b |
 		remove(Br((a,x),t1,t2),b) =
 			if b<a then (*try to remove on left hand child*)
@@ -55,6 +55,8 @@ Date/time of supervision: Wednesday 4th Nov, 1900-20:00
 			else (*a=b*)
 				mergeTrees(t1,t2) (*Cuts out br*)
 	;
+
+
 	
 	(*
 	This has a problem in that real use it has a tendency to produce unbalanced trees as the left hand child is always promoted.
@@ -114,6 +116,11 @@ val b = Lf : Tree
 
 
 *)
+
+
+	(*Function for testing*)
+	fun list_to_tree [] T = T |
+		list_to_tree ((b,y)::xs) T = list_to_tree xs (update(T,b,y));
 (* ____________________ Exercise 3 ____________________ *)
 
 	(*Auxilary functions, defining the datatype*)
@@ -292,11 +299,11 @@ val b = Lf : Tree
 
 (* ____________________ Exercise 8 ____________________ *)
 	datatype 'a LazyTree = Null | Br of 'a * (unit -> 'a LazyTree) * (unit -> 'a LazyTree);
-
+	fun lazyAppend Nil yf = yf | 															 (*Creates a lazy list from two other lazy lists, weaves the lists together*)	
+		lazyAppend (Cons(x,xf)) yf = Cons(x,fn() => (lazyAppend (yf) (xf()))) ;
 	fun labels Null = Nil | 
 		labels (Br(x,t1,t2)) = Cons(x,fn() => (lazyAppend (labels (t1())) (labels (t2())) )) (*Preorder tree traversal*)
-	and lazyAppend Nil yf = yf | 															 (*Creates a lazy list from two other lazy lists*)	
-		lazyAppend (Cons(x,xf)) yf = Cons(x,fn() => (lazyAppend (xf()) (yf))) ;
+
 
 	(*Navigating the tree*)
 
