@@ -1,3 +1,7 @@
+open Math; (*Uses Math's functions for evaluation*)
+
+(*Expr datatype*)
+
 datatype Expr =
 	cnst of real |
 	sum of Expr * Expr |
@@ -10,6 +14,8 @@ datatype Expr =
 	eExp | eLn |
 	polynomial of int;
 
+
+(* Differentiates an expression *)
 fun diff (cnst _) = cnst 0.0 |
 	diff (sum(f,g)) = sum(diff f, diff g) |
 	diff (prod(f,g)) = sum(prod(diff f,g),prod(f,diff g)) |
@@ -26,6 +32,22 @@ fun diff (cnst _) = cnst 0.0 |
 
 fun realEq (a,b) = abs(a-b) < 0.0001;
 
+(*Evaluates an expression at a point*)
+fun eval (cnst n) x = n |  						(*Evals an eExpression at zero*)
+	eval eSin x = sin x |
+	eval eCos x = cos x |
+	eval eTan x = tan x |
+	eval eExp x = exp x |
+	eval eLn x = ln x |
+	eval (sum(a,b)) x = (eval a x) + (eval b x) |
+	eval (sub(a,b)) x = (eval a x) - (eval b x) |
+	eval (prod(a,b)) x = (eval a x) * (eval b x) |
+	eval (quotient(a,b)) x = (eval a x) / (eval b x) |
+	eval (neg a) x = ~(eval a x) |
+	eval (chain(f,g)) x = (eval f) (eval g x) |
+	eval (polynomial n) x = pow(x, Real.fromInt n);
+
+(*Tidies up expression by removing zero products, terms etc*)
 fun clean eSin = eSin | 
 	clean eCos = eCos | 
 	clean eTan = eTan | 
@@ -46,14 +68,15 @@ fun clean eSin = eSin |
 	clean (neg (neg f)) = clean f | 
 	clean (neg f) = neg (clean f) | 
 	clean (quotient(f, g)) = quotient(clean f, clean g) |
-	clean (chain(f,g)) = chain(clean f, clean g)|
+	clean (chain(f,cnst n)) = cnst (eval f n) | clean (chain(f,g)) = chain(clean f, clean g)|
 	clean (cnst n) = cnst n;
 
-fun pr x eSin = "eSin("^x^")" |
-	pr x eCos = "eCos("^x^")" |
-	pr x eTan = "eTan("^x^")" |
-	pr x eExp = "eExp("^x^")" |
-	pr x eLn  = "eLn("^x^")" |
+(*Prints an expression in x *)
+fun pr x eSin = "Sin("^x^")" |
+	pr x eCos = "Cos("^x^")" |
+	pr x eTan = "Tan("^x^")" |
+	pr x eExp = "Exp("^x^")" |
+	pr x eLn  = "Ln("^x^")" |
 	pr x (cnst n) = Real.toString n |
 	pr x (sum(f,g)) = "("^(pr x f)^")+("^(pr x g)^")" |
 	pr x (sub(f,g)) = "("^(pr x f)^")-("^(pr x g)^")" |
@@ -68,24 +91,27 @@ fun pr x eSin = "eSin("^x^")" |
 
 
 
-open Math;
 
-fun eval (cnst n) x = n |  						(*Evals an eExpression at zero*)
-	eval eSin x = sin x |
-	eval eCos x = cos x |
-	eval eTan x = tan x |
-	eval eExp x = exp x |
-	eval eLn x = ln x |
-	eval (sum(a,b)) x = (eval a x) + (eval b x) |
-	eval (sub(a,b)) x = (eval a x) - (eval b x) |
-	eval (prod(a,b)) x = (eval a x) * (eval b x) |
-	eval (quotient(a,b)) x = (eval a x) / (eval b x) |
-	eval (neg a) x = ~(eval a x) |
-	eval (chain(f,g)) x = (eval f) (eval g x) |
-	eval (polynomial n) x = pow(x, Real.fromInt n);
 
+
+
+
+(*Datatype and manipulation of the series data type (lazy list) *)
 datatype series = cons of Expr * (unit -> series);
-fun maclaurinSeriesIter expr n d = cons(prod(poly(n),quotient(cnst(eval expr 0.0),cnst(d*(Real.fromInt n)))), fun () => (maclaurinSeriesIter (diff expr), n+1, d*(Real.fromInt n)));
+fun head (cons(x,xf)) = x;
+fun tail (cons(x,xf)) = xf();
 
+(*Maclaurin series generating code code*)
+fun maclaurinSeriesIter expr n d = cons(prod(polynomial(n),quotient(cnst(eval expr 0.0),cnst( if n = 0 then 1.0 else d*(Real.fromInt n)))), (fn () => (maclaurinSeriesIter (diff expr) (n+1) (if n = 0 then 1.0 else d*(Real.fromInt n)))));
+fun maclaurinSeries expr = maclaurinSeriesIter expr 0 1.0;
+
+	(*Reduces a series to just its non zero terms*)
+fun reduceSeries (cons(prod(a,quotient(cnst n, b)),xf)) = if realEq(n,0.0) then reduceSeries (xf()) else cons(prod(a,quotient(cnst n, b)),(fn () => (reduceSeries (xf()))));
+
+fun printMac 0 _ = "" | (*Prints n terms of a maclaurin series*)
+	printMac n (cons(x,xf)) = (pr "x" x) ^ " + " ^ (printMac (n-1) (xf ()));
 
 val a = (diff eTan);
+
+print (printMac 5 (reduceSeries (maclaurinSeries eSin))); (*Prints the first five terms of the series (maclaurin series of sin x, reduced - only non zero terms)*)
+print (printMac 5 (reduceSeries (maclaurinSeries (chain(eLn,sum(cnst 1.0,polynomial 1)))))); (*prints out the series of ln(1+x)   *)
