@@ -1,12 +1,15 @@
-package uk.ac.cam.at736.oopjava.tick4;
+package uk.ac.cam.at736.oopjava.tick5;
 import java.util.*;
 import java.io.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import uk.ac.cam.acr31.life.World;
 import uk.ac.cam.acr31.life.WorldViewer;
+import java.awt.event.*;
 
-public class ControlPanel extends JPanel {
+public abstract class ControlPanel extends JPanel {
 	private JSlider zoomSlider;
 	private JSlider stepSlider;
 	private JSlider speedSlider;
@@ -28,6 +31,9 @@ public class ControlPanel extends JPanel {
 		b.add(sButton);
 		return sButton;
 	}
+	protected abstract void onSpeedChange(int value);
+	protected abstract void onStepChange(int value);
+
 	public ControlPanel() {
 		super();
 		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
@@ -36,6 +42,14 @@ public class ControlPanel extends JPanel {
 		stepSlider = createNewSlider(0,10,0,Strings.CONTROL_STEP);
 		add(Box.createVerticalStrut(10)); //add 10px of extra space
 		speedSlider = createNewSlider(0,100,0,Strings.CONTROL_SPEED);
+		speedSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if (!speedSlider.getValueIsAdjusting())
+					onSpeedChange(speedSlider.getValue());
+				if (!stepSlider.getValueIsAdjusting())
+					onStepChange(stepSlider.getValue());
+			}
+		});
 		add(Box.createVerticalStrut(10)); //add 10px of extra space	
 		Box worldPanel = Box.createHorizontalBox();
 		add(worldPanel);
