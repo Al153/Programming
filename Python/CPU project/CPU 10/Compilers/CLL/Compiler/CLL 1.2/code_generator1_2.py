@@ -130,7 +130,7 @@ class code_generator:
 		self.global_variable_type_dict = global_variable_type_dict
 #		print self.global_variable_address_dict
 		self.function_name = function_object.name
-		self.variable_address_dict,self.stack_frame_size = self.get_var_addresses(function_object.variable_sizes)
+		self.variable_address_dict,self.variable_offsets,self.stack_frame_size = self.get_var_addresses(function_object.variable_sizes)
 		self.variable_types = function_object.variables
 		self.simplified_variable_types = {var_name:("char" if self.variable_types[var_name] == "char" else "int") for var_name in self.variable_types} #simplified types means @int and @chars are ints
 		self.input_variables = self.get_input_variables(function_object)
@@ -160,15 +160,23 @@ class code_generator:
 	#############################
 	#- fix global variable addressing - allow assembler to do heavy lifting DONE
 	
+	def generate_local_definitions(self):
+		return_string = "#__________ Defining offsets of local variables __________#\n"
+		for var in self.variable_address_dict:
+			return_string += "def "+ self.variable_address_dict[var] + " " + str(self.variable_offsets[var]) +"\n"
+			return_string += "def @"+ self.variable_address_dict[var] + " @" + str(self.variable_offsets[var]) +"\n"
+		return return_string + "\n#__________ End of local variable definitions __________#"
 
 	def get_var_addresses(self,var_sizes):
 		#generates a dictionary of the addresses of variables used b a function
 		address_dict = {}
+		variable_names = {}
 		current_address = 8 #2 ints are alreadying in stack frame: Return address, and previous top of stack
 		for var in var_sizes:
 			address_dict[var] = current_address
+			variable_names[var] = "Local."+var
 			current_address += var_sizes[var]
-		return address_dict,current_address #current address is stack frame size
+		return variable_names,address_dict,current_address #current address is stack frame size
 
 	def get_input_variables(self,function):
 		# extracts a list of the names of input variables from the function
@@ -197,7 +205,8 @@ class code_generator:
 			{
 			"function_name":self.function_name,
 			"new_length":str(stack_frame_size),
-			"get_parameters":code_to_get_parameters
+			"get_parameters":code_to_get_parameters,
+			"variable_offsets":self.generate_local_definitions()
 			})
 		assembly_code += self.generate_block_code(function_parse_tree)
 		return assembly_code
