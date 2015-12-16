@@ -1,14 +1,11 @@
 // __________________ ALU _____________________________
 
-
 void ADD(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-//ADD
 	unsigned int flags = 0;
 	unsigned int result = r1_value + r2_value;
 	if (result < r1_value){	//if there is a carry
 		flags = 16;
 	} else flags = 0;
-
 	to_return[0] = result;
 	to_return[2] = flags;
 }
@@ -56,8 +53,7 @@ void MOD(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	}
 	else {
 		result = r1_value % r2_value;
-		}
-
+	}
 	to_return[0] = result;
 	to_return[2] = flags;
 }
@@ -70,14 +66,12 @@ void AND(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 
 void OR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	unsigned int result = r1_value | r2_value;
-
 	to_return[0] = result;
 	to_return[2] = 0;
 }
 
 void XOR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	unsigned int result = r1_value ^ r2_value;
-
 	to_return[0] = result;
 	to_return[2] = 0;
 }
@@ -88,37 +82,30 @@ void NOT(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 }
 
 void NAND(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	
 	unsigned int result = (r1_value & r2_value) ^ 4294967295;
-
 	to_return[0] = result;
 	to_return[2] = 0;
 }
 
 void NOR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-
 	unsigned int result = (r1_value | r2_value) ^ 4294967295;
-
 	to_return[0] = result;
 	to_return[2] = 0;
 }
 
 void XNOR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	unsigned int result = (r1_value ^ r2_value) ^ 4294967295;
-
 	to_return[0] = result;
 	to_return[2] = 0;
 }
 
 void SHL(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-		unsigned int result;
-		if (r2_value < 32){
-			result = (r1_value << r2_value)&4294967295;
-		} else {
-			result = 0;
-		}
-
-
+	unsigned int result;
+	if (r2_value < 32){
+		result = (r1_value << r2_value)&4294967295;
+	} else {
+		result = 0;
+	}
 	to_return[0] = result;
 	to_return[2] = 0;
 }
@@ -130,7 +117,6 @@ void SHR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	} else {
 		result = 0;
 	}
-
 	to_return[0] = result;
 	to_return[2] = 0;
 }

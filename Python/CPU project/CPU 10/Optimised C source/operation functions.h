@@ -1,3 +1,4 @@
+// function for every opcode in the CPU's instruction set
 
 int Halt(unsigned char opcode, unsigned char reg1, unsigned char reg2, unsigned int *registers, unsigned char *MEMORY){
 	return 1;   		//halt
@@ -143,10 +144,6 @@ int ALU_op_addr(unsigned char opcode, unsigned char reg1, unsigned char reg2, un
 }
 
 int (*CPU_OPS[50])(unsigned char, unsigned char, unsigned char, unsigned int *, unsigned char *) = {
-	
-
-
-
 	&Halt,
 	&Pass,
 	&Move,
@@ -200,14 +197,14 @@ int (*CPU_OPS[50])(unsigned char, unsigned char, unsigned char, unsigned int *, 
 };
 
 unsigned int execute(unsigned char instruction, unsigned char reg1, unsigned char reg2, unsigned char conditional, unsigned int *registers, unsigned char *MEMORY){
-	reg1 = reg1&15;
+	//executes a single instruction
+	reg1 = reg1&15; //gets register addresses
 	reg2 = reg2&15;
-	int will_exe = get_conditional(registers,conditional);
-	//printf("\nwill execute? {%u}\n",will_exe);
+	int will_exe = get_conditional(registers,conditional); //tests the conditional byte of the instruction
 	if (will_exe){
 		if (instruction<50){
 			return CPU_OPS[instruction](instruction,reg1,reg2,registers,MEMORY);
 		}
 		else return 0;
-	} else return 0;
+	} else return 0; //if does not execute instruction then does nothing
 }

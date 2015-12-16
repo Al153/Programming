@@ -1,0 +1,8 @@
+gcc -O3 "Optimised C source\CPU.c" -o CEmuTest.exe    (for testing)
+gcc -O3 "Optimised C source\CPU.c" -o CEmu.exe 		(for real)
+
+to do profiling:
+
+gcc -O3 -pg "Optimised C source\CPU.c" -o CEmuTest.exe
+ then run the emulator
+gprof CEmuTest.exe gmon.out > analysis.txt

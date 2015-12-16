@@ -1,4 +1,4 @@
-// _______________________ execution instructions ________________________
+// _______________________ execution of instructions ________________________
 
 unsigned int fetch_instruction(unsigned int *registers, unsigned char *MEMORY){ //fetches next instruction
 	unsigned int instruction; 				
@@ -20,34 +20,29 @@ unsigned char get_conditional(unsigned int *registers,unsigned char conditional)
 			if (!((1<<(31-(conditional & 31))) & registers[5])){ //if condition true
 				if (((conditional&31) == 24) || ((conditional&31) == 25) || ((conditional&31) == 26)){
 					registers[5] &= 4294967071; //reset all three of the  ><= flags
-				} 
-				else{
+				} else {
 					registers[5] &=  (1<<(31 - (conditional&31)))^4294967295;   //resets just the tested flag
 				}
 				return 0;
 
-			}
-			else{
+			} else {
 				if  (((conditional&31) == 24) || ((conditional&31) == 25) || ((conditional&31) == 26)){
 					registers[5] &= 4294967071;					//#reset all three of the  ><= flags
 				}
-				else{
+				else {
 					registers[5] &= (1<<(31-(conditional&31)))^4294967295;
 				}
 				return 1;
 
 			}
-		}
-		else{ //if conditional based on a register
+		} else{ //if conditional based on a register
 			if  (registers[conditional&15]){
 				return 1;
-			}
-			else{
+			} else {
 				return 0;
 			}
 		}
-	}
-	else {
+	} else {
 		return 1;
 	}
 }
@@ -55,20 +50,16 @@ unsigned char get_conditional(unsigned int *registers,unsigned char conditional)
 unsigned int do_ALU_op(unsigned int value1,unsigned int value2,unsigned char opcode,unsigned int *registers){
 	unsigned int ALU_return_array[3];
 	opcode &= 15;
-
 	if (opcode == 14){ //add with carry
 		if (!(registers[5]&16)){ //if no carry flag do a normal addition
 			opcode = 0;
-		}
-		else {
+		} else {
 			registers[5] &= 4294967279;  //reset carry flag
 		}
-	}
-	else if(opcode == 15){ //sub with borrow
+	} else if(opcode == 15){ //sub with borrow
 		if (!(registers[5] & 8)){  //if no borrow flag then do a normal subtract
 			opcode= 1;
-		}
-		else {
+		} else {
 			registers[5] &= 4294967287; //reset carry flag
 		}
 	}
@@ -76,14 +67,6 @@ unsigned int do_ALU_op(unsigned int value1,unsigned int value2,unsigned char opc
 	if (opcode == 2){  //if mmultiplication, ACC register = top 32bits of result
 		registers[2] = ALU_return_array[1]; 
 	}
-
 	registers[5] |= ALU_return_array[2]; //rupdate flags
 	return ALU_return_array[0]; //return value of result
-
-
-
 }
-
-
-#include "operation functions.h"
-

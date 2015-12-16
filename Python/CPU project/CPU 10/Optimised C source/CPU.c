@@ -17,46 +17,28 @@
 #include "ALU.h"
 #include "io.h"
 #include "execution.h"
+#include "operation functions.h"
 
 
 //C implementation of my CPU 10
 
 int step(unsigned int *registers, unsigned char *MEMORY){   //returns halt, carries out game logic
-	register unsigned int instruction = 0;
-
-	register unsigned char instr;  //instruction data
-	register unsigned char reg1;
-	register unsigned char reg2;
-	register unsigned char conditional;
-
-	instruction = fetch_instruction(registers,MEMORY);
-	//address = fetch_address(registers,MEMORY);
-	instr = (instruction&0xff000000)>>24;   //decoded[0];
-	reg1 =  ((instruction&0x000f0000)>>16); //decoded[1]&15;
-	reg2 =  ((instruction&0x00000f00)>>8);
-	conditional = instruction&0xff;
+	register unsigned int instruction = fetch_instruction(registers,MEMORY);
+	register unsigned char 	instr = (instruction&0xff000000)>>24;
+	register unsigned char 	reg1 =  ((instruction&0x000f0000)>>16); 
+	register unsigned char 	reg2 =  ((instruction&0x00000f00)>>8);
+	register unsigned char 	conditional = instruction&0xff;
 	return execute(instr,reg1,reg2,conditional,registers,MEMORY);   //returned value is 1 if needs to return, otherwise false
-
 }
 
 int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt? values, carries out logic
-	unsigned int instruction = 0;
-	unsigned int address = 0;
-
-	unsigned char instr;
-	unsigned char reg1;
-	unsigned char reg2;
-	unsigned char conditional;
-
-	instruction = fetch_instruction(registers,MEMORY);
-
-	instr = (instruction&0xff000000)>>24;   //decoded[0];
-	reg1 = ((instruction&0x000f0000)>>16); //decoded[1]&15;
-	reg2 = ((instruction&0x00000f00)>>8);
-	conditional = instruction&0xff;
+	unsigned int  	instruction = fetch_instruction(registers,MEMORY); 
+	unsigned char 	instr = (instruction&0xff000000)>>24;    
+	unsigned char 	reg1 = ((instruction&0x000f0000)>>16);  
+	unsigned char 	reg2 = ((instruction&0x00000f00)>>8); 
+	unsigned char 	conditional = instruction&0xff; 
 
 	printf("\n%u|  ",registers[4]-8);  //prints out runtime data
-
 	printf("%i   ", (int) instr);
 	printf("%i   ", (int) reg1);
 	printf("%i   ", (int) reg2);
@@ -75,7 +57,6 @@ void init_memory(unsigned char *MEMORY, char *name){
 	char state;   //uses a state machine to switch between address and data
 	unsigned int address;
 	unsigned char chr; 	//exctracted character
-	int i = 0;
 	FILE *fp = fopen(name, "rb");  //get file
 	if (fp == NULL){ 				//check valid file
 		printf("ERROR: Failed to open file \"%s\"\n",name);
@@ -85,47 +66,30 @@ void init_memory(unsigned char *MEMORY, char *name){
 	state = 0;
 	while (state != 6){   //parsing state machine, state of 6 ==> halt;
 		fread(&chr,1,1,fp);
-		//getchar();
-
 		if (state == 0){
-			//printf("%x\n",chr);
 			state = 1;
 			address = chr;
-		}
-		else if (state == 1){
-			//printf("%x\n",chr);
+		} else if (state == 1){
 			state = 2;
 			address = address << 8;
 			address = address + chr;
-		}
-		else if (state == 2){
-			//printf("%x\n",chr);
+		} else if (state == 2){
 			state = 3;
 			address = address << 8;
 			address = address + chr;
-		}
-		else if (state == 3){
-			//printf("%x\n",chr);
+		} else if (state == 3){
 			state = 4;
 			address = address << 8;
 			address = address + chr;
-
-			//printf("address = %u\n",address );
-		}
-		else if (state == 4){
-			//printf("chr = %x\n",chr );
+		} else if (state == 4){
 			state = 5;
 			store_byte_memory(address,chr,MEMORY);
-		}
-		else if (state == 5){ //sixth byte is 1 for an EOF or 0 for continue
-			//printf("hit state 5: %x\n",chr);
+		} else if (state == 5){ //sixth byte is 1 for an EOF or 0 for continue
 			if (chr == 1){
 				state = 6;
-			}
-			else if (chr == 0){
+			} else if (chr == 0){
 				state = 0;
-			}
-			else{
+			} else{
 				exit(1);
 			}
 		}
@@ -137,8 +101,6 @@ void dumpMemory(unsigned char *MEMORY){
 	int i;
 	for (i = 0; i < 32;i++){printf("%u\t", (unsigned int)MEMORY[i]);}
 }
-
-
 
 int main(int argc, char *argv[]){
 	static unsigned char MEMORY[MEMORY_SIZE] = {0}; 					//setting up memory and registers
@@ -156,7 +118,6 @@ int main(int argc, char *argv[]){
 
 	printf("initialising memory\n");
 	init_memory(MEMORY,argv[1]);
-	//dumpMemory(MEMORY);
 
 	if (argc < 3){
 
@@ -214,7 +175,7 @@ int main(int argc, char *argv[]){
 			}
 			gettimeofday(&end,NULL);	
 
-			seconds_elapsed = (end.tv_sec - begin.tv_sec); //(double) (end.tv_usec - begin.tv_usec)/1000000 + 
+			seconds_elapsed = (end.tv_sec - begin.tv_sec);
 			useconds_elapsed = end.tv_usec - begin.tv_usec;
 			time_elapsed = (double)seconds_elapsed + ((double)useconds_elapsed)/1000000;
 			instructions_per_second = count/time_elapsed; 
@@ -228,9 +189,3 @@ int main(int argc, char *argv[]){
 	}
 	return 0;
 }
-
-
-
-
-
-

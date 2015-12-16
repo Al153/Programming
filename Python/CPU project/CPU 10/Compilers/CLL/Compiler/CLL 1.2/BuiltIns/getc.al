@@ -1,5 +1,5 @@
 
-##################### GETC ###############################################
+##################### built in function getc ###############################################
 #returns a char
 In gp0 %function:getc #gets a char without waiting (state of keyboard)
 Store gp0 Expression_stack [gp7]

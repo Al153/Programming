@@ -1,5 +1,5 @@
 
-############################## GETW ################################
+############################## built in function getw ################################
 #returns a char
 In gp0 %function:getw 				#waits for a user to press a key
 Compare gp0 Zero

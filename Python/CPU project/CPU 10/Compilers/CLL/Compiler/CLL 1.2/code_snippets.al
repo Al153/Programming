@@ -8,7 +8,23 @@
 
 
 
-For detailed explanations of the run time see "code_snippets - commented.al"
+#For detailed explanations of the run time see "code_snippets - commented.al" - NO LONGER EXISTS??
+
+
+# Register usage:
+#	Jump 		- when a function has just been called, Jump contains the return address. this is unused for most of the execution
+#	stack_pointer - holds the Callstack pointer - points to the stack frame and is used to access local variables 
+#	gp0 		- primary expression register - used to hold first operand between operations, loading, storing and stack pushing and popping
+# 	gp1			- secondary expression register - used to hold first operand between operations, loading, storing and stack pushing and popping
+#	gp2 		- comparison register - loaded with default value; gp0 and gp1 are compared; if needed, gp2\'s value is changed; gp2 is moved to gp1
+#	gp3			- unused
+#	gp4			- unused
+#	gp5			- holds the previous expression stack pointer
+#	gp6			- index register - used to index addresses such as arrays, pointers, etc
+#	gp7 		- Expression_stack pointer - holds the address of the top of the expression stack
+
+# the Callstack extends downwards in memory addresses. When the stackframe is indexed with positive indices, that index extends back into the stack frame 
+
 << setup routines >>
 
 ############################################################################
@@ -318,7 +334,6 @@ Goto function:<Call_address> 												#CALLING <Call_address>
 
 
 																	Scope <function_name>
-def length gp4
 def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
@@ -328,7 +343,7 @@ SUB Stack_pointer @<new_length> 									#OVERHEAD FOR FUNCTION <function_name>
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
-Store previous_stack_ptr 4 [Stack_pointer]
+Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION <function_name>
 <get_parameters>
 << return routine >>
 <generate value to return>
