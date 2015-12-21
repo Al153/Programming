@@ -1,0 +1,226 @@
+#define WORDCALL 1
+#define PUSHLIT 2
+#define BRANCH 5
+#define PRIMITIVE 6
+
+#include primitives.cll
+
+
+/////////////////////////////////  Main bytecode interpeter //////////////////////////////////////
+char dontBreak = 1;
+void bytecode_interp(@int reference)
+	int currentFSP = ForthStackPointer;
+	dontBreak = char(1);
+	while((reference)and(dontBreak))do
+		int opType = reference[0];
+		if (opType == WORDCALL) then
+			@int new_reference = reference[1];
+			bytecode_interp(new_reference[2]); //reference points to the dictionary entry
+			reference = reference[2];
+		else if(opType == PUSHLIT) then
+			PushLit(reference[1]);
+			reference = reference[2];
+		else if (opType == BRANCH) then
+			int branchIfTrue = Pop();
+			reference = reference[1] if branchIfTrue else reference[2];
+		else if (opType == PRIMITIVE) then
+			executePrimitive(reference[1]);
+			 reference = reference[2];
+		else
+			printf("ERROR: unrecognised bytecode: "); print_i(opType);
+			dontBreak = char(0);
+
+		endif;
+		endif;
+		endif;
+		endif;
+		endif;
+		endif;
+	loop;
+	if (not(dontBreak)) then ForthStackPointer = currentFSP; endif; //if there is an error then roll back the FSP.
+end;
+
+/////////////////////////////// Stack tools for bytecode interpeter /////////////////////////////////
+#define FORTHSTACKSIZE 65536
+@int FORTHSTACKSIZE ForthStack;
+int ForthStackPointer = 0;
+
+
+
+void PushLit(int number)
+	ForthStack[ForthStackPointer] = number;
+	ForthStackPointer = ForthStackPointer + 1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack Overflow.\n");
+		dontBreak = char(0); //breaks to the REPL 
+	endif;
+end;
+
+
+void executePrimitive(int primitive_opcode)
+	//picks primitive to run and runs it
+
+	////////////////  PRIMITIVE OPCODES ///////////////////////////////////////
+	// @     00   	| +  08 	| ~  		10 | == 		18 | ISINT		20
+	// !     01 	| -  09 	| ~&        11 | VARIABLE 	19 | CONVERTINT 21
+	// .     02 	| *  0A 	| ~|  		12 | CONST   	1A | .BUF 		22
+	// DUP   03 	| /  0B 	| ~^ 	  	13 | TABLE      1B | .c 		23
+	// SWAP  04 	| %  0C 	| << 		14 | READ 		1C | PASS		24
+	// ROT   05 	| &  0D 	| >> 	    15 | EXEC 		1D |
+	// OVER  06 	| |  0E 	| < 		16 | INDICT		1E |
+	// DROP  07 	| ^  0F 	| >         17 | COMPILE	1F |
+	///////////////////////////////////////////////////////////////////////////
+
+	//in the future more words such as anonymous allocate, deallocate may be added
+
+	//READ, EXEC, INDICT, ISINT, CONVERTINT COMPILE, CONST, VARIABLE, TABLE are technical interpreted words, and probably wont be linked to user generated words
+
+	//binary search over opcodes
+	if (primitive_opcode<32) then 
+		if (primitive_opcode<16) then
+			if (primitive_opcode<8) then
+				if (primitive_opcode<4) then
+					if (primitive_opcode<2) then
+						if (primitive_opcode<1) then // == 00:  @
+	
+						else 						 // == 01: !
+	
+						endif;
+					else
+						if (primitive_opcode<3) then // == 02: .
+	
+						else 						 // == 03: DUP
+	
+						endif;
+					endif;
+				else
+					if (primitive_opcode<6) then
+						if (primitive_opcode<5) then // == 04: SWAP
+	
+						else 						 // == 05: ROT
+	
+						endif;
+					else
+						if (primitive_opcode<7) then // == 06: OVER
+	
+						else 						 // == 07: DROP
+	
+						endif;
+					endif;
+				endif;
+			else
+				if (primitive_opcode<12) then
+					if (primitive_opcode<10) then
+						if (primitive_opcode<9) then // == 08: +
+	
+						else						 // == 09: -
+	
+						endif;
+					else
+						if (primitive_opcode<11) then // == 0A: *
+	
+						else						  // == 0B: /
+	
+						endif;
+					endif;
+				else
+					if (primitive_opcode<14) then
+						if (primitive_opcode<13) then // == 0C: %
+				
+						else 						  // == 0D: &
+				
+						endif;
+					else
+						if (primitive_opcode<15) then // == 0E: |
+				
+						else 						  // == 0F: ^
+				
+						endif;
+					endif;
+				endif;
+			endif;
+		else
+			if (primitive_opcode<24) then
+				if (primitive_opcode<20) then
+					if (primitive_opcode<18) then
+						if (primitive_opcode<17 then // == 10: ~
+	
+						else 						 // == 11: ~&
+	
+						endif;
+					else
+						if (primitive_opcode<19) then // == 12: ~|
+	
+						else 						  // == 13: ~^
+	
+						endif;
+					endif;
+				else
+					if (primitive_opcode<22) then
+						if (primitive_opcode<21) then // == 14: <<
+	
+						else 						  // == 15: >>
+	
+						endif;
+					else
+						if (primitive_opcode<23) then // == 16: <
+	
+						else 						  // == 17: >
+	
+						endif;
+					endif;
+				endif;
+			else
+				if (primitive_opcode<28) then
+					if (primitive_opcode<26) then
+						if (primitive_opcode<25) then // == 18: ==
+	
+						else						  // == 19: VARIABLE
+	
+						endif;
+					else
+						if (primitive_opcode<27) then // == 1A: CONST
+	
+						else						  // == 1B: TABLE
+	
+						endif;
+					endif;
+				else
+					if (primitive_opcode<30) then
+						if (primitive_opcode<29) then // == 1C: READ
+				
+						else 						  // == 1D: EXEC
+				
+						endif;
+					else
+						if (primitive_opcode<31) then // == 1E: INDICT
+				
+						else 						  // == 1F: COMPILE
+				
+						endif;
+					endif;
+				endif;
+			endif;
+		endif;
+	else
+		if (primitive_opcode<37) then
+			if (primitive_opcode<34) then
+				if (primitive_opcode==32) then 			  // == 20: ISINT
+
+				else									  // == 21: CONVERTINT
+
+				endif;
+			else
+				if (primitive_opcode == 34) then	  // == 22: .BUF
+
+				else if (primitive_opcode == 35) then	  // == 23: .c
+
+				else 									  // == 24: PASS
+
+				endif;endif;
+			endif;	
+		else
+			printf("ERROR: unrecognised opcode ");print_h(primitive_opcode);dontBreak = char(0);endif;
+		endif;
+	endif;
+end;

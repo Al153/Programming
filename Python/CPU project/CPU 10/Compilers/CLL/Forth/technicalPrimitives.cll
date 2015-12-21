@@ -1,0 +1,61 @@
+//////////////////////// INNER INTERPRETER TECHNICAL PRIMITIVES ///////////////
+
+//primitives not designed to be used by the user, but used to build the outer interpreter
+void primRead()
+	convertName(scanWord(),WORD_BUF); //puts the word name into the global buffer
+end;
+
+void primIsInDict()
+	//primitive version of is in dict
+	Push(isInDict(WORD_BUF,ForthDictHead));
+end;
+
+void primExecute()
+	@int ref = Pop();
+	bytecode_interp(ref[2]);
+	dontBreak = 1; //if a subroutine causes a break then the break doesn't unwravel past the outer interpreter
+end;
+
+void primCompile()
+	compileWord();
+end;
+
+void isInt()
+	int i = 0;
+	while (WORD_BUF[i])do
+		if (not((WORD_BUF[i]>='0')and (WORD_BUF[i]<='9'))) then return 0; endif; //if not a digit then failed
+	loop;
+	retun 1; //if hasnt returned then is an int
+end;
+
+void convertInt()
+	//converts WORD_BUF to an int and pushes it
+	int dec = 0;
+	int i;
+	for(i=0, WORD_BUF[i] ,i = i+1)
+		dec = dec * 10 + ( WORD_BUF[i] - '0' );
+	loop;
+	Push(dec);
+end;
+
+//////// Variables and constant auxiliaries (technical primitives) //////////
+void createConstant()
+	@char 9 name; //9 to pad a zero on the end
+	convertName(scanWord(),name);   //produces an acceptable name
+	int n = Pop(); 					 //n on stack
+	editDictEntry(name,newByteCodeNode(PUSHLIT,n,0)); //creates a word
+end;
+
+void createVariable()
+	@char 9 name; //9 to pad a zero on the end
+	convertName(scanWord(),name);   //produces an acceptable name
+	int address = malloc(1); 					 //allocates memory
+	editDictEntry(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
+end;
+
+void createTable()
+	@char 9 name; //9 to pad a zero on the end
+	convertName(scanWord(),name);   //produces an acceptable name
+	int address = malloc(Pop()); 					 //n on stack
+	editDictEntry(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
+end;

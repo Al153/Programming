@@ -1,4 +1,4 @@
-
+Proposed functions of the fl virtual machine
 
 Statement ops
 	let
@@ -43,7 +43,7 @@ function declaration
 	
 	@pattern 									-> @s a pattern object
 	pattern-> 									-> stores a pattern and expression list
-	EPattern
+	Epattern 									-> Creates a pattern object
 
 structure creation ops
 	(, )										-> stores the code in the middle in a list and pushes it onto the stack

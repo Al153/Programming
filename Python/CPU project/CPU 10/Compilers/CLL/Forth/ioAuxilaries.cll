@@ -1,0 +1,115 @@
+//Functions and procedures used by the interpreters
+
+///////////////////////// IO //////////////////////////////
+@char 256 lineBuff;
+int linePtr;
+int READ_IN_STATE = EMPTY;
+@char 9 WORD_BUF; //global var containing the name of a word
+#define EMPTY 0
+#define FULL 1
+
+void readInOld(@char buf) //old readIn function - doesn't handle backspaces.
+	linePtr = 0;
+	int i = 0;
+	char character;
+	while (1) do
+		character = getw();
+		putc(character); //so it can be seen
+		if (character == 13) then
+			buf[i] = 0; //nullifies string
+			break;
+		else
+			buf[i] = character;
+			i = i+1;
+		endif;
+	loop;
+	READ_IN_STATE = FULL;
+end;
+
+
+void readIn(@char buf) //new readIn function - handles backspaces
+	linePtr = 0;
+	char character;
+	char lineFeed = 10;
+	char blank = 0;
+	char backSpace = 8;
+	while (1) do
+		character = getw();
+		putc(character);
+		if (character == 13) then
+			buf[linePtr] = 0; //nullifies string
+			putc(lineFeed);
+			break;
+		else
+			if (character == 8) then
+				buf[linePtr] = 0;
+				linePtr = linePtr - 1;
+				putc(blank);
+				putc(backSpace);
+				continue;
+			endif;
+			buf[linePtr] = character;
+			linePtr = linePtr + 1;
+		endif;
+	loop;
+	while (linePtr) do 
+		buf[linePtr] = 0; //clear rest of buffer
+		linePtr = linePtr + 1;
+	loop;
+	linePtr = 0;
+	READ_IN_STATE = FULL;
+end;
+
+
+
+@char scanWord()
+	//returns pointer to the next word on the input buffer, and leaves linePtr at the end of the word. if the buffer is empty then reset and read in
+	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
+	while (isWhiteSpace(lineBuff[linePtr])) do linePtr = linePtr + 1; loop;
+	@char return_value = lineBuff+linePtr; //value to return points to the start of the word
+	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop;
+	if (lineBuff[linePtr] == '\n') then READ_IN_STATE = EMPTY; endif;
+	return return_value;
+end;
+
+int isWhiteSpace(char input)
+	//checks if a character is whitespace or not
+	if (input == ' ') then
+		return 1;
+	else
+		if (input == '\n') then
+			return 1;
+		else
+			if (input == '\t') then
+				return 1;
+	endif; endif; endif;
+	return 0;
+end;
+
+void convertName(@char name_string,@char buffer)
+	//copies name into buffer, pads with zeroes
+	int pad =0;
+	int i;
+	for(i = 0, i<8,i = i + 1)
+		if (pad) then buffer[i] = 0;
+		else
+			if (isWhiteSpace(name_string[i])) then pad = 1; buffer[i] = 0;
+			else
+				buffer[i] = name_string[i];
+			endif;
+		endif;
+	loop;
+	name_string[8] = 0;
+end;
+
+char readStringChar()
+	//reads in a single string character, refilling the input buffer if necessary
+	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
+	if (lineBuff[linePtr] == '\n') then READ_IN_STATE = EMPTY;
+	return lineBuff[linePtr];
+end;
+
+void scanToEndOfDef()
+	//scans to the nearest semicolon or new line on the input
+	//TODO: fill this in
+end;

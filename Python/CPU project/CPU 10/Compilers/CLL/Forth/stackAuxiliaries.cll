@@ -1,0 +1,21 @@
+void Push(@int val)
+	if (ForthStackPointer>FORTHSTACKSIZE-1) then 
+		printf("ERROR: Forth Stack overflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = val;
+end;
+
+@int Pop()
+	if (ForthStackPointer<1) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStackPointer -= 1;
+	return ForthStack[ForthStackPointer];
+end;
+
+void __greater(int a, int b) if (a>b) then return 1; else return 0; endif; end;
+void __less(int a, int b) if (a<b) then return 1; else return 0; endif; end;
+void __equal(int a, int b) if (a==b) then return 1; else return 0; endif; end;
+

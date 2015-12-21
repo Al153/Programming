@@ -1,0 +1,244 @@
+#include technicalPrimitives.cll
+
+////////////////////////  STACK primitives //////////////////////////
+
+void Fetch() // (Address -- value)
+	if (ForthStackPointer == 0) then //check stack not empty
+		printf("ERROR: Forth Stack Underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+
+	@int address = ForthStack[ForthStackPointer-1];
+	ForthStack[ForthStackPointer-1] = address[0];
+end;
+
+void Store() // (value address -- )
+	if (ForthStackPointer<2) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStackPointer = ForthStackPointer-2;
+	@int address = ForthStack[ForthStackPointer+1];
+	address[0] = ForthStack[ForthStackPointer];
+end;
+
+void printTOS()
+	int TOS = Pop();
+	if (TOS&2147483648) then printf("-"); print_i(TOS&2147483647); return; endif; //deals with negative numbers
+	print_i(TOS);
+end;
+
+void printChar()
+	int TOS = Pop();
+	putc(char(TOS));
+end;
+
+void Dup()
+	if (ForthStackPointer>0) then //if stack has a value on it then
+		ForthStack[ForthStackPointer+1] = ForthStack[ForthStackPointer];
+		ForthStackPointer = ForthStackPointer + 1;
+		if (ForthStackPointer>FORTHSTACKSIZE) then
+			printf("ERROR: Forth Stack Overflow.\n");
+			dontBreak = char(0); //breaks to the REPL 
+		endif;
+	else
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL	
+	endif;
+end;
+
+void Drop()
+	if (ForthStackPointer>0) then //if stack has a value on it then
+		ForthStackPointer = ForthStackPointer -1 ;
+	else
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL	
+	endif;
+end;
+
+
+void Swap()
+	if (ForthStackPointer>1) then //if stack has a value on it then
+		int temp = ForthStack[ForthStackPointer-1];
+		ForthStack[ForthStackPointer-1] = ForthStack[ForthStackPointer];
+		ForthStack[ForthStackPointer] = temp;
+	else
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL	
+	endif;
+end;
+
+void Rot()
+	if (ForthStackPointer>2) then //if stack has a value on it then
+		int temp = ForthStack[ForthStackPointer];
+		ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer-1];
+		ForthStack[ForthStackPointer-1] = ForthStack[ForthStackPointer-2];
+		ForthStack[ForthStackPointer-2] = temp;
+	else
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL	
+	endif;
+end;
+
+void Over()
+	if (ForthStackPointer>1) then //if stack has a value on it then
+		ForthStack[ForthStackPointer+1] = ForthStack[ForthStackPointer-1];
+		ForthStackPointer = ForthStackPointer + 1;
+		if (ForthStackPointer>FORTHSTACKSIZE) then
+			printf("ERROR: Forth Stack Overflow.\n");
+			dontBreak = char(0); //breaks to the REPL 
+		endif;
+	else
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL	
+	endif;
+end;
+
+//////////////////////// Arithmetic + Logic primitives /////////////////////////////////
+
+//arithmetic primitives for forth, arithmetic is 2s complement
+void ADD()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]+ForthStack[ForthStackPointer+1];
+end;
+void SUB()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer][ForthStack[ForthStackPointer+1];
+end;
+void MUL()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]*ForthStack[ForthStackPointer+1];
+end;
+void DIV()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]/ForthStack[ForthStackPointer+1];
+end;
+void MOD()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]%ForthStack[ForthStackPointer+1];
+end;
+void AND()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]&ForthStack[ForthStackPointer+1];
+end;
+void OR()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]|ForthStack[ForthStackPointer+1];
+end;
+void XOR()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ForthStack[ForthStackPointer]^ForthStack[ForthStackPointer+1];
+end;
+void NOT()
+	ForthStack[ForthStackPointer] = ~ForthStack[ForthStackPointer];
+end;
+
+void NAND()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ~(ForthStack[ForthStackPointer]&ForthStack[ForthStackPointer+1]);
+end;
+void NOR()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ~(ForthStack[ForthStackPointer]|ForthStack[ForthStackPointer+1]);
+end;
+void XNOR()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = ~(ForthStack[ForthStackPointer]^ForthStack[ForthStackPointer+1]);
+end;
+
+
+
+//////// comparison //////////
+void greater()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	int a = ForthStack[ForthStackPointer];
+	int b = ForthStack[ForthStackPointer+1];
+	if ((a&2147483648) and (b&2147483648)) then  ForthStack[ForthStackPointer] = __greater(a,b); //if both are negative then return (a>b), since this is 2s complement
+	else if (a&2147483648) then ForthStack[ForthStackPointer] = 0; 							  //else if a is negative then return 0;
+		else if (b&2147483648) then ForthStack[ForthStackPointer] = 1; 						  //else if b is negative then return 1;
+			else ForthStack[ForthStackPointer] = __greater(a,b);
+			endif;
+		endif;
+	endif;
+end;
+
+void less()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	int a = ForthStack[ForthStackPointer];
+	int b = ForthStack[ForthStackPointer+1];
+	if ((a&2147483648) and (b&2147483648)) then  ForthStack[ForthStackPointer] = __lessa,b); //if both are negative then return (a<b)
+	else if (a&2147483648) then ForthStack[ForthStackPointer] = 1; 							  //else if a is negative then return 1;
+		else if (b&2147483648) then ForthStack[ForthStackPointer] = 0; 						  //else if b is negative then return 0;
+			else ForthStack[ForthStackPointer] = __less(a,b);
+			endif;
+		endif;
+	endif;
+end;
+void equal()
+	ForthStackPointer = ForthStackPointer-1;
+	if (ForthStackPointer>FORTHSTACKSIZE) then
+		printf("ERROR: Forth Stack underflow.\n");
+		dontBreak = char(0); //breaks to REPL
+	endif;
+	ForthStack[ForthStackPointer] = __equal(ForthStack[ForthStackPointer],ForthStack[ForthStackPointer+1]); //if both are negative then return (a>b)
+end;
+
+
+
+////////////////////////// IO WORDS ///////////////////////
+
+void printBUF()
+	printf(WORD_BUF); //prints out the most recent word to be read in
+end;

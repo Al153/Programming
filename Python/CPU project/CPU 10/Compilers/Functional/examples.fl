@@ -6,12 +6,12 @@ let fib = fun: (int -> int);
 
 let stringDouble = fun: (str -> str);
 	stringDouble("") -> "";
-	stringDouble([x::xs]) -> [x:x:stringDouble(xs)];
+	stringDouble([x::xs]) -> [x::x::stringDouble(xs)];
 
 
 let opList = fun: (fun,list -> list);
 	opList(f,{}) -> {};
-	opList(f,{x::xs}) -> {f(x):xs};
+	opList(f,{x::xs}) -> {f(x)::opList(xs)};
 
 
 let nextState = fun:(chr,chr -> chr);

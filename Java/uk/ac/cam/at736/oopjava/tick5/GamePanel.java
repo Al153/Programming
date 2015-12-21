@@ -14,7 +14,10 @@ public class GamePanel extends JPanel {
 	public Dimension getPreferredSize() {
 		return new Dimension(width, height);
 	}
-	
+	public void setZoom(int newZoom){
+		this.zoom = newZoom;
+	}
+
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (current == null) return;	
