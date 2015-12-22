@@ -18,10 +18,10 @@ def pretokenise(source_text,path):
 				#print line
 				if split_line[1][:4] == "STD:":
 					file_path = os.path.join(CURRENT_DIR,"standard library\\"+split_line[1][4:])
-					included = pretokenise(open(file_path,"r").read(),file_path[-1])
+					included = pretokenise(open(file_path,"r").read(),file_path[:-1])
 				else:
 					file_path = path+[split_line[1]]
-					included = pretokenise(open("\\".join(file_path),"r").read(),file_path[-1])
+					included = pretokenise(open("\\".join(file_path),"r").read(),file_path[:-1])
 				lines[i] = included[0]
 				replace_dict.update(included[1])
 			elif split_line[0] == "#define": #defines token to be changed for another

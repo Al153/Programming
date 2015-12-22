@@ -500,7 +500,7 @@ class function:
 							return type_to_return
 						else:
 							#raise an error
-							print "ERROR(1): variable "+variable_parse_tree.children[0].string+" of type "+self.variables[variable_parse_tree.children[0].string]+" cannot be used as a pointer"
+							print "ERROR(1): variable "+variable_parse_tree.children[0].string + " in function "+self.name+" of type "+self.variables[variable_parse_tree.children[0].string]+" cannot be used as a pointer"
 							quit()
 					elif variable_parse_tree.children[0].string in program.global_var_types:
 						if program.global_var_types[variable_parse_tree.children[0].string][0] == "@":
@@ -511,10 +511,10 @@ class function:
 							return type_to_return
 						else:
 							#raise an error
-							print "ERROR(2): variable "+variable_parse_tree.children[0].string+" of type "+program.global_var_types[variable_parse_tree.children[0]].string+" cannot be used as a pointer"
+							print "ERROR(2): variable "+variable_parse_tree.children[0].string+ " in function "+self.name+" of type "+program.global_var_types[variable_parse_tree.children[0]].string+" cannot be used as a pointer"
 							quit()
 					else:
-						print "ERROR(3): Unrecognised variable: \""+variable_parse_tree.children[0].string + "\""
+						print "ERROR(3): Unrecognised variable: \""+variable_parse_tree.children[0].string + "\""+ " in function "+self.name
 						quit()
 
 			elif parse_tree.children[0].type == "<const>":
@@ -560,7 +560,7 @@ class function:
 						quit()
 					i += 1
 			else:
-				print "ERROR(6): Function "+function_name.string+" takes "+str(len(function_parameters))+ " argument(s), "+ str(len(parameters)) + " given"
+				print "ERROR(6): Function "+function_name.string+" called in function "+self.name+ " takes "+str(len(function_parameters))+ " argument(s), "+ str(len(parameters)) + " given"
 				quit()
 	
 	def get_given_parameters(self,parameters_parse_tree):

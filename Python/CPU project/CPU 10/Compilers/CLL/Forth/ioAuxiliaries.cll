@@ -1,10 +1,13 @@
 //Functions and procedures used by the interpreters
 
+
 ///////////////////////// IO //////////////////////////////
 @char 256 lineBuff;
-int linePtr;
+char linePtr;
 int READ_IN_STATE = EMPTY;
 @char 9 WORD_BUF; //global var containing the name of a word
+int EOL = 0; //used as extra state to trigger OKs
+int SOL = 1;
 #define EMPTY 0
 #define FULL 1
 
@@ -33,6 +36,7 @@ void readIn(@char buf) //new readIn function - handles backspaces
 	char lineFeed = 10;
 	char blank = 0;
 	char backSpace = 8;
+	//printf("\n>>");
 	while (1) do
 		character = getw();
 		putc(character);
@@ -58,22 +62,33 @@ void readIn(@char buf) //new readIn function - handles backspaces
 	loop;
 	linePtr = 0;
 	READ_IN_STATE = FULL;
+	//printf("finished reading\n");
 end;
 
 
 
 @char scanWord()
 	//returns pointer to the next word on the input buffer, and leaves linePtr at the end of the word. if the buffer is empty then reset and read in
+	//printf("Scanning\n");
 	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
-	while (isWhiteSpace(lineBuff[linePtr])) do linePtr = linePtr + 1; loop;
+	while (isWhiteSpace(lineBuff[linePtr])) do 
+		linePtr = linePtr + 1; 
+		if ((lineBuff[linePtr] == 13) or (lineBuff[linePtr] == 0)) then readIn(lineBuff);
+		endif;
+	loop;
 	@char return_value = lineBuff+linePtr; //value to return points to the start of the word
-	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop;
-	if (lineBuff[linePtr] == '\n') then READ_IN_STATE = EMPTY; endif;
+	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop; //scrolls on to teh next whitespace
+	if ((lineBuff[linePtr] == 13)or (lineBuff[linePtr] == 0)) then READ_IN_STATE = EMPTY; EOL = 1; endif;
+	//printf("\n\n");
+	//int i;
+	//for (i = 0, i<16,i+=1) print_i(int(lineBuff[i]));printf(", ");loop;
+	//printf("\n\n\nfinished scan, press enter to continue\n"); char cont = getw();
 	return return_value;
 end;
 
 int isWhiteSpace(char input)
 	//checks if a character is whitespace or not
+	if (input == char(0)) then return 1; endif;
 	if (input == ' ') then
 		return 1;
 	else
@@ -105,11 +120,17 @@ end;
 char readStringChar()
 	//reads in a single string character, refilling the input buffer if necessary
 	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
-	if (lineBuff[linePtr] == '\n') then READ_IN_STATE = EMPTY;
+	if (lineBuff[linePtr] == '\n') then READ_IN_STATE = EMPTY; endif;
+	linePtr += 1;
 	return lineBuff[linePtr];
 end;
 
 void scanToEndOfDef()
 	//scans to the nearest semicolon or new line on the input
-	//TODO: fill this in
+	char character;
+	while (1) do
+		character = readStringChar();
+		if (character == ';') then break; endif;
+		if (character == '\n') then break; READ_IN_STATE = EMPTY; endif;
+	loop;
 end;

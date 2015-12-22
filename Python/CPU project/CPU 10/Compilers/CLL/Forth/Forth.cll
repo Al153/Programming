@@ -69,10 +69,18 @@ void main()
 	//initialise :
 	// dictionary
 	// primitive words in dictionary
+	printf(">>FORTH SYSTEM STARTED\n");
 	init_primitives();
+	printf(">>BUILT INS COMPILED\n");
 	// inner interpreter location an first level of REPL
-
+	printf("OK\n__________________________________________________________\n");
+	@int replWordReference = isInDict("TEST",ForthDictHead);//isInDict("INTERP",ForthDictHead);
 	// set an inner interpreter instance to start executing "INTERP"
+	//bytecodeInterp(replWordReference[2]); 
+	//replWordReference = isInDict("TEST1",ForthDictHead);
+	//bytecodeInterp(replWordReference[2]);
+	replWordReference = isInDict("INTERP",ForthDictHead);
+	bytecodeInterp(replWordReference[2]);
 end;
 
 

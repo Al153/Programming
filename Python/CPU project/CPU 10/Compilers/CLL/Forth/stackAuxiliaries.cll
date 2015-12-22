@@ -4,6 +4,7 @@ void Push(@int val)
 		dontBreak = char(0); //breaks to REPL
 	endif;
 	ForthStack[ForthStackPointer] = val;
+	ForthStackPointer += 1;
 end;
 
 @int Pop()
@@ -15,7 +16,7 @@ end;
 	return ForthStack[ForthStackPointer];
 end;
 
-void __greater(int a, int b) if (a>b) then return 1; else return 0; endif; end;
-void __less(int a, int b) if (a<b) then return 1; else return 0; endif; end;
-void __equal(int a, int b) if (a==b) then return 1; else return 0; endif; end;
+int __greater(int a, int b) if (a>b) then return 1; else return 0; endif; end;
+int __less(int a, int b) if (a<b) then return 1; else return 0; endif; end;
+int __equal(int a, int b) if (a==b) then return 1; else return 0; endif; end;
 

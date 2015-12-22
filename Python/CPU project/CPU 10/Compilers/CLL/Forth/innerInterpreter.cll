@@ -8,22 +8,29 @@
 
 /////////////////////////////////  Main bytecode interpeter //////////////////////////////////////
 char dontBreak = 1;
-void bytecode_interp(@int reference)
+void bytecodeInterp(@int reference)
+	//printf("New inner interpreter instance\n");
 	int currentFSP = ForthStackPointer;
 	dontBreak = char(1);
+	//printf("Reference ");print_i(reference);printf("\n");
 	while((reference)and(dontBreak))do
+
 		int opType = reference[0];
 		if (opType == WORDCALL) then
+			//printf("Word call\n");
 			@int new_reference = reference[1];
-			bytecode_interp(new_reference[2]); //reference points to the dictionary entry
+			bytecodeInterp(new_reference[2]); //reference points to the dictionary entry
 			reference = reference[2];
 		else if(opType == PUSHLIT) then
+			//printf(" PushLit\n");
 			PushLit(reference[1]);
 			reference = reference[2];
 		else if (opType == BRANCH) then
+			//printf("BRANCH\n");
 			int branchIfTrue = Pop();
 			reference = reference[1] if branchIfTrue else reference[2];
 		else if (opType == PRIMITIVE) then
+			//printf("PRIMITIVE\n");
 			executePrimitive(reference[1]);
 			 reference = reference[2];
 		else
@@ -34,9 +41,8 @@ void bytecode_interp(@int reference)
 		endif;
 		endif;
 		endif;
-		endif;
-		endif;
 	loop;
+	//printf("\nRETURNING\n");
 	if (not(dontBreak)) then ForthStackPointer = currentFSP; endif; //if there is an error then roll back the FSP.
 end;
 
@@ -82,29 +88,29 @@ void executePrimitive(int primitive_opcode)
 				if (primitive_opcode<4) then
 					if (primitive_opcode<2) then
 						if (primitive_opcode<1) then // == 00:  @
-	
+							Fetch();
 						else 						 // == 01: !
-	
+							Store();
 						endif;
 					else
 						if (primitive_opcode<3) then // == 02: .
-	
+							printTOS();
 						else 						 // == 03: DUP
-	
+							Dup();
 						endif;
 					endif;
 				else
 					if (primitive_opcode<6) then
 						if (primitive_opcode<5) then // == 04: SWAP
-	
+							Swap();
 						else 						 // == 05: ROT
-	
+							Rot();
 						endif;
 					else
 						if (primitive_opcode<7) then // == 06: OVER
-	
+							Over();
 						else 						 // == 07: DROP
-	
+							Drop();
 						endif;
 					endif;
 				endif;
@@ -112,29 +118,29 @@ void executePrimitive(int primitive_opcode)
 				if (primitive_opcode<12) then
 					if (primitive_opcode<10) then
 						if (primitive_opcode<9) then // == 08: +
-	
+							ADD();
 						else						 // == 09: -
-	
+							SUB();
 						endif;
 					else
 						if (primitive_opcode<11) then // == 0A: *
-	
+							MUL();
 						else						  // == 0B: /
-	
+							DIV();
 						endif;
 					endif;
 				else
 					if (primitive_opcode<14) then
 						if (primitive_opcode<13) then // == 0C: %
-				
+							MOD();
 						else 						  // == 0D: &
-				
+							AND();
 						endif;
 					else
 						if (primitive_opcode<15) then // == 0E: |
-				
+							OR();
 						else 						  // == 0F: ^
-				
+							XOR();
 						endif;
 					endif;
 				endif;
@@ -143,30 +149,30 @@ void executePrimitive(int primitive_opcode)
 			if (primitive_opcode<24) then
 				if (primitive_opcode<20) then
 					if (primitive_opcode<18) then
-						if (primitive_opcode<17 then // == 10: ~
-	
+						if (primitive_opcode<17) then // == 10: ~
+							NOT();
 						else 						 // == 11: ~&
-	
+							NAND();
 						endif;
 					else
 						if (primitive_opcode<19) then // == 12: ~|
-	
+							NOR();
 						else 						  // == 13: ~^
-	
+							XNOR();
 						endif;
 					endif;
 				else
 					if (primitive_opcode<22) then
 						if (primitive_opcode<21) then // == 14: <<
-	
+							SHL();
 						else 						  // == 15: >>
-	
+							SHR();
 						endif;
 					else
 						if (primitive_opcode<23) then // == 16: <
-	
+							less();
 						else 						  // == 17: >
-	
+							greater();
 						endif;
 					endif;
 				endif;
@@ -174,29 +180,29 @@ void executePrimitive(int primitive_opcode)
 				if (primitive_opcode<28) then
 					if (primitive_opcode<26) then
 						if (primitive_opcode<25) then // == 18: ==
-	
+							equal();
 						else						  // == 19: VARIABLE
-	
+							createVariable();
 						endif;
 					else
 						if (primitive_opcode<27) then // == 1A: CONST
-	
+							createConstant();
 						else						  // == 1B: TABLE
-	
+							createTable();
 						endif;
 					endif;
 				else
 					if (primitive_opcode<30) then
 						if (primitive_opcode<29) then // == 1C: READ
-				
+							primRead();
 						else 						  // == 1D: EXEC
-				
+							primExecute();
 						endif;
 					else
 						if (primitive_opcode<31) then // == 1E: INDICT
-				
+							primIsInDict();
 						else 						  // == 1F: COMPILE
-				
+							primCompile();
 						endif;
 					endif;
 				endif;
@@ -206,21 +212,21 @@ void executePrimitive(int primitive_opcode)
 		if (primitive_opcode<37) then
 			if (primitive_opcode<34) then
 				if (primitive_opcode==32) then 			  // == 20: ISINT
-
+					primIsInt();
 				else									  // == 21: CONVERTINT
-
+					convertInt();
 				endif;
 			else
 				if (primitive_opcode == 34) then	  // == 22: .BUF
-
+					printBUF();
 				else if (primitive_opcode == 35) then	  // == 23: .c
-
+					printChar();
 				else 									  // == 24: PASS
-
+					primPass();
 				endif;endif;
 			endif;	
 		else
-			printf("ERROR: unrecognised opcode ");print_h(primitive_opcode);dontBreak = char(0);endif;
+			printf("ERROR: unrecognised opcode ");print_h(primitive_opcode);dontBreak = char(0);
 		endif;
 	endif;
 end;

@@ -803,7 +803,7 @@ class code_generator:
 		elif start_type == "char" and destination_type == "int":
 			return ''
 		else:
-			print "ERROR(38): unhandled type casting: "+start_type+" and "+destination_type
+			print "ERROR(38): unhandled type casting: "+start_type+" and "+destination_type +  " in function "+self.function_name
 			quit()
 
 def print_parse_tree(parse_tree_node,offset = ''):

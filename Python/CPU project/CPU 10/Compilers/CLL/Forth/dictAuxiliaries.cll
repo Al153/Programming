@@ -14,9 +14,9 @@ end;
 void editDictEntry(@char name, @int codePtr)
 	//tries to edit the code pointer of a word in the dictionary, if word doesnt already exist, then add a new one at the top of the dictionary
 	int dict = ForthDictHead;
-	int address = isInDict(name,dict);
+	@int address = isInDict(name,dict);
 	if (address) then 
-		if ((address[2])and(address[2] != codePtr])) then
+		if ((address[2])and(address[2] != codePtr)) then
 			collectGarbage(address[2]);
 			address[2] = codePtr;
 
@@ -43,6 +43,7 @@ end;
 		if(checkDictName(name,dict))then return dict; endif;
 		dict = dict[3];
 	loop;
+	//printf("COULD NOT FIND WORD\n");
 	return 0; //failure 
 end;
 
@@ -50,7 +51,7 @@ end;
 @int newDictInst(@char name, @int codePtr)
 	@int returnPTR = malloc(4);
 	// set up name
-	@char name_pointer;
+	@char name_pointer = returnPTR;
 	int i = 0;
 	while (i<8) do
 		if (name[i]) then
@@ -73,6 +74,7 @@ end;
 	returnPTR[1] = field1;
 	returnPTR[2] = field2;
 	returnPTR[3] = 0; 					//sets flags to zero
+	return returnPTR;
 end;
 
 

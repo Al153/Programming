@@ -3,6 +3,7 @@ void init_primitives()
 	malloc_init();
 
 	//sets up operators
+	printf(">>COMPIlING BUILT INS\n");
 	addToDict("@",newByteCodeNode(PRIMITIVE,0,0)); //Fetch ( address -- value at address)
 	addToDict("!",newByteCodeNode(PRIMITIVE,1,0)); //Store ( value address -- ) stores value to the address
 	addToDict(".",newByteCodeNode(PRIMITIVE,2,0)); //Prints the top of stack as an int
@@ -37,103 +38,105 @@ void init_primitives()
 	addToDict(":",newByteCodeNode(PRIMITIVE,31,0)); // triggers the compiler
 	addToDict("ISINT",newByteCodeNode(PRIMITIVE,32,0)); // tests the string in the buffer. if it is an int then returns 1
 	addToDict("CONVERTINT",newByteCodeNode(PRIMITIVE,33,0)); //converts teh wordbuffer to an int
-	addToDict(".BUF",newByteCodeNode(PRIMITIVE,34)); //prints out the buffer
+	addToDict(".BUF",newByteCodeNode(PRIMITIVE,34,0)); //prints out the buffer
 	addToDict(".c",newByteCodeNode(PRIMITIVE,35,0)); // prints the TOS as a char
 	addToDict("PASS",newByteCodeNode(PRIMITIVE,36,0)); // doesn't do anything - used as a placeholder
 
-	//self interpreting code: - I need to manually compile these
+	//self interpreting code: - manually compiled
+	printf(">>COMPIlING REPL ENVIRONMENT\n");
+	createTryInt();
+	createEval();
+	createInterp();
+	createTest();
+end;
+void createTest()
+	addToDict("TEST",newByteCodeNode(PUSHLIT,1,newByteCodeNode(PRIMITIVE,2,0)));
+	addToDict("TEST1",newByteCodeNode(PUSHLIT,1,newByteCodeNode(PUSHLIT,2,newByteCodeNode(PRIMITIVE,9,newByteCodeNode(PRIMITIVE,2,0)))));
+end;
 
+void createTryInt()
 	//: TRYINT isInt if convertInt else INPUTERROR then ;
 	addToDict("TRYINT",
 		newByteCodeNode(PRIMITIVE,32,
 		newByteCodeNode(BRANCH,
 			newByteCodeNode(PRIMITIVE,33,0),
 			
-			(
-				newByteCodeNode(PUSHLIT,'E',
+			( //uses 0+ to convert to an int
+				newByteCodeNode(PUSHLIT,0+'E',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'R',
+				newByteCodeNode(PUSHLIT,0+'R',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'R',
+				newByteCodeNode(PUSHLIT,0+'R',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'O',
+				newByteCodeNode(PUSHLIT,0+'O',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'R',
+				newByteCodeNode(PUSHLIT,0+'R',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,':',
+				newByteCodeNode(PUSHLIT,0+':',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,' ',
+				newByteCodeNode(PUSHLIT,0+' ',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'U',
+				newByteCodeNode(PUSHLIT,0+'U',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'N',
+				newByteCodeNode(PUSHLIT,0+'N',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'R',
+				newByteCodeNode(PUSHLIT,0+'R',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'E',
+				newByteCodeNode(PUSHLIT,0+'E',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'C',
+				newByteCodeNode(PUSHLIT,0+'C',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'O',
+				newByteCodeNode(PUSHLIT,0+'O',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'G',
+				newByteCodeNode(PUSHLIT,0+'G',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'N',
+				newByteCodeNode(PUSHLIT,0+'N',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'I',
+				newByteCodeNode(PUSHLIT,0+'I',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'S',
+				newByteCodeNode(PUSHLIT,0+'S',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'E',
+				newByteCodeNode(PUSHLIT,0+'E',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'D',
+				newByteCodeNode(PUSHLIT,0+'D',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,' ',
+				newByteCodeNode(PUSHLIT,0+' ',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'W',
+				newByteCodeNode(PUSHLIT,0+'W',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'O',
+				newByteCodeNode(PUSHLIT,0+'O',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'R',
+				newByteCodeNode(PUSHLIT,0+'R',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'D',
+				newByteCodeNode(PUSHLIT,0+'D',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,':',
+				newByteCodeNode(PUSHLIT,0+':',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,' ',
+				newByteCodeNode(PUSHLIT,0+' ',
 				newByteCodeNode(PRIMITIVE,35,
 				newByteCodeNode(PRIMITIVE,34,0)	
 
 		))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+end;
 
-	//: EVAl DUP isInDict DUP if EXECUTE else DROP TRYINT then ;
+void createEval()
+	//: EVAl isInDict DUP if EXECUTE else DROP TRYINT then ;
 
 	addToDict("EVAL",
-		newByteCodeNode(PRIMITIVE,3,
 		newByteCodeNode(PRIMITIVE,30,
 		newByteCodeNode(PRIMITIVE,3,
 		newByteCodeNode(BRANCH,
 			newByteCodeNode(PRIMITIVE,29,0),
 			newByteCodeNode(PRIMITIVE,7,
-			newByteCodeNode(WORDCALL,isInDict("TRYINT"),0))
+			newByteCodeNode(WORDCALL,isInDict("TRYINT",ForthDictHead),0))
 			)
-		))));	
+		)));	
+end;
 
-
-	//: INTERP 1 while ." >> " READ EVAL ." OK" 1 LOOP ;
-	@int first = newByteCodeNode(PUSHLIT,'\n',0)//prints ("\n> ")
-	first[2] = 	newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'>',
-				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,' ',
-				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PRIMITIVE,28,ForthDictHead),
-				newByteCodeNode(WORDCALL,isInDict("EVAL",ForthDictHead),
-				newByteCodeNode(PUSHLIT,'O',
-				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PUSHLIT,'K',
-				newByteCodeNode(PRIMITIVE,35,first
-				))))))))))) ; 
+void createInterp()
+	//: INTERP 1 while READ EVAL 1 LOOP ;
+	@int first = newByteCodeNode(PRIMITIVE,28, 0);	
+	first[2] = 	newByteCodeNode(WORDCALL,isInDict("EVAL",ForthDictHead),first); 
 
 	addToDict("INTERP",first);
 end;

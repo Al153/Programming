@@ -26,8 +26,9 @@ void compileWord()
 end;
 
 
+
+
 void compileSingleWord(@int retArray) //compiles a single word from the buffer, places a pointer to the first node in retArray[0], last node in retArray[1]
-	@int node
 	retArray[2] = 0;
 	primRead(); // reads in a word to the buffer
 	if (checkDictName(WORD_BUF,";")) then //scans word against special words .. if, while etc
@@ -35,49 +36,91 @@ void compileSingleWord(@int retArray) //compiles a single word from the buffer, 
 		retArray[1] = 0;
 		retArray[2] = 1; //signify a ;
 	else
-		if (checkDictName(WORD_BUF,"IF")) then
-			@int 3 ifRetArray; //3rd index gives exit condition - 0 for then 1 for else 2 for ; (error)
-			compileIfWord(ifRetArray);
-			if (dontBreak == 0) then return; endif;//checks for an error
-			if (ifRetArray[2] == 2) then printf("ERROR: Did not expect a semicolon when compiling an if statement"); dontBreak = 0; return; endif;
-			if (ifRetArray[2] == 0) then // if..then
-				@int placeholderNode = newByteCodeNode(PRIMITIVE,36,0); //uses a pass as a placeholder
-				retArray[0] = newByteCodeNode(BRANCH,ifRetArray[0],placeholderNode);  //part of linkage
-				@int bottom = ifRetArray[2];
-				bottom[2] = placeholderNode;
-				retArray[1] = placeholderNode;
-			else if (ifRetArray[2] == 1) then // if...else..then
-				//TODO: this should scan looking for a ..then and do appropriate linkage;
-			endif; endif;
-			
-	
+		if (checkDictName(WORD_BUF,"[")) then // causes the compiler to switch to an intepreter until a ] is encountered, at which point, the TOS is used as a PUSHLIT
+			while (1) do
+				primRead();
+				if (checkDictName(WORD_BUF,"]")) then break; endif;
+				@int dictEntry = isInDict(WORD_BUF,ForthDictHead);
+				bytecodeInterp(dictEntry[2]); //does some execution
+				if (dontBreak == 0) then printf("\nCould not complete compilation");return; endif;
+			loop;
+			retArray[0] = newByteCodeNode(PUSHLIT,Pop(),0); //creates a pushlit
+			retArray[1] = retArray[0];
 		else
-			if (checkDictName(WORD_BUF,"WHILE")) then
-				//TODO: a while clause etc
+			if (checkDictName(WORD_BUF,"IF")) then
+				@int 3 ifRetArray; //3rd index gives exit condition - 0 for then 1 for else 2 for ; (error)
+				compileIfWord(ifRetArray);
+				if (dontBreak == 0) then return; endif;//checks for an error
+				if (ifRetArray[2] == 2) then printf("ERROR: Did not expect a semicolon when compiling an if statement"); dontBreak = 0; return; endif;
+				if (ifRetArray[2] == 0) then // if..then
+					@int placeholderNode = newByteCodeNode(PRIMITIVE,36,0); //uses a pass as a placeholder
+					retArray[0] = newByteCodeNode(BRANCH,ifRetArray[0],placeholderNode);  //part of linkage
+					@int bottom = ifRetArray[1];
+					bottom[2] = placeholderNode;
+					retArray[1] = placeholderNode;
+				else if (ifRetArray[2] == 1) then // if...else..then
+						@int 3 elseRetArray;
+						compileIfWord(elseRetArray); //get the else clause
+						if (dontBreak == 0) then return; endif;//checks for an error
+						if (ifRetArray[2] == 2) then printf("ERROR: Did not expect a semicolon when compiling an if statement"); dontBreak = 0; return; endif;
+						if (ifRetArray[2] == 1) then printf("ERROR: Did not expect second ELSE clause when compiling and if statement"); dontBreak = 0; return; endif; // if...else..then 
+						if (ifRetArray[2] == 0) then
+					
+							retArray[0] = newByteCodeNode(BRANCH,ifRetArray[0],elseRetArray[0]); //set up the top node
+							placeholderNode = newByteCodeNode(PRIMITIVE,36,0); //set up the exit node
+							bottom = ifRetArray[1]; 						   //link the two chains to the exit node
+							bottom[2] = placeholderNode;
+							bottom = elseRetArray[1];
+							bottom[2] = placeholderNode;
+							retArray[1] = placeholderNode;
+						else
+							printf("ERROR: unrecognised return code from compileIfWord: ");print_i(ifRetArray[2]); dontBreak = 0; return;
+						endif;
+					else
+						printf("ERROR: unrecognised return code from compileIfWord: ");print_i(ifRetArray[2]); dontBreak = 0; return;
+					endif;
+				endif; 
 			else
-				if (checkDictName(WORD_BUF,".\"")) then //needs to create a string pushing word
-					compileStringPrint(retArray);
-				else //if a normal word, then lookup reference
-					@int reference = isInDict(WORD_BUF,ForthDictHead);
-					if (reference) then 
-						//if the word has only a single bytecode instruction (ie runs a primitive, then we just copy in the primitive)
-						@int referenceNode = reference[2];
-						if ((referenceNode[0] == PRIMITIVE)o(referenceNode[0] == PUSHLIT)) then
-							if (referenceNode[2] == 0) then
-								retArray[0] = newByteCodeNode(referenceNode[0],referenceNode[1],referenceNode[2]); //clone the node
-								retArray[1] = retArray[0];
+				if (checkDictName(WORD_BUF,"WHILE")) then
+					//TODO: a while clause etc
+					@int 3 whileRetArray; //return codes: 0: LOOP; 2: semicolon;
+					compileWhileWord(whileRetArray);
+					if (dontBreak == 0) then return; endif;//checks for an error
+					if (whileRetArray[2] == 2) then printf("ERROR: Did not expect a semicolon when compiling an while statement"); dontBreak = 0; return; endif;
+					if (whileRetArray[2] == 0) then // if..then
+						retArray[0] = newByteCodeNode(BRANCH,whileRetArray[0],0);
+						retArray[1] = retArray[0];
+						bottom = whileRetArray[1];
+						bottom[2] = retArray[0]; 
+					else
+						printf("ERROR: unrecognised return code from compileWhileWord: ");print_i(whileRetArray[2]);
+					endif;	
+
+				else
+					if (checkDictName(WORD_BUF,".\"")) then //needs to create a string pushing word
+						compileStringPrint(retArray);
+					else //if a normal word, then lookup reference
+						@int reference = isInDict(WORD_BUF,ForthDictHead);
+						if (reference) then 
+							//if the word has only a single bytecode instruction (ie runs a primitive, then we just copy in the primitive)
+							@int referenceNode = reference[2];
+							if ((referenceNode[0] == PRIMITIVE)or(referenceNode[0] == PUSHLIT)) then
+								if (referenceNode[2] == 0) then
+									retArray[0] = newByteCodeNode(referenceNode[0],referenceNode[1],referenceNode[2]); //clone the node
+									retArray[1] = retArray[0];
+								else
+									retArray[0] = newByteCodeNode(WORDCALL,reference,0); //otherwise return a word call
+									retArray[1] = retArray[0];
+								endif;
 							else
-								retArray[0] = newByteCodeNode(WORDCALL,reference,0); //otherwise return a word call
+								retArray[0] = newByteCodeNode(WORDCALL,reference,0);
 								retArray[1] = retArray[0];
 							endif;
-						else
-							retArray[0] = newByteCodeNode(WORDCALL,reference,0);
-							retArray[1] = retArray[0];
+						else printf("ERROR: unrecognised word compiled\n");				//maybe return an error in the future - go back to REPL
+							dontBreak = 0;
+							retArray[0] = 1;
+							retArray[1] = 1; //returns an error code
 						endif;
-					else printf("ERROR: unrecognised word compiled\n");				//maybe return an error in the future - go back to REPL
-						dontBreak = 0;
-						retArray[0] = 1;
-						retArray[1] = 1; //returns an error code
 					endif;
 				endif;
 			endif;
@@ -88,14 +131,249 @@ end;
 void compileStringPrint(@int retArray) //compiles a string to be printed
 	@int prev = newByteCodeNode(PRIMITIVE,36,0);
 	retArray[0] = prev;
-	while (1)
+	while (1) do
 		char newChar = readStringChar();
 		if (newChar == '"') then
 			retArray[1] = prev;
 			return;
 		endif;
 		if (newChar == '\\') then newChar = readStringChar(); endif; //take into account escaped "s
-		prev[2] = newByteCodeNode(PUSHLIT,newChar,newByteCodeNode(PRIMITIVE,35,0));
+		prev[2] = newByteCodeNode(PUSHLIT,int(newChar),newByteCodeNode(PRIMITIVE,35,0));
 		prev = prev[2]; prev = prev[2];
 	loop;
+end;
+
+
+
+void compileIfWord(@int retArray)
+	int dummy; //first line to start syntax highlighting
+	@int start = newByteCodeNode(PRIMITIVE,36,0); // a pass block
+	@int previous = start;
+	while (1) do
+		retArray[2] = 0;
+		primRead(); // reads in a word to the buffer
+		if (checkDictName(WORD_BUF,"ELSE")) then
+			retArray[2] = 0;
+			break;
+		endif; 
+		if (checkDictName(WORD_BUF,"THEN")) then 
+			retArray[2] = 1;
+			break;
+		endif;
+		if (checkDictName(WORD_BUF,";")) then //scans word against special words .. if, while etc
+			retArray[0] = 0;
+			retArray[1] = 0;
+			retArray[2] = 2; //signify a ; - an error
+			break;
+		else
+			if (checkDictName(WORD_BUF,"[")) then // causes the compiler to switch to an intepreter until a ] is encountered, at which point, the TOS is used as a PUSHLIT
+				while (1) do
+					primRead();
+					if (checkDictName(WORD_BUF,"]")) then break; endif;
+					@int dictEntry = isInDict(WORD_BUF,ForthDictHead);
+					bytecodeInterp(dictEntry[2]); //does some execution
+					if (dontBreak == 0) then printf("\nCould not complete compilation");return; endif;
+				loop;
+				retArray[0] = newByteCodeNode(PUSHLIT,Pop(),0); //creates a pushlit
+				retArray[1] = retArray[0];
+			else
+				if (checkDictName(WORD_BUF,"IF")) then
+					@int 3 ifRetArray; //3rd index gives exit condition - 0 for then 1 for else 2 for ; (error)
+					compileIfWord(ifRetArray);
+					if (dontBreak == 0) then return; endif;//checks for an error
+					if (ifRetArray[2] == 2) then printf("ERROR: Did not expect a semicolon when compiling an if statement"); dontBreak = 0; return; endif;
+					if (ifRetArray[2] == 0) then // if..then
+						@int placeholderNode = newByteCodeNode(PRIMITIVE,36,0); //uses a pass as a placeholder
+						retArray[0] = newByteCodeNode(BRANCH,ifRetArray[0],placeholderNode);  //part of linkage
+						@int bottom = ifRetArray[1];
+						bottom[2] = placeholderNode;
+						retArray[1] = placeholderNode;
+					else if (ifRetArray[2] == 1) then // if...else..then
+							@int 3 elseRetArray;
+							compileIfWord(elseRetArray); //get the else clause
+							if (dontBreak == 0) then return; endif;//checks for an error
+							if (ifRetArray[2] == 2) then printf("ERROR: Did not expect a semicolon when compiling an if statement"); dontBreak = 0; return; endif;
+							if (ifRetArray[2] == 1) then printf("ERROR: Did not expect second ELSE clause when compiling and if statement"); dontBreak = 0; return; endif; // if...else..then 
+							if (ifRetArray[2] == 0) then
+						
+								retArray[0] = newByteCodeNode(BRANCH,ifRetArray[0],elseRetArray[0]); //set up the top node
+								placeholderNode = newByteCodeNode(PRIMITIVE,36,0); //set up the exit node
+								bottom = ifRetArray[1]; 						   //link the two chains to the exit node
+								bottom[2] = placeholderNode;
+								bottom = elseRetArray[1];
+								bottom[2] = placeholderNode;
+								retArray[1] = placeholderNode;
+							else
+								printf("ERROR: unrecognised return code from compileIfWord: ");print_i(ifRetArray[2]); dontBreak = 0; return;
+							endif;
+						else
+							printf("ERROR: unrecognised return code from compileIfWord: ");print_i(ifRetArray[2]); dontBreak = 0; return;
+						endif;
+					endif; 
+				else
+					if (checkDictName(WORD_BUF,"WHILE")) then
+						//TODO: a while clause etc
+						@int 3 whileRetArray; //return codes: 0: LOOP; 2: semicolon;
+						compileWhileWord(whileRetArray);
+						if (dontBreak == 0) then return; endif;//checks for an error
+						if (whileRetArray[2] == 2) then printf("ERROR: Did not expect a semicolon when compiling an while statement"); dontBreak = 0; return; endif;
+						if (whileRetArray[2] == 0) then // if..then
+							retArray[0] = newByteCodeNode(BRANCH,whileRetArray[0],0);
+							retArray[1] = retArray[0];
+							bottom = whileRetArray[1];
+							bottom[2] = retArray[0]; 
+						else
+							printf("ERROR: unrecognised return code from compileWhileWord: ");print_i(whileRetArray[2]);dontBreak = 0; return;
+						endif;		
+
+					else
+						if (checkDictName(WORD_BUF,".\"")) then //needs to create a string pushing word
+							compileStringPrint(retArray);
+						else //if a normal word, then lookup reference
+							@int reference = isInDict(WORD_BUF,ForthDictHead);
+							if (reference) then 
+								//if the word has only a single bytecode instruction (ie runs a primitive, then we just copy in the primitive)
+								@int referenceNode = reference[2];
+								if ((referenceNode[0] == PRIMITIVE)or(referenceNode[0] == PUSHLIT)) then
+									if (referenceNode[2] == 0) then
+										retArray[0] = newByteCodeNode(referenceNode[0],referenceNode[1],referenceNode[2]); //clone the node
+										retArray[1] = retArray[0];
+									else
+										retArray[0] = newByteCodeNode(WORDCALL,reference,0); //otherwise return a word call
+										retArray[1] = retArray[0];
+									endif;
+								else
+									retArray[0] = newByteCodeNode(WORDCALL,reference,0);
+									retArray[1] = retArray[0];
+								endif;
+							else printf("ERROR: unrecognised word compiled\n");				//maybe return an error in the future - go back to REPL
+								dontBreak = 0;
+								retArray[0] = 1;
+								retArray[1] = 1; //returns an error code
+							endif;
+						endif;
+					endif;
+				endif;
+			endif;
+		endif;
+		previous[2] = retArray[0];
+		previous = retArray[1];
+	loop;
+	retArray[0] = start;
+	retArray[1] = previous;
+end;
+
+void compileWhileWord(@int retArray)
+	int dummy; //first line to start syntax highlighting
+	@int start = newByteCodeNode(PRIMITIVE,36,0); // a pass block
+	@int previous = start;
+	while (1) do
+		retArray[2] = 0;
+		primRead(); // reads in a word to the buffer
+		if (checkDictName(WORD_BUF,"LOOP")) then
+			retArray[2] = 0;
+			break;
+		endif; 
+		if (checkDictName(WORD_BUF,";")) then //scans word against special words .. if, while etc
+			retArray[0] = 0;
+			retArray[1] = 0;
+			retArray[2] = 2; //signify a ; - an error
+			break;
+		else
+			if (checkDictName(WORD_BUF,"[")) then // causes the compiler to switch to an intepreter until a ] is encountered, at which point, the TOS is used as a PUSHLIT
+				while (1) do
+					primRead();
+					if (checkDictName(WORD_BUF,"]")) then break; endif;
+					@int dictEntry = isInDict(WORD_BUF,ForthDictHead);
+					bytecodeInterp(dictEntry[2]); //does some execution
+					if (dontBreak == 0) then printf("\nCould not complete compilation");return; endif;
+				loop;
+				retArray[0] = newByteCodeNode(PUSHLIT,Pop(),0); //creates a pushlit
+				retArray[1] = retArray[0];
+			else
+				if (checkDictName(WORD_BUF,"IF")) then
+					pass;
+					@int 3 ifRetArray; //3rd index gives exit condition - 0 for then 1 for else 2 for ; (error)
+					compileIfWord(ifRetArray);
+					if (dontBreak == 0) then return; endif;//checks for an error
+					if (ifRetArray[2] == 2) then printf("ERROR: Did not expect a semicolon when compiling an if statement"); dontBreak = 0; return; endif;
+					if (ifRetArray[2] == 0) then // if..then
+						@int placeholderNode = newByteCodeNode(PRIMITIVE,36,0); //uses a pass as a placeholder
+						retArray[0] = newByteCodeNode(BRANCH,ifRetArray[0],placeholderNode);  //part of linkage
+						@int bottom = ifRetArray[1];
+						bottom[2] = placeholderNode;
+						retArray[1] = placeholderNode;
+					else if (ifRetArray[2] == 1) then // if...else..then
+							@int 3 elseRetArray;
+							compileIfWord(elseRetArray); //get the else clause
+							if (dontBreak == 0) then return; endif;//checks for an error
+							if (ifRetArray[2] == 2) then printf("ERROR: Did not expect a semicolon when compiling an if statement"); dontBreak = 0; return; endif;
+							if (ifRetArray[2] == 1) then printf("ERROR: Did not expect second ELSE clause when compiling and if statement"); dontBreak = 0; return; endif; // if...else..then 
+							if (ifRetArray[2] == 0) then
+						
+								retArray[0] = newByteCodeNode(BRANCH,ifRetArray[0],elseRetArray[0]); //set up the top node
+								placeholderNode = newByteCodeNode(PRIMITIVE,36,0); //set up the exit node
+								bottom = ifRetArray[1]; 						   //link the two chains to the exit node
+								bottom[2] = placeholderNode;
+								bottom = elseRetArray[1];
+								bottom[2] = placeholderNode;
+								retArray[1] = placeholderNode;
+							else
+								printf("ERROR: unrecognised return code from compileIfWord: ");print_i(ifRetArray[2]); dontBreak = 0; return;
+							endif;
+						else
+							printf("ERROR: unrecognised return code from compileIfWord: ");print_i(ifRetArray[2]); dontBreak = 0; return;
+						endif;
+					endif; 
+				else
+					if (checkDictName(WORD_BUF,"WHILE")) then
+						//TODO: a while clause etc
+						@int 3 whileRetArray; //return codes: 0: LOOP; 2: semicolon;
+						compileWhileWord(whileRetArray);
+						if (dontBreak == 0) then return; endif;//checks for an error
+						if (whileRetArray[2] == 2) then printf("ERROR: Did not expect a semicolon when compiling an while statement"); dontBreak = 0; return; endif;
+						if (whileRetArray[2] == 0) then // if..then
+							retArray[0] = newByteCodeNode(BRANCH,whileRetArray[0],0);
+							retArray[1] = retArray[0];
+							bottom = whileRetArray[1];
+							bottom[2] = retArray[0]; 
+						else
+							printf("ERROR: unrecognised return code from compileWhileWord: ");print_i(whileRetArray[2]); dontBreak = 0; return;
+						endif;		
+
+					else
+						if (checkDictName(WORD_BUF,".\"")) then //needs to create a string pushing word
+							compileStringPrint(retArray);
+						else //if a normal word, then lookup reference
+							@int reference = isInDict(WORD_BUF,ForthDictHead);
+							if (reference) then 
+								//if the word has only a single bytecode instruction (ie runs a primitive, then we just copy in the primitive)
+								@int referenceNode = reference[2];
+								if ((referenceNode[0] == PRIMITIVE)or(referenceNode[0] == PUSHLIT)) then
+									if (referenceNode[2] == 0) then
+										retArray[0] = newByteCodeNode(referenceNode[0],referenceNode[1],referenceNode[2]); //clone the node
+										retArray[1] = retArray[0];
+									else
+										retArray[0] = newByteCodeNode(WORDCALL,reference,0); //otherwise return a word call
+										retArray[1] = retArray[0];
+									endif;
+								else
+									retArray[0] = newByteCodeNode(WORDCALL,reference,0);
+									retArray[1] = retArray[0];
+								endif;
+							else printf("ERROR: unrecognised word compiled\n");				//maybe return an error in the future - go back to REPL
+								dontBreak = 0;
+								retArray[0] = 1;
+								retArray[1] = 1; //returns an error code
+							endif;
+						endif;
+					endif;
+				endif;
+			endif;
+		endif;
+		previous[2] = retArray[0];
+		previous = retArray[1];
+	loop;
+	retArray[0] = start;
+	retArray[1] = previous;
 end;
