@@ -1,5 +1,4 @@
-//Functions and procedures used by the interpreters
-
+//Functions and procedures used by the interpreter for IO
 
 ///////////////////////// IO //////////////////////////////
 @char 256 lineBuff;
@@ -29,14 +28,12 @@ void readInOld(@char buf) //old readIn function - doesn't handle backspaces.
 	READ_IN_STATE = FULL;
 end;
 
-
 void readIn(@char buf) //new readIn function - handles backspaces
 	linePtr = 0;
 	char character;
 	char lineFeed = 10;
 	char blank = 0;
-	char backSpace = 8;
-	//printf("\n>>");
+	char backSpace = 8;	
 	while (1) do
 		character = getw();
 		putc(character);
@@ -46,30 +43,30 @@ void readIn(@char buf) //new readIn function - handles backspaces
 			break;
 		else
 			if (character == 8) then
-				buf[linePtr] = 0;
-				linePtr = linePtr - 1;
-				putc(blank);
-				putc(backSpace);
+				if (linePtr>0) then
+					buf[linePtr] = 0;
+					linePtr = linePtr - 1;
+					putc(blank);
+					putc(backSpace);
+				else putc('>');
+				endif;
 				continue;
 			endif;
 			buf[linePtr] = character;
 			linePtr = linePtr + 1;
 		endif;
 	loop;
+	linePtr += 1;
 	while (linePtr) do 
 		buf[linePtr] = 0; //clear rest of buffer
 		linePtr = linePtr + 1;
 	loop;
 	linePtr = 0;
 	READ_IN_STATE = FULL;
-	//printf("finished reading\n");
 end;
-
-
 
 @char scanWord()
 	//returns pointer to the next word on the input buffer, and leaves linePtr at the end of the word. if the buffer is empty then reset and read in
-	//printf("Scanning\n");
 	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
 	while (isWhiteSpace(lineBuff[linePtr])) do 
 		linePtr = linePtr + 1; 
@@ -79,10 +76,9 @@ end;
 	@char return_value = lineBuff+linePtr; //value to return points to the start of the word
 	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop; //scrolls on to teh next whitespace
 	if ((lineBuff[linePtr] == 13)or (lineBuff[linePtr] == 0)) then READ_IN_STATE = EMPTY; EOL = 1; endif;
-	//printf("\n\n");
-	//int i;
-	//for (i = 0, i<16,i+=1) print_i(int(lineBuff[i]));printf(", ");loop;
-	//printf("\n\n\nfinished scan, press enter to continue\n"); char cont = getw();
+		//int i;
+	//	for (i = 0, i<16,i+=1) print_i(int(lineBuff[return_value-lineBuff + i]));printf(", ");loop;
+	//	printf("\n\n\nfinished scan, press enter to continue\n"); char cont = getw();
 	return return_value;
 end;
 
@@ -114,7 +110,7 @@ void convertName(@char name_string,@char buffer)
 			endif;
 		endif;
 	loop;
-	name_string[8] = 0;
+	buffer[8] = 0;
 end;
 
 char readStringChar()
@@ -122,15 +118,48 @@ char readStringChar()
 	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
 	if (lineBuff[linePtr] == '\n') then READ_IN_STATE = EMPTY; endif;
 	linePtr += 1;
-	return lineBuff[linePtr];
+	return lineBuff[linePtr-1];
 end;
 
 void scanToEndOfDef()
 	//scans to the nearest semicolon or new line on the input
 	char character;
+	printf("Scanning to end of def\n");
 	while (1) do
 		character = readStringChar();
 		if (character == ';') then break; endif;
 		if (character == '\n') then break; READ_IN_STATE = EMPTY; endif;
+		if (character == char(0)) then break; READ_IN_STATE = EMPTY; endif;
 	loop;
+	SOL = 1;
+end;
+
+int isInt()	
+	//determines if the contents of WORD_BUF is an int
+	int i = 0;
+	int digCount = 0; //counts number of digits
+	while (WORD_BUF[i])do
+		if (not((WORD_BUF[i]>='0')and (WORD_BUF[i]<='9'))) then
+			if (not((i == 0) and (WORD_BUF[i] == '-'))) then return 0; endif; //if not a preliminary minus sign
+		endif;//if not a digit then failed
+		if (not(WORD_BUF[i] == '-')) then digCount += 1; endif; //if there is a digit, then increment digCount
+		i += 1;
+	loop;
+	if (digCount) then
+		return 1; //if hasnt returned then is an int
+	else
+		return 0; //if no digits were seen (a single - sign, then there is no int)
+	endif;
+end;
+
+int convertInt()
+	//converts WORD_BUF to an int and returns it
+	int negative = 0;
+	int dec = 0;
+	int i;
+	for(i=0, WORD_BUF[i] ,i = i+1)
+		if ((i == 0) and (WORD_BUF[i] == '-')) then negative = 1; continue; endif;
+		dec = dec * 10 + ( WORD_BUF[i] - '0' );
+	loop;
+	return (0-dec) if negative else dec;
 end;

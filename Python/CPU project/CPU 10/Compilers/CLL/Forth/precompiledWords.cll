@@ -3,7 +3,7 @@ void init_primitives()
 	malloc_init();
 
 	//sets up operators
-	printf(">>COMPIlING BUILT INS\n");
+	printf(">>COMPILING BUILT INS\n");
 	addToDict("@",newByteCodeNode(PRIMITIVE,0,0)); //Fetch ( address -- value at address)
 	addToDict("!",newByteCodeNode(PRIMITIVE,1,0)); //Store ( value address -- ) stores value to the address
 	addToDict(".",newByteCodeNode(PRIMITIVE,2,0)); //Prints the top of stack as an int
@@ -28,7 +28,7 @@ void init_primitives()
 	addToDict(">>",newByteCodeNode(PRIMITIVE,21,0)); //SHR
 	addToDict("<",newByteCodeNode(PRIMITIVE,22,0)); // (a b -- ?); ? = 1 if a<b else 0
 	addToDict(">",newByteCodeNode(PRIMITIVE,23,0)); // (a b -- ?); ? = 1 if a>b else 0
-	addToDict("==",newByteCodeNode(PRIMITIVE,24,0)); // (a b -- ?); ? = 1 if a==b else 0
+	addToDict("=",newByteCodeNode(PRIMITIVE,24,0)); // (a b -- ?); ? = 1 if a==b else 0
 	addToDict("VARIABLE",newByteCodeNode(PRIMITIVE,25,0)); // reads a name from the word buffer, creates a variable of its name and stores the TOS to it
 	addToDict("CONST",newByteCodeNode(PRIMITIVE,26,0)); // creates a name from the line buffer, sets it to a PUSHLIT of the current TOS
 	addToDict("TABLE",newByteCodeNode(PRIMITIVE,27,0)); // ( n -- ) creates an array of size n
@@ -37,21 +37,25 @@ void init_primitives()
 	addToDict("INDICT",newByteCodeNode(PRIMITIVE,30,0)); // looks up the word buffer in the dict, returns its reference on the stack, otherwise returns 0
 	addToDict(":",newByteCodeNode(PRIMITIVE,31,0)); // triggers the compiler
 	addToDict("ISINT",newByteCodeNode(PRIMITIVE,32,0)); // tests the string in the buffer. if it is an int then returns 1
-	addToDict("CONVERTINT",newByteCodeNode(PRIMITIVE,33,0)); //converts teh wordbuffer to an int
+	addToDict("CONV_INT",newByteCodeNode(PRIMITIVE,33,0)); //converts teh wordbuffer to an int
 	addToDict(".BUF",newByteCodeNode(PRIMITIVE,34,0)); //prints out the buffer
 	addToDict(".c",newByteCodeNode(PRIMITIVE,35,0)); // prints the TOS as a char
 	addToDict("PASS",newByteCodeNode(PRIMITIVE,36,0)); // doesn't do anything - used as a placeholder
+	addToDict(".s",newByteCodeNode(PRIMITIVE,37,0)); 	//prints the stack in hexadecimal
+	addToDict(".dict",newByteCodeNode(PRIMITIVE,38,0)); //prints the names of all dictionary words in search order
+	addToDict("HALT",newByteCodeNode(PRIMITIVE,39,0));   //quits the entire forth system immediately
+	addToDict("DROPALL",newByteCodeNode(PRIMITIVE,40,0)); //returns stack pointer to 0 - clears stack
+	addToDict("//",newByteCodeNode(PRIMITIVE,41,0)); 	//comments out rest of the line 
+	addToDict("READC",newByteCodeNode(PRIMITIVE,42,0)); //reads a single char onto the stack
+	addToDict("ALLOC",newByteCodeNode(PRIMITIVE,43,0)); //Allocates a block of memory of size of the value on the top of stack. pushes pointer to the memory to the TOS
+	addToDict("DALLOC",newByteCodeNode(PRIMITIVE,44,0)); //deallocates the block of memory pointed to by the TOS
+
 
 	//self interpreting code: - manually compiled
-	printf(">>COMPIlING REPL ENVIRONMENT\n");
+	printf(">>COMPILING REPL ENVIRONMENT\n");
 	createTryInt();
 	createEval();
 	createInterp();
-	createTest();
-end;
-void createTest()
-	addToDict("TEST",newByteCodeNode(PUSHLIT,1,newByteCodeNode(PRIMITIVE,2,0)));
-	addToDict("TEST1",newByteCodeNode(PUSHLIT,1,newByteCodeNode(PUSHLIT,2,newByteCodeNode(PRIMITIVE,9,newByteCodeNode(PRIMITIVE,2,0)))));
 end;
 
 void createTryInt()
@@ -114,9 +118,11 @@ void createTryInt()
 				newByteCodeNode(PRIMITIVE,35,
 				newByteCodeNode(PUSHLIT,0+' ',
 				newByteCodeNode(PRIMITIVE,35,
-				newByteCodeNode(PRIMITIVE,34,0)	
+				newByteCodeNode(PRIMITIVE,34,
+				newByteCodeNode(PUSHLIT,0+'\n',
+				newByteCodeNode(PRIMITIVE,35,0)	
 
-		))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+		))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
 end;
 
 void createEval()

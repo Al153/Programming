@@ -19,4 +19,3 @@ end;
 int __greater(int a, int b) if (a>b) then return 1; else return 0; endif; end;
 int __less(int a, int b) if (a<b) then return 1; else return 0; endif; end;
 int __equal(int a, int b) if (a==b) then return 1; else return 0; endif; end;
-

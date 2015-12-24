@@ -1,9 +1,10 @@
-//Trying to produce forth in CLL - may end up in assembly instead
-
-
-
+//Implementation of a forth in CLL - has some differences to regular forth -NOT COMPATIBLE WITH ANSFORTH
+//
+// 	This is an interactive, highly reflected language with an interpreter and bytecode compiler in (ignoring these comments) < 1500 lines of CLL (as of 23/12/2015)
+//
+//
 //defnitions within forth
-
+//
 //word dctionary format:
 //
 //8 bytes of name, an int of code pointer, an int of next entry pointer
@@ -17,21 +18,13 @@
 //			-----------------
 //	x+c:x+f	|    0123ABCD   | 	next entry pointer, points to the next dictionary entry
 //			-----------------
-
-
-// functions needed relating to dictionary entries:
-	// compare name (name, reference) ==> true or false - compares a string against the name of and entry
-	// search dictionary (name) ==> reference 		 	- searches the dictionary for the matching entry - makes use of compare_name  
-	// execute dictionary entry (reference) ==> none 	- executes the bytecode from a dictionary reference
-	// outer interpreter 								- executes bytecode 
-
-
-
+//
 //Bytecode format:
 //bytecode for and instruction constists of a linked list of bytecode instructions
-
-//bytecode instructions can be different lengths depending on the type of instructions.
-
+//
+//bytecode instructions can be different lengths depending on the type of instruction.
+//there are four specific types of instruction
+//
 //			word call 							  			push literal					branch  										primitive (CLL code)
 //
 // int0		type:word call      							type: PushLit					type: control flow 						 		type: primitive
@@ -39,21 +32,32 @@
 // int2		next Bytecode  		                     		Next Bytecode			 		Next Bytecode1 									Next Bytecode
 // int3 	flags 											flags 							flags 											flags
 //
-
+//
 // notes:
 	// the type field consists of some identifying number
 	// the last link to Next Bytecode in a chain will be 0, indicating to return 
 	// the flags int is used during compiliation to check whether a node has been touched
-
+//
 // Functions relating to Bytecodes:
 
 	// Bytecode interpeter: proceeds through bytecode list executing instructions, can execute any bytecode instruction and when it hits a primitive, performs a Goto to the machine code
 	//						and executes it, storing the current instruction before hand
 	
-	// A  set of primitives: primitives will allow forth to modify its own state. I plan on making "addToDictionary", "outerInterpreter" and parts of "Compile" primitives
+	// A  set of primitives: primitives will allow forth to modify its own state.
 
+	////////////////  PRIMITIVE OPCODES /////////////////////////////////////////////////////////
+	// @     00   	| +  08 	| ~  		10 | == 		18 | ISINT		20 | DROPALL	28
+	// !     01 	| -  09 	| ~&        11 | VARIABLE 	19 | CONVERTINT 21 | // 		29
+	// .     02 	| *  0A 	| ~|  		12 | CONST   	1A | .BUF 		22 | READC		2A
+	// DUP   03 	| /  0B 	| ~^ 	  	13 | TABLE      1B | .c 		23 | ALLOC 		2B
+	// SWAP  04 	| %  0C 	| << 		14 | READ 		1C | PASS		24 | DALLOC 	2C
+	// ROT   05 	| &  0D 	| >> 	    15 | EXEC 		1D | .s 		25 |
+	// OVER  06 	| |  0E 	| < 		16 | INDICT		1E | .dict 		26 |
+	// DROP  07 	| ^  0F 	| >         17 | COMPILE	1F | halt 		27 | 
+	//////////////////////////////////////////////////////////////////////////////////////////////
 
-
+	// the functions of these primitives are explained in precompiledWords.cll
+	//in the future more words such as anonymous allocate, deallocate may be added
 
 #include STD:allocation.cll
 #include STD:radix.cll
@@ -63,36 +67,13 @@
 #include auxiliaries.cll
 #include precompiledWords.cll
 
-
-
 void main()
-	//initialise :
-	// dictionary
-	// primitive words in dictionary
+	printf("______________________ Welcome to Al Forth (2015) ______________________\n");
 	printf(">>FORTH SYSTEM STARTED\n");
 	init_primitives();
 	printf(">>BUILT INS COMPILED\n");
 	// inner interpreter location an first level of REPL
-	printf("OK\n__________________________________________________________\n");
-	@int replWordReference = isInDict("TEST",ForthDictHead);//isInDict("INTERP",ForthDictHead);
-	// set an inner interpreter instance to start executing "INTERP"
-	//bytecodeInterp(replWordReference[2]); 
-	//replWordReference = isInDict("TEST1",ForthDictHead);
-	//bytecodeInterp(replWordReference[2]);
-	replWordReference = isInDict("INTERP",ForthDictHead);
+	printf("OK\n______________________________________________________________________\n");
+	@int replWordReference = isInDict("INTERP",ForthDictHead);
 	bytecodeInterp(replWordReference[2]);
 end;
-
-
-
-
-
-
-
-
-
-
-
-
-
-

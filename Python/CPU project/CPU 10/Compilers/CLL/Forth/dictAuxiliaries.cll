@@ -36,6 +36,7 @@ int checkDictName(@char name, @char reference)
 		if (name[i] != reference[i]) then return 0; endif; //fail
 		if (name[i] == 0) then return 1; endif; //end of string, success
 	loop;
+	if (name[8] == 0) then return 1; endif;
 end;
 
 @int isInDict(@char name,@int dict)

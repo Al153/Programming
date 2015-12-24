@@ -2,9 +2,8 @@
 
 //primitives not designed to be used by the user, but used to build the outer interpreter
 void primRead()
-	if (SOL) then SOL = 0; printf("\n>>"); endif;
+	if (SOL) then SOL = 0; printf("\nOK\n"); printf("\n>>"); endif;
 	convertName(scanWord(),WORD_BUF); //puts the word name into the global buffer
-	//printf("\nFINISHED READING\n");
 end;
 
 void primIsInDict()
@@ -13,13 +12,10 @@ void primIsInDict()
 end;
 
 void primExecute()
-	//printf("EXECUTING\n");
 	@int ref = Pop();
-	//printf("POPPED\n");
 	bytecodeInterp(ref[2]);
 	dontBreak = 1; //if a subroutine causes a break then the break doesn't unwravel past the outer interpreter
-	//printf("FINISHED EXECUTING\n");
-	if (EOL) then printf("\nOK\n"); EOL = 0; SOL = 1;endif;
+	if (EOL) then EOL = 0; SOL = 1;endif;
 end;
 
 void primCompile()
@@ -27,24 +23,12 @@ void primCompile()
 end;
 
 void primIsInt()
-	//printf("Trying int\n");
-	int i = 0;
-	while (WORD_BUF[i])do
-		if (not((WORD_BUF[i]>='0')and (WORD_BUF[i]<='9'))) then Push(0); endif; //if not a digit then failed
-		i += 1;
-	loop;
-	Push(1); //if hasnt returned then is an int
+	Push(isInt()); //if hasnt returned then is an int
 end;
 
-void convertInt()
-	//converts WORD_BUF to an int and pushes it
-	//printf("converting int\n");
-	int dec = 0;
-	int i;
-	for(i=0, WORD_BUF[i] ,i = i+1)
-		dec = dec * 10 + ( WORD_BUF[i] - '0' );
-	loop;
-	Push(dec);
+void primConvertInt()
+	//converts WORD_BUF to an int and pushes it	
+	Push(convertInt());
 end;
 
 //////// Variables and constant auxiliaries (technical primitives) //////////
@@ -67,4 +51,12 @@ void createTable()
 	convertName(scanWord(),name);   //produces an acceptable name
 	@int address = malloc(Pop()); 					 //n on stack
 	editDictEntry(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
+end;
+
+void dropAll()
+	ForthStackPointer = 0;
+end;
+
+void comment()
+	READ_IN_STATE = EMPTY;
 end;

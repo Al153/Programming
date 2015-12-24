@@ -1,6 +1,9 @@
 #include technicalPrimitives.cll
 
 ////////////////////////  STACK primitives //////////////////////////
+void halt ()
+	quit();
+end;
 
 void Fetch() // (Address -- value)
 	if (ForthStackPointer == 0) then //check stack not empty
@@ -15,7 +18,7 @@ end;
 
 void Store() // (value address -- )
 	if (ForthStackPointer<2) then
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -26,13 +29,28 @@ end;
 
 void printTOS()
 	int TOS = Pop();
-	if (TOS&2147483648) then printf("-"); print_i(0-TOS); return; endif; //deals with negative numbers
-	print_i(TOS);
+	if (TOS&2147483648) then printf("-"); print_i(0-TOS); printf(" "); return; endif; //deals with negative numbers
+	print_i(TOS); printf(" ");
 end;
 
 void printChar()
 	int TOS = Pop();
 	putc(char(TOS));
+end;
+
+void printStack()
+	int i;
+	for (i = 0, i<ForthStackPointer, i+=1)
+		print_h(ForthStack[i]);printf(" ");
+	loop;
+end;
+
+void printDict()
+	@int ref;
+	for (ref = ForthDictHead,ref,ref = ref[3])
+		@char name = ref;
+		printf(name);printf("\t");
+	loop;
 end;
 
 void Dup()
@@ -44,7 +62,7 @@ void Dup()
 			dontBreak = char(0); //breaks to the REPL 
 		endif;
 	else
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL	
 	endif;
 end;
@@ -53,7 +71,7 @@ void Drop()
 	if (ForthStackPointer>0) then //if stack has a value on it then
 		ForthStackPointer = ForthStackPointer -1 ;
 	else
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL	
 	endif;
 end;
@@ -65,7 +83,7 @@ void Swap()
 		ForthStack[ForthStackPointer-2] = ForthStack[ForthStackPointer-1];
 		ForthStack[ForthStackPointer-1] = temp;
 	else
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL	
 	endif;
 end;
@@ -77,7 +95,7 @@ void Rot()
 		ForthStack[ForthStackPointer-2] = ForthStack[ForthStackPointer-3];
 		ForthStack[ForthStackPointer-3] = temp;
 	else
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL	
 	endif;
 end;
@@ -91,7 +109,7 @@ void Over()
 			dontBreak = char(0); //breaks to the REPL 
 		endif;
 	else
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL	
 	endif;
 end;
@@ -103,7 +121,7 @@ end;
 //arithmetic primitives for forth, arithmetic is 2s complement
 void ADD()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -112,7 +130,7 @@ void ADD()
 end;
 void SUB()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -121,7 +139,7 @@ void SUB()
 end;
 void MUL()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -130,7 +148,7 @@ void MUL()
 end;
 void DIV()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -139,7 +157,7 @@ void DIV()
 end;
 void MOD()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -148,7 +166,7 @@ void MOD()
 end;
 void AND()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -157,7 +175,7 @@ void AND()
 end;
 void OR()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -166,7 +184,7 @@ void OR()
 end;
 void XOR()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -175,7 +193,7 @@ void XOR()
 end;
 void NOT()
 	if (ForthStackPointer<1) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -184,7 +202,7 @@ end;
 
 void NAND()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -193,7 +211,7 @@ void NAND()
 end;
 void NOR()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -202,7 +220,7 @@ void NOR()
 end;
 void XNOR()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -212,7 +230,7 @@ end;
 
 void SHR()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -223,7 +241,7 @@ end;
 
 void SHL()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -236,7 +254,7 @@ end;
 //////// comparison //////////
 void greater()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -254,7 +272,7 @@ end;
 
 void less()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -272,7 +290,7 @@ end;
 
 void equal()
 	if (ForthStackPointer<2) then 
-		printf("ERROR: Forth Stack underflow.\n");
+		printf("ERROR: Forth Stack Underflow\n");
 		dontBreak = char(0); //breaks to REPL
 		return;
 	endif;
@@ -280,15 +298,25 @@ void equal()
 	ForthStack[ForthStackPointer-1] = __equal(ForthStack[ForthStackPointer-1],ForthStack[ForthStackPointer]); //if both are negative then return (a>b)
 end;
 
-
-
 ////////////////////////// IO WORDS ///////////////////////
-
 void printBUF()
 	printf(WORD_BUF); //prints out the most recent word to be read in
 end;
 
+void readC()
+	Push(int(readStringChar()));
+end;
 
 void primPass()
 	pass;
+end;
+
+////////////////////////// MEMORY WORDS /////////////////////////
+void primAlloc()
+	ForthStack[ForthStackPointer-1] = malloc(ForthStack[ForthStackPointer -1]);
+end;
+
+void primDalloc()
+	ForthStackPointer -= 1;
+	dalloc(ForthStack[ForthStackPointer]);
 end;

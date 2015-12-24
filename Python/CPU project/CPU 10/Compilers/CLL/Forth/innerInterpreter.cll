@@ -5,44 +5,35 @@
 
 #include primitives.cll
 
-
 /////////////////////////////////  Main bytecode interpeter //////////////////////////////////////
 char dontBreak = 1;
 void bytecodeInterp(@int reference)
-	//printf("New inner interpreter instance\n");
 	int currentFSP = ForthStackPointer;
 	dontBreak = char(1);
-	//printf("Reference ");print_i(reference);printf("\n");
 	while((reference)and(dontBreak))do
 
 		int opType = reference[0];
 		if (opType == WORDCALL) then
-			//printf("Word call\n");
 			@int new_reference = reference[1];
 			bytecodeInterp(new_reference[2]); //reference points to the dictionary entry
 			reference = reference[2];
-		else if(opType == PUSHLIT) then
-			//printf(" PushLit\n");
+		else if(opType == PUSHLIT) then			
 			PushLit(reference[1]);
 			reference = reference[2];
-		else if (opType == BRANCH) then
-			//printf("BRANCH\n");
+		else if (opType == BRANCH) then			
 			int branchIfTrue = Pop();
 			reference = reference[1] if branchIfTrue else reference[2];
 		else if (opType == PRIMITIVE) then
-			//printf("PRIMITIVE\n");
 			executePrimitive(reference[1]);
 			 reference = reference[2];
 		else
 			printf("ERROR: unrecognised bytecode: "); print_i(opType);
 			dontBreak = char(0);
-
 		endif;
 		endif;
 		endif;
 		endif;
-	loop;
-	//printf("\nRETURNING\n");
+	loop;	
 	if (not(dontBreak)) then ForthStackPointer = currentFSP; endif; //if there is an error then roll back the FSP.
 end;
 
@@ -50,8 +41,6 @@ end;
 #define FORTHSTACKSIZE 65536
 @int FORTHSTACKSIZE ForthStack;
 int ForthStackPointer = 0;
-
-
 
 void PushLit(int number)
 	ForthStack[ForthStackPointer] = number;
@@ -65,22 +54,6 @@ end;
 
 void executePrimitive(int primitive_opcode)
 	//picks primitive to run and runs it
-
-	////////////////  PRIMITIVE OPCODES ///////////////////////////////////////
-	// @     00   	| +  08 	| ~  		10 | == 		18 | ISINT		20
-	// !     01 	| -  09 	| ~&        11 | VARIABLE 	19 | CONVERTINT 21
-	// .     02 	| *  0A 	| ~|  		12 | CONST   	1A | .BUF 		22
-	// DUP   03 	| /  0B 	| ~^ 	  	13 | TABLE      1B | .c 		23
-	// SWAP  04 	| %  0C 	| << 		14 | READ 		1C | PASS		24
-	// ROT   05 	| &  0D 	| >> 	    15 | EXEC 		1D |
-	// OVER  06 	| |  0E 	| < 		16 | INDICT		1E |
-	// DROP  07 	| ^  0F 	| >         17 | COMPILE	1F |
-	///////////////////////////////////////////////////////////////////////////
-
-	//in the future more words such as anonymous allocate, deallocate may be added
-
-	//READ, EXEC, INDICT, ISINT, CONVERTINT COMPILE, CONST, VARIABLE, TABLE are technical interpreted words, and probably wont be linked to user generated words
-
 	//binary search over opcodes
 	if (primitive_opcode<32) then 
 		if (primitive_opcode<16) then
@@ -209,24 +182,43 @@ void executePrimitive(int primitive_opcode)
 			endif;
 		endif;
 	else
-		if (primitive_opcode<37) then
-			if (primitive_opcode<34) then
+		if (primitive_opcode<40) then
+			if (primitive_opcode<36) then
 				if (primitive_opcode==32) then 			  // == 20: ISINT
 					primIsInt();
-				else									  // == 21: CONVERTINT
-					convertInt();
-				endif;
-			else
-				if (primitive_opcode == 34) then	  // == 22: .BUF
+				else if (primitive_opcode == 33) then		  // == 21: CONVERTINT
+					primConvertInt();
+				else if (primitive_opcode == 34) then	  // == 22: .BUF
 					printBUF();
 				else if (primitive_opcode == 35) then	  // == 23: .c
 					printChar();
-				else 									  // == 24: PASS
+				endif; endif; endif; endif;
+			else
+				if (primitive_opcode == 36) then	  	   // == 24: PASS
 					primPass();
+
+				else if (primitive_opcode == 37) then 	   // == 25: .s
+					printStack(); 						  
+				else if (primitive_opcode == 38) then 	   // == 26: .dict
+					printDict();
+				else									   // == 27: HALT
+					halt();
+				endif;
 				endif;endif;
 			endif;	
-		else
-			printf("ERROR: unrecognised opcode ");print_h(primitive_opcode);dontBreak = char(0);
+		else if (primitive_opcode == 40) then 			   // == 28: DROPALL
+				dropAll();
+			else if (primitive_opcode == 41) then 		   // == 29: //
+				comment();
+			else if (primitive_opcode == 42) then 		   // == 2A: READC
+				readC();
+			else if (primitive_opcode == 43) then		   // == 2B: ALLOC
+				primAlloc();
+			else if (primitive_opcode == 44) then 		   // == 2C: DALLOC
+				primDalloc();
+			else
+				printf("ERROR: unrecognised opcode ");print_h(primitive_opcode);dontBreak = char(0);
+			endif; endif; endif; endif; endif;
 		endif;
 	endif;
 end;
