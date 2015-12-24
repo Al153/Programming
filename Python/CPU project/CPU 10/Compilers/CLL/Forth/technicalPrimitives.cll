@@ -2,7 +2,7 @@
 
 //primitives not designed to be used by the user, but used to build the outer interpreter
 void primRead()
-	if (SOL) then SOL = 0; printf("\nOK\n"); printf("\n>>"); endif;
+	if (EOL) then printf("\nOK\n"); printf("\n>>"); EOL = 0; endif;
 	convertName(scanWord(),WORD_BUF); //puts the word name into the global buffer
 end;
 
@@ -15,7 +15,6 @@ void primExecute()
 	@int ref = Pop();
 	bytecodeInterp(ref[2]);
 	dontBreak = 1; //if a subroutine causes a break then the break doesn't unwravel past the outer interpreter
-	if (EOL) then EOL = 0; SOL = 1;endif;
 end;
 
 void primCompile()

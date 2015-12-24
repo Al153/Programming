@@ -382,7 +382,6 @@ byteArray CLL.array_of_string38 30 [69, 82, 82, 79, 82, 58, 32, 70, 111, 114, 11
 int CLL.string38 CLL.array_of_string38
 byteArray CLL.array_of_string39 30 [69, 82, 82, 79, 82, 58, 32, 70, 111, 114, 116, 104, 32, 83, 116, 97, 99, 107, 32, 85, 110, 100, 101, 114, 102, 108, 111, 119, 10, 0]
 int CLL.string39 CLL.array_of_string39
-int CLL.SOL 0
 byteArray CLL.array_of_string112 4 [68, 85, 80, 0]
 int CLL.string112 CLL.array_of_string112
 byteArray CLL.array_of_string113 5 [83, 87, 65, 80, 0]
@@ -1357,10 +1356,8 @@ Load gp0 @0
 Store gp0 CLL.ForthDictTail 										#STORE GP0 GLOBAL
 Load gp0 @0
 Store gp0 CLL.READ_IN_STATE 										#STORE GP0 GLOBAL
-Load gp0 @0
-Store gp0 CLL.EOL 										#STORE GP0 GLOBAL
 Load gp0 @1
-Store gp0 CLL.SOL 										#STORE GP0 GLOBAL
+Store gp0 CLL.EOL 										#STORE GP0 GLOBAL
 Load gp0 CLL.string160 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -2396,6 +2393,151 @@ Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
 Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
 Move ret_addr PC
+#########################################################################################################################
+																	Scope isEOL
+def expression_stack_ptr gp7
+def ret_addr Jump
+def previous_stack_ptr gp5
+#__________ Defining offsets of local variables __________#
+#__________ End of local variable definitions __________#
+Move Stack_pointer previous_stack_ptr								%function:isEOL
+SUB Stack_pointer @8 									#OVERHEAD FOR FUNCTION isEOL
+Compare Stack_pointer Callstack_ptr
+if Less then Load PC Recursion_limit_reached
+Store ret_addr 0 [Stack_pointer]
+Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION isEOL
+Pass 										%loopisEOL-0entry
+Load gp0 @1
+if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
+NOT gp0
+if gp0 then Load PC loopisEOL-0exit 								#WHILE LOOP
+LoadByte gp0 CLL.linePtr 									#LOAD GP0 GLOBAL (CHAR)
+Move gp0 gp6 						#PUSH gp0 POP gp6
+ADD gp6 CLL.lineBuff 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
+LoadByte gp0 0 [gp6]
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp0 @32
+AND gp0 @255 													  #CASTING INT TO CHAR
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+LoadByte gp0 CLL.linePtr 									#LOAD GP0 GLOBAL (CHAR)
+Move gp0 gp6 						#PUSH gp0 POP gp6
+ADD gp6 CLL.lineBuff 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
+LoadByte gp0 0 [gp6]
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp0 @9
+AND gp0 @255 													  #CASTING INT TO CHAR
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+OR gp0 gp1
+if gp0 then Load PC ifisEOL-1true 									#IF ELSE STATEMENT
+LoadByte gp0 CLL.linePtr 									#LOAD GP0 GLOBAL (CHAR)
+Move gp0 gp6 						#PUSH gp0 POP gp6
+ADD gp6 CLL.lineBuff 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
+LoadByte gp0 0 [gp6]
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp0 @10
+AND gp0 @255 													  #CASTING INT TO CHAR
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+LoadByte gp0 CLL.linePtr 									#LOAD GP0 GLOBAL (CHAR)
+Move gp0 gp6 						#PUSH gp0 POP gp6
+ADD gp6 CLL.lineBuff 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
+LoadByte gp0 0 [gp6]
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp0 @0
+AND gp0 @255 													  #CASTING INT TO CHAR
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+OR gp0 gp1
+if gp0 then Load PC ifisEOL-0true 									#IF ELSE STATEMENT
+Load gp0 @0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+Load PC ifisEOL-0endif
+Pass 										%ifisEOL-0true
+Load gp0 @1
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
+Pass 										%ifisEOL-0endif           
+Load PC ifisEOL-1endif
+Pass 										%ifisEOL-1true
+LoadByte gp0 CLL.linePtr 									#LOAD GP0 GLOBAL (CHAR)
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp0 @1
+AND gp0 @255 													  #CASTING INT TO CHAR
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+ADD gp0 gp1 														#ADD (CHARS)
+AND gp0 @255
+StoreByte gp0 CLL.linePtr 									#STORE GP0 GLOBAL (CHAR)
+Pass 										%ifisEOL-1endif           
+Load PC loopisEOL-0entry					%loopisEOL-0continue
+Pass 										%loopisEOL-0exit
+Load gp0 @0
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
+Load ret_addr 0 [Stack_pointer]
+Move previous_stack_ptr Stack_pointer
+Move ret_addr PC
 
 ############################################## Built in function printf ####################################################################
 
@@ -2576,12 +2718,10 @@ Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION primRead
-Load gp0 CLL.SOL 										#LOAD GP0 GLOBAL
+Load gp0 CLL.EOL 										#LOAD GP0 GLOBAL
 if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifprimRead-0endif
-Load gp0 @0
-Store gp0 CLL.SOL 										#STORE GP0 GLOBAL
 Load gp0 CLL.string13 										#LOAD GP0 GLOBAL
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
@@ -2594,6 +2734,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
+Load gp0 @0
+Store gp0 CLL.EOL 										#STORE GP0 GLOBAL
 Pass										%ifprimRead-0endif
 Goto function:scanWord 												#CALLING scanWord
 Load gp0 CLL.WORD_BUF 										#LOAD GP0 GLOBAL
@@ -2805,33 +2947,10 @@ AND gp0 @255
 StoreByte gp0 CLL.linePtr 									#STORE GP0 GLOBAL (CHAR)
 Load PC loopscanWord-1entry					%loopscanWord-1continue
 Pass 										%loopscanWord-1exit
-LoadByte gp0 CLL.linePtr 									#LOAD GP0 GLOBAL (CHAR)
-Move gp0 gp6 						#PUSH gp0 POP gp6
-ADD gp6 CLL.lineBuff 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
-LoadByte gp0 0 [gp6]
-Move gp0 gp1 						#PUSH gp0 POP gp1
-Load gp0 @13
-Move Zero gp2 														#COMPARE (IS EQUAL)
-Compare gp1 gp0
-if Equal then Load  gp2 @4294967295
-Move gp2 gp0
-Store gp0 Expression_stack [gp7]									#PUSH GP0
-ADD gp7 @4
-Compare gp7 stack_length
-if Greater then Load PC Stack_overflow_error
-LoadByte gp0 CLL.linePtr 									#LOAD GP0 GLOBAL (CHAR)
-Move gp0 gp6 						#PUSH gp0 POP gp6
-ADD gp6 CLL.lineBuff 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
-LoadByte gp0 0 [gp6]
-Move gp0 gp1 						#PUSH gp0 POP gp1
-Load gp0 @0
-Move Zero gp2 														#COMPARE (IS EQUAL)
-Compare gp1 gp0
-if Equal then Load  gp2 @4294967295
-Move gp2 gp0
-SUB gp7 @4 															#POP GP1
-Load gp1 Expression_stack [gp7]
-OR gp0 gp1
+Goto function:isEOL 												#CALLING isEOL
+SUB gp7 @4 															#POP GP0
+Load gp0 Expression_stack [gp7]
+if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifscanWord-2endif
 Load gp0 @0
@@ -4222,15 +4341,6 @@ Goto function:bytecodeInterp 												#CALLING bytecodeInterp
 Load gp0 @1
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load gp0 CLL.EOL 										#LOAD GP0 GLOBAL
-if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
-NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC ifprimExecute-0endif
-Load gp0 @0
-Store gp0 CLL.EOL 										#STORE GP0 GLOBAL
-Load gp0 @1
-Store gp0 CLL.SOL 										#STORE GP0 GLOBAL
-Pass										%ifprimExecute-0endif
 Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
 Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer
@@ -7948,7 +8058,7 @@ Pass										%ifscanToEndOfDef-2endif
 Load PC loopscanToEndOfDef-0entry					%loopscanToEndOfDef-0continue
 Pass 										%loopscanToEndOfDef-0exit
 Load gp0 @1
-Store gp0 CLL.SOL 										#STORE GP0 GLOBAL
+Store gp0 CLL.EOL 										#STORE GP0 GLOBAL
 Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
 Load ret_addr 0 [Stack_pointer]
 Move previous_stack_ptr Stack_pointer

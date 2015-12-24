@@ -5,8 +5,7 @@
 char linePtr;
 int READ_IN_STATE = EMPTY;
 @char 9 WORD_BUF; //global var containing the name of a word
-int EOL = 0; //used as extra state to trigger OKs
-int SOL = 1;
+int EOL = 1; //used as extra state to trigger OKs
 #define EMPTY 0
 #define FULL 1
 
@@ -74,12 +73,21 @@ end;
 		endif;
 	loop;
 	@char return_value = lineBuff+linePtr; //value to return points to the start of the word
-	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop; //scrolls on to teh next whitespace
-	if ((lineBuff[linePtr] == 13)or (lineBuff[linePtr] == 0)) then READ_IN_STATE = EMPTY; EOL = 1; endif;
-		//int i;
-	//	for (i = 0, i<16,i+=1) print_i(int(lineBuff[return_value-lineBuff + i]));printf(", ");loop;
-	//	printf("\n\n\nfinished scan, press enter to continue\n"); char cont = getw();
+	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop; //scrolls on to the next whitespace
+	if (isEOL()) then READ_IN_STATE = EMPTY; EOL = 1; endif;
 	return return_value;
+end;
+
+int isEOL()
+	//determines if there is an EOL before the start of the next word
+	while (1) do
+		if ((lineBuff[linePtr] == ' ')or(lineBuff[linePtr] == '\t')) then
+			linePtr += 1;
+		else if ((lineBuff[linePtr] == '\n')or(lineBuff[linePtr] == char(0))) then return 1; //eol
+			else return 0;
+			endif; 
+		endif;
+	loop;
 end;
 
 int isWhiteSpace(char input)
@@ -131,7 +139,7 @@ void scanToEndOfDef()
 		if (character == '\n') then break; READ_IN_STATE = EMPTY; endif;
 		if (character == char(0)) then break; READ_IN_STATE = EMPTY; endif;
 	loop;
-	SOL = 1;
+	EOL = 1;
 end;
 
 int isInt()	
