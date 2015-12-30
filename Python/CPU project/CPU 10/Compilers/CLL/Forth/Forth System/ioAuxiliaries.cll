@@ -5,7 +5,7 @@
 char linePtr;
 int READ_IN_STATE = EMPTY;
 @char 9 WORD_BUF; //global var containing the name of a word
-int EOL = 1; //used as extra state to trigger OKs
+int EOL = 0; //used as extra state to trigger OKs
 #define EMPTY 0
 #define FULL 1
 
@@ -124,7 +124,7 @@ end;
 char readStringChar()
 	//reads in a single string character, refilling the input buffer if necessary
 	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
-	if (lineBuff[linePtr] == '\n') then READ_IN_STATE = EMPTY; endif;
+	if (lineBuff[linePtr] == 0) then READ_IN_STATE = EMPTY; endif;
 	linePtr += 1;
 	return lineBuff[linePtr-1];
 end;

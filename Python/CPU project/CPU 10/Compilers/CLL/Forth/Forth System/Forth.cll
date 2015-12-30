@@ -73,7 +73,7 @@ void main()
 	init_primitives();
 	printf(">>BUILT INS COMPILED\n");
 	// inner interpreter location an first level of REPL
-	printf("OK\n______________________________________________________________________\n");
+	printf("OK\n________________________________________________________________________\n>>");
 	@int replWordReference = isInDict("INTERP",ForthDictHead);
 	bytecodeInterp(replWordReference[2]);
 end;
