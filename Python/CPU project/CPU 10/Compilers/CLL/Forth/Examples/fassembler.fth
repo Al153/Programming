@@ -14,21 +14,6 @@ VARIABLE dataPtr 0 dataPtr !
 	SWAP 65535 & 16 << | SWAP !
 ;
 
-: asm_init
-	// do something	
-;
-
-: EXEC
-	// write launchpad code to all addresses until the right one is hit
-	0 1 while
-		50593792 OVER 0 int[!] // writes an unconditional load pc instruction to the address
-		4 + codeSegment OVER 0 int[!] // writes the address of the code segment
-		4 + 
-
-		0 0 < DROP // in current forth.al file, the less subroutine is defined first, so by dummy calling it,
-				   // we can attempt to run the launchpad code  sooner
-	1 loop
-;
 
 : cW codeSegm codePtr @ char[!] codePtr ++ ; // writes a byte to the  											// TICK
 : cIW codeSegm codePtr @  + 0 int[!] codePtr ++4 ; // writes an int to the codeSegment							// TICK 
@@ -48,26 +33,13 @@ VARIABLE dataPtr 0 dataPtr !
 	CONST // stores the address of the variable
 ;
 
-: labelVal codeSegment codePtr @ + ;
+: labelVal codeSegm codePtr @ + ;
 
 : LABEL! // store an address to a label variable
 	labelVal SWAP !
 ;
 
-: varLAB // if references a label from a variable
-	DUP @ if	// if the found field of the label is true
-		@ 		// then simply return the address
-	else
-		DUP 4 + @ // PTR NEXT
-		2 ALLOC SWAP // PTR NEW NEXT
-		OVER 4 + !   // PTR NEW NEXT NEW =(4 + !)=> PTR NEW
-		DUP codePtr codeSegment @ + SWAP ! // PTR NEW NEW intPTR =(!)=> PTR NEW
-		SWAP 4 + ! // EMPTY
-		0 // returns a zero to act as a dummy address
-	then
-;
-
-256 TABLE litTab // hashtable of values
+256 TABLE litTab // hashtable of values  // TICK FOR ALL THE LABELLING CODE
 VARIABLE litVal
 : @value 0 int[@] ;
 : @entry 1 int[@] ;
@@ -87,30 +59,46 @@ VARIABLE litVal
 	loop
 ;
 
-: litTab@ litTab litVal @ byteHash int[@] ; // ( -- litTab[hash(litVal)])
-: litTab! litTab litVal @ byteHash int[!] ; // ( listPtr -- )
+
 
 : byteHash 255 & ; // gets litTab lookup address of a value
+: litTab@ litTab litVal @ byteHash int[@] ; // ( -- litTab[hash(litVal)])
+: litTab! litTab litVal @ byteHash int[!] ; // ( listPtr -- )
 : newTabEn // creates a new hashtable linked list node
 			// ( -- literalVarPointer listNode )
 	4 ALLOC
-	DUP litVal @ !value DUP currDP !entry DUP 0 !next
+	litVal @ OVER !value currDP OVER !entry 0 OVER !next
 	litVal @ dIW
 	DUP @entry SWAP
 ; 
 
 : # // # returns the address of a variable initialised to the value passed to it, if one exists, makes one otherwise
-	DUP litVal !
-	byteHash litTab int[@]
+	// (value -- address of int containing that value)
+	litVal !
+	litTab@
 	DUP if
 		inList DUP if // if it's in the list, then the value will be returned so do nothing
 		else
-			DROP newTabEn DUP litTab@ SWAP !next litTab! // creates a new linked list node and does linkage
+			DROP newTabEn litTab@ OVER !next litTab! // creates a new linked list node and does linkage
+			// newTabEn returns the entry anyway
 		then
 	else
 		DROP newTabEn litTab! // create a new table entry and add it to the table
 	then
 ;
+
+: ASM_EXEC
+	// write launchpad code to all addresses until the right one is hit
+	0 1 while
+		50593792 OVER 0 int[!] // writes an unconditional load pc, instruction to the address
+		4 + codeSegment # OVER 0 int[!] // writes a variable with the address of the code segment
+		4 + 
+
+		0 0 < DROP // in current forth.al file, the less subroutine is defined first, so by dummy calling it,
+				   // we can attempt to run the launchpad code  sooner
+	1 loop
+;
+
 
 // now "DECLABEL x ... x instrLAB goto ... x :LABEL" should work
 
@@ -147,7 +135,7 @@ VARIABLE asm_r1 VARIABLE asm_r2 VARIABLE asm_cnd VARIABLE asm_op VARIABLE asm_ad
 : asm;
 	// assembles 4 bytes and an int address
 	asm_addr ! asm_op ! asm_r2 ! asm_r1 ! asm_cnd ! // stack is: cnd r1 r2 op addr
-	asm_op @ cW asm_r1 @ cW asm_r2 @ cW asm_cnd @ cW asm_addr @ cWI // writes each part of the instruction to the code segment
+	asm_op @ cW asm_r1 @ cW asm_r2 @ cW asm_cnd @ cW asm_addr @ cIW // writes each part of the instruction to the code segment
 ;
 
 // assembly programming can be done from this code alone, but now we can introduce macros to make us more efficient, we can add our macros
@@ -235,9 +223,9 @@ VARIABLE asm_r1 VARIABLE asm_r2 VARIABLE asm_cnd VARIABLE asm_op VARIABLE asm_ad
 : ina[]; 0 ROT 0 ROT op_ina, SWAP asm; ;
 
 // branch pseudocommands
-: brr; pc op_mov, 0 asm; ;
-: bra; pc SWAP 0 SWAP op_lda, SWAP asm; ;
-: bra[]; pc ROT op_lda, SWAP asm; ;
+: brr; pc, op_mov, 0 asm; ;
+: bra; pc, SWAP 0 SWAP op_ldi, SWAP asm; ;
+: bra[]; pc, ROT op_ldi, SWAP asm; ;
 
 // construct conditionals
 
@@ -258,7 +246,7 @@ VARIABLE asm_r1 VARIABLE asm_r2 VARIABLE asm_cnd VARIABLE asm_op VARIABLE asm_ad
 : goto;
 	pc, jmp, mov;
 	jmp, 16 # adda;
-	pc, SWAP lda;
+	pc, SWAP ldi;
 ;
 : gotoIf;
 	pc, jmp, mov;
@@ -266,7 +254,6 @@ VARIABLE asm_r1 VARIABLE asm_r2 VARIABLE asm_cnd VARIABLE asm_op VARIABLE asm_ad
 	bra;
 ;
 
-16 # .h
-16 # .h
-5 # .h
-256 16 + # .h
+97 # oca;
+hlt;
+ASM_EXEC
