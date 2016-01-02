@@ -44,6 +44,16 @@ loop DROP ; // start predicate next, looped_code ==> executes looped_code repeat
 	SWAP 255 & 24 << | SWAP ! 		// FINISHED
 ;
 
+: word[!] 				// (value address offset --)		
+	2 * + SWAP OVER 	
+	@ 65535 &
+	SWAP 65535 & 16 << | SWAP !
+;
+
+: word[@] // ( address offset -- value)
+	2 * + @ 16 >>
+;
+
 : int[@] // address, offset ==> address[offset]                 indexes an int array/ @int
 	4 * + @
 ;
@@ -69,6 +79,8 @@ loop DROP ; // start predicate next, looped_code ==> executes looped_code repeat
 
 : ++ DUP @ 1 + SWAP ! ;
 : -- DUP @ 1 - SWAP ! ;
+: ++4 DUP @ 4 + SWAP ! ; // does 4 ++s on a var
+: += OVER @ + SWAP ! ;
 : reZero 0 SWAP ! ;
 
 VARIABLE strCtr

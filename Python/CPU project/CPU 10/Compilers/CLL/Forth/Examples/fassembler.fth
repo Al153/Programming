@@ -1,29 +1,21 @@
+// requires std.fth to be pre-executed
+
 // writing a postfix assembler as an extension of the forth system
 
 65536 ALLOC CONST codeSegm // 32000 instructions max
 65536 ALLOC CONST dataSegm // 64k * 4 bytes available
 
-VARIABLE codePtr 0 codePtr !
+VARIABLE codePtr 0 codePtr ! // create pointers to keep track of code and data segments
 VARIABLE dataPtr 0 dataPtr !
 
-: ++4 DUP DUP DUP ++ ++ ++ ++ ; // TICK
-
-: word[!] 						// TICK
-	2 * + SWAP OVER
-	@ 65535 &
-	SWAP 65535 & 16 << | SWAP !
-;
-
-
-: cW codeSegm codePtr @ char[!] codePtr ++ ; // writes a byte to the  											// TICK
-: cIW codeSegm codePtr @  + 0 int[!] codePtr ++4 ; // writes an int to the codeSegment							// TICK 
+: cW codeSegm codePtr @ char[!] codePtr ++ ; // writes a byte to the codeSegment 											
+: cIW codeSegm codePtr @  + 0 int[!] codePtr ++4 ; // writes an int to the codeSegment							
 : dW dataSegm dataPtr @ + 0 char[!] dataPtr ++ ; // writes a byte to the dataSegment
 : dIW dataSegm dataPtr @  + 0 int[!] dataPtr ++4 ; // writes an int to the dataSegment
 : dWW dataSegm dataPtr @ + 0 word[!] dataPtr ++ dataPtr ++ ; // writes a 16 bit word to the datasegment
 : currDP dataSegm dataPtr @ + ; // returns the next dataValue to be written to 
-
 // words to create variables
-: INT dIW currDP 4 - CONST ; // TICK
+: INT dIW currDP 4 - CONST ; 
 : CHAR dW currDP 1 - CONST ;
 : WORD dWW currDP 2 - CONST ;
 
@@ -33,22 +25,21 @@ VARIABLE dataPtr 0 dataPtr !
 	CONST // stores the address of the variable
 ;
 
-: labelVal codeSegm codePtr @ + ;
-
+: labelVal codeSegm codePtr @ + ; // ( -- top of codeSegment)  - auxiliary to LABEL
 : LABEL! // store an address to a label variable
 	labelVal SWAP !
 ;
 
-256 TABLE litTab // hashtable of values  // TICK FOR ALL THE LABELLING CODE
+256 TABLE litTab // hashtable of values  
 VARIABLE litVal
-: @value 0 int[@] ;
-: @entry 1 int[@] ;
-: @next 2 int[@] ;
-: !value 0 int[!] ;
-: !entry 1 int[!] ;
-: !next  2 int[!] ;
+: @value 0 int[@] ; // (litNode -- value)
+: @entry 1 int[@] ; // (litode -- entryPointer)
+: @next 2 int[@] ; // (litNode -- nextPointer)
+: !value 0 int[!] ; // (value litNode -- )
+: !entry 1 int[!] ; // (entryPointer litNode -- )
+: !next  2 int[!] ; // (nextPointer litNode -- )
 
-: inList // ( topOfList -- pointerToLiteralVariable )
+: inList // ( topOfList -- pointerToLiteralVariable ) // sees if a particular value is present as the value of a node in a hash table collision list
 	DUP while
 		DUP @value litVal @ =
 		if 
@@ -61,7 +52,7 @@ VARIABLE litVal
 
 
 
-: byteHash 255 & ; // gets litTab lookup address of a value
+: byteHash 255 & ; // gets litTab lookup address of a value 
 : litTab@ litTab litVal @ byteHash int[@] ; // ( -- litTab[hash(litVal)])
 : litTab! litTab litVal @ byteHash int[!] ; // ( listPtr -- )
 : newTabEn // creates a new hashtable linked list node
@@ -90,7 +81,7 @@ VARIABLE litVal
 : ASM_EXEC
 	// write launchpad code to all addresses until the right one is hit
 	0 1 while
-		50593792 OVER 0 int[!] // writes an unconditional load pc, instruction to the address
+		50593792 OVER 0 int[!] // writes an unconditional "load pc...", instruction to the address
 		4 + codeSegment # OVER 0 int[!] // writes a variable with the address of the code segment
 		4 + 
 
@@ -254,6 +245,63 @@ VARIABLE asm_r1 VARIABLE asm_r2 VARIABLE asm_cnd VARIABLE asm_op VARIABLE asm_ad
 	bra;
 ;
 
+// __________________________________________________ defining char literals _____________________________
+: 'a' ;
+: 'b' ;
+: 'c' ;
+: 'd' ;
+: 'e' ;
+: 'f' ;
+: 'g' ;
+: 'h' ;
+: 'i' ;
+: 'j' ;
+: 'k' ;
+: 'l' ;
+: 'm' ;
+: 'n' ;
+: 'o' ;
+: 'p' ;
+: 'q' ;
+: 'r' ;
+: 's' ;
+: 't' ;
+: 'u' ;
+: 'v' ;
+: 'w' ;
+: 'x' ;
+: 'y' ;
+: 'z' ;
+: 'A' ;
+: 'B' ;
+: 'C' ;
+: 'D' ;
+: 'E' ;
+: 'F' ;
+: 'G' ;
+: 'H' ;
+: 'I' ;
+: 'J' ;
+: 'K' ;
+: 'L' ;
+: 'M' ;
+: 'N' ;
+: 'O' ;
+: 'P' ;
+: 'Q' ;
+: 'R' ;
+: 'S' ;
+: 'T' ;
+: 'U' ;
+: 'V' ;
+: 'W' ;
+: 'X' ;
+: 'Y' ;
+: 'Z' ;
+
+// example: 
 97 # oca;
 hlt;
 ASM_EXEC
+
+
