@@ -90,6 +90,24 @@ VARIABLE litVal
 	1 loop
 ;
 
+2 TABLE INLN_RES
+: ASM_INLN // ( ASSEMBLY_FIRSt_STAGE --)
+	// new idea to execute arbitary machine code 
+	// address of start of div by zero = 8 * 58
+
+	// idea: create a launchpad by writing a LOAD PC jump to a piece of  first stage code to the code which handles divisions by zero
+	// first stage code stores the current registers to some spot in memory, rewrites the error handling code then jumps to the payload code
+	// the payload should then use the jump register to return to stage one on the descent.
+	// first stage's descent module should now reconstruct the stack frame from the stack pointers and call a CLL return, returning to the execution of the FORTH 
+	// ASM_INLN word
+
+	// the launchpad code is then executed by dividing by zero
+	[ 58 8 * ] DUP 0 int[@] INLN_RES 0 int[!] 1 int[@] INLN_RES 1 int[!] // saves the existing error handling code
+	[ 58 8 * ] 50593792 OVER ! 4 + ! // writes a load PC instr (505...92) to the error handling code (addr = 58 * 8), then writes the first stage address qith an offset of 4
+	1 0 / DROP // triggers div by zero
+	INLN_RES 0 int[@] INLN_RES 1 int[@]	[ 58 8 * ] SWAP OVER 1 int[!] 0 int[!] // restores the error handling code
+;
+
 
 // now "DECLABEL x ... x instrLAB goto ... x :LABEL" should work
 
