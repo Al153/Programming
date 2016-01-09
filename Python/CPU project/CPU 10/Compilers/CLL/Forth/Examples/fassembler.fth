@@ -2,8 +2,17 @@
 
 // writing a postfix assembler as an extension of the forth system
 
-65536 ALLOC CONST codeSegm // 32000 instructions max
-65536 ALLOC CONST dataSegm // 64k * 4 bytes available
+65536 ALLOC CONST cSeg // 32000 instructions max
+65536 ALLOC CONST dSeg // 64k * 4 bytes available
+: codeSegm cSeg 0 DROP ; // simple abstraction allowing us to change the position of the datacSeg, 
+: dataSegm dSeg 0 DROP ; // 
+
+// words to get and set the code and data segments
+// do some clever meta editting to change the address that it pushed to the stack
+: getCode [ getA codeSegm ] 2 int[@] 1 int[@] ; 
+: getData [ getA dataSegm ] 2 int[@] 1 int[@] ; 
+: setCode [ getA codeSegm ] 2 int[@] 1 int[!] ;
+: setData [ getA dataSegm ] 2 int[@] 1 int[!] ;
 
 VARIABLE codePtr 0 codePtr ! // create pointers to keep track of code and data segments
 VARIABLE dataPtr 0 dataPtr !
@@ -30,10 +39,14 @@ VARIABLE dataPtr 0 dataPtr !
 	labelVal SWAP !
 ;
 
-256 TABLE litTab // hashtable of values  
+VARIABLE P_litTab // hash table of literal values.
+: litTab P_litTab @ ; // code to get and set current table - allows change of namespace for different pieces of assembly
+: n_litTab P_litTab ! ;
+
+256 ALLOC n_litTab // hashtable of values  
 VARIABLE litVal
 : @value 0 int[@] ; // (litNode -- value)
-: @entry 1 int[@] ; // (litode -- entryPointer)
+: @entry 1 int[@] ; // (litNode -- entryPointer)
 : @next 2 int[@] ; // (litNode -- nextPointer)
 : !value 0 int[!] ; // (value litNode -- )
 : !entry 1 int[!] ; // (entryPointer litNode -- )
@@ -78,7 +91,7 @@ VARIABLE litVal
 	then
 ;
 
-: ASM_EXEC
+: ASM_EXEC_OLD
 	// write launchpad code to all addresses until the right one is hit
 	0 1 while
 		50593792 OVER 0 int[!] // writes an unconditional "load pc...", instruction to the address
@@ -90,22 +103,21 @@ VARIABLE litVal
 	1 loop
 ;
 
-2 TABLE INLN_RES
-: ASM_INLN // ( ASSEMBLY_FIRSt_STAGE --)
-	// new idea to execute arbitary machine code 
-	// address of start of div by zero = 8 * 58
+2 TABLE EXEC_CLR // stores the previous instructions held at divByZeroError, so that they can be restored
+: ASM_EXEC // ( PASSED_VAL ASSEMBLY_FIRST_STAGE --)
+	// executes arbitary machine code - pointed to by ASSEMBLY_FIRST_STAGE
 
 	// idea: create a launchpad by writing a LOAD PC jump to a piece of  first stage code to the code which handles divisions by zero
 	// first stage code stores the current registers to some spot in memory, rewrites the error handling code then jumps to the payload code
 	// the payload should then use the jump register to return to stage one on the descent.
 	// first stage's descent module should now reconstruct the stack frame from the stack pointers and call a CLL return, returning to the execution of the FORTH 
-	// ASM_INLN word
+	// ASM_EXEC word
 
-	// the launchpad code is then executed by dividing by zero
-	[ 58 8 * ] DUP 0 int[@] INLN_RES 0 int[!] 1 int[@] INLN_RES 1 int[!] // saves the existing error handling code
-	[ 58 8 * ] 50593792 OVER ! 4 + ! // writes a load PC instr (505...92) to the error handling code (addr = 58 * 8), then writes the first stage address qith an offset of 4
-	1 0 / DROP // triggers div by zero
-	INLN_RES 0 int[@] INLN_RES 1 int[@]	[ 58 8 * ] SWAP OVER 1 int[!] 0 int[!] // restores the error handling code
+	// the launchpad code is then executed by dividing by zero, the value passed to the word is left in gp0 upon execution
+	552 DUP 0 int[@] EXEC_CLR 0 int[!] 1 int[@] EXEC_CLR 1 int[!] // saves the existing error handling code
+	552 50593792 OVER ! 4 + ! // writes a load PC instr (505...92) to the error handling code (addr = 552), then writes the first stage address with an offset of 4
+	0 / DROP // triggers div by zero
+	EXEC_CLR 0 int[@] EXEC_CLR 1 int[@]	552 SWAP OVER 1 int[!] 0 int[!] // restores the error handling code
 ;
 
 
@@ -264,62 +276,115 @@ VARIABLE asm_r1 VARIABLE asm_r2 VARIABLE asm_cnd VARIABLE asm_op VARIABLE asm_ad
 ;
 
 // __________________________________________________ defining char literals _____________________________
-: 'a' ;
-: 'b' ;
-: 'c' ;
-: 'd' ;
-: 'e' ;
-: 'f' ;
-: 'g' ;
-: 'h' ;
-: 'i' ;
-: 'j' ;
-: 'k' ;
-: 'l' ;
-: 'm' ;
-: 'n' ;
-: 'o' ;
-: 'p' ;
-: 'q' ;
-: 'r' ;
-: 's' ;
-: 't' ;
-: 'u' ;
-: 'v' ;
-: 'w' ;
-: 'x' ;
-: 'y' ;
-: 'z' ;
-: 'A' ;
-: 'B' ;
-: 'C' ;
-: 'D' ;
-: 'E' ;
-: 'F' ;
-: 'G' ;
-: 'H' ;
-: 'I' ;
-: 'J' ;
-: 'K' ;
-: 'L' ;
-: 'M' ;
-: 'N' ;
-: 'O' ;
-: 'P' ;
-: 'Q' ;
-: 'R' ;
-: 'S' ;
-: 'T' ;
-: 'U' ;
-: 'V' ;
-: 'W' ;
-: 'X' ;
-: 'Y' ;
-: 'Z' ;
 
-// example: 
-97 # oca;
-hlt;
-ASM_EXEC
+: 'a' 97  ; : 'A' 65 ; : 'n' 110 ; : 'N' 78 ; 
+: 'b' 98  ; : 'B' 66 ; : 'o' 111 ; : 'O' 79 ; 
+: 'c' 99  ; : 'C' 67 ; : 'p' 112 ; : 'P' 80 ; 
+: 'd' 100 ; : 'D' 68 ; : 'q' 113 ; : 'Q' 81 ; 
+: 'e' 101 ; : 'E' 69 ; : 'r' 114 ; : 'R' 82 ; 
+: 'f' 102 ; : 'F' 70 ; : 's' 115 ; : 'S' 83 ; 
+: 'g' 103 ; : 'G' 71 ; : 't' 116 ; : 'T' 84 ; 
+: 'h' 104 ; : 'H' 72 ; : 'u' 117 ; : 'U' 85 ; 
+: 'i' 105 ; : 'I' 73 ; : 'v' 118 ; : 'V' 86 ; 
+: 'j' 106 ; : 'J' 74 ; : 'w' 119 ; : 'W' 87 ; 
+: 'k' 107 ; : 'K' 75 ; : 'x' 120 ; : 'X' 88 ; 
+: 'l' 108 ; : 'L' 76 ; : 'y' 121 ; : 'Y' 89 ; 
+: 'm' 109 ; : 'M' 77 ; : 'z' 122 ; : 'Z' 90 ;
+
+// __________________________________________________ for inlining ________________________________________
+VARIABLE asmCR
+10 asmCR !
+VARIABLE SO_DELTA
+
+// to use stage one:
+// 1) compile and run stageOne word before any assembly is compiled
+// 2) store the result of stageOne to a variable or constant.
+// 3) reset dataPtr, dataSegm, codePtr, codeSegm
+// 4) when arbitary assembly code has been assembled, store the address
+// 	  of the first instruction to the block of memory pointed to by the
+//    result of stageOne, with an offset of 4.
+// 5) pass the result of stage one to ASM_EXEC
+: stageOne // first stage is designed to be assembled, and then have an address edited into it
+					// ( -- dataPointer)
+	64 ALLOC setCode // less than 32 instrs
+	16 ALLOC setData // less than 16 variables
+	0 codePtr ! 0 dataPtr !
+	16 SO_DELTA !
+
+	// data structure of data - since INT, LABEL are immediate words
+
+	// ///////////////////
+	// first stage pointer
+	// code pointer - edited before running
+	// stack pointer
+	// flags
+	// gp6 - saved as indexing register
+	// gp7 - saved as CLL expression stack pointer
+	// ///////////////////////////////////////////
+
+	stp, dataSegm 8 + sti; // save vital registers
+	fst, dataSegm 12 + sti;
+	gp6, dataSegm 16 + sti;
+	gp7, dataSegm 20 + sti;
+
+	pc, jmp, mov;
+	jmp, SO_DELTA adda;
+	pc, dataSegm 4 + ldi;
+
+	// dataSegm 4 + goto;
+
+	// if returned
+	stp, dataSegm 8 + ldi; // restore vital registers and flags
+	zro, frst, mov;
+	fst, dataSegm 12 + ldi;
+	gp6, dataSegm 16 + ldi;
+	gp7, dataSegm 20 + ldi;
+
+	// restored registers, now needs to obtain the return address
+	jmp, stp, 0 ldi[];
+	stp, stp, 4 ldi[]; // gets hold of the old stack frame
+	jmp, pc, mov; // jump back according to stack frame
+
+
+	codeSegm dataSegm ! // store the first stage assembly code to the dataPtr			 
+	dataSegm 	 // return the data address
+	0 dataPtr ! 0 codePtr !
+;
+
+VARIABLE P_INLN // variable holding addresses vital for inlining
+
+: INLN_INI // ( -- ) sets up the first stages for inlining
+	getCode getData
+	stageOne P_INLN !
+	setData setCode
+;
+
+: doInline // ( value CodePtr -- ) inline executes the machine code pointed to by code pointer. passes value to the inlined code in gp0
+	P_INLN @ 4 + !
+	P_INLN @ ASM_EXEC
+;
+
+// _________________________________________________ EXAMPLE OF ASSMEMBLY INLINING ____________________________________
+
+
+
+
+'N' # oca;
+'i' # oca;
+'c' # oca;
+'e' # oca;
+32 # oca;
+'h' # oca;
+'a' # oca;
+'c' # oca;
+'k' # oca;
+'s' # oca;
+32 # oca;
+'m' # oca;
+56 # oca;
+jmp, pc, mov;
+
+INLN_INI
+0 codeSegm doInline
 
 

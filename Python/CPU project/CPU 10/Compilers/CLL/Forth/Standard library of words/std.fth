@@ -19,6 +19,15 @@
 		DROP DROP ." 0"
 	then ; //
 
+: .h8
+	7 1 while
+		OVER 4 >> SWAP 1 - DUP
+	loop DROP
+	8 1 while 
+		SWAP hexChar 1 - DUP
+	loop DROP
+;
+
 : .ch DUP >> hexChar hexChar ;
 // creating a useable for loop
 
@@ -40,7 +49,7 @@ loop DROP ; // start predicate next, looped_code ==> executes looped_code repeat
 
 : char[!] 			// value address offset
 	+ SWAP OVER  	// newAddress value newAddress
-	@ 16777215 & 	// newAddress value originalValueMasked
+	@ 16777215 & 	// newAddress value originalValueMaskedDROPAL
 	SWAP 255 & 24 << | SWAP ! 		// FINISHED
 ;
 
@@ -102,3 +111,8 @@ VARIABLE strPtr
 
 VARIABLE 4ROTTEMP
 : 4ROT SWAP 4ROTTEMP ! ROT 4ROTTEMP @ ;
+
+
+// dumps the 1024 bytes of memory following the argument in 64 bit blocks
+// (numberOfBytes startAddr -- )
+: addrDump OVER +  SWAP 1 while DUP .h8 TAB DUP @ .h8 TAB 4 + DUP @ .h8 CR 4 + OVER OVER > loop DROP DROP ;

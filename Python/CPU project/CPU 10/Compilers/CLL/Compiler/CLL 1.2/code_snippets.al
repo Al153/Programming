@@ -348,10 +348,9 @@ Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION <function_name>
 <get_parameters>
 << return routine >>
-<generate value to return>
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+<generate value to return>							
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 << while loop code >>
 Pass 										%loop<number>entry
