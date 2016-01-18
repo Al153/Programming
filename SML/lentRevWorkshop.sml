@@ -1,7 +1,7 @@
 (*_____________________Excercise 1_____________________*)
 
 They want verifiable code, use of ML dataypes.
-They to develop code incrementally using the interactive interpreter.
+They want to develop code incrementally using the interactive interpreter.
 (Functional in general) They want to use a language with pure functions so that
 they can make use of the optimisations and concurrency available when  using pure functions.
 They want to make use of higher order functions to allow more concise code.
@@ -12,21 +12,23 @@ fun xor (a:bool) b = not(a = b);
 fun factInt 0 = 1 
 	|factInt n = n * factInt (n-1);
 (*It's hard to adapt this to floats, since you cannot use pattern matching or equality
-	on floats. One way would be to integerate the function (x^n)*e^(-x) from 1 to infinity*)
+	on floats. One way would be to integrate the function (x^n)*e^(-x) from 1 to infinity*)
 (*_____________________Excercise 4_____________________*)
-	t(1) = t(0) + 0 = 0
-	t(2) = t(1) + 1 = 1
-	t(3) = t(2) + 2 = 3
+	t(1) = t(0) + 0 = 0 1
+	t(2) = t(1) + 1 = 1 2 
+	t(3) = t(2) + 2 = 3 4
 
 	t(n) = (1/2)(n)(n-1)
+
+	bubble sort?
 
 (*_____________________Excercise 5_____________________*)
 fun empty [] = true |
 	empty _ = false;
 
 (*_____________________Excercise 6_____________________*)
-fun sum [] = 0 |
-	sum (x::xs) = x + (sum xs);
+fun sum add [] = 0 |
+	sum add (x::xs) = (add x (sum xs));
 (*_____________________Excercise 7_____________________*)
 fun reverse xs =
 	let
@@ -72,6 +74,9 @@ fun hd (Cons(x,xs)) = x |
 fun sumTree Lf = 0 |
 	sumTree (Br(v,t1,t2)) = v + (sumTree t1) + (sumTree t2);
 
+fun sumTree Lf value = value |
+	sumTree (Br(v,t1,t2)) value = sumTree t2 (sumTree t1 (v + value));
+
 (*_____________________Excercise 16_____________________*)
 exception notFound;
 
@@ -114,6 +119,18 @@ fun toList Lf = [] |
 (*Postorder*)
 fun toList Lf = [] |
 	toList (Br(a,t1,t2)) = toList t1 @ (toList t2) @ [a]; 
+
+(*In order *)
+fun toList Lf l = l |
+	toList (Br(a,t1,t2)) l = toList t1 (a :: (toList t2 l));
+
+(*pre order*)
+fun toList Lf l = l |
+	toList (Br(a,t1,t2)) l = toList t1 (toList t2 (a::l));
+
+(*post order*)
+fun toList Lf l = l |
+	toList (Br(a,t1,t2)) l = a ::(toList t1 (toList t2 l));
 (*_____________________Excercise 20_____________________*)
 
 A functional array uses a binary tree to implement an array.
@@ -133,9 +150,16 @@ fun map _ [] = [] |
 	map f (x::xs) = (f x) :: (map f xs);
 (*_____________________Excercise 22_____________________*)
 datatype 'a lazyList = Nil | Cons of 'a * ( unit -> 'a lazyList);
+datatype 'a lazyTree = LazyLf | LazyBr of 'a * ( unit -> 'a lazyTree) * (unit -> 'a lazyTree);
+
 (*_____________________Excercise 23_____________________*)
 fun toList _ Nil = [] |
 	toList n (Cons(x,xf)) = if n = 0 then [] else (x::(toList (n-1) (xf()))); 
+
+fun toTree _ LazyLf = Lf |
+	toTree 0 _ = Lf |
+	toTree n (LazyBr(a,t1f,t2f)) = Br(a,  ((toTree (n-1)) (t1f())), ((toTree (n-1)) (t2f())));
+
 (*_____________________Excercise 24_____________________*)
 fun interleave Nil y = y |
 	interleave x Nil = x |
@@ -157,9 +181,9 @@ datatype 'a Queue = Qu of 'a list * 'a list;
 fun qNorm (Qu([],back)) = Qu(rev back,[]) |
 	qNorm q = q;
 
-fun qAdd a (Qu(front,back)) = qNorm (Qu(front,a::back));
-fun qRead (Qu(f::fs, back)) = f;
-fun qRemove (Qu(f::fs,back)) = qNorm (Qu(fs,back));
+fun qAdd a (Qu(front,back)) = qNorm (Qu(front,a::back)); (*Amortised O(1)*)
+fun qRead (Qu(f::fs, back)) = f; (*O(1)*)
+fun qRemove (Qu(f::fs,back)) = qNorm (Qu(fs,back)); (*Amortised O(1)*)
 
 (*_____________________Excercise 28_____________________*)
 
