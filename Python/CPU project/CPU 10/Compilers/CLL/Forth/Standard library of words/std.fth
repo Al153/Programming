@@ -116,3 +116,73 @@ VARIABLE 4ROTTEMP
 // dumps the 1024 bytes of memory following the argument in 64 bit blocks
 // (numberOfBytes startAddr -- )
 : addrDump OVER +  SWAP 1 while DUP .h8 TAB DUP @ .h8 TAB 4 + DUP @ .h8 CR 4 + OVER OVER > loop DROP DROP ;
+
+
+: .(  // ( --  ) prints ouf the line buffer until a ( is encountere
+	1 while 
+		READC DUP [ READC \ ] = if
+			DROP READC .c
+		else
+			DUP [ READC ) ] = if
+				DROP 0 
+			else
+				.c
+				1
+			then
+		then
+	loop
+;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

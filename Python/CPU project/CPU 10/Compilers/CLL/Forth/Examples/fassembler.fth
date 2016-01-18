@@ -156,6 +156,11 @@ VARIABLE asm_r1 VARIABLE asm_r2 VARIABLE asm_cnd VARIABLE asm_op VARIABLE asm_ad
 : asm;
 	// assembles 4 bytes and an int address
 	asm_addr ! asm_op ! asm_r2 ! asm_r1 ! asm_cnd ! // stack is: cnd r1 r2 op addr
+	// bounds checking
+	asm_op @ 49 > if ." Warning: opcode is out of normal bounds: "  asm_op @ . CR then
+	asm_r1 @ 15 > if ." Warning: register 1 is out of normal bounds: "  asm_r1 @ . CR then
+	asm_r2 @ 15 > if ." Warning: register 2 is out of normal bounds: "  asm_r2 @ . CR then
+	
 	asm_op @ cW asm_r1 @ cW asm_r2 @ cW asm_cnd @ cW asm_addr @ cIW // writes each part of the instruction to the code segment
 ;
 
@@ -275,6 +280,41 @@ VARIABLE asm_r1 VARIABLE asm_r2 VARIABLE asm_cnd VARIABLE asm_op VARIABLE asm_ad
 	bra;
 ;
 
+: rskip1; // skips the next instr if the register is positive
+	testr,	pc, zro,  op_adda, 8 # asm;
+;
+
+: nskip; // ( condition n -- )
+	// flag condition passed in
+	SWAP pc, SWAP zro, SWAP op_adda, SWAP  8 * # asm;
+;
+
+: njmpBack; // ( condition n -- )
+	// jumps back n instructions
+ 	SWAP pc, SWAP zro, SWAP op_suba, SWAP  8 * # asm;
+;
+
+: echo(  // ( --  ) creates assembly code to echo the string on the input buff
+	1 while 
+		READC DUP [ READC \ ] = if
+			DROP READC # oca;
+		else
+			DUP [ READC ) ] = if
+				DROP 0 
+			else
+				# oca;
+				1
+			then
+		then
+	loop
+;
+
+: getW; // stores character into passed register
+	DUP inr; // duplicates register then gets an input to it
+	rskip1;  // if the register has a non zero value then skip to the end
+	pc, 24 # suba; // else loop
+;
+
 // __________________________________________________ defining char literals _____________________________
 
 : 'a' 97  ; : 'A' 65 ; : 'n' 110 ; : 'N' 78 ; 
@@ -369,22 +409,23 @@ VARIABLE P_INLN // variable holding addresses vital for inlining
 
 
 
-'N' # oca;
-'i' # oca;
-'c' # oca;
-'e' # oca;
-32 # oca;
-'h' # oca;
-'a' # oca;
-'c' # oca;
-'k' # oca;
-'s' # oca;
-32 # oca;
-'m' # oca;
-56 # oca;
-jmp, pc, mov;
-
-INLN_INI
-0 codeSegm doInline
+//	'N' # oca;
+//	'i' # oca;
+//	'c' # oca;
+//	'e' # oca;
+//	32 # oca;
+//	'h' # oca;
+//	'a' # oca;
+//	'c' # oca;
+//	'k' # oca;
+//	's' # oca;
+//	32 # oca;
+//	'm' # oca;
+//	56 # oca;
+//	echo( hello word!) // adds an echo of hello world to the assembly code
+//	jmp, pc, mov;
+//	
+//	INLN_INI
+//	0 codeSegm doInline
 
 

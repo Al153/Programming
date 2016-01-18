@@ -1,4 +1,4 @@
-void heapsort(@int ptr, int length)
+ void heapsort(@int ptr, int length)
 	build_heap(ptr,length);
 	sort_heap(ptr,length);
 end;

@@ -489,9 +489,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifless-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -620,9 +619,8 @@ Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
 Pass 										%ifless-3endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope printChar
@@ -650,9 +648,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:putc 												#CALLING putc
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope __less
@@ -689,9 +686,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC if__less-0endif
 Pass 										%if__less-0true
@@ -700,9 +696,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%if__less-0endif           
 Load gp0 @0
@@ -710,9 +705,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope checkDictName
@@ -773,9 +767,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcheckDictName-0endif
 Load gp6 Local.i [Stack_pointer] 						#LOAD GP0
@@ -794,9 +787,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcheckDictName-1endif
 Pass 										%loopcheckDictName-0continue
@@ -822,9 +814,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcheckDictName-2endif
 Load gp0 @0
@@ -832,9 +823,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope SUB
@@ -866,9 +856,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifSUB-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -904,9 +893,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope malloc_init
@@ -997,9 +985,8 @@ Goto function:create_tree_node 												#CALLING create_tree_node
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 Store gp0 CLL.MALLOC_TREE 										#STORE GP0 GLOBAL
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope create_tree_node
@@ -1085,9 +1072,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%ifcreate_tree_node-0endif           
 Load gp0 @0
@@ -1095,9 +1081,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope readIn
@@ -1324,9 +1309,8 @@ AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.linePtr 									#STORE GP0 GLOBAL (CHAR)
 Load gp0 @1
 Store gp0 CLL.READ_IN_STATE 										#STORE GP0 GLOBAL
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope main
@@ -1406,9 +1390,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:bytecodeInterp 												#CALLING bytecodeInterp
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope dalloc
@@ -1457,9 +1440,8 @@ if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
 Goto function:quit 												#CALLING quit
 Pass										%ifdalloc-0endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope __dump_malloc
@@ -1582,9 +1564,8 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:__dump_malloc 												#CALLING __dump_malloc
 Pass 										%if__dump_malloc-1endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope collectGarbage
@@ -1654,9 +1635,8 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:dalloc 												#CALLING dalloc
 Pass										%ifcollectGarbage-1endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope editDictEntry
@@ -1768,9 +1748,8 @@ ADD gp6 Local.address [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
 Pass										%ifeditDictEntry-0endif
 Pass 										%ifeditDictEntry-1endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope primAlloc
@@ -1808,9 +1787,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope printBUF
@@ -1831,9 +1809,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope isWhiteSpace
@@ -1873,9 +1850,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifisWhiteSpace-0endif
 LoadByte gp0 Local.input [Stack_pointer] 					#LOAD GP0 (CHAR)
@@ -1926,9 +1902,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifisWhiteSpace-1endif
 Load PC ifisWhiteSpace-2endif
@@ -1938,9 +1913,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%ifisWhiteSpace-2endif           
 Load PC ifisWhiteSpace-3endif
@@ -1950,9 +1924,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%ifisWhiteSpace-3endif           
 Load gp0 @0
@@ -1960,18 +1933,16 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope dump_malloc_partition
@@ -1997,9 +1968,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:__dump_malloc 												#CALLING __dump_malloc
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope Over
@@ -2067,9 +2037,8 @@ AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
 Pass										%ifOver-0endif
 Pass 										%ifOver-1endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope delete_tree_node
@@ -2096,9 +2065,8 @@ ADD gp6 Local.node [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
 Load gp0 Local.node [Stack_pointer] 						#LOAD GP0
 Store gp0 CLL.MALLOC_POOL 										#STORE GP0 GLOBAL
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope __greater
@@ -2135,9 +2103,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC if__greater-0endif
 Pass 										%if__greater-0true
@@ -2146,9 +2113,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%if__greater-0endif           
 Load gp0 @0
@@ -2156,9 +2122,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope createTable
@@ -2216,9 +2181,8 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:newByteCodeNode 												#CALLING newByteCodeNode
 Goto function:editDictEntry 												#CALLING editDictEntry
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope split_tree_node
@@ -2317,9 +2281,8 @@ Load gp6 @5
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.parent_node [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope OR
@@ -2351,9 +2314,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifOR-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -2389,9 +2351,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope isEOL
@@ -2496,9 +2457,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifisEOL-0endif
 Pass 										%ifisEOL-0true
@@ -2507,9 +2467,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%ifisEOL-0endif           
 Load PC ifisEOL-1endif
@@ -2534,9 +2493,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 
 ############################################## Built in function printf ####################################################################
@@ -2601,9 +2559,8 @@ ADD gp6 Local.newEntry [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
 Load gp0 Local.newEntry [Stack_pointer] 						#LOAD GP0
 Store gp0 CLL.ForthDictHead 										#STORE GP0 GLOBAL
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope createEval
@@ -2701,9 +2658,8 @@ Goto function:newByteCodeNode 												#CALLING newByteCodeNode
 Goto function:newByteCodeNode 												#CALLING newByteCodeNode
 Goto function:newByteCodeNode 												#CALLING newByteCodeNode
 Goto function:addToDict 												#CALLING addToDict
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope primRead
@@ -2744,9 +2700,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:convertName 												#CALLING convertName
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope createVariable
@@ -2808,9 +2763,8 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:newByteCodeNode 												#CALLING newByteCodeNode
 Goto function:editDictEntry 												#CALLING editDictEntry
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope scanWord
@@ -2963,18 +2917,16 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope compileIfWord
@@ -3110,9 +3062,8 @@ Load gp6 @2
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.retArray [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileIfWord-0endif
 Load gp0 CLL.WORD_BUF 										#LOAD GP0 GLOBAL
@@ -3146,9 +3097,8 @@ Load gp6 @2
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.retArray [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileIfWord-1endif
 Load gp0 CLL.WORD_BUF 										#LOAD GP0 GLOBAL
@@ -3486,9 +3436,8 @@ if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileIfWord-12endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileIfWord-12endif
 Load gp6 @2
@@ -3511,9 +3460,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileIfWord-13endif
 Load gp6 @2
@@ -3544,9 +3492,8 @@ Goto function:print_i 												#CALLING print_i
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifcompileIfWord-14endif
 Pass 										%ifcompileIfWord-14true
@@ -3618,9 +3565,8 @@ if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileIfWord-4endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileIfWord-4endif
 Load gp6 @2
@@ -3643,9 +3589,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileIfWord-5endif
 Load gp6 @2
@@ -3686,9 +3631,8 @@ Goto function:print_i 												#CALLING print_i
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifcompileIfWord-10endif
 Pass 										%ifcompileIfWord-10true
@@ -3710,9 +3654,8 @@ if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileIfWord-6endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileIfWord-6endif
 Load gp6 @2
@@ -3735,9 +3678,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileIfWord-7endif
 Load gp6 @2
@@ -3760,9 +3702,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileIfWord-8endif
 Load gp6 @2
@@ -3793,9 +3734,8 @@ Goto function:print_i 												#CALLING print_i
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifcompileIfWord-9endif
 Pass 										%ifcompileIfWord-9true
@@ -4000,9 +3940,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileIfWord-3endif
 Load PC loopcompileIfWord-1entry					%loopcompileIfWord-1continue
@@ -4051,9 +3990,8 @@ Load gp6 @2
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.retArray [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%ifcompileIfWord-23endif           
 Load gp6 @0
@@ -4081,9 +4019,8 @@ Load gp6 @1
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.retArray [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope XNOR
@@ -4115,9 +4052,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifXNOR-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -4154,9 +4090,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope SHR
@@ -4188,9 +4123,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifSHR-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -4225,9 +4159,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope isInDict
@@ -4278,9 +4211,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifisInDict-0endif
 Load gp6 @3
@@ -4295,18 +4227,16 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 
 Halt %function:quit
@@ -4341,9 +4271,8 @@ Goto function:bytecodeInterp 												#CALLING bytecodeInterp
 Load gp0 @1
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope primConvertInt
@@ -4360,9 +4289,8 @@ Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION primConvertInt
 Goto function:convertInt 												#CALLING convertInt
 Goto function:Push 												#CALLING Push
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope SHL
@@ -4394,9 +4322,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifSHL-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -4431,9 +4358,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope AND
@@ -4465,9 +4391,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifAND-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -4503,9 +4428,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope printTOS
@@ -4553,9 +4477,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifprintTOS-0endif
 Load gp0 Local.TOS [Stack_pointer] 						#LOAD GP0
@@ -4570,9 +4493,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope equal
@@ -4604,9 +4526,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifequal-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -4645,9 +4566,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope createConstant
@@ -4704,9 +4624,8 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:newByteCodeNode 												#CALLING newByteCodeNode
 Goto function:editDictEntry 												#CALLING editDictEntry
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope __equal
@@ -4743,9 +4662,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC if__equal-0endif
 Pass 										%if__equal-0true
@@ -4754,9 +4672,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%if__equal-0endif           
 Load gp0 @0
@@ -4764,9 +4681,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope NOT
@@ -4798,9 +4714,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifNOT-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -4826,9 +4741,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope primPass
@@ -4843,9 +4757,8 @@ Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION primPass
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope Rot
@@ -4949,9 +4862,8 @@ Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
 Pass 										%ifRot-0endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope NOR
@@ -4983,9 +4895,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifNOR-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -5022,9 +4933,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope MOD
@@ -5056,9 +4966,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifMOD-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -5094,9 +5003,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope comment
@@ -5113,9 +5021,8 @@ Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION comment
 Load gp0 @0
 Store gp0 CLL.READ_IN_STATE 										#STORE GP0 GLOBAL
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope __dalloc
@@ -5253,9 +5160,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC if__dalloc-0endif
 Pass 										%if__dalloc-0true
@@ -5269,9 +5175,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%if__dalloc-0endif           
 Pass										%if__dalloc-1endif
@@ -5421,9 +5326,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%if__dalloc-5endif           
 Load gp0 @0
@@ -5431,9 +5335,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope PushLit
@@ -5480,9 +5383,8 @@ Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
 Pass										%ifPushLit-0endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope readStringChar
@@ -5561,18 +5463,16 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 
 #################################### Built in function print_integer ####################################
@@ -5667,9 +5567,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:putc 												#CALLING putc
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope Dup
@@ -5737,9 +5636,8 @@ AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
 Pass										%ifDup-0endif
 Pass 										%ifDup-1endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope MUL
@@ -5771,9 +5669,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifMUL-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -5809,9 +5706,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope print_b
@@ -5895,9 +5791,8 @@ Load Flags_reset @4294967287
 Store gp0 Local.i [Stack_pointer] 						#STORE GP0
 Load PC loopprint_b-0entry
 Pass 										%loopprint_b-0exit
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope Store
@@ -5931,9 +5826,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifStore-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -5957,9 +5851,8 @@ Load gp6 @0
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.address [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope primIsInDict
@@ -5986,9 +5879,8 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:isInDict 												#CALLING isInDict
 Goto function:Push 												#CALLING Push
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope primCompile
@@ -6004,9 +5896,8 @@ if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION primCompile
 Goto function:compileWord 												#CALLING compileWord
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope convertInt
@@ -6128,18 +6019,16 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Pass 										%ifconvertInt-1endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope executePrimitive
@@ -6678,9 +6567,8 @@ Pass 										%ifexecutePrimitive-6endif
 Pass 										%ifexecutePrimitive-14endif           
 Pass 										%ifexecutePrimitive-30endif           
 Pass 										%ifexecutePrimitive-45endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope compileWhileWord
@@ -6813,9 +6701,8 @@ Load gp6 @1
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.retArray [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWhileWord-0endif
 Load gp0 CLL.WORD_BUF 										#LOAD GP0 GLOBAL
@@ -7153,9 +7040,8 @@ if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileWhileWord-11endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWhileWord-11endif
 Load gp6 @2
@@ -7178,9 +7064,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWhileWord-12endif
 Load gp6 @2
@@ -7211,9 +7096,8 @@ Goto function:print_i 												#CALLING print_i
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifcompileWhileWord-13endif
 Pass 										%ifcompileWhileWord-13true
@@ -7285,9 +7169,8 @@ if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileWhileWord-3endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWhileWord-3endif
 Load gp6 @2
@@ -7310,9 +7193,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWhileWord-4endif
 Load gp6 @2
@@ -7353,9 +7235,8 @@ Goto function:print_i 												#CALLING print_i
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifcompileWhileWord-9endif
 Pass 										%ifcompileWhileWord-9true
@@ -7377,9 +7258,8 @@ if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileWhileWord-5endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWhileWord-5endif
 Load gp6 @2
@@ -7402,9 +7282,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWhileWord-6endif
 Load gp6 @2
@@ -7427,9 +7306,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWhileWord-7endif
 Load gp6 @2
@@ -7460,9 +7338,8 @@ Goto function:print_i 												#CALLING print_i
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifcompileWhileWord-8endif
 Pass 										%ifcompileWhileWord-8true
@@ -7667,9 +7544,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWhileWord-2endif
 Load PC loopcompileWhileWord-1entry					%loopcompileWhileWord-1continue
@@ -7718,9 +7594,8 @@ Load gp6 @2
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.retArray [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%ifcompileWhileWord-22endif           
 Load gp6 @0
@@ -7748,9 +7623,8 @@ Load gp6 @1
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.retArray [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope convertName
@@ -7843,9 +7717,8 @@ AND gp0 @255 													  #CASTING INT TO CHAR
 Load gp6 @8
 ADD gp6 Local.buffer [Stack_pointer] 							#STORE GP0 RELATIVE (CHAR)
 StoreByte gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 
 ########################## built in function putc ########################################
@@ -7897,9 +7770,8 @@ ADD gp0 gp1 														#ADD
 Store gp0 Local.i [Stack_pointer] 						#STORE GP0
 Load PC loopntab-0entry
 Pass 										%loopntab-0exit
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope print_pool
@@ -7960,9 +7832,8 @@ Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_pool 												#CALLING print_pool
 Pass										%ifprint_pool-0endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope scanToEndOfDef
@@ -8053,9 +7924,8 @@ Load PC loopscanToEndOfDef-0entry					%loopscanToEndOfDef-0continue
 Pass 										%loopscanToEndOfDef-0exit
 Load gp0 @1
 Store gp0 CLL.EOL 										#STORE GP0 GLOBAL
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope primIsInt
@@ -8072,9 +7942,8 @@ Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION primIsInt
 Goto function:isInt 												#CALLING isInt
 Goto function:Push 												#CALLING Push
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope __malloc
@@ -8131,9 +8000,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%if__malloc-0endif
 Load gp0 Local.size [Stack_pointer] 						#LOAD GP0
@@ -8174,9 +8042,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%if__malloc-1endif
 Load gp0 @0
@@ -8184,9 +8051,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%if__malloc-2endif
 Load gp1 Local.node_size [Stack_pointer] 						#LOAD GP0
@@ -8274,9 +8140,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%if__malloc-5endif
 Pass										%if__malloc-6endif
@@ -8330,9 +8195,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%if__malloc-8endif
 Pass										%if__malloc-9endif
@@ -8341,9 +8205,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%if__malloc-10endif
 Load gp0 @0
@@ -8351,9 +8214,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC if__malloc-11endif
 Pass 										%if__malloc-11true
@@ -8370,9 +8232,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope ADD
@@ -8404,9 +8265,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifADD-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -8442,9 +8302,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope Push
@@ -8500,9 +8359,8 @@ Load gp1 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
 Load gp0 @1
 ADD gp0 gp1 														#ADD
 Store gp0 CLL.ForthStackPointer 										#STORE GP0 GLOBAL
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope printDict
@@ -8550,9 +8408,8 @@ Load gp0 0 [gp6]
 Store gp0 Local.ref [Stack_pointer] 						#STORE GP0
 Load PC loopprintDict-0entry
 Pass 										%loopprintDict-0exit
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope newByteCodeNode
@@ -8618,18 +8475,16 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope Fetch
@@ -8663,9 +8518,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifFetch-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -8695,9 +8549,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 
 ################## built in function char ##############################################
@@ -8900,9 +8753,8 @@ if gp0 then Load PC ifbytecodeInterp-5endif
 Load gp0 Local.currentFSP [Stack_pointer] 						#LOAD GP0
 Store gp0 CLL.ForthStackPointer 										#STORE GP0 GLOBAL
 Pass										%ifbytecodeInterp-5endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope createTryInt
@@ -9809,9 +9661,8 @@ Goto function:newByteCodeNode 												#CALLING newByteCodeNode
 Goto function:newByteCodeNode 												#CALLING newByteCodeNode
 Goto function:newByteCodeNode 												#CALLING newByteCodeNode
 Goto function:addToDict 												#CALLING addToDict
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope halt
@@ -9827,9 +9678,8 @@ if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION halt
 Goto function:quit 												#CALLING quit
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope printStack
@@ -9879,9 +9729,8 @@ ADD gp0 gp1 														#ADD
 Store gp0 Local.i [Stack_pointer] 						#STORE GP0
 Load PC loopprintStack-0entry
 Pass 										%loopprintStack-0exit
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope __isAllocated
@@ -9989,9 +9838,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC if__isAllocated-3endif
 Pass 										%if__isAllocated-3true
@@ -10019,9 +9867,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC if__isAllocated-0endif
 Pass 										%if__isAllocated-0true
@@ -10030,9 +9877,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%if__isAllocated-0endif           
 Pass										%if__isAllocated-1endif
@@ -10073,9 +9919,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:__dalloc 												#CALLING __dalloc
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC if__isAllocated-2endif
 Pass 										%if__isAllocated-2true
@@ -10090,9 +9935,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:__isAllocated 												#CALLING __isAllocated
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%if__isAllocated-2endif           
 Pass 										%if__isAllocated-3endif           
@@ -10101,9 +9945,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope readInOld
@@ -10176,9 +10019,8 @@ Load PC loopreadInOld-0entry					%loopreadInOld-0continue
 Pass 										%loopreadInOld-0exit
 Load gp0 @1
 Store gp0 CLL.READ_IN_STATE 										#STORE GP0 GLOBAL
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope malloc
@@ -10210,9 +10052,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifmalloc-0endif
 Load gp0 CLL.MALLOC_TREE 										#LOAD GP0 GLOBAL
@@ -10247,18 +10088,16 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope compileStringPrint
@@ -10335,9 +10174,8 @@ Load gp6 @1
 MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.retArray [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileStringPrint-0endif
 LoadByte gp0 Local.newChar [Stack_pointer] 					#LOAD GP0 (CHAR)
@@ -10405,9 +10243,8 @@ Load gp0 0 [gp6]
 Store gp0 Local.prev [Stack_pointer] 						#STORE GP0
 Load PC loopcompileStringPrint-0entry					%loopcompileStringPrint-0continue
 Pass 										%loopcompileStringPrint-0exit
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope isAllocated
@@ -10438,18 +10275,16 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:__isAllocated 												#CALLING __isAllocated
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope primDalloc
@@ -10478,9 +10313,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:dalloc 												#CALLING dalloc
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope Swap
@@ -10562,9 +10396,8 @@ Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
 Pass 										%ifSwap-0endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope DIV
@@ -10596,9 +10429,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifDIV-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -10634,9 +10466,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope greater
@@ -10672,9 +10503,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifgreater-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -10803,9 +10633,8 @@ Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
 Pass 										%ifgreater-3endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope readC
@@ -10822,9 +10651,8 @@ Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION readC
 Goto function:readStringChar 												#CALLING readStringChar
 Goto function:Push 												#CALLING Push
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope isInt
@@ -10930,9 +10758,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifisInt-0endif
 Pass										%ifisInt-1endif
@@ -10973,9 +10800,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifisInt-3endif
 Pass 										%ifisInt-3true
@@ -10984,9 +10810,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass 										%ifisInt-3endif           
 Load gp0 @0
@@ -10994,9 +10819,8 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 
 ##################### built in function getc ###############################################
@@ -11038,9 +10862,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifNAND-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -11077,9 +10900,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 
 ############################## built in function getw ################################
@@ -11497,9 +11319,8 @@ if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileSingleWord-12endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileSingleWord-12endif
 Load gp6 @2
@@ -11522,9 +11343,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileSingleWord-13endif
 Load gp6 @2
@@ -11622,9 +11442,8 @@ if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileSingleWord-4endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileSingleWord-4endif
 Load gp6 @2
@@ -11647,9 +11466,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileSingleWord-5endif
 Load gp6 @2
@@ -11690,9 +11508,8 @@ Goto function:print_i 												#CALLING print_i
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifcompileSingleWord-10endif
 Pass 										%ifcompileSingleWord-10true
@@ -11714,9 +11531,8 @@ if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileSingleWord-6endif
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileSingleWord-6endif
 Load gp6 @2
@@ -11739,9 +11555,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileSingleWord-7endif
 Load gp6 @2
@@ -11764,9 +11579,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileSingleWord-8endif
 Load gp6 @2
@@ -11797,9 +11611,8 @@ Goto function:print_i 												#CALLING print_i
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifcompileSingleWord-9endif
 Pass 										%ifcompileSingleWord-9true
@@ -12021,9 +11834,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load PC ifcompileSingleWord-1endif
 Pass 										%ifcompileSingleWord-1true
@@ -12046,9 +11858,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:printf 												#CALLING printf
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileSingleWord-3endif
 Load PC loopcompileSingleWord-1entry					%loopcompileSingleWord-1continue
@@ -12098,9 +11909,8 @@ MUL gp6 @4 														   #INDEXING FOR @INT
 ADD gp6 Local.retArray [Stack_pointer] 							#STORE GP0 RELATIVE
 Store gp0 0 [gp6]
 Pass 										%ifcompileSingleWord-23endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope XOR
@@ -12132,9 +11942,8 @@ Goto function:printf 												#CALLING printf
 Load gp0 @0
 AND gp0 @255 													  #CASTING INT TO CHAR
 StoreByte gp0 CLL.dontBreak 									#STORE GP0 GLOBAL (CHAR)
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifXOR-0endif
 Load gp0 CLL.ForthStackPointer 										#LOAD GP0 GLOBAL
@@ -12170,9 +11979,8 @@ SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 ADD gp6 CLL.ForthStack 											#STORE GP0 GLOBAL RELATIVE
 Store gp0 0 [gp6]
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope Drop
@@ -12211,9 +12019,8 @@ SUB gp0 gp1 														#SUBTRACT
 Load Flags_reset @4294967287 
 Store gp0 CLL.ForthStackPointer 										#STORE GP0 GLOBAL
 Pass 										%ifDrop-0endif           
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope createInterp
@@ -12288,9 +12095,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:addToDict 												#CALLING addToDict
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope newDictInst
@@ -12399,18 +12205,16 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope compileWord
@@ -12468,9 +12272,8 @@ Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileWord-0endif
 Goto function:scanToEndOfDef 												#CALLING scanToEndOfDef
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWord-0endif
 Load gp6 @2
@@ -12524,9 +12327,8 @@ Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
 if gp0 then Load PC ifcompileWord-2endif
 Goto function:scanToEndOfDef 												#CALLING scanToEndOfDef
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Pass										%ifcompileWord-2endif
 Load gp6 @2
@@ -12567,9 +12369,8 @@ ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:addToDict 												#CALLING addToDict
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope Pop
@@ -12615,18 +12416,16 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 Load gp0 @0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope init_primitives
@@ -13647,9 +13446,8 @@ Goto function:printf 												#CALLING printf
 Goto function:createTryInt 												#CALLING createTryInt
 Goto function:createEval 												#CALLING createEval
 Goto function:createInterp 												#CALLING createInterp
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 #########################################################################################################################
 																	Scope dropAll
@@ -13666,7 +13464,6 @@ Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION dropAll
 Load gp0 @0
 Store gp0 CLL.ForthStackPointer 										#STORE GP0 GLOBAL
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
