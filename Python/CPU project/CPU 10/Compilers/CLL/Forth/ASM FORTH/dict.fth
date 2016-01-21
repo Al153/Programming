@@ -30,3 +30,7 @@ DictLkup LABEL!
 		gp5, testr, DLkup_L bra;
 		0 # Pusha;
 		ret;
+
+// _______________________________________
+
+// TODO: write assembly to populate the doctionaries

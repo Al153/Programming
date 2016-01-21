@@ -105,7 +105,15 @@ INT ISEOL_ST // is EOL state
 LABEL: ISEOL // checks if there is an EOL before the next word
 
 LABEL: COMPILER // compiler subroutine
-
+LABEL: COMPILLP // the compile word definition loop
+LABEL: COMPWORD // execute a word in the compiler namespace
+LABEL: COMPRET // prepare the compiler for completion 
+LABEL: COMPABRT // what to do if a compilation fails
+LABEL: COMPCALL // generate a word call instruction to call a word
+0 INT COMPDICT // pointer to the compile mode dictionary
+0 INT COMPDCTT // pointer to the temporary compile mode dictionary - stores loop/if words
+0 INT COMPMODE // compile mode variable: 0 for interp, 1 for compile
+0 INT COMPTEMP // store the current name space pointer
 // ASM words: - pre compiled words
 
 LABEL: fREAD
@@ -113,6 +121,7 @@ LABEL: fEXEC
 LABEL: f: 				// compile word
 LABEL: fC: 				// compile a compile time word
 LABEL: fNEW_DICT
+LABEL: fDICT // PUSH the current namespace pointer
 LABEL: fINTERP  
 LABEL: fEVAL    
 LABEL: fTRYINT  
@@ -238,9 +247,14 @@ LABEL: EVAL_ISW // what to do if a word is found in the dictionary
 
 : NDCTNTRY; // creates a new dict entry, with the next word in the word buffer as its name
 			// gp4 as an auxiliary register
-	gp5, 4 # ldi;
+			// gp5 holds the dict entry
+	gp5, 16 # ldi;
 	ALLOC call;
-
+	gp6, WORD_BUF ldi;
+	gp4, gp6, 0 ldi[];
+	gp4, gp5, 0 sti[];
+	gp4, gp6, 4 ldi[];
+	gp4, gp5, 4 sti[];
 ;
 
 

@@ -49,6 +49,10 @@ fNEW_DICT LABEL! // updates the dictionary pointer to the TOS (allows name space
 		gp7, Popr;
 		ret;
 
+fDICT LABEL! // Push the current namespace pointer
+		gp7, Pushr;
+		ret;
+
 fINTERP  	 				LABEL! // outer interpreter loop
 	fREAD call;
 	fEVAL call;
