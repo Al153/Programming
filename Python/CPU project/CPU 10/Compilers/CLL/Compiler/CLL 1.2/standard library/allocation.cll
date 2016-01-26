@@ -62,7 +62,8 @@ end;
 
 //_____________________________________ Under the hood functions _______________________________________
 int __malloc(@int node,int size)
-	//search through the malloc tree. If a spare partition of the right size is found, fill it, else split the partition and check that. If the size is too small then dont't split
+	//Uses Knuth's buddy system to allocate
+	//search through the malloc tree. If a spare partition of the right size is found, fill it, else split the partition and check that. If the size is too small then don't split
 	//size is in terms of blocks ie size of 5 = 5 ints = 20 bytes
 	int node_size = node[3];
 	if (size>node_size) then //error, should only happen if the allocated size is bigger than the heap

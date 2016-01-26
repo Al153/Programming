@@ -7,43 +7,78 @@
 
 
 fREAD LABEL!
-		// TODO: copy into gp6
 		SCANW call;
-
  		gp6, WORD_BUF ldi;
 
-;
+ 		gp6, 8 # adda;
+ 		gp6, WORD_BF8 sti; // creates a variable to store the address of the end of the word buff
+ 		gp6, 8 # suba;
+ 	READLOOP LABEL!
+ 		gp4, gp5, 0 ldc[]; 	// load up a char to gp4
+ 								// tests the char for whitespace
+
+			// TEST FOR WHITESPACE
+				gp4, zro, cma; 							// if a  null
+				eq, READEND bra; // branch to the padding routine
+				gp4, 13 # cma; 							// if a CR
+				eq, READEND bra; // branch to the padding routine
+				gp4, 32 # cma;							// if a space
+				eq, READEND bra; // branch to the padding routine
+				gp4, 9 # cma;							// if a tab
+				eq, READEND bra; // branch to the padding routine
+			// store the character to 
+
+			// increment gp6
+			gp6, one, addr;
+			gp5, one, addr;
+			gp6, WORD_BF8 cma;
+			eq, READLOOP bra;
+		// if loop ends at 8th char, then store the null and return
+		zro, gp6, 0 stc[];
+		ret;
+
+	READEND LABEL!
+		// iterate though to end of word buf writing zeros
+		zro, gp6, 0 stc[]; // write zero
+		gp6, one, adda; // increment and test
+		p6, WORD_BF8 cma;
+		eq, READEND bra;
+	zro, gp6, 0 stc[]; // at end then write one more zero then ret
+	ret;
+
+
 
 
 
 
 fEXEC LABEL! // executes a dictionary node (dictNode -- )
 		gp5, Popr;
-		gp5, 4 call[];
+		gp5, 8 call[];
 		ret;
 
 f:	 				LABEL!
-	// /////////////////////////////////////////////
-	// TODO: WRITE COMPILER
-	// /////////////////////////////////////////////
+
 	// non - monolithic compile
 	// the : word 
 	// creates a new dict entry (ptr in gp5) and stores the next word on the input to its name part, stores gp7 to its link part and calls
 	// the compile subroutine
-	fREAD call;
-	NDCTNTRY;
+	fREAD call; // reads the name in
+	NDCTNTRY;	// creates a new dict entry
+	gp5, gp7, mov; // add new dict entry to the dictionary (linkage is already done)
+	COMPILER call; // 
+	ret;
 
 fC: 				LABEL! 
 	// compiles to the Compile namespace
+	// exactly the same as f:, except creates the new word entry in the compile dict
 
-	// //////////////////////////////////
-	// TODO: exactly the same as f:, except creates the new word entry in the compile dict
-	// //////////////////////////////////
 
 	// Afterwards restores the original gp7 ( the compile subroutine stores the compiled word to gp7 )
 	fREAD call;
 	NDCTNTRY;
-
+	gp6, COMPDICT ldi;
+	gp6, gp5, 8 sti[];
+	ret;
 
 fNEW_DICT LABEL! // updates the dictionary pointer to the TOS (allows name spaces)
 		gp7, Popr;
@@ -67,7 +102,7 @@ fEVAL    	 				LABEL!	 //		: EVAl isInDict DUP if EXECUTE else DROP TRYINT then 
 			ret;
 
 		EVAL_ISW LABEL!
-			gp5, 4 call[]; // executes contents of gp5
+			gp5, 8 call[]; // executes contents of gp5
 			ret; 			// returns
 
 fTRYINT  	 				LABEL!
@@ -92,6 +127,10 @@ fALLOC   	 				LABEL!
 		ALLOC call;
 		gp5 Pushr;
 		ret;
+
+fALLC_AD 					LABEL!
+		gp5, Popr;
+		0 ALLC_ADD bra; // branch avoids the need for a return
 
 fREADC 	 					LABEL!
 	// /////////////////////////////
@@ -155,11 +194,77 @@ fINDICT  	 				LABEL!
 
 
 fTABLE   	 				LABEL!
-	// TODO: alloc and add to dict
+		fREAD call; // gets the name
+		NDCTNTRY; // creates a dict entry
+		gp5, gp7, mov; // adds to the dictionary
+		gp5, 10 8 * 4 + # ldi; // at least 10 instructions, plus one piece of data
+		ALLOC call; // allocate a chunk of memory the right size
+
+		
+		gp5, gp6, mov; // use gp6 as temp
+		gp5, Popr; // get size
+		gp5, 4 # mula;
+		ALLOC call; // allocates and get address
+		gp5, gp6, 10 8 * sti[]; // stores to appropriate place
+		gp6, gp5, mov; // restores gp5
+		
+
+		gp6, gp5, 10 8 * sti[]; // uses a variable in the code stream
+		// needs to compile a ret instruction
+		0 $N !
+		51250176 $ 9 8 * $						// gp6, pc, (9*8) ldi[]; // uses the PC to index the value to push
+		68028160 $ 0 $						// gp6, stp, 0 sti[]; // TODO: needs bounds checking
+		537329664 $ 4 # $									// stp, 4 # adda;
+	
+	
+		553844736 $ 4 # $ 					// ret: jmp, 4 # suba;
+		50594560 $ 0 $ 						// 		pc, jmp, 0 ldi[];
+		ret;
 fCONST   	 				LABEL!
-	// TODO: alloc and add to dict
-fVARIABLE        	 		LABEL!#
-	// TODO: alloc and add to dict
+
+		fREAD call; // gets the name
+		NDCTNTRY; // creates a dict entry
+		gp5, gp7, mov; // adds to the dictionary
+		gp5, 10 8 * 4 + # ldi; // at least 10 instructions, plus one piece of data
+		ALLOC call; // allocate a chunk of memory the right size
+		gp6, Popr;
+		gp6, gp5, 10 8 * sti[]; // uses a variable in the code stream
+		// needs to compile a ret instruction
+		0 $N !
+		51250176 $ 9 8 * $						// gp6, pc, (9*8) ldi[]; // uses the PC to index the value to push
+		68028160 $ 0 $						// gp6, stp, 0 sti[]; // TODO: needs bounds checking
+		537329664 $ 4 # $									// stp, 4 # adda;
+	
+	
+		553844736 $ 4 # $ 					// ret: jmp, 4 # suba;
+		50594560 $ 0 $ 						// 		pc, jmp, 0 ldi[];
+		ret;
+
+fVARIABLE        	 		LABEL!
+		fREAD call; // gets the name
+		NDCTNTRY; // creates a dict entry
+		gp5, gp7, mov; // adds to the dictionary
+		gp5, 10 8 * 4 + # ldi; // at least 10 instructions, plus one piece of data
+		ALLOC call; // allocate a chunk of memory the right size
+
+		gp5, gp6, mov; // use gp6 as temp
+		gp5, 4 # ldi; 
+		ALLOC call; // allocates and get address
+		gp5, gp6, 10 8 * sti[]; // stores to appropriate place
+		gp6, gp5, mov; // restores gp5
+		
+
+		gp6, gp5, 10 8 * sti[]; // uses a variable in the code stream
+		// needs to compile a ret instruction
+		0 $N !
+		51250176 $ 9 8 * $						// gp6, pc, (9*8) ldi[]; // uses the PC to index the value to push
+		68028160 $ 0 $						// gp6, stp, 0 sti[]; // TODO: needs bounds checking
+		537329664 $ 4 # $									// stp, 4 # adda;
+	
+	
+		553844736 $ 4 # $ 					// ret: jmp, 4 # suba;
+		50594560 $ 0 $ 						// 		pc, jmp, 0 ldi[];
+		ret;
 
 f=       	 				LABEL!
 		stp, 8 # cma; // make sure there is 2 or more elements on stack
@@ -175,6 +280,7 @@ f=       	 				LABEL!
 		ret;
 
 f>       	 				LABEL!
+		// TODO: deal with 2s complement
 		stp, 8 # cma; // make sure there is 2 or more elements on stack
 		gre, 1 nskip;
 		one, testr, stckUndr bra;
@@ -188,6 +294,7 @@ f>       	 				LABEL!
 		ret;
 
 f<	 						LABEL!
+		// TODO: deal with 2s complement
 		stp, 8 # cma; // make sure there is 2 or more elements on stack
 		gre, 1 nskip;
 		one, testr, stckUndr bra;

@@ -114,9 +114,15 @@ LABEL: COMPCALL // generate a word call instruction to call a word
 0 INT COMPDCTT // pointer to the temporary compile mode dictionary - stores loop/if words
 0 INT COMPMODE // compile mode variable: 0 for interp, 1 for compile
 0 INT COMPTEMP // store the current name space pointer
+0 INT COMPCSEG // place where the machine code being compiled is stored
+0 INT COMPPTR // stores gp5 while compiling a word call
+0 INT COMPNODE // variable storing the dict node to be used
 // ASM words: - pre compiled words
 
 LABEL: fREAD
+	LABEL: READLOOOP
+	LABEL: READEND
+	0 INT WORD_BF8
 LABEL: fEXEC 
 LABEL: f: 				// compile word
 LABEL: fC: 				// compile a compile time word
@@ -126,7 +132,8 @@ LABEL: fINTERP
 LABEL: fEVAL    
 LABEL: fTRYINT  
 LABEL: fDALLOC  
-LABEL: fALLOC   
+LABEL: fALLOC
+LABEL: fALLC_AD // add mroe space to the most recently allocated piece of memory  
 LABEL: fREADC 
 LABEL: f//      
 LABEL: fDROPALL
@@ -175,6 +182,7 @@ LABEL: f@
 LABEL: EVAL_ISW // what to do if a word is found in the dictionary
 // ________________________________ GENERAL ASSEMBLY MACRO WORDS __________________________________
 : call; // generates call assembly
+	// COST = 5
 	pc, gp6, mov;
 	gp6, 32 # adda;
 	gp6, jmp, 0 sti[];
@@ -183,6 +191,7 @@ LABEL: EVAL_ISW // what to do if a word is found in the dictionary
 ;
 
 : call[]; // generates call assembly
+	// COST = 5
 	pc, gp6, mov;
 	gp6, 32 # adda;
 	gp6, jmp, 0 sti[];
@@ -191,22 +200,26 @@ LABEL: EVAL_ISW // what to do if a word is found in the dictionary
 ;
 
 : ret; // generates return assembly
+	// COST = 2
 	jmp, 4 # suba;
 	pc, jmp, 0 ldi[];
 ;
 
 : Pushr; 
-	stp, 0 sti[]; // needs bounds checking
+	// COST = 2
+	stp, 0 sti[]; // TODO: needs bounds checking
 	stp, 4 # adda;
 ;
 
 : Pusha;
-	gp5, SWAP ldi; // needs bounds checking
+	// COST = 3
+	gp5, SWAP ldi; // TODO: needs bounds checking
 	gp5, stp, 0 sti[];
 	stp, 4 # adda;
 ;
 
 : Popr;
+	// COST = 4
 	stp, rskip1; // constructs a custom skip if stp != 0 instruction
 	one, testr, stckUndr bra;
 	stp, 4 # suba;
@@ -214,17 +227,29 @@ LABEL: EVAL_ISW // what to do if a word is found in the dictionary
 ;
 
 : Peekr;
+	// COST = 3
 	stp, rskip1; // constructs a custom skip if stp != 0 instruction
 	one, testr, stckUndr bra;
 	stp, -4 ldi[]; // loads designated register
 ;
 
 : Popa;
+	// COST = 5
 	stp, rskip1; // constructs a custom skip if stp != 0 instruction
 	one, testr, stckUndr bra;
 	stp, 4 # suba;
 	gp5, stp, 0 ldi[];
 	gp5, SWAP sti; // store to the address
+;
+
+VARIABLE $N // forth variable
+: $ // write machine code (assembly macro) word
+	// COST = 2
+	// assumes gp6 is free, gp5 holds a pointer to the space. writes a single int to gp5 and increments it
+	# gp6, SWAP ldi;
+	gp6, gp5, $N @ sti;
+	$N 4 += // uses a forth variable to reduce number of ASM instructions
+
 ;
 
 // ________________________________  MORE SPECIFIC ASSEMBLY MACRO WORDS _____________________________
@@ -242,12 +267,13 @@ LABEL: EVAL_ISW // what to do if a word is found in the dictionary
 
 : EXEC;
 	gp5, Popr;
-	gp5, 4 call[];
+	gp5, 8 call[];
 ;
 
 : NDCTNTRY; // creates a new dict entry, with the next word in the word buffer as its name
 			// gp4 as an auxiliary register
 			// gp5 holds the dict entry
+			// COST = 7 + CALL = 12
 	gp5, 16 # ldi;
 	ALLOC call;
 	gp6, WORD_BUF ldi;
@@ -255,9 +281,9 @@ LABEL: EVAL_ISW // what to do if a word is found in the dictionary
 	gp4, gp5, 0 sti[];
 	gp4, gp6, 4 ldi[];
 	gp4, gp5, 4 sti[];
+
+	gp7, gp5, 8 sti[];
 ;
-
-
 
 
 

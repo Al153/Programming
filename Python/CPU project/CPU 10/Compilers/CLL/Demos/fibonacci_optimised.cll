@@ -1,14 +1,28 @@
 int calls;
+@int 32 MEMO;
+
 
 int fib(int x)
 	calls += 1;
+	if (MEMO[x]) then return MEMO[x]; endif;
 	if ((x==0) or (x==1)) then
+		MEMO[x] = 1;
 		return 1;
 	else
-		return fib(x-1) + fib(x-2);
+		MEMO[x] = fib(x-1) + fib(x-2);
+		return MEMO[x];
 	endif;
 end;
 
+
+void clearMemo()
+	// resets MEMO to zeroes for more accurate analysis
+	int i;
+	for (i = 0, i<32, i += 1) 
+		MEMO[i] = 0;
+	loop;
+end;
+ 
 void main()
 	int i;
 	for (i=0,i=<30,i=i+10)
@@ -19,5 +33,6 @@ void main()
 		print_i(fib(i));
 		printf("\nNumber of calls = ");
 		print_i(calls);
+		clearMemo();
 	loop;
 end;

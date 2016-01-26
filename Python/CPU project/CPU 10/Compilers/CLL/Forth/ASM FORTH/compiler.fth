@@ -2,7 +2,8 @@ COMPILER LABEL!
 	// COMPILER ROUTINE.
 	// PRECONDITION: gp5 stores the dictionary pointer to store the word to.
 	// 				 this should have already had its name copied into it, and correct linkage done
-		
+	// GP4 will hold a pointer to the next space for an instruction
+
 	// TODO: 
 		// alloc some instruction space
 		// lookup each word in the incoming stream
@@ -20,13 +21,16 @@ COMPILER LABEL!
 				// store new code segment to the dictionary entry
 				// update gp7
 				// return
-
+	gp5, COMPNODE sti;
 	fRead call;
 	NDCTNTRY; // create a new dict entry
 	one, COMPMODE sti;
 	gp5, COMPDICT ldi;
 	gp5, COMPDCTT sti; // initialise the temporary compile dictionary - will store any loops etc
-
+	gp5, 8 # ldi;
+	ALLOC call;
+	gp5, gp4, mov;
+	gp5, COMPCSEG sti;
 	COMPILLP LABEL! // compile time dictionary loop
 		fRead call;
 		gp7, COMPTEMP sti; // load up the temporary compile dict (contains any local loop definitions)
@@ -35,8 +39,9 @@ COMPILER LABEL!
 		gp7, COMPTEMP ldi; // restore the normal dictionary
 		gp5, testr, COMPWORD bra; // if has found a word
 		DictLkup call;						  // otherwise look up in the regular dictionary
-		gp5, testr, COMPCALL bra;
-
+		gp5, testr, COMPCALL bra;  // if in the dictionary, then compile a word call for it
+									// finally test for an integer literal
+		0 COMPABRT bra; // if all that fails then abort
 
 
 
@@ -47,11 +52,38 @@ COMPILER LABEL!
 		eq, COMPILLP bra; // loop
 		0 COMPRET bra; // else prep for return
 
-	COMPCALL LABEL! // to geneate code to call a word
-		// TODO: create a "call word" piece of machine code, and store it to the code segm
+
+
+	COMPCALL LABEL! // to generate code to call a word
+
+		gp5, gp5, 8 ldi[]; // make gp5 the code pointer
+		gp5, COMPPTR sti; // store the code ptr
+
+		gp5, 40 # ldi;
+		ALLC_ADD call; // adds more to the allocation (40 bytes - 5 instructions)		
+
+		gp5, 33820160 #  ldi; 	gp5, gp4, 0 sti[];gp5, 0 # ldi; 			gp5, gp4, 4 sti[]; 	//	pc, gp6, mov;
+
+		gp5, 537788416 # ldi; gp5, gp4, 8 sti[];   gp5,	32 # # 	ldi;  gp5, gp4, 12	sti[];	//	gp6, 32 # adda;
+		gp5, 68027136 #  ldi; gp5, gp4, 16 sti[];  gp5,	0 # 	ldi; gp5, gp4, 	20	sti[];	//	gp6, jmp, 0 sti[];
+		gp5, 537067520 # ldi; gp5, gp4, 24 sti[];  gp5,	4 # #  	ldi; gp5, gp4, 	28	sti[];	//	jmp, 4 # adda; // needs bounds testing
+		gp5, 50593792 #  ldi; gp5, gp4, 32 sti[]; 	gp5, COMPPTR ldi; gp5, gp4, 36 sti[];	//	pc, [current address in gp5 + 8] ldi;
+		gp4, 40 # adda; // incremenet gp4 to point to next available instruction
+
+		0 COMPILLP bra;
+
+
+
+
 
 	COMPABRT LABEL! // what to do if an error:
 		// TODO: print a message, deallocate the excess COMPDCTT entries
+
+		gp5, COMPCSEG ldi; // deallocate the generated code, restore gp7 and the comp dict respectively
+		
+		DALLOC call;
+
+		ret;
 
 	COMPRET LABEL!
 		// TODO: store new code segment to dict etc

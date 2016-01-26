@@ -85,7 +85,7 @@ SCANW LABEL! // ( leaves pointer to the next word in gp5)
 
 		gp5, SCANW_RS ldi;
 		/////////////////////////////////////////////
-		// needs to to EOL check
+		// TODO: needs to to EOL check
 		//////////////////////////////////////////////
 		gp7, RDIN_LP sti;
 		gp7, RDIN_TMP ldi; // restore gp7
@@ -95,7 +95,7 @@ SCANW LABEL! // ( leaves pointer to the next word in gp5)
 ISWSPACE LABEL! // assumes gp7 contains the value
 	acc, 2 # ldi; // loads up a 2 to the acc
 	acc, ISWS_ST8 sti; // default to two
-	gp5, gp7, LINE_BUF ldi[];
+	gp5, gp7, LINE_BUF ldc[];
 	gp5, testr, zro, zro, op_sti, ISWS_ST8 asm; // create a sustom store if command, if the value isn't zro then store 0 to teh state
 	gp5, 13 # cma; 							// if a CR
 	eq, acc, zro, op_sti, ISWS_ST8 asm; // create a custom store if command, store a 2

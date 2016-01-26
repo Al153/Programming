@@ -1,61 +1,61 @@
 //////////////////////// INNER INTERPRETER TECHNICAL PRIMITIVES ///////////////
 
 //primitives not designed to be used by the user, but used to build the outer interpreter
-void primRead()
+void primRead() // ( -- ) [ reads a word into the buffer ]
 	if (EOL) then printf("\nOK\n"); printf("\n>>"); EOL = 0; endif;
 	convertName(scanWord(),WORD_BUF); //puts the word name into the global buffer
 end;
 
-void primIsInDict()
+void primIsInDict() // ( -- a ) [ tests word in buffer against the dictionary. a = 0 if not found ] 
 	//primitive version of is in dict
 	Push(isInDict(WORD_BUF,ForthDictHead));
 end;
 
-void primExecute()
+void primExecute() // ( ref -- ) [ executes bytecode at the address passed (needs to be in dictionary entry format)]
 	@int ref = Pop();
 	bytecodeInterp(ref[2]);
 	dontBreak = 1; //if a subroutine causes a break then the break doesn't unwravel past the outer interpreter
 end;
 
-void primCompile()
+void primCompile() // ( -- ) [ starts the compiler ]
 	compileWord();
 end;
 
-void primIsInt()
+void primIsInt() // ( -- bool ) [ tests if the string in the word buffer an integer, if so then returns 1 else 0]
 	Push(isInt()); //if hasnt returned then is an int
 end;
 
-void primConvertInt()
+void primConvertInt() // ( -- val ) [ converts the word buffer to an integer ]
 	//converts WORD_BUF to an int and pushes it	
 	Push(convertInt());
 end;
 
 //////// Variables and constant auxiliaries (technical primitives) //////////
-void createConstant()
+void createConstant() // ( val -- ) [ reads a word from the input, creates a constant with that word as a name which pushes the val ]
 	@char 9 name; //9 to pad a zero on the end
 	convertName(scanWord(),name);   //produces an acceptable name
 	int n = Pop(); 					 //n on stack
 	editDictEntry(name,newByteCodeNode(PUSHLIT,n,0)); //creates a word
 end;
 
-void createVariable()
+void createVariable() // ( -- ) [ reads a word from the input, creates a variable with that word as a name which pushes the address of the variable ]
 	@char 9 name; //9 to pad a zero on the end
 	convertName(scanWord(),name);   //produces an acceptable name
 	@int address = malloc(1); 					 //allocates memory
 	editDictEntry(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
 end;
 
-void createTable()
+void createTable() // ( size -- ) [ reads a word from the input, creates a variable with that word as a name which pushes the address of a table of size size ]
 	@char 9 name; //9 to pad a zero on the end
 	convertName(scanWord(),name);   //produces an acceptable name
 	@int address = malloc(Pop()); 					 //n on stack
 	editDictEntry(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
 end;
 
-void dropAll()
+void dropAll() // ( whole stack -- ) [ deletes everything on the stack ]
 	ForthStackPointer = 0;
 end;
 
-void comment()
+void comment() // ( -- ) [ skips the rest of the line ]
 	READ_IN_STATE = EMPTY;
 end;
