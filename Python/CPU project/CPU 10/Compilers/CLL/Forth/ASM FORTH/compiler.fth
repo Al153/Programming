@@ -68,7 +68,7 @@ COMPILER LABEL!
 		gp5, 68027136 #  ldi; gp5, gp4, 16 sti[];  gp5,	0 # 	ldi; gp5, gp4, 	20	sti[];	//	gp6, jmp, 0 sti[];
 		gp5, 537067520 # ldi; gp5, gp4, 24 sti[];  gp5,	4 # #  	ldi; gp5, gp4, 	28	sti[];	//	jmp, 4 # adda; // needs bounds testing
 		gp5, 50593792 #  ldi; gp5, gp4, 32 sti[]; 	gp5, COMPPTR ldi; gp5, gp4, 36 sti[];	//	pc, [current address in gp5 + 8] ldi;
-		gp4, 40 # adda; // incremenet gp4 to point to next available instruction
+		gp4, 40 # adda; // increment gp4 to point to next available instruction
 
 		0 COMPILLP bra;
 
