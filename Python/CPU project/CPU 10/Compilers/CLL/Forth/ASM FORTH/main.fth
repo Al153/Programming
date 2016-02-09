@@ -280,7 +280,7 @@ VARIABLE $N // forth variable
 	gp4, gp6, 0 ldi[];
 	gp4, gp5, 0 sti[];
 	gp4, gp6, 4 ldi[];
-	gp4, gp5, 4 sti[];
+	gp4, gp5, 4 sti[];  
 
 	gp7, gp5, 8 sti[];
 ;

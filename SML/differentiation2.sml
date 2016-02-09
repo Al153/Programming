@@ -1,7 +1,6 @@
 open Math; (*Uses Math's functions for evaluation*)
 
 (*Expr datatype*)
-
 datatype Expr =
 	cnst of real |
 	sum of Expr * Expr |
@@ -142,3 +141,5 @@ print (printMac 5 (reduceSeries (maclaurinSeries (chain(eLn,sum(cnst 1.0,polynom
 
 (* could still be buggy
 *)
+
+val a = 
