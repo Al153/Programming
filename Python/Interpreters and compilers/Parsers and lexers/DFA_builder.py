@@ -34,8 +34,11 @@ class DFA_state:
 					new_items |= equivalent_items
 			self.nfa_set |= new_items
 
-	def __eq__(self,a): return self.nfa_set == a.nfa_set
-	def __ne__(self,a): return self.nfa_set != a.nfa_set
+	def __eq__(self,a):
+		if isinstance(a,DFA_state): return self.nfa_set == a.nfa_set
+		return False;
+
+	def __ne__(self,a): return not (self == a)
 	def __str__(self): #hack to give print behaviour
 		string =  "-------------------------------------------------------------\n"
 		string += "| State number: " + str(self.id) + "\t\t\t\t|\n"
@@ -52,20 +55,20 @@ class DFA_state:
 class DFA:
 	def __init__(self,nfa,alphabet):
 		# builds a DFA from an NFA
-		print "Generating nfa state table"
+		#print "Generating nfa state table"
 		self.nfa_states = {s.getID():s for s in nfa.getStates()}
-		print "Getting start state"
+		#print "Getting start state"
 		self.start = DFA_state([nfa.getStart().getID()])
-		print "Getting start closure"
+		#print "Getting start closure"
 		self.start.getClosure(self.nfa_states)
-		print "creating all states"
+		#print "creating all states"
 		self.allSets = [self.start] #set of dfa states
 		self.alphabet = alphabet
 		changes = 1
 		while changes:
 			changes = 0
 			for s in self.allSets:
-				print "transition state = ",s
+				#print "transition state = ",s
 				for character in self.alphabet:
 					#raw_input()
 					#print character
@@ -94,14 +97,14 @@ class DFA:
 							changes = 1
 
 		#find accept states:
-		print "end of loop"
+		#print "end of loop"
 		self.accept = set([])
-		print "finding accept states"
+		#print "finding accept states"
 		for  s in self.allSets:
 			for n in s.nfa_set:
 				if self.nfa_states[n] in nfa.getAcceptStates():
 					self.accept.add(s.id)
-		print "done"
+		#print "done"
 
 
 	def __getTransition(self,this_DFA_state,char):
@@ -119,9 +122,26 @@ class DFA:
 			string += s.__str__()
 		return string
 
+	def DFA_MATCH(self,s):
+		# s is a string, try and match it
+		current_state = self.start
+		for c in s: # for every character in the string
+			if current_state == "FAILURE":
+				break
+			if c in current_state.transitions: # else
+				current_state = current_state.transitions[c] #transition state
+			else: current_state = "FAILURE"
+
+		if current_state == "FAILURE": return False
+		if current_state.id in self.accept:
+			return True
+		return False
+
+
 if __name__ == "__main__":
 	import sys
 	source_name = sys.argv[1]
+	string = sys.argv[2]
 	grammar_name = "regex.parse"
 	local_parser = LR1_parser.Parser(grammar_name)
 	nfa = NFA_builder.CreateNFA(local_parser.parse(open(source_name,"r").read()))
@@ -131,5 +151,6 @@ if __name__ == "__main__":
 #		print s.getAllNextStates()
 	output = open("resultingDFA.txt",'w')
 	output.write(dfa.__str__())
+	print dfa.DFA_MATCH(string)
 
 
