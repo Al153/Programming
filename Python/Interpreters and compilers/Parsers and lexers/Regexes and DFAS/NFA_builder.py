@@ -107,6 +107,7 @@ class NFA:
 
 def TerminalNFA(char):
 	# creates an NFA which accepts a single character
+	if char == "$": char = "" # replace £ sign with the empty regex
 	stateA = NFA_state(stateCounter(),[])
 	stateB = NFA_state(stateCounter(),[])
 	stateA.addRelation(Relation(char,stateB))
@@ -114,8 +115,8 @@ def TerminalNFA(char):
 
 
 def CreateNFA(ParseTree):
-	# creates an NFA from a parse tree
-	if ParseTree.terminal:
+	# creates an NFA from a parse tree of a regex
+	if ParseTree.terminal: #terminal node case
 		return TerminalNFA(ParseTree.string)
 	else:
 		if ParseTree.type == "<PROGRAM>": # Program -> expr
