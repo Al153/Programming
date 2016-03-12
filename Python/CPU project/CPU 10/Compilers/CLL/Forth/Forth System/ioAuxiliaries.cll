@@ -1,13 +1,21 @@
 //Functions and procedures used by the interpreter for IO
 
 ///////////////////////// IO //////////////////////////////
-@char 256 lineBuff;
-char linePtr;
+@char 256 keyboardBuff;
+@int 4097 diskBuff;
+int diskPtr = 0;
+@char lineBuff = keyboardBuff;
+int linePtr = 0;
+int keyboardPtr;
 int READ_IN_STATE = EMPTY;
+int READ_IN_MODE = KEYBOARD;
 @char 9 WORD_BUF; //global var containing the name of a word
 int EOL = 0; //used as extra state to trigger OKs
 #define EMPTY 0
 #define FULL 1
+#define KEYBOARD 0
+#define DISK 1
+
 
 void readInOld(@char buf) //old readIn function - doesn't handle backspaces.
 	linePtr = 0;
@@ -28,7 +36,10 @@ void readInOld(@char buf) //old readIn function - doesn't handle backspaces.
 end;
 
 void readIn(@char buf) //new readIn function - handles backspaces
-	linePtr = 0;
+	if (READ_IN_MODE == DISK) then
+		changeMode(KEYBOARD); //hand back keyboard control
+		return;
+	else linePtr = 0; endif;
 	char character;
 	char lineFeed = 10;
 	char blank = 0;
@@ -52,13 +63,13 @@ void readIn(@char buf) //new readIn function - handles backspaces
 				continue;
 			endif;
 			buf[linePtr] = character;
-			linePtr = linePtr + 1;
+			linePtr = (linePtr + 1)&255;
 		endif;
 	loop;
 	linePtr += 1;
 	while (linePtr) do 
 		buf[linePtr] = 0; //clear rest of buffer
-		linePtr = linePtr + 1;
+		linePtr = (linePtr + 1)&255;
 	loop;
 	linePtr = 0;
 	READ_IN_STATE = FULL;
@@ -68,12 +79,12 @@ end;
 	//returns pointer to the next word on the input buffer, and leaves linePtr at the end of the word. if the buffer is empty then reset and read in
 	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
 	while (isWhiteSpace(lineBuff[linePtr])) do 
-		linePtr = linePtr + 1; 
+		linePtr = (linePtr + 1)&(255 if READ_IN_MODE == KEYBOARD else 4095); 
 		if ((lineBuff[linePtr] == 13) or (lineBuff[linePtr] == 0)) then readIn(lineBuff);
 		endif;
 	loop;
 	@char return_value = lineBuff+linePtr; //value to return points to the start of the word
-	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = linePtr + 1; loop; //scrolls on to the next whitespace
+	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = (linePtr + 1)&(255 if READ_IN_MODE == KEYBOARD else 4095);  loop; //scrolls on to the next whitespace
 	if (isEOL()) then READ_IN_STATE = EMPTY; EOL = 1; endif;
 	return return_value;
 end;
@@ -82,12 +93,26 @@ int isEOL()
 	//determines if there is an EOL before the start of the next word
 	while (1) do
 		if ((lineBuff[linePtr] == ' ')or(lineBuff[linePtr] == '\t')) then
-			linePtr += 1;
+			linePtr = (linePtr + 1)&(255 if READ_IN_MODE == KEYBOARD else 4095); 
 		else if ((lineBuff[linePtr] == '\n')or(lineBuff[linePtr] == char(0))) then return 1; //eol
 			else return 0;
 			endif; 
 		endif;
 	loop;
+end;
+
+void changeMode(int newMode)
+	if (newMode == KEYBOARD) then
+		if (READ_IN_MODE == DISK) then diskPtr = linePtr; endif;
+		READ_IN_MODE = KEYBOARD;
+		lineBuff = keyboardBuff;
+		linePtr = keyboardPtr;
+	else
+		if (READ_IN_MODE == KEYBOARD) then keyboardPtr = linePtr; endif; // handles a context switch from keyboard to disk
+		READ_IN_MODE = DISK;
+		lineBuff = diskBuff;
+		linePtr = diskPtr;
+	endif;
 end;
 
 int isWhiteSpace(char input)
@@ -125,7 +150,7 @@ char readStringChar()
 	//reads in a single string character, refilling the input buffer if necessary
 	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
 	if (lineBuff[linePtr] == 0) then READ_IN_STATE = EMPTY; endif;
-	linePtr += 1;
+	linePtr = (linePtr + 1)&(255 if READ_IN_MODE == KEYBOARD else 4095); 
 	return lineBuff[linePtr-1];
 end;
 

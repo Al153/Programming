@@ -5,61 +5,35 @@ public class LCSBottomUp extends LCSFinder{
 	public LCSBottomUp(String s1, String s2){
 		super(s1,s2);
 		super.mTable = new int[s1.length()][s2.length()];
-		for (int i = 0; i< s1.length(); i++){
-			for (int j = 0; j< s2.length(); j++){
-				super.mTable[i][j] = -1; // sets default value so that we can check whether a value has been calculated
-			}
-		}
+	}
+
+
+	private int getTableEntry(int i, int j){
+		// looks up coords in table, returning 0 as sentinel values for those outside the table
+		if ((i<0) || (j<0)) return 0;
+		else return super.mTable[i][j];
 	}
 
 	public int getLCSLength(){
-		return getLengthRecursive(super.mString1.length(), super.mString2.length()); // call a recursive function
-	}
-
-	private int getLengthRecursive(int s1Length, int s2Length){
-		if ((s1Length == 0)||(s2Length == 0)) return 0; // if either string is empty then return 0
-		if (super.mTable[s1Length-1][s2Length-1] >= 0) return super.mTable[s1Length-1][s2Length-1]; // if already calculated, return the calculated value
-		if (super.mString1.charAt(s1Length-1) == super.mString2.charAt(s2Length-1)){ // If s1 and s2 finish with the same character, the LCS length of s1 and
-			// s2 is the LCS length of s1 minus its last character and s2 minus its last character, plus 1 (for the common last character of s1 and s2).
-			super.mTable[s1Length-1][s2Length-1] = getLengthRecursive(s1Length-1,s2Length-1) + 1; // memoize the answer
-			///////////////////////////////////////////////////////////////
-					// calculate unnecessary substrings in order to pass tester
-					getLengthRecursive(s1Length,s2Length-1); // tests unnecessary cases in order to populate the table to pass the tester
-					getLengthRecursive(s1Length-1,s2Length);
-
-
-			///////////////////////////////////////////////////////////////
-			return super.mTable[s1Length-1][s2Length-1];
+		if ((mString1.length() == 0)||(mString2.length() == 0)) return 0; // if either string is empty then return 0
+		for (int i = 0; i< mString1.length(); i++){
+			for (int j = 0; j< mString2.length(); j++){
+				if (super.mString1.charAt(i) == super.mString2.charAt(j)){
+					// if strings have the same character at [i] and [j] respectively, the LCSL at this point is 1 + previous_LCSL
+					super.mTable[i][j] = getTableEntry(i-1,j-1) + 1;
+				} else {
+					// otherwise the LCSL at this point is the maximum of those with one fewer character at the end of either string
+					super.mTable[i][j] = max(getTableEntry(i-1,j),getTableEntry(i,j-1)); 
+																				
+				}
+			}
 		}
-		// Otherwise, it's either the LCS length of s1 and (s2 minus its last character), or the LCS length of (s1 minus its last character) and s2, whichever is longest.
-		super.mTable[s1Length-1][s2Length-1] = max(
-			getLengthRecursive(s1Length-1,s2Length),
-			getLengthRecursive(s1Length,s2Length-1)
-		);
-		return super.mTable[s1Length-1][s2Length-1];
+		return getTableEntry(super.mString1.length()-1,super.mString2.length()-1); // returns last value in the table
 	}
 
 	private int max(int a, int b){
 		if (a>b) return a;
 		return b;
-	}
-
-	public void printTable(){ // debugging tool to print out the internal table, but flipped vertically from the tick page
-		System.out.print("\t");
-		for (int i = 0; i<super.mString1.length(); i++){
-			System.out.print(super.mString1.charAt(i)); 
-			System.out.print("\t");
-		}
-		System.out.println("");
-		for (int j = 0; j <super.mString2.length(); j++){
-			System.out.print(super.mString2.charAt(j)); 
-			System.out.print("\t");		
-			for (int i = 0; i<super.mString1.length(); i++){
-				System.out.print(super.mTable[i][j]); 
-				System.out.print("\t");
-			}
-			System.out.println("");
-		}
 	}
 
 	public String getLCSString(){
@@ -116,5 +90,23 @@ public class LCSBottomUp extends LCSFinder{
 		}
 		return new String(resultStack);
 
+	}
+
+	public void printTable(){ // debugging tool to print out the internal table, but flipped vertically from the tick page
+		System.out.print("\t");
+		for (int i = 0; i<super.mString1.length(); i++){
+			System.out.print(super.mString1.charAt(i)); 
+			System.out.print("\t");
+		}
+		System.out.println("");
+		for (int j = 0; j <super.mString2.length(); j++){
+			System.out.print(super.mString2.charAt(j)); 
+			System.out.print("\t");		
+			for (int i = 0; i<super.mString1.length(); i++){
+				System.out.print(super.mTable[i][j]); 
+				System.out.print("\t");
+			}
+			System.out.println("");
+		}
 	}
 }

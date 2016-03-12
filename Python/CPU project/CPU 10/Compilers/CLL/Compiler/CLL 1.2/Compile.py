@@ -41,7 +41,9 @@ class Program:
 			built_in_function([("char","character")],"void","putc",open(os.path.join(CURRENT_DIR, 'BuiltIns\\putc.al'),"r").read()),
 			built_in_function([],"char","getc",open(os.path.join(CURRENT_DIR, 'BuiltIns\\getc.al'),"r").read()),
 			built_in_function([],"char","getw",open(os.path.join(CURRENT_DIR, 'BuiltIns\\getw.al'),"r").read()),
-			built_in_function([],"void","quit",open(os.path.join(CURRENT_DIR, 'BuiltIns\\quit.al'),"r").read())
+			built_in_function([],"void","quit",open(os.path.join(CURRENT_DIR, 'BuiltIns\\quit.al'),"r").read()),
+			built_in_function([("int","diskAddr"),("int","start"),("int","end")],"int","dRead",open(os.path.join(CURRENT_DIR,'BuiltIns\\dRead.al'),'r').read()),
+			built_in_function([("int","diskAddr"),("int","start"),("int","end")],"int","dWrite",open(os.path.join(CURRENT_DIR,'BuiltIns\\dWrite.al'),'r').read())
 
 		]
 		print "DONE!\nExtracting functions = ",	
@@ -511,6 +513,7 @@ class function:
 							return type_to_return
 						else:
 							#raise an error
+							print "HIT ERROR: function = ",self.name, "variable = ", variable_parse_tree.children[0].string 
 							print "ERROR(2): variable "+variable_parse_tree.children[0].string+ " in function "+self.name+" of type "+program.global_var_types[variable_parse_tree.children[0]].string+" cannot be used as a pointer"
 							quit()
 					else:

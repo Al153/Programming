@@ -49,6 +49,10 @@ void init_primitives()
 	addToDict("READC",newByteCodeNode(PRIMITIVE,42,0)); //reads a single char onto the stack
 	addToDict("ALLOC",newByteCodeNode(PRIMITIVE,43,0)); //Allocates a block of memory of size of the value on the top of stack. pushes pointer to the memory to the TOS
 	addToDict("DALLOC",newByteCodeNode(PRIMITIVE,44,0)); //deallocates the block of memory pointed to by the TOS
+	addToDict("SETDICT",newByteCodeNode(PRIMITIVE,45,0)); // sets the global dict pointer
+	addToDict("BOOTSTRP",newByteCodeNode(PRIMITIVE,46,0)); //loads a 4k block from disk to memory and executes it
+	addToDict("@DISK",newByteCodeNode(PRIMITIVE,47,0)); // loads data from disk to memory
+	addToDict("!DISK",newByteCodeNode(PRIMITIVE,48,0)); // stores data from memory to disk
 
 
 	//self interpreting code: - manually compiled

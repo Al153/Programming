@@ -3,7 +3,6 @@
 //dictionary does not need initialisation or construction, since editDictEntry edis the forthDictHead directly
 
 @int ForthDictHead = 0;
-@int ForthDictTail = 0;
 
 void addToDict(@char name, @int codePtr)
 	@int newEntry = newDictInst(name,codePtr);

@@ -1,0 +1,9 @@
+from the CPU 10 directory:
+gcc -O3 "C source\CPU.c" -o CEmuTest.exe    (for testing)
+gcc -O3 "C source\CPU.c" -o CEmu.exe 		(for real)
+
+to do profiling:
+
+gcc -O3 -pg "C source\CPU.c" -o CEmuTest.exe
+ then run the emulator
+gprof CEmuTest.exe gmon.out > analysis.txt

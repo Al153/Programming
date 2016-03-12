@@ -320,3 +320,30 @@ void primDalloc() // ( address -- ) [ deallocates memory at address ]
 	ForthStackPointer -= 1;
 	dalloc(ForthStack[ForthStackPointer]);
 end;
+
+void bootstrap() // (address -- ) [ loads a 4k block of code into disk and executes it]
+	int failed = dRead(Pop(),diskBuff,diskBuff+4096); //reads into the disk buffer
+	if (failed) then
+		printf("ERROR: BOOTSTRAP FAILED\n");
+		return;
+	endif;
+
+	changeMode(DISK); // changes the mode
+	linePtr = 0; //resets line pointer	
+end;
+
+void READDISK() // (DISK_ADDRESS, START, LENGTH -- failed?) [loads to memory from disk]
+	int LENGTH = Pop();
+	int START = Pop();
+	int DISK_ADDRESS = Pop();
+	printf("READING DISK\n");
+	Push(dRead(DISK_ADDRESS,START,LENGTH));
+end;
+
+void WRITEDISK() // (DISK_ADDRESS, START, LENGTH -- failed?) [writes from memory to disk]
+	int LENGTH = Pop();
+	int START = Pop();
+	int DISK_ADDRESS = Pop();
+	printf("WRITING DISK\n");
+	Push(dWrite(DISK_ADDRESS,START,LENGTH));
+end;

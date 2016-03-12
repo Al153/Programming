@@ -3,8 +3,7 @@
 // Compile at -O3 for 5x speed up 				//
 //												//
 //////////////////////////////////////////////////
-
-
+#pragma GCC diagnostic ignored "-Wpedantic"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,10 +16,12 @@
 #include "ALU.h"
 #include "io.h"
 #include "execution.h"
+#include "hardDisk.h"
 #include "operation functions.h"
 
 
 //C implementation of my CPU 10
+
 
 int step(unsigned int *registers, unsigned char *MEMORY){   //returns halt, carries out game logic
 	register unsigned int instruction = fetch_instruction(registers,MEMORY);
@@ -119,8 +120,13 @@ int main(int argc, char *argv[]){
 	printf("initialising memory\n");
 	init_memory(MEMORY,argv[1]);
 
-	if (argc < 3){
-
+	if (argc < 4){
+		if (argc == 3){ // needs to load hard disk
+			HD_LOADED = load_HD(argv[2]);
+		} else { // no hard disk
+			HD_LOADED = 0;
+			HD_FILE = NULL;
+		}
 		printf("______________________ running ______________________\n");
 		gettimeofday(&begin,NULL); //uses this to work out running time
 		while (halt == 0){
@@ -140,7 +146,8 @@ int main(int argc, char *argv[]){
 			printf("at %lf ips\n", instructions_per_second);
 		}
 	} else { //does a debug run - pauses between instructions etc
-		if (argc == 3){	
+		HD_LOADED = load_HD(argv[3]); 
+		if (argc == 4){	
 
 			printf("______________________ running Debug ______________________\n");
 			gettimeofday(&begin,NULL);
@@ -161,7 +168,7 @@ int main(int argc, char *argv[]){
 				printf("at %lf ips\n", instructions_per_second);
 				}
 		} else {
-			int debug_threshold = atoi(argv[3]); //if a debug threshold of n is set, then executes n instructions before going into debug mode
+			int debug_threshold = atoi(argv[4]); //if a debug threshold of n is set, then executes n instructions before going into debug mode
 
 			printf("______________________ running Debug ______________________\n");
 			gettimeofday(&begin,NULL);
@@ -187,5 +194,6 @@ int main(int argc, char *argv[]){
 				}
 		}
 	}
+	fclose(HD_FILE);
 	return 0;
 }

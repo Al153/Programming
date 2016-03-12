@@ -409,23 +409,23 @@ VARIABLE P_INLN // variable holding addresses vital for inlining
 
 
 
-//	'N' # oca;
-//	'i' # oca;
-//	'c' # oca;
-//	'e' # oca;
-//	32 # oca;
-//	'h' # oca;
-//	'a' # oca;
-//	'c' # oca;
-//	'k' # oca;
-//	's' # oca;
-//	32 # oca;
-//	'm' # oca;
-//	56 # oca;
-//	echo( hello word!) // adds an echo of hello world to the assembly code
-//	jmp, pc, mov;
-//	
-//	INLN_INI
-//	0 codeSegm doInline
+	'N' # oca;
+	'i' # oca;
+	'c' # oca;
+	'e' # oca;
+	32 # oca;
+	'h' # oca;
+	'a' # oca;
+	'c' # oca;
+	'k' # oca;
+	's' # oca;
+	32 # oca;
+	'm' # oca;
+	56 # oca;
+	echo( hello word!) // adds an echo of hello world to the assembly code
+	jmp, pc, mov;
+	
+	INLN_INI
+	0 codeSegm doInline
 
 

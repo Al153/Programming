@@ -59,3 +59,7 @@ end;
 void comment() // ( -- ) [ skips the rest of the line ]
 	READ_IN_STATE = EMPTY;
 end;
+
+void setDict() // ( ptr -- ) [ sets the global head of dict pointer to ptr ]
+	ForthDictHead = Pop();
+end;

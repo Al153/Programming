@@ -55,7 +55,11 @@ opcodes = {
 		"ADDcAddr":46,
 		"SUBbAddr":47,
 		"InReg":48,
-		"InAddr":49
+		"InAddr":49,
+		"HDScanReg":50,
+		"HDScanAddr":51,
+		"HDRead":52,
+		"HDWrite":53
 		}
 
 opcodes_to_count = [
@@ -89,7 +93,10 @@ opcodes_to_count = [
 		"StoreByte",
 		"LoadWord",
 		"StoreWord",
-		"In"
+		"In",
+		"HDScan",
+		"HDRead",
+		"HDWrite"
 ]
 
 register_addresses = {
@@ -135,7 +142,7 @@ conditional_addresses = {
 		"20":20,
 		"21":21,
 		"22":22,
-		"23":23,
+		"EOF":23,
 		"Equal":24,
 		"Greater":25,
 		"Less":26,
@@ -903,19 +910,20 @@ def fill_in_gaps(tokens,print_flag):
 
 def fill_in_gaps_line(line,print_flag):
 	''' fills in gaps, giving instructions nearly uniform format before final assembly'''
+#	print line
 	try:
 		if print_flag: print line #if there is a call to print from elsewhere
 		if line[1] == "CondR" or line[1] == "CondF":  #if there is a conditional instruction
 			semi_line = [line[0]]+line[3:] #cuts out conditional part
 			return line[:3] + fill_in_gaps_line(semi_line,print_flag)[1:] #combines conditional part (line[:3]) with the result of compiling the rest of the line
 	
-		elif line[1] == "Data":
+		elif line[1] in ("Data","Byte","Word"):
 			return line
 	
-		elif line[1] == "Byte":
-			return line
-		elif line[1] == "Word":
-			return line
+#		elif line[1] == "Byte":
+#			return line
+#		elif line[1] == "Word":
+#			return line
 		else:
 			length = len(line)
 			if line[1] == "Halt":
@@ -924,168 +932,26 @@ def fill_in_gaps_line(line,print_flag):
 				return [line[0],"Pass","Zero","Zero","0"]
 			elif line[1] == "Move":
 				return line + ["0"]
-	
-			elif line[1] == "Load":
+			elif line[1] in ["Load","Store","LoadByte","StoreByte","LoadWord","StoreWord"]:
 				if length == 5: #0 Load reg addr index
 					return line[:3]+[line[4][1:-1]]+[line[3]]
 				else:
 					return line[:3]+["Zero"]+[line[3]]
 	
-			elif line[1] == "Store":
-				#print   line
-				if length == 5: #0 Load reg addr index
-					return line[:3]+[line[4][1:-1]]+[line[3]]
-				else:
-					return line[:3]+["Zero"]+[line[3]]
-	
-			elif line[1] == "Compare": #0 compare reg (reg/addr)
+			elif line[1] in ["Compare","ADD","SUB","MUL","DIV","MOD","AND","OR","XOR","NAND","NOR","XNOR","SHR","SHL","ADDc","SUBb"]: #0 compare reg (reg/addr)
 				if line[3] in register_addresses:
-					#register-rgister compare
+					#register-rgister op
 					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
 				else:
-					if length == 5: #0 compare reg addr index
+					if length == 5: #0 op reg addr index
 						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
 					else:
 						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "ADD":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-	
-			elif line[1] == "SUB":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "MUL":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "DIV":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "MOD":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "AND":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "OR":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "XOR":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "NOT":
+
+			elif line[1] in ["NOT"]:
 				return [line[0]] + [line[1]+ "Reg"]+ line[2:] + ["Zero","0"]
-			elif line[1] == "NAND":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "NOR":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "XNOR":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "SHL":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "SHR":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "ADDc":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "SUBb":
-				if line[3] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
-				else:
-					if length == 5: #0 compare reg addr index
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
-					else:
-						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
-			elif line[1] == "Out":
+
+			elif line[1] in ["Out","In","Outd","HDScan"]: # if this doesnt work, change me
 				if line[2] in register_addresses:
 					#register-rgister compare
 					return [line[0]] + [line[1]+"Reg"]+[line[2]] +["Zero"] + ["0"]
@@ -1094,48 +960,200 @@ def fill_in_gaps_line(line,print_flag):
 						return [line[0]] + [line[1]+"Addr","Zero"]+[line[3][1:-1]]+[line[2]]
 					else:
 						return [line[0]] + [line[1]+"Addr","Zero","Zero"]+[line[2]]
-			elif line[1] == "In":
-				if line[2] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+[line[2]] +["Zero"] + ["0"]
+			elif line[1] in ["HDWrite","HDRead"]:
+				if length == 5: #0 compare reg addr index
+					return [line[0], line[1], line[2], line[3], line[4]]
 				else:
-					if length == 4: #0 out addr [index]
-						return [line[0]] + [line[1]+"Addr","Zero"]+[line[3][1:-1]]+[line[2]]
-					else:
-						return [line[0]] + [line[1]+"Addr","Zero","Zero"]+[line[2]]
-			elif line[1] == "Outd":
-				if line[2] in register_addresses:
-					#register-rgister compare
-					return [line[0]] + [line[1]+"Reg"]+[line[2]] +["Zero"] + ["0"]
-				else:
-					if length == 4: #0 out addr [index]
-						return [line[0]] + [line[1]+"Addr","Zero"]+[line[3][1:-1]]+[line[2]]
-					else:
-						return [line[0]] + [line[1]+"Addr","Zero","Zero"]+[line[2]]
-			elif line[1] == "LoadByte":
-				if length == 5: #0 Load reg addr index
-					return line[:3]+[line[4][1:-1]]+[line[3]]
-				else:
-					return line[:3]+["Zero"]+[line[3]]
+					return [line[0],line[1],line[2],"Zero",line[3]]
+#			elif line[1] == "Load":
+#				if length == 5: #0 Load reg addr index
+#					return line[:3]+[line[4][1:-1]]+[line[3]]
+#				else:
+#					return line[:3]+["Zero"]+[line[3]]
+#
+#			elif line[1] == "Store":
+#				#print   line
+#				if length == 5: #0 Load reg addr index
+#					return line[:3]+[line[4][1:-1]]+[line[3]]
+#				else:
+#					return line[:3]+["Zero"]+[line[3]]
+
+#			elif line[1] == "ADD":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+	#
+#			elif line[1] == "SUB":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "MUL":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "DIV":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "MOD":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "AND":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "OR":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "XOR":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+
+#			elif line[1] == "NAND":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "NOR":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "XNOR":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "SHL":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "SHR":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "ADDc":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+#			elif line[1] == "SUBb":
+#				if line[3] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+line[2:] + ["0"]
+#				else:
+#					if length == 5: #0 compare reg addr index
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+[line[4][1:-1]]+[line[3]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr"]+[line[2]]+["Zero"]+[line[3]]
+
+#			elif line[1] == "In":
+#				if line[2] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+[line[2]] +["Zero"] + ["0"]
+#				else:
+#					if length == 4: #0 out addr [index]
+#						return [line[0]] + [line[1]+"Addr","Zero"]+[line[3][1:-1]]+[line[2]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr","Zero","Zero"]+[line[2]]
+#			elif line[1] == "Outd":
+#				if line[2] in register_addresses:
+#					#register-rgister compare
+#					return [line[0]] + [line[1]+"Reg"]+[line[2]] +["Zero"] + ["0"]
+#				else:
+#					if length == 4: #0 out addr [index]
+#						return [line[0]] + [line[1]+"Addr","Zero"]+[line[3][1:-1]]+[line[2]]
+#					else:
+#						return [line[0]] + [line[1]+"Addr","Zero","Zero"]+[line[2]]
+
 	
-			elif line[1] == "StoreByte":
-				#print   line
-				if length == 5: #0 Load reg addr index
-					return line[:3]+[line[4][1:-1]]+[line[3]]
-				else:
-					return line[:3]+["Zero"]+[line[3]]
-			elif line[1] == "LoadWord":
-				if length == 5: #0 Load reg addr index
-					return line[:3]+[line[4][1:-1]]+[line[3]]
-				else:
-					return line[:3]+["Zero"]+[line[3]]
-	
-			elif line[1] == "StoreWord":
-				#print   line
-				if length == 5: #0 Load reg addr index
-					return line[:3]+[line[4][1:-1]]+[line[3]]
-				else:
-					return line[:3]+["Zero"]+[line[3]]
+#			elif line[1] == "StoreByte":
+#				#print   line
+#				if length == 5: #0 Load reg addr index
+#					return line[:3]+[line[4][1:-1]]+[line[3]]
+#				else:
+#					return line[:3]+["Zero"]+[line[3]]
+#			elif line[1] == "LoadWord":
+#				if length == 5: #0 Load reg addr index
+#					return line[:3]+[line[4][1:-1]]+[line[3]]
+#				else:
+#					return line[:3]+["Zero"]+[line[3]]
+#
+#			elif line[1] == "StoreWord":
+#				#print   line
+#				if length == 5: #0 Load reg addr index
+#					return line[:3]+[line[4][1:-1]]+[line[3]]
+#				else:
+#					return line[:3]+["Zero"]+[line[3]]
 			else:
 				print "Unknown command: ",line
 	
@@ -1199,6 +1217,8 @@ def low_level_assemble(line_list):
 
 				else:
 					opcode = opcodes[tokens[1]]
+					if tokens[1] in ("HDScanAddr","HDScanReg","HDRead","HDWrite"):
+						print tokens[1], " --> ", opcode
 					reg1 = register_addresses[tokens[2]]
 					reg2 = register_addresses[tokens[3]] 
 					cond = 0

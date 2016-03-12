@@ -216,9 +216,17 @@ void executePrimitive(int primitive_opcode)
 				primAlloc();
 			else if (primitive_opcode == 44) then 		   // == 2C: DALLOC
 				primDalloc();
+			else if (primitive_opcode == 45) then 		   // == 2D: SETDICT
+				setDict();
+			else if (primitive_opcode == 46) then 		   // == 2E: BOOTSTRP
+				bootstrap();
+			else if (primitive_opcode == 47) then 		   // == 2F: @DISK
+				READDISK();
+			else if (primitive_opcode == 48) then		   // == 30: !DISK
+				WRITEDISK();
 			else
 				printf("ERROR: unrecognised opcode ");print_h(primitive_opcode);dontBreak = char(0);
-			endif; endif; endif; endif; endif;
+			endif; endif; endif; endif; endif; endif; endif; endif; endif;
 		endif;
 	endif;
 end;
