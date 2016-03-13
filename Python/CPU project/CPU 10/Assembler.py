@@ -1217,8 +1217,6 @@ def low_level_assemble(line_list):
 
 				else:
 					opcode = opcodes[tokens[1]]
-					if tokens[1] in ("HDScanAddr","HDScanReg","HDRead","HDWrite"):
-						print tokens[1], " --> ", opcode
 					reg1 = register_addresses[tokens[2]]
 					reg2 = register_addresses[tokens[3]] 
 					cond = 0

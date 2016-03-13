@@ -322,14 +322,15 @@ void primDalloc() // ( address -- ) [ deallocates memory at address ]
 end;
 
 void bootstrap() // (address -- ) [ loads a 4k block of code into disk and executes it]
-	int failed = dRead(Pop(),diskBuff,diskBuff+4096); //reads into the disk buffer
+	int failed = dRead(Pop(),diskBuff,4096); //reads into the disk buffer
 	if (failed) then
 		printf("ERROR: BOOTSTRAP FAILED\n");
 		return;
 	endif;
 
 	changeMode(DISK); // changes the mode
-	linePtr = 0; //resets line pointer	
+	linePtr = 0; //resets line pointer
+	READ_IN_STATE = FULL;
 end;
 
 void READDISK() // (DISK_ADDRESS, START, LENGTH -- failed?) [loads to memory from disk]

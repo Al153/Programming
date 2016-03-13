@@ -1,7 +1,7 @@
 ################## built in function dWrite ##############################################
 
 SUB gp7 @4 		 		 %function:dWrite									
-								# disk addr, start, end ==> success?
+								# disk addr, start, length ==> success?
 Load gp3 Expression_stack [gp7] #len
 SUB gp7 @4
 Load gp2 Expression_stack [gp7] #start

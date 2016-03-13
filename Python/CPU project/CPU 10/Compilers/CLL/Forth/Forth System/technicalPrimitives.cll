@@ -57,7 +57,19 @@ void dropAll() // ( whole stack -- ) [ deletes everything on the stack ]
 end;
 
 void comment() // ( -- ) [ skips the rest of the line ]
-	READ_IN_STATE = EMPTY;
+	// previously:
+
+		//READ_IN_STATE = EMPTY;
+	
+	// now
+	while (1) do
+		if (lineBuff[linePtr] == 13) then break; endif;
+		if (lineBuff[linePtr] == 10) then break; endif;
+		linePtr = (linePtr + 1)&(255 if READ_IN_MODE == KEYBOARD else 4095);
+		if (linePtr == 0) then break; endif;
+
+		if (READ_IN_MODE == KEYBOARD) then READ_IN_STATE = EMPTY; endif;
+	loop;
 end;
 
 void setDict() // ( ptr -- ) [ sets the global head of dict pointer to ptr ]

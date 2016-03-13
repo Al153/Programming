@@ -42,8 +42,8 @@ class Program:
 			built_in_function([],"char","getc",open(os.path.join(CURRENT_DIR, 'BuiltIns\\getc.al'),"r").read()),
 			built_in_function([],"char","getw",open(os.path.join(CURRENT_DIR, 'BuiltIns\\getw.al'),"r").read()),
 			built_in_function([],"void","quit",open(os.path.join(CURRENT_DIR, 'BuiltIns\\quit.al'),"r").read()),
-			built_in_function([("int","diskAddr"),("int","start"),("int","end")],"int","dRead",open(os.path.join(CURRENT_DIR,'BuiltIns\\dRead.al'),'r').read()),
-			built_in_function([("int","diskAddr"),("int","start"),("int","end")],"int","dWrite",open(os.path.join(CURRENT_DIR,'BuiltIns\\dWrite.al'),'r').read())
+			built_in_function([("int","diskAddr"),("int","start"),("int","len")],"int","dRead",open(os.path.join(CURRENT_DIR,'BuiltIns\\dRead.al'),'r').read()),
+			built_in_function([("int","diskAddr"),("int","start"),("int","len")],"int","dWrite",open(os.path.join(CURRENT_DIR,'BuiltIns\\dWrite.al'),'r').read())
 
 		]
 		print "DONE!\nExtracting functions = ",	
@@ -54,21 +54,21 @@ class Program:
 		self.header_code = Non_terminal_parse_tree_node("<block>",linearise_code(self.parse_tree))
 
 		print "DONE!\nFinding global variables =",
-		#print_parse_tree(self.header_code)
+		
 
 		self.global_var_types = {}
 		self.global_array_values = {}
 		self.global_var_values = [] #for simple type global vars
 		self.global_var_sizes = {}
 		for line in self.header_code.children:
-			#print line.type
+			
 			if line.type == "<var_dec>":
 				self.get_var(line)
 			else:
 				print "ERROR(7): not expecting line of type "+line.type+" outside of function definitions"
 
 
-		#print self.global_var_types
+		
 
 		self.functions["main"].parse_tree.children = self.global_var_values + self.functions["main"].parse_tree.children #inserts assignments for global variables
 
@@ -79,13 +79,13 @@ class Program:
 				#	print_parse_tree(self.functions["main"].parse_tree)
 				self.functions[function_name].process()
 				self.functions[function_name].check_function_typing(self.functions[function_name].parse_tree)
-		#print_parse_tree(self.functions["main"].parse_tree)
+		
 
 		print "DONE!\nGenerating assembly =",
 		global_var_addresses = {var:"CLL."+var for var in self.global_var_types}
 		assembly_code = code_generator.snippets[" setup routines "].generate_code({})
 		assembly_code += self.generate_global_vars()
-		#print assembly_code
+		
 		#raw_input('')
 		for function_name in self.functions:
 			if self.functions[function_name].built_in:
@@ -145,7 +145,7 @@ class Program:
 		#creates assembly level variable definitions
 		return_string = ''
 		for var_name in self.global_var_types:
-			#print self.global_var_types[var_name]
+			
 			#cont = raw_input('')
 			self.global_var_types[var_name]
 			if self.global_var_types[var_name] in ["int","char"]:     #plain variables
@@ -271,7 +271,7 @@ class function:
 		widths_lookup = {"int":4,"char":1,"@int":4,"@char":4} #arrays for @chars and @ints are 4+n or 4+(n*4), ptr, then array
 		i = 0
 		while i < len(parse_tree.children):
-			#print i, len(parse_tree.children)
+			
 			array = 0
 			assignment_present = 0
 			child = parse_tree.children[i]
@@ -303,15 +303,15 @@ class function:
 				else:
 					print "ERROR(8): non control flow parse tree: "+child.children[0].type
 			elif child.type == "<var_dec>":
-				#print "VAR DEC!"
-				#print "VAR DEC"
-				#print_parse_tree(parse_tree)
-				#print get_type(child.children[0])
+				
+				
+				
+				
 				return_variables[child.children[1].string] = get_type(child.children[0])			#adds an entry for the new variable
 				widths[child.children[1].string] = widths_lookup[get_type(child.children[0])]
 				
 				if len(child.children[0].children)==3: #if there is an array type 
-					#print "ARRAY TYPE !"
+					
 					array_type = get_type(child.children[0])[1:] 			#type of variables in array
 					array_length =int(child.children[0].children[2].string)*widths_lookup[array_type] #adds the length of the array to lengths
 					widths["Array_of"+child.children[1].string] = array_length
@@ -327,11 +327,11 @@ class function:
 
 
 					parse_tree.children[i] = assignment_tree
-					#print_parse_tree(assignment_tree)
+					
 					assignment_present = 1
 
 				if len(child.children) > 2: #if there is an assignment
-					#print "assignment"
+					
 					assignment_present = 1
 					if len(child.children[3].children)==1: #if a simple expression
 						assign_expression = child.children[3].children[0] #gets the assignment trees	
@@ -345,7 +345,7 @@ class function:
 						array_vars = self.parse_array(child.children[3].children[1])
 						#parse_tree.children = parse_tree.children[:i]+parse_tree.children[i+1:] #deletes variable declaration	
 						for j in xrange(len(array_vars)):
-							#print j
+							
 							index_parse_tree = Terminal_parse_tree_node("num",str(j)) #build up the  indexing expression
 							index_parse_tree = Non_terminal_parse_tree_node("<const>",[index_parse_tree]) #constant layer
 							index_parse_tree = Non_terminal_parse_tree_node("<factor>",[index_parse_tree]) #factor layer
@@ -372,7 +372,7 @@ class function:
 
 
 				
-				#print len(parse_tree.children)
+				
 				i -= 1 #makes up for shortened parse tree
 				#cont = raw_input("")
 			i += 1
@@ -384,7 +384,7 @@ class function:
 		return widths_lookup[var_type]
 
 	def parse_array(self,array_tree):
-		#print array_tree.type
+		
 		if len(array_tree.children) == 1:
 			return [int(array_tree.children[0].string)]
 		else:
@@ -401,7 +401,7 @@ class function:
 				if child.type == "<expr>":
 					self.check_typing(child)
 				elif child.type == "<assignment>":
-					#print_parse_tree(child)
+					
 					self.check_assignment_typing(child)
 				elif child.type == "<fun_call>" and parse_tree.type == "<other>": #function call on its own in a line
 					function_name = parse_tree.children[0].children[0].string
@@ -419,8 +419,8 @@ class function:
 
 		lhs = self.check_typing(Non_terminal_parse_tree_node("<factor>",[parse_tree.children[0]]))
 		rhs = self.check_typing(parse_tree.children[1])
-		#print lhs, rhs
-		#print_parse_tree(parse_tree)
+		
+		
 
 		if lhs != rhs:
 			parse_tree.children[1] = self.cast_type(rhs,lhs,parse_tree.children[1]) #adds a cast operation
@@ -456,7 +456,7 @@ class function:
 				rhs_type = self.check_typing(parse_tree.children[2])
 				overall_type = lhs_type #left hand rule
 
-				#print lhs_type,rhs_type
+				
 		#				print_parse_tree(parse_tree)
 		#				cont = raw_input("")
 
@@ -475,29 +475,29 @@ class function:
 				function_name = parse_tree.children[0].children[0].string
 				function_type = self.get_overall_type(program.functions[function_name].return_type)
 				self.check_function_call(parse_tree.children[0])
-				#print "FUNCTION TYPE = ", function_type
+				
 				return function_type
 			elif parse_tree.children[0].type == "<variable>":
 
 				variable_parse_tree = parse_tree.children[0]
 				if len(variable_parse_tree.children) == 1: #treating a variable as itself
 					if variable_parse_tree.children[0].string in self.variables:
-						#print	self.get_overall_type(self.variables[variable_parse_tree.children[0].string])
+						
 						return self.get_overall_type(self.variables[variable_parse_tree.children[0].string]) #gets overall type
 					elif variable_parse_tree.children[0].string in program.global_var_types:
-						#print self.get_overall_type(program.global_var_types[variable_parse_tree.children[0].string])
+						
 						return self.get_overall_type(program.global_var_types[variable_parse_tree.children[0].string])
 					else:
 						print "ERROR(0): Unrecognised variable: "+ variable_parse_tree.children[0].string + " in function "+self.name
 						quit()
 				else: #indirect addressing
 					#needs to be a pointer
-					#print "POINTER"
+					
 					if variable_parse_tree.children[0].string in self.variables: #if local
 						if self.variables[variable_parse_tree.children[0].string][0] == "@":
 							#if the variable type is a pointer
 							type_to_return = self.variables[variable_parse_tree.children[0].string][1:] #gets the pointed to type
-							#print type_to_return
+							
 							self.check_typing(variable_parse_tree.children[2])
 							return type_to_return
 						else:
@@ -509,7 +509,7 @@ class function:
 							#if the variable type is a pointer
 							type_to_return = program.global_var_types[variable_parse_tree.children[0].string][1:] #gets the pointed to type
 							self.check_typing(variable_parse_tree.children[2])
-							#print type_to_return
+							
 							return type_to_return
 						else:
 							#raise an error
@@ -521,7 +521,7 @@ class function:
 						quit()
 
 			elif parse_tree.children[0].type == "<const>":
-				#print "CONSTANT"
+				
 				return "int"  #constants are either numbers or pointers (ints)
 			else:
 				print "ERROR(39): incorrect node passed: "+ parse_tree.children[0].type
@@ -567,7 +567,7 @@ class function:
 				quit()
 	
 	def get_given_parameters(self,parameters_parse_tree):
-		#print_parse_tree(parameters_parse_tree)
+		
 		if len(parameters_parse_tree.children) == 1:
 			return parameters_parse_tree.children
 		else:
@@ -599,7 +599,7 @@ class Terminal_parse_tree_node:                                                 
 def tokenise(self,source_text):
 	#tokeniser which handles strings and comments, deals with import directives etc
 	#source_text = fix_strings_and_comments(source_text)
-	#print "tokenising"
+	
 	escaped_replace_dict = {"n":"\n",'"':'"',"\\":"\\","'":"'","t":"\t"}
 	source_text,macro_replace_dict = preprocessor.pretokenise(source_text,sys.argv[1].split("\\")[:-1])
 	#standard tokenizing routine
@@ -609,7 +609,7 @@ def tokenise(self,source_text):
 	i = 0
 	while i < len(string_token_list):
 		current_token = string_token_list[i]
-		#print current_token
+		
 		if current_token[0] == current_token[-1] == '"': #if a string
 			name  = "string"+str(string_counter)
 			values_list = []
@@ -645,7 +645,7 @@ def tokenise(self,source_text):
 				token_list.append(self.get_parse_tree_node(string_token_list[i]))
 		i += 1
 	token_list.append(Terminal_parse_tree_node("END","END"))                                    #adds end symbol to end of code
-	#print [token.string for token in token_list]
+	
 	return token_list
 
 
@@ -656,7 +656,7 @@ def main_tokenise(self,text_file):
 	Monolithic tokenizer
 	''' #replaces parser tokeniser
 	text_file = [line for line in text_file.split("\n")]
-	#print text_file
+	
 	token_list = []
 	string = 0
 	escaped = 0
@@ -799,7 +799,7 @@ def get_type(type_tree):
 		return type_tree.children[0].string
 	elif len(type_tree.children) >= 2: #@int or @char
 		return type_tree.children[0].string+type_tree.children[1].string
-	#print type_tree.type
+	
 	quit()
 
 def copy_parse_tree(parse_tree):

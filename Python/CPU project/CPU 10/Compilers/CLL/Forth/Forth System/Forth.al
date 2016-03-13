@@ -1378,7 +1378,7 @@ Move ret_addr PC
 ################## built in function dWrite ##############################################
 
 SUB gp7 @4 		 		 %function:dWrite									
-								# disk addr, start, end ==> success?
+								# disk addr, start, length ==> success?
 Load gp3 Expression_stack [gp7] #len
 SUB gp7 @4
 Load gp2 Expression_stack [gp7] #start
@@ -2638,23 +2638,17 @@ Move ret_addr PC
 
 SUB gp7 @4 		 		 %function:dRead									
 								# disk addr, start, length ==> success?
-
-Out @'a'
 Load gp3 Expression_stack [gp7] #len
 SUB gp7 @4
 Load gp2 Expression_stack [gp7] #start
 SUB gp7 @4						
 Load gp1 Expression_stack [gp7] #addr
-Out @'b'
 HDScan gp1 						#scan to the right position
-Out @'c'
 HDRead gp3 gp2 0 				# read l characters to memory at addr s
-Out @'d'
 Move Zero gp0 		
 if EOF then Move One gp0 			#test for EOF
 Store gp0 Expression_stack [gp7]  #push flag
 ADD gp7 @4
-Out @'e'
 Move Jump PC 
 ################################################################################################################################################################################################################
 																	Scope createEval
@@ -5145,8 +5139,93 @@ Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
 Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION comment
+Pass 										%loopcomment-0entry
+Load gp0 @1
+if gp0 then Load gp0 @4294967295 									#COMPARE (IS TRUE)
+NOT gp0
+if gp0 then Load PC loopcomment-0exit 								#WHILE LOOP
+Load gp6 CLL.linePtr 										#LOAD GP0 GLOBAL
+ADD gp6 CLL.lineBuff 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
+LoadByte gp0 0 [gp6]
+Move gp0 gp1 						#PUSH gp0 POP gp1
+Load gp0 @13
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifcomment-0endif
+Load PC loopcomment-0exit
+Pass										%ifcomment-0endif
+Load gp6 CLL.linePtr 										#LOAD GP0 GLOBAL
+ADD gp6 CLL.lineBuff 											#LOAD GP0 GLOBAL RELATIVE (CHAR)
+LoadByte gp0 0 [gp6]
+Move gp0 gp1 						#PUSH gp0 POP gp1
+Load gp0 @10
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifcomment-1endif
+Load PC loopcomment-0exit
+Pass										%ifcomment-1endif
+Load gp1 CLL.linePtr 										#LOAD GP0 GLOBAL
+Load gp0 @1
+ADD gp0 gp1 														#ADD
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp1 CLL.READ_IN_MODE 										#LOAD GP0 GLOBAL
+Load gp0 @0
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+if gp0 then Load PC ifcomment-2true 									#IF ELSE STATEMENT
+Load gp0 @4095
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load PC ifcomment-2endif
+Pass 										%ifcomment-2true
+Load gp0 @255
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Pass 										%ifcomment-2endif           
+SUB gp7 @4 															#POP GP0
+Load gp0 Expression_stack [gp7]
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+AND gp0 gp1 														#AND
+Store gp0 CLL.linePtr 										#STORE GP0 GLOBAL
+Load gp1 CLL.linePtr 										#LOAD GP0 GLOBAL
+Load gp0 @0
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifcomment-3endif
+Load PC loopcomment-0exit
+Pass										%ifcomment-3endif
+Load gp1 CLL.READ_IN_MODE 										#LOAD GP0 GLOBAL
+Load gp0 @0
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifcomment-4endif
 Load gp0 @0
 Store gp0 CLL.READ_IN_STATE 										#STORE GP0 GLOBAL
+Pass										%ifcomment-4endif
+Load PC loopcomment-0entry					%loopcomment-0continue
+Pass 										%loopcomment-0exit
 Load ret_addr 0 [Stack_pointer]										#RETURNING
 Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
@@ -12715,9 +12794,7 @@ Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
-Load gp1 CLL.diskBuff 										#LOAD GP0 GLOBAL
 Load gp0 @4096
-ADD gp0 gp1 														#ADD
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -12748,6 +12825,8 @@ if Greater then Load PC Stack_overflow_error
 Goto function:changeMode 												#CALLING changeMode
 Load gp0 @0
 Store gp0 CLL.linePtr 										#STORE GP0 GLOBAL
+Load gp0 @1
+Store gp0 CLL.READ_IN_STATE 										#STORE GP0 GLOBAL
 Load ret_addr 0 [Stack_pointer]										#RETURNING
 Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
