@@ -1,0 +1,8 @@
+Type = { 
+	int val;
+	int payLoad;
+	TreeNode left;
+	TreeNode right;
+}
+
+int searchTree (TreeNode A) (int Key) = if (Key < A.Val) { }

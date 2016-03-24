@@ -1,7 +1,0 @@
-A list of optional guidelines for programming in forth
-
-for datastructures/objects:
-P_name is a private underlying variable for the structure
-N_name is a word to create a new object etc/change the underlying variable for singletons
-
-

@@ -1,0 +1,272 @@
+//Functions and procedures used by the interpreter for IO
+
+///////////////////////// IO //////////////////////////////
+@char 256 keyboardBuff;
+@int 4097 diskBuff;
+int diskPtr = 0;
+@char lineBuff = keyboardBuff;
+int linePtr = 0;
+int keyboardPtr;
+int READ_IN_STATE = EMPTY;
+int READ_IN_MODE = KEYBOARD;
+@char 9 WORD_BUF; //global var containing the name of a word
+int EOL = 0; //used as extra state to trigger OKs
+int blockOverFlowFlag = 0;
+int blockOverFlowPointer;
+
+#define EMPTY 0
+#define FULL 1
+#define KEYBOARD 0
+#define DISK 1
+
+// ___________________________________________________ LOWEST ABSTRACTION LAYER _____________________________________________________________
+char readStringChar()
+	//reads in a single string character, refilling the input buffer if necessary
+	if(READ_IN_STATE == EMPTY)then readIn(); endif; //reads in another line
+	if (lineBuff[linePtr] == 0) then READ_IN_STATE = EMPTY; endif;
+	if (linePtr == 4096) then readIn(); endif; // reads in if has reached end of the block
+	linePtr = (linePtr + 1)%(256 if READ_IN_MODE == KEYBOARD else 4097);  
+	return lineBuff[linePtr-1];
+end;
+void backChar() // returns the line pointer back one
+	if (linePtr == 0) then return; endif;
+	linePtr -= 1;
+end; 
+
+void readIn() //new readIn function - handles backspaces
+	if (READ_IN_MODE == DISK) then // if in disk mode:
+		if ((linePtr >= 4095)or(lineBuff[linePtr] == 0)) then // if at the end of the disk block
+			if (QueueEmpty()) then // if no more blocks in the execution queue:
+				changeMode(KEYBOARD); //hand back keyboard control
+				EOL = 1;
+				READ_IN_STATE = FULL;
+			else
+				int diskAddress = GetFromQueue();
+				int failed = dRead(diskAddress,diskBuff,4096); // refills disk buffer
+				if (failed) then
+					printf("ERROR: Unable to load block from disk: ");
+					print_i(diskAddress);
+					printf("\n");
+					changeMode(KEYBOARD);
+					return;
+				endif;
+				linePtr = 0;
+				READ_IN_STATE = FULL;
+			endif;
+		else // otherwise just move the pointer on to the next line
+			if (lineBuff[linePtr] == 10) then linePtr = (linePtr + 1)%4097; endif;
+			while (lineBuff[linePtr] == 13) do 
+				linePtr = (linePtr + 1)%4097; // move to the next char
+			loop;
+			READ_IN_STATE = FULL;
+		endif;
+	else // if is in keyboard mode, then needs to prompt user
+		linePtr = 0;
+		char character;
+		char lineFeed = 10;
+		char blank = 0;
+		char backSpace = 8;	
+		while (1) do
+			character = getw();
+			putc(character);
+			if (character == 13) then
+				lineBuff[linePtr] = 0; //nullifies string
+				putc(lineFeed);
+				break;
+			else
+				if (character == 8) then
+					if (linePtr>0) then
+						lineBuff[linePtr] = 0;
+						linePtr = linePtr - 1;
+						putc(blank);
+						putc(backSpace);
+					else putc('>');
+					endif;
+					continue;
+				endif;
+				lineBuff[linePtr] = character;
+				linePtr = (linePtr + 1)&255;
+			endif;
+		loop;
+		linePtr += 1;
+		while (linePtr) do 
+			lineBuff[linePtr] = 0; //clear rest of buffer
+			linePtr = (linePtr + 1)&255;
+		loop;
+		linePtr = 0;
+		READ_IN_STATE = FULL;
+	endif;
+end;
+
+void scrollWhiteSpaceAndLine()
+	char thisChar; // skips whitespace, and reads in more lines if necessary
+	for (thisChar = readStringChar(), isWhiteSpace(thisChar), thisChar = readStringChar()) // find the start of the next word
+		checkForEnd(thisChar);
+	loop;
+	backChar();
+end;
+
+void scrollLine() // scrolls to the end of a line
+	char thisChar;
+	backChar();
+	for (thisChar = readStringChar(), 1, thisChar = readStringChar()) // find the start of the next word
+		if (isEOLChar(thisChar)) then break; endif;
+	loop;
+	backChar();
+end;
+
+void scrollWhiteSpace()
+	char thisChar; // skips whitespace, and reads in more lines if necessary
+	if (READ_IN_STATE == EMPTY) then return; endif;
+	for (thisChar = readStringChar(), isWhiteSpace(thisChar), thisChar = readStringChar()) // find the start of the next word
+		if (READ_IN_STATE == EMPTY) then break; endif; // break if runs out of characters in line
+	loop;
+	backChar();
+end;
+
+void getWordName() // gets the name of the next word and copies it to the word buffer
+	int done = 0;
+	char thisChar;
+	scrollWhiteSpaceAndLine();
+	int i;
+	for (i = 0, i<8, i += 1) // loop through, filling the word buffer
+		if (done) then WORD_BUF[i] = 0;
+		else
+			thisChar = readStringChar();
+			if (isWhiteSpace(thisChar)) then
+				done = 1;
+				WORD_BUF[i] = 0;
+			else
+				WORD_BUF[i] = thisChar;
+			endif;
+		endif;
+	loop;
+	WORD_BUF[8] = 0;
+	if (not(done)) then // if the word is 8 characters or more, then we need to need to scroll to the next whitespace
+		for (thisChar = readStringChar(), not(isWhiteSpace(thisChar)), thisChar = readStringChar()) // find the start of the next word
+			continue;
+		loop;
+	endif;
+	// scrollWhiteSpace(); //finally scroll through the remaining whitespace
+end;
+
+int isWhiteSpace(char input)
+	//checks if a character is whitespace or not
+	if (input == char(0)) then
+		EOL = 1;
+		return 1; endif;
+	if (input == ' ') then
+		return 1; endif;
+	if (input == '\n') then
+		EOL = 1;
+		return 1; endif;
+	if (input == '\t') then
+		return 1; endif;
+	if (input == char(13)) then
+		EOL = 1;
+		return 1; endif;
+	return 0;
+end;
+
+int isEOLChar(char thisChar)
+		if (thisChar == 0) then return 1; endif;
+		if (thisChar == 10) then return 1; endif;
+		if (thisChar == 13) then return 1; endif;
+		return 0;
+end;
+
+void checkForEnd(char input) // checks if a character signal the end of currently available characters, and if so, triggers a read in
+	if (READ_IN_STATE == EMPTY) then readIn();
+	else
+		if (input == char(0)) then readIn(); return; endif;
+		if (input == char(10)) then readIn(); return; endif;
+		if (input == char(13)) then readIn(); return; endif;
+	endif;
+end;
+
+void changeMode(int newMode)
+	if (newMode == KEYBOARD) then
+		if (READ_IN_MODE == DISK) then diskPtr = linePtr; endif;
+		READ_IN_MODE = KEYBOARD;
+		lineBuff = keyboardBuff;
+		linePtr = keyboardPtr;
+		blockOverFlowFlag = 0;
+	else
+		if (READ_IN_MODE == KEYBOARD) then // handles a context switch from keyboard to disk
+			keyboardPtr = linePtr;
+			READ_IN_MODE = DISK;
+			lineBuff = diskBuff;
+			linePtr = 0;
+			if (QueueEmpty()) then changeMode(KEYBOARD); else
+				int failed = dRead(GetFromQueue(),diskBuff,4096); //reads into the disk buffer
+				if (failed) then
+					printf("ERROR: BOOTSTRAP FAILED\n");
+					return;
+				endif;
+				linePtr = 0; //resets line pointer
+				READ_IN_STATE = FULL;
+			endif;
+		else
+			READ_IN_MODE = DISK;
+			lineBuff = diskBuff;
+			linePtr = diskPtr;
+
+		endif;
+	endif;
+end;
+
+
+
+
+
+
+
+void scanToEndOfDef()
+	//scans to the nearest semicolon or new line on the input
+	char character;
+	printf("Scanning to end of def\n");
+	while (1) do
+		character = readStringChar();
+		if (character == ';') then break; endif;
+		if (character == '\n') then break; READ_IN_STATE = EMPTY; endif;
+		if (character == char(0)) then break; READ_IN_STATE = EMPTY; endif;
+	loop;
+	EOL = 1;
+end;
+
+int isInt()	
+	//determines if the contents of WORD_BUF is an int
+	int i = 0;
+	int digCount = 0; //counts number of digits
+	while (WORD_BUF[i])do
+		if (not((WORD_BUF[i]>='0')and (WORD_BUF[i]<='9'))) then
+			if (not((i == 0) and (WORD_BUF[i] == '-'))) then return 0; endif; //if not a preliminary minus sign
+		endif;//if not a digit then failed
+		if (not(WORD_BUF[i] == '-')) then digCount += 1; endif; //if there is a digit, then increment digCount
+		i += 1;
+	loop;
+	if (digCount) then
+		return 1; //if hasnt returned then is an int
+	else
+		return 0; //if no digits were seen (a single - sign, then there is no int)
+	endif;
+end;
+
+int convertInt()
+	//converts WORD_BUF to an int and returns it
+	int negative = 0;
+	int dec = 0;
+	int i;
+	for(i=0, WORD_BUF[i] ,i = i+1)
+		if ((i == 0) and (WORD_BUF[i] == '-')) then negative = 1; continue; endif;
+		dec = dec * 10 + ( WORD_BUF[i] - '0' );
+	loop;
+	return (0-dec) if negative else dec;
+end;
+
+void copyName(@int name)
+	// quickly copy WORD_BUF to name string
+	@int intWORD_BUF = WORD_BUF;
+	name[0] = intWORD_BUF[0];
+	name[1] = intWORD_BUF[1];
+end;

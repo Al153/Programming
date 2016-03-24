@@ -1,0 +1,80 @@
+//Implementation of a forth in CLL - has some differences to regular forth -NOT COMPATIBLE WITH ANSFORTH
+//
+// 	This is an interactive, highly reflected language with an interpreter and bytecode compiler in (ignoring these comments) < 1500 lines of CLL (as of 23/12/2015)
+//
+//
+//defnitions within forth
+//
+//word dctionary format:
+//
+//8 bytes of name, an int of code pointer, an int of next entry pointer
+//  ADDR 	CONTENTS 			Remarks
+//			-----------------
+//	x  :x+3	| E | X | A | M |   8 byte character name, other bytes = 0
+//			-----------------
+//	x+4:x+7	| P | L | E | 0 |   ditto
+//			-----------------
+//	x+8:x+B	|    ABCD0123   |   code pointer, 4 bytes, points to the byte code of the particular instruction
+//			-----------------
+//	x+c:x+f	|    0123ABCD   | 	next entry pointer, points to the next dictionary entry
+//			-----------------
+//
+//Bytecode format:
+//bytecode for and instruction constists of a linked list of bytecode instructions
+//
+//bytecode instructions can be different lengths depending on the type of instruction.
+//there are four specific types of instruction
+//
+//			word call 							  			push literal					branch  										primitive (CLL code)
+//
+// int0		type:word call      							type: PushLit					type: control flow 						 		type: primitive
+// int1     dictionary entry of word to be called   		literal to push					Next Bytecode0		 							primitive identifier
+// int2		next Bytecode  		                     		Next Bytecode			 		Next Bytecode1 									Next Bytecode
+// int3 	flags 											flags 							flags 											flags
+//
+//
+// notes:
+	// the type field consists of some identifying number
+	// the last link to Next Bytecode in a chain will be 0, indicating to return 
+	// the flags int is used during compiliation to check whether a node has been touched
+//
+// Functions relating to Bytecodes:
+
+	// Bytecode interpeter: proceeds through bytecode list executing instructions, can execute any bytecode instruction and when it hits a primitive, performs a Goto to the machine code
+	//						and executes it, storing the current instruction before hand
+	
+	// A  set of primitives: primitives will allow forth to modify its own state.
+
+	////////////////  PRIMITIVE OPCODES //////////////////////////////////////////////////////////////////////////
+	// @     00   	| +  08 	| ~  		10 | == 		18 | ISINT		20 | DROPALL	28 | !DISK		30
+	// !     01 	| -  09 	| ~&        11 | VARIABLE 	19 | CONVERTINT 21 | // 		29 | SWITCH 	31
+	// .     02 	| *  0A 	| ~|  		12 | CONST   	1A | .BUF 		22 | READC		2A | GETDICT	32
+	// DUP   03 	| /  0B 	| ~^ 	  	13 | TABLE      1B | .c 		23 | ALLOC 		2B |
+	// SWAP  04 	| %  0C 	| << 		14 | READ 		1C | PASS		24 | DALLOC 	2C |
+	// ROT   05 	| &  0D 	| >> 	    15 | EXEC 		1D | .s 		25 | SETDICT	2D |
+	// OVER  06 	| |  0E 	| < 		16 | INDICT		1E | .dict 		26 | ADDBLOCK 	2E |
+	// DROP  07 	| ^  0F 	| >         17 | COMPILE	1F | HALT 		27 | @DISK		2F |
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// the functions of these primitives are explained in precompiledWords.cll
+	//in the future more words such as anonymous allocate, deallocate may be added
+
+#include STD:allocation.cll
+#include STD:radix.cll
+
+#include innerInterpreter.cll
+#include CompilerAndOuterInterpreter.cll
+#include auxiliaries.cll
+#include precompiledWords.cll
+#include pageQueue.cll
+
+void main()
+	printf("______________________ Welcome to Al Forth (2016) ______________________\n");
+	printf(">>FORTH SYSTEM STARTED\n");
+	init_primitives();
+	printf(">>BUILT INS COMPILED\n");
+	// inner interpreter location an first level of REPL
+	printf("OK\n________________________________________________________________________\n>>");
+	@int replWordReference = isInDict("INTERP",ForthDictHead);
+	bytecodeInterp(replWordReference[2]);
+end;

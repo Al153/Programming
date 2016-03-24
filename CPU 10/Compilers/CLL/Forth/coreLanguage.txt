@@ -1,0 +1,12 @@
+Executable words - words that have a dictionary entry
+
+special words - words that are not recognised by ISINDICT EXEC, but are recognised by the compiler (:)
+	- IF
+	- ELSE
+	- ENDIF
+
+	- WHILE
+	- LOOP
+	- [ ] - causes interpreted execution of code inside them. the top result on the stack is inserted into the code as a PUSHLIT
+	- { } - causes interpreted execution of code inside them. does not produce any instructions ( Useful for editting the dictionary during compilation)
+	- ; closes the compilation and stores the word to the dictionary

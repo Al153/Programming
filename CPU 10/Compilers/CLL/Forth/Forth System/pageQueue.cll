@@ -1,0 +1,31 @@
+// functions to deal with the block queue for executing from disk
+
+@int frontOfQueue = 0;
+@int BackOfQueue = 0;
+#define QUEUE_NEXT 1
+#define QUEUE_VALUE 0
+
+int QueueEmpty() return (1 if frontOfQueue == 0 else 0); end;
+void AddToQueue(int blockAddress)
+	@int new = malloc(2);
+	new[QUEUE_NEXT] = 0;
+	new[QUEUE_VALUE] = blockAddress;
+	if (QueueEmpty()) then
+		frontOfQueue = new;
+		BackOfQueue = new;
+	else
+		BackOfQueue[QUEUE_NEXT] = new;
+		BackOfQueue = new;
+	endif;
+end;
+
+@int GetFromQueue()
+	if (QueueEmpty()) then return 0; else
+		@int new = frontOfQueue;
+		frontOfQueue = frontOfQueue[QUEUE_NEXT];
+		if (QueueEmpty()) then BackOfQueue = 0; endif;
+		int val =  new[QUEUE_VALUE];
+		dalloc(new);
+		return val;
+	endif;
+end;

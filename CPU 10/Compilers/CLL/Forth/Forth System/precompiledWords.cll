@@ -1,0 +1,158 @@
+void init_primitives()
+	//sets up dictionary etc
+	malloc_init();
+
+	//sets up operators
+	printf(">>COMPILING BUILT INS\n");
+	addToDict("@",newByteCodeNode(PRIMITIVE,0,0)); //Fetch ( address -- value at address)
+	addToDict("!",newByteCodeNode(PRIMITIVE,1,0)); //Store ( value address -- ) stores value to the address
+	addToDict(".",newByteCodeNode(PRIMITIVE,2,0)); //Prints the top of stack as an int
+	addToDict("DUP",newByteCodeNode(PRIMITIVE,3,0)); //Duplicates the top of stack
+	addToDict("SWAP",newByteCodeNode(PRIMITIVE,4,0)); //swaps the two top of stack items
+	addToDict("ROT",newByteCodeNode(PRIMITIVE,5,0));
+	addToDict("OVER",newByteCodeNode(PRIMITIVE,6,0));
+	addToDict("DROP",newByteCodeNode(PRIMITIVE,7,0)); //deletes the top of the stack
+	addToDict("+",newByteCodeNode(PRIMITIVE,8,0)); //adds the top two values (2s complement)
+	addToDict("-",newByteCodeNode(PRIMITIVE,9,0)); //subtracts the TOS from the second value (2s complement)
+	addToDict("*",newByteCodeNode(PRIMITIVE,10,0)); //multiplies the TOS
+	addToDict("/",newByteCodeNode(PRIMITIVE,11,0)); // divides TOS  elements
+	addToDict("%",newByteCodeNode(PRIMITIVE,12,0)); // Second % TOS
+	addToDict("&",newByteCodeNode(PRIMITIVE,13,0)); // ANDs the top the TOS and second
+	addToDict("|",newByteCodeNode(PRIMITIVE,14,0)); // ORs
+	addToDict("^",newByteCodeNode(PRIMITIVE,15,0)); // XORs
+	addToDict("~",newByteCodeNode(PRIMITIVE,16,0)); //NOTs the TOS
+	addToDict("~&",newByteCodeNode(PRIMITIVE,17,0)); // NANDs
+	addToDict("~|",newByteCodeNode(PRIMITIVE,18,0)); //NORs
+	addToDict("~^",newByteCodeNode(PRIMITIVE,19,0)); // XNORs
+	addToDict("<<",newByteCodeNode(PRIMITIVE,20,0)); // SHL
+	addToDict(">>",newByteCodeNode(PRIMITIVE,21,0)); //SHR
+	addToDict("<",newByteCodeNode(PRIMITIVE,22,0)); // (a b -- ?); ? = 1 if a<b else 0
+	addToDict(">",newByteCodeNode(PRIMITIVE,23,0)); // (a b -- ?); ? = 1 if a>b else 0
+	addToDict("=",newByteCodeNode(PRIMITIVE,24,0)); // (a b -- ?); ? = 1 if a==b else 0
+	addToDict("VARIABLE",newByteCodeNode(PRIMITIVE,25,0)); // reads a name from the word buffer, creates a variable of its name and stores the TOS to it
+	addToDict("CONST",newByteCodeNode(PRIMITIVE,26,0)); // creates a name from the line buffer, sets it to a PUSHLIT of the current TOS
+	addToDict("TABLE",newByteCodeNode(PRIMITIVE,27,0)); // ( n -- ) creates an array of size n
+	addToDict("READ",newByteCodeNode(PRIMITIVE,28,0)); //( -- ) reads a word from the line buffer to the word buffer
+	addToDict("EXEC",newByteCodeNode(PRIMITIVE,29,0)); //( ref -- )  - executes the word at ref
+	addToDict("INDICT",newByteCodeNode(PRIMITIVE,30,0)); // looks up the word buffer in the dict, returns its reference on the stack, otherwise returns 0
+	addToDict(":",newByteCodeNode(PRIMITIVE,31,0)); // triggers the compiler
+	addToDict("ISINT",newByteCodeNode(PRIMITIVE,32,0)); // tests the string in the buffer. if it is an int then returns 1
+	addToDict("CONV_INT",newByteCodeNode(PRIMITIVE,33,0)); //converts teh wordbuffer to an int
+	addToDict(".BUF",newByteCodeNode(PRIMITIVE,34,0)); //prints out the buffer
+	addToDict(".c",newByteCodeNode(PRIMITIVE,35,0)); // prints the TOS as a char
+	addToDict("PASS",newByteCodeNode(PRIMITIVE,36,0)); // doesn't do anything - used as a placeholder
+	addToDict(".s",newByteCodeNode(PRIMITIVE,37,0)); 	//prints the stack in hexadecimal
+	addToDict(".dict",newByteCodeNode(PRIMITIVE,38,0)); //prints the names of all dictionary words in search order
+	addToDict("HALT",newByteCodeNode(PRIMITIVE,39,0));   //quits the entire forth system immediately
+	addToDict("DROPALL",newByteCodeNode(PRIMITIVE,40,0)); //returns stack pointer to 0 - clears stack
+	addToDict("//",newByteCodeNode(PRIMITIVE,41,0)); 	//comments out rest of the line 
+	addToDict("READC",newByteCodeNode(PRIMITIVE,42,0)); //reads a single char onto the stack
+	addToDict("ALLOC",newByteCodeNode(PRIMITIVE,43,0)); //Allocates a block of memory of size of the value on the top of stack. pushes pointer to the memory to the TOS
+	addToDict("DALLOC",newByteCodeNode(PRIMITIVE,44,0)); //deallocates the block of memory pointed to by the TOS
+	addToDict("SETDICT",newByteCodeNode(PRIMITIVE,45,0)); // sets the global dict pointer
+	addToDict("ADDBLOCK",newByteCodeNode(PRIMITIVE,46,0)); // Adds a 4k block to the block queue
+	addToDict("@DISK",newByteCodeNode(PRIMITIVE,47,0)); // loads data from disk to memory
+	addToDict("!DISK",newByteCodeNode(PRIMITIVE,48,0)); // stores data from memory to disk
+	addToDict("SWITCH",newByteCodeNode(PRIMITIVE,49,0)); // switches execution to or from the keyboard and disk
+	addToDict("GETDICT",newByteCodeNode(PRIMITIVE,50,0)); // returns a pointer to the top of the dictionary
+
+
+	//self interpreting code: - manually compiled
+	printf(">>COMPILING REPL ENVIRONMENT\n");
+	createTryInt();
+	createEval();
+	createInterp();
+end;
+
+void createTryInt()
+	//: TRYINT isInt if convertInt else INPUTERROR then ;
+	addToDict("TRYINT",
+		newByteCodeNode(PRIMITIVE,32,
+		newByteCodeNode(BRANCH,
+			newByteCodeNode(PRIMITIVE,33,0),
+			
+			( //uses 0+ to convert to an int
+				newByteCodeNode(PUSHLIT,0+'E',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'R',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'R',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'O',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'R',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+':',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+' ',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'U',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'N',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'R',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'E',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'C',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'O',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'G',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'N',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'I',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'S',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'E',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'D',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+' ',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'W',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'O',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'R',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'D',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+':',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+' ',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'"',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PRIMITIVE,34,
+				newByteCodeNode(PUSHLIT,0+'"',
+				newByteCodeNode(PRIMITIVE,35,
+				newByteCodeNode(PUSHLIT,0+'\n',
+				newByteCodeNode(PRIMITIVE,35,0)	
+
+		))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+end;
+
+void createEval()
+	//: EVAl isInDict DUP if EXECUTE else DROP TRYINT then ;
+
+	addToDict("EVAL",
+		newByteCodeNode(PRIMITIVE,30,
+		newByteCodeNode(PRIMITIVE,3,
+		newByteCodeNode(BRANCH,
+			newByteCodeNode(PRIMITIVE,29,0),
+			newByteCodeNode(PRIMITIVE,7,
+			newByteCodeNode(WORDCALL,isInDict("TRYINT",ForthDictHead),0))
+			)
+		)));	
+end;
+
+void createInterp()
+	//: INTERP 1 while READ EVAL 1 LOOP ;
+	@int first = newByteCodeNode(PRIMITIVE,28, 0);	
+	first[2] = 	newByteCodeNode(WORDCALL,isInDict("EVAL",ForthDictHead),first); 
+
+	addToDict("INTERP",first);
+end;

@@ -1,0 +1,149 @@
+void readInOld(@char buf) //old readIn function - doesn't handle backspaces.
+	linePtr = 0;
+	int i = 0;
+	char character;
+	while (1) do
+		character = getw();
+		putc(character); //so it can be seen
+		if (character == 13) then
+			buf[i] = 0; //nullifies string
+			break;
+		else
+			buf[i] = character;
+			i = i+1;
+		endif;
+	loop;
+	READ_IN_STATE = FULL;
+end;
+
+@char scanWord()
+	//returns pointer to the next word on the input buffer, and leaves linePtr at the end of the word. if the buffer is empty then reset and read in
+	if(READ_IN_STATE == EMPTY)then readIn(lineBuff); endif; //reads in another line
+	while (isWhiteSpace(lineBuff[linePtr])) do 
+		linePtr = (linePtr + 1)%(256 if READ_IN_MODE == KEYBOARD else 4097); 
+		if ((lineBuff[linePtr] == 13) or (lineBuff[linePtr] == 0)) then readIn(lineBuff);
+		endif;
+	loop;
+	@char return_value = lineBuff+linePtr; //value to return points to the start of the word
+	blockOverFlowPointer = linePtr & 7; // store the line position in case of an overflow
+	while (not(isWhiteSpace(lineBuff[linePtr]))) do linePtr = (linePtr + 1)%(256 if READ_IN_MODE == KEYBOARD else 4097); loop; //scrolls on to the next whitespace
+	if (isEOL()) then READ_IN_STATE = EMPTY; EOL = 1; endif;
+	return return_value;
+end;
+
+void convertName(@char name_string,@char buffer)
+	//copies name into buffer, pads with zeroes
+	int i;
+	int pad = 0;
+	if (blockOverFlowFlag) then  				// if the name goes over a block edge, then we need to look at the temporay buffer and the new line buffer
+		name_string = lineBuff; // one we've expended the temporary buffer, we need to start at the beginning of the line buffer
+		for(i = 0, i<8,i = i + 1)
+			if (pad) then buffer[i] = 0; 		// if we have already reached the end of the name, then pad with zeroes
+			else 			
+				if (i<8-blockOverFlowPointer) then // if we are still extracting from the temp buffer: use this
+						if (isWhiteSpace(blockOverFlowBuf[blockOverFlowPointer + i])) then pad = 1; buffer[i] = 0;
+					else
+						buffer[i] = blockOverFlowBuf[blockOverFlowPointer + i];
+					endif;
+				else
+					if (isWhiteSpace(name_string[i-(8-blockOverFlowPointer)])) then pad = 1; buffer[i] = 0;
+					else
+						buffer[i] = name_string[i-(8-blockOverFlowPointer)];
+					endif;
+				endif;
+			endif;
+		loop;
+		buffer[8] = 0;
+		blockOverFlowFlag = 0;
+		printf("Overflowed: ");
+		printf(buffer);
+		printf(" temp buffer = ");
+		printf(blockOverFlowBuf);
+		printf("\n");
+	else
+		for(i = 0, i<8,i = i + 1)
+			if (pad) then buffer[i] = 0;
+			else
+				if (isWhiteSpace(name_string[i])) then pad = 1; buffer[i] = 0;
+				else
+					buffer[i] = name_string[i];
+				endif;
+			endif;
+		loop;
+		buffer[8] = 0;
+	endif;
+end;
+
+int isWhiteSpace(char input)
+	//checks if a character is whitespace or not
+	if (READ_IN_MODE == DISK) then // edge case if word goes over the end of a block
+		if (not(QueueEmpty())) then 
+			if (linePtr == 4096) then 
+				blockOverFlowFlag = 1; // show that there has been overflow over the line
+				blockOverFlowBuf[0] = lineBuff[4088]; // copy overflow buffer to handle the word going over the line
+				blockOverFlowBuf[1] = lineBuff[4089];
+				blockOverFlowBuf[2] = lineBuff[4090];
+				blockOverFlowBuf[3] = lineBuff[4091];
+				blockOverFlowBuf[4] = lineBuff[4092];
+				blockOverFlowBuf[5] = lineBuff[4093];
+				blockOverFlowBuf[6] = lineBuff[4094];
+				blockOverFlowBuf[7] = lineBuff[4095];
+				readIn(lineBuff); // read in next block
+			endif;
+		endif;
+	endif;
+
+
+	if (input == char(0)) then return 1; endif;
+	if (input == ' ') then
+		return 1; endif;
+	if (input == '\n') then
+		return 1; endif;
+	if (input == '\t') then
+		return 1; endif;
+	if (input == char(13)) then
+		return 1; endif;
+	return 0;
+end;
+@char 9 blockOverFlowBuf;
+int isEOL()
+	//determines if there is an EOL before the start of the next word
+	while (1) do
+		if ((lineBuff[linePtr] == ' ')or(lineBuff[linePtr] == '\t')) then
+			linePtr = (linePtr + 1)%(256 if READ_IN_MODE == KEYBOARD else 4097);  
+		else if ((lineBuff[linePtr] == '\n')or(lineBuff[linePtr] == char(0))) then return 1; //eol
+			else return 0;
+			endif; 
+		endif;
+	loop;
+end;
+
+void comment() // ( -- ) [ skips the rest of the line ]
+	// previously:
+	if (READ_IN_MODE == KEYBOARD) then
+		READ_IN_STATE = EMPTY;
+	else
+		while (1) do
+			//if (lineBuff[linePtr] == 13) then break; endif;
+			if (lineBuff[linePtr] == 10) then break; endif;
+			if (QueueEmpty()) then
+				if (linePtr == 0) then break; endif;
+				if (linePtr == 4096) then break; endif;
+			else 
+				if (linePtr == 4096) then readIn(); endif;
+			endif;
+			if (lineBuff[linePtr] == 0) then break;	endif;
+			linePtr = (linePtr + 1)%4097; // uses mod to force it to the end
+		loop;
+		READ_IN_STATE = EMPTY;
+	endif;
+	// now
+//	while (1) do
+//		if (lineBuff[linePtr] == 13) then break; endif;
+//		if (lineBuff[linePtr] == 10) then break; endif;
+//		linePtr = (linePtr + 1)&(255 if READ_IN_MODE == KEYBOARD else 4095);
+//		if (linePtr == 0) then break; endif;
+//
+//		if (READ_IN_MODE == KEYBOARD) then READ_IN_STATE = EMPTY; endif;
+//	loop;
+end;

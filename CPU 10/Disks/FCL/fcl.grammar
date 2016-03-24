@@ -1,0 +1,42 @@
+-- Possible grammar for a new Language compiled by forth into forth assembler
+
+-- Want to include: no pointer arithmetic, only references.
+--					User defined types (structs)
+--					Primitives: Ints, Floats, Chars 
+-- 					Tuples
+-- 					Not polymorphic
+--
+Block -> Block Line ";" | Line ";"
+Line -> Statement | VarDec | FunDec | PureFunDec | TypeDec |  IfStatement | WhileLoop | ForLoop | "{" Block "}" | FunCall
+
+Statement -> StatementVar "=" Expr
+Expr ->  FunCall | Expr AddOp Term | Term | UnOp Term
+Term -> Term MulOp Factor | Factor
+Factor -> "(" Expr ")" | Value
+
+Value -> TypeInst | Primitive
+MulOp -> "*" | "/" | "mod" | "&" | "^"
+AddOp -> "+" | "-" | "|"
+
+
+
+TypeDec ->  "Type" id "=" "{" TDefInner "}"
+TDefInner -> TDefInner VarDec ";" | VarDec ";"
+
+FunCall -> StatementVar Args
+Args -> Args Expr | Expr
+
+IfStatement -> "if" "(" BoolExp ")" Line | "if" "(" BoolExp ")" Line else Line
+ForLoop -> "for" "(" VarDec ";" Statement ";" Statement ";" ")" Line
+WhileLoop -> "while" "(" BoolExp ")" Line
+PureFunDec -> Type id FunArgs "=" Expr
+
+
+Type -> "Type" id | Type "[" "]" | "int" | "char" | "float" | "unit"
+FunArgs -> FunArg | FunArgs FunArg
+FunArg -> id ":" Type
+StatementVar -> id | StatementVar "[" Expr "]" | StatementVar "." id | Expr "." id
+VarDec ->
+FunDec -> Type id FunArgs
+Primitive ->
+TypeInst ->
