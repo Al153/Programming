@@ -1,0 +1,13 @@
+type Treenode = { 
+	int val;
+	int payLoad;
+	type TreeNode left;
+	type TreeNode right;
+}
+
+int searchTree (type TreeNode A) (int Key) = if (Treenode == Null) then
+													return Null;											
+												else if (Key == A.val)
+												then (A.payload)
+												else if ( Key < A.val ) then
+													(searchTree A.left) else ( searchTree A.right);

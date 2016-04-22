@@ -1,0 +1,7 @@
+PROGRAM -> Expr "\n"
+ELEMENTARY_TOKENS -> "(" | ")" | "+" | "*" | "\n" | " " | "\t"
+IGNORE -> " " | "\t"
+
+Expr -> Expr "+" Term | Term
+Term -> Term "*" Factor | Factor
+Factor -> "(" Expr ")" | num | id

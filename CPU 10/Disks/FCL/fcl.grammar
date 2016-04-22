@@ -10,17 +10,18 @@ Block -> Block Line ";" | Line ";"
 Line -> Statement | VarDec | FunDec | PureFunDec | TypeDec |  IfStatement | WhileLoop | ForLoop | "{" Block "}" | FunCall
 
 Statement -> StatementVar "=" Expr
-Expr ->  FunCall | Expr AddOp Term | Term | UnOp Term
+Expr ->  FunCall | Expr AddOp Term | Term | UnOp Term | TernaryOp
 Term -> Term MulOp Factor | Factor
 Factor -> "(" Expr ")" | Value
 
+TernaryOp -> "if" BoolExp "then" Expr "else" Expr
 Value -> TypeInst | Primitive
 MulOp -> "*" | "/" | "mod" | "&" | "^"
 AddOp -> "+" | "-" | "|"
 
 
 
-TypeDec ->  "Type" id "=" "{" TDefInner "}"
+TypeDec ->  "type" id "=" "{" TDefInner "}"
 TDefInner -> TDefInner VarDec ";" | VarDec ";"
 
 FunCall -> StatementVar Args
@@ -32,7 +33,7 @@ WhileLoop -> "while" "(" BoolExp ")" Line
 PureFunDec -> Type id FunArgs "=" Expr
 
 
-Type -> "Type" id | Type "[" "]" | "int" | "char" | "float" | "unit"
+Type -> "type" id | Type "[" "]" | "int" | "char" | "float" | "unit" | "Bool"
 FunArgs -> FunArg | FunArgs FunArg
 FunArg -> id ":" Type
 StatementVar -> id | StatementVar "[" Expr "]" | StatementVar "." id | Expr "." id
@@ -40,3 +41,7 @@ VarDec ->
 FunDec -> Type id FunArgs
 Primitive ->
 TypeInst ->
+BoolExp -> BoolExp "orelse" BoolTerm | BoolTerm
+BoolTerm -> BoolTerm "andalso" BoolFac | BoolFac
+BoolFac -> BoolComp | "(" BoolExp ")"
+BoolComp -> 

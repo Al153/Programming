@@ -69,7 +69,7 @@ class Parser:
 	def reduce(self,rule_number):
 		pattern = self.enum_rules[rule_number].rhs
 		lhs = self.enum_rules[rule_number].lhs
-		if lhs == "<GOAL>":
+		if lhs == "GOAL":
 			return self.done()
 		length_to_pop = 2*len(pattern)                                                              #the length of the pattern to reduce is doubled (to accomodate for state values)
 		popped = self.parse_tree_stack[-length_to_pop::2]                                           #pops off symbols to be matched
@@ -161,7 +161,7 @@ def float_to_raw_int(f):
 if __name__ == "__main__":
 	import sys
 	source_name = sys.argv[1]
-	grammar_name = sys.argv[2]
-	local_parser = Parser(grammar_name)
+	parse_table_name = sys.argv[2]
+	local_parser = Parser(parse_table_name)
 	local_parser.print_parse_tree(local_parser.parse(open(source_name,"r").read()))
 

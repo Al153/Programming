@@ -1,0 +1,65 @@
+PROGRAM -> block
+ELEMENTARY_TOKENS -> " " | "\t" | "\n" | "(" | ")" | "@" | "$" | "+" | "-" | "*" | "/" | "%" | "|" | "^" | "&" | "~" | "<" | "=" | ">" | ";" | "," | "[" | "]" | "!"
+IGNORE -> " " | "\t" | "\n"
+
+block -> line | block line
+line -> stmnt ";"
+
+stmnt -> assignment | cntrl_flow | var_dec | fun_dec | other
+
+assignment -> variable "=" expr | variable modify_op "=" expr
+cntrl_flow -> if_stmnt | while_loop | for_loop
+var_dec -> type id | type id "=" var_value
+var_value -> "[" array "]" | expr 
+fun_dec -> type id "(" inargs ")" block "end" | type id "(" ")" block "end"
+other -> "return" expr | "return" | fun_call | "break" | "continue" | "pass"
+
+inargs -> type id | inargs "," type id
+
+
+
+variable -> id | id "[" expr "]" 
+const -> num | "@" id
+
+expr -> expr addop term | unary_op term | term | ternary_op
+term -> term mulop factor | factor
+factor -> const | variable | fun_call | "(" expr ")" | type_cast
+
+ternary_op -> expr "if" for_bool_expr "else" expr 
+modify_op ->  addop | mulop
+
+
+fun_call -> id "(" args ")" | id "(" ")"
+args -> args "," expr | expr
+
+type_cast -> type "(" expr ")"
+
+addop -> "+" | "-" | ">" ">" | "<" "<"
+mulop -> "*" | "/" | "%" | "^" | "|" | "&"
+unary_op -> "~" | "-"
+
+
+
+
+for_bool_expr -> bool_factor | comparison
+
+bool_expr -> "(" bool_factor ")" | "(" comparison ")"
+bool_factor -> bool_expr | bool_factor boolop bool_expr | unary_boolop bool_expr
+
+comparison -> expr comp_op expr | expr
+
+boolop -> "and" | "or" | "xor"
+unary_boolop -> "not"
+
+comp_op -> "!" "=" | "=" "=" | "<" | ">" | not_less | not_greater
+not_less -> ">" "=" | "=" ">"
+not_greater -> "<" "=" | "=" "<"
+
+
+
+if_stmnt -> "if" bool_expr "then" block "endif" | "if" bool_expr "then" block "else" block "endif"
+while_loop -> "while" bool_expr "do" block "loop"
+for_loop -> "for" "(" assignment "," for_bool_expr "," assignment ")" block "loop"
+
+type -> "int" | "char" | "@" "int" | "@" "int" num |  "@" "char" | "@" "char" num | "void"
+array -> array "," num | num
