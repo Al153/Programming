@@ -6,19 +6,29 @@
 -- 					Tuples
 -- 					Not polymorphic
 --
+PROGRAM -> Block
+ELEMENTARY_TOKENS -> " " | "\t" | "\n" | "(" | ")" | "+" | "-" | "*" | "/" | "%" | "|" | "^" | "&" | "~" | "<" | "=" | ">" | ";" | "," | "[" | "]" | "!" | "{" | "}" | "."
+IGNORE -> " " | "\t" | "\n"
+
 Block -> Block Line ";" | Line ";"
-Line -> Statement | VarDec | FunDec | PureFunDec | TypeDec |  IfStatement | WhileLoop | ForLoop | "{" Block "}" | FunCall
+Line -> Statement | VarDec | FunDec | PureFunDec | TypeDec |  IfStatement | WhileLoop | ForLoop | "{" Block "}" | FunCall | Scope | "break" | "continue" | "return" Expr
+
+Scope -> "scope" id Line
 
 Statement -> StatementVar "=" Expr
 Expr ->  FunCall | Expr AddOp Term | Term | UnOp Term | TernaryOp
 Term -> Term MulOp Factor | Factor
 Factor -> "(" Expr ")" | Value
 
-TernaryOp -> "if" BoolExp "then" Expr "else" Expr
-Value -> TypeInst | Primitive
-MulOp -> "*" | "/" | "mod" | "&" | "^"
-AddOp -> "+" | "-" | "|"
+TernaryOp -> "if" Expr "then" Expr "else" Expr
+Value -> TypeInst | Primitive | BoolComp | StatementVar
 
+MulOp -> "*" | "/" | "mod" | "&" | "^" | "andalso" 
+AddOp -> "+" | "-" | "|" | "orelse" | BoolComp
+UnOp -> "-" | "~" | "not"
+BoolComp -> "=" "=" | "<" | ">" | "!" "=" | BoolLessEq | BoolGreaterEq
+BoolLessEq -> "<" "=" | "=" "<"
+BoolGreaterEq -> ">" "=" | "=" ">"
 
 
 TypeDec ->  "type" id "=" "{" TDefInner "}"
@@ -27,21 +37,22 @@ TDefInner -> TDefInner VarDec ";" | VarDec ";"
 FunCall -> StatementVar Args
 Args -> Args Expr | Expr
 
-IfStatement -> "if" "(" BoolExp ")" Line | "if" "(" BoolExp ")" Line else Line
-ForLoop -> "for" "(" VarDec ";" Statement ";" Statement ";" ")" Line
-WhileLoop -> "while" "(" BoolExp ")" Line
+IfStatement -> "if" "(" Expr ")" Line | "if" "(" Expr ")" Line else Line -- expressions in if statements, for loops and while loops should all be of type bool
+ForLoop -> "for" "(" ForInstantiation ";" Expr ";" Statement ")" Line
+ForInstantiation -> Statement | VarDec
+WhileLoop -> "while" "(" Expr ")" Line
 PureFunDec -> Type id FunArgs "=" Expr
 
 
-Type -> "type" id | Type "[" "]" | "int" | "char" | "float" | "unit" | "Bool"
+Type -> "type" id | Type "[" "]" | "int" | "char" | "float" | "unit" | "bool" | FunType
+FunType -> "(" TypeList "->" Type ")"
+TypeList -> "Type" | TypeList "*" Type
 FunArgs -> FunArg | FunArgs FunArg
 FunArg -> id ":" Type
 StatementVar -> id | StatementVar "[" Expr "]" | StatementVar "." id | Expr "." id
-VarDec ->
+
 FunDec -> Type id FunArgs
-Primitive ->
+Primitive -> num | fp | "True" | "False" | chr
 TypeInst ->
-BoolExp -> BoolExp "orelse" BoolTerm | BoolTerm
-BoolTerm -> BoolTerm "andalso" BoolFac | BoolFac
-BoolFac -> BoolComp | "(" BoolExp ")"
-BoolComp -> 
+VarDec ->
+

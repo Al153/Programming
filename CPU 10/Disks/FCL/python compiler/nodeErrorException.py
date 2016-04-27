@@ -1,0 +1,1 @@
+class NodeError(Exception): # an exception signifying that a parse tree node error has occured

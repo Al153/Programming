@@ -534,7 +534,7 @@ class function:
 		else:
 			print "ERROR(40): incorrect node passed: "+pass_tree.type
 			quit()
-	def cast_type(self,start_type,end_type,parse_tree):
+	def cast_type(self,start_type,end_type,parse_tree): # creates AST node representing the cast of an expression to another type
 		return Non_terminal_parse_tree_node(
 			"<cast>",[
 				parse_tree,
