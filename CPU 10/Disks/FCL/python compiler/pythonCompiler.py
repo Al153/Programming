@@ -4,9 +4,11 @@ import LR1_parser
 import sys
 from tokeniser import tokenise
 from parseTreeNodes import * 
-from exceptions import *
-from types import *
+from Types import *
 from Scope import *
+from FunctionsAndOperators import *
+from Exceptions import *
+from DataStructures import * 
 
 
 #_______________________ TO DO __________________________________________
