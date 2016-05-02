@@ -43,7 +43,7 @@ class Type:
 			return result
 
 class ParseTreeType(Type):
-	def __init__(self,parseTreeNode):
+	def __init__(self,parseTreeNode,scope):
 		if parseTreeNode.type == "Type": # simple types
 			if len(parseTreeNode.children) == 1: # either function types or primitives
 				try:
@@ -60,7 +60,7 @@ class ParseTreeType(Type):
 						super(typeClass,value)
 					elif typeClass == 'function':
 						parseTreeNode = parseTreeNode.children[0] # if it is a function, then we need to look at the function's arguments and parameters
-						value = (ParseTreeType(parseTreeNode.children[1],ParseTreeType(parseTreeNode.children[3]))
+						value = (ParseTreeType(parseTreeNode.children[1],scope),ParseTreeType(parseTreeNode.children[3],scope))
 						super(typeClass,value)
 					else: raise NodeError()	
 				except KeyError:
@@ -70,7 +70,7 @@ class ParseTreeType(Type):
 				if parseTreeNode.children[0].type == "type":
 					typeClass = "defined"
 					value = parseTreeNode.children[1].string
-					if value in definedTypes:
+					if value in getDefinedTypes(scope):
 						super(typeClass,value)
 					else: raise NodeError()
 				else:
@@ -78,7 +78,7 @@ class ParseTreeType(Type):
 			elif len(parseTreeNode.children) == 3: # primarily array types
 				if parseTreeNode.children[1].type == '"["' and parseTreeNode.children[2].type == '"]"':
 					typeClass = "array"
-					value = ParseTreeType(parseTreeNode.children[0])
+					value = ParseTreeType(parseTreeNode.children[0],scope)
 					super(typeClass,value)
 				else: raise NodeError()
 
@@ -86,19 +86,19 @@ class ParseTreeType(Type):
 				raise NodeError()
 		elif parseTreeNode.type == "TypeList":
 			typeClass = "list"
-			value = FunTypeToList(,Nil())
+			value = FunTypeToList(,Nil(),scope)
 		else: raise NodeError()
 	
-def FunTypeToList(parseTreeNode,result):
+def FunTypeToList(parseTreeNode,result,scope):
 	# ParseTreeNode -> TypeList
 	if parseTreeNode.type != "FunType": raise NodeError()
 	elif len(parseTreeNode.children) == 3: # Typelist -> TypeList * Type
 		nextNode = parseTreeNode.children[0]
-		x = ParseTreeType(parseTreeNode.children[2])
+		x = ParseTreeType(parseTreeNode.children[2],scope)
 		xs = result
-		return FunTypeToList(nextNode,List(x,xs))
+		return FunTypeToList(nextNode,List(x,xs),scope)
 	elif len(parseTreeNode) == 1: # TypeList -> Type
-		x = ParseTreeType(parseTreeNode.children[0])
+		x = ParseTreeType(parseTreeNode.children[0],scope)
 		xs = result
 		return List(x,xs)
 	else raise NodeError()

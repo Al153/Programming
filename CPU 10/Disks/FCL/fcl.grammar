@@ -53,6 +53,6 @@ StatementVar -> id | StatementVar "[" Expr "]" | StatementVar "." id | Expr "." 
 
 FunDec -> Type id FunArgs
 Primitive -> num | fp | "True" | "False" | chr | "Null" | "(" ")"
-TypeInst -> "new" Type | Primitive
+TypeInst -> "new" DecType | Primitive
 VarDec -> Type id | Type id "=" Expr
 

@@ -21,17 +21,18 @@ from DataStructures import *
 # - optimisation?
 # - Type dictionary
 # - FASM environment - whiles, calls, breaks, returns etc
-# - Type class
 # - typeError exceptions
-# - nodeError exceptions
+# - NodeError exceptions
 # - scope lookup function
+# - defined types by scope
 # - incomplete exceptions
 # - type comparison
 # - create operation definitions 
-#
-#
-#
-#
+# - update grammar to include array sizes
+# - FASM errors library
+# - FASM nameSpacing
+# - initialise operators and functions
+
 #_________________________________________________________________________
 
 #____________________________ Compiling strategy _________________________
@@ -53,8 +54,21 @@ from DataStructures import *
 # 		continue -> compiles to a FASM continue - check context
 #		return -> test expression and create return code
 #____________________________________________________________________________
-primitiveTypes = {"int","char","float","bool","unit"}
-definedTypes = {}
+primitiveTypes = ["int","char","float","bool","unit"] # holds names of primitive type
+definedTypes = {} # typeId -> struct
+typeSizes = {"int":4,"char":1, "float":4,"bool":4,"unit":0} # type -> sizeOfType in bytes
+
+operators = {}
+registerNames = [
+	"gp0,",
+	"gp1,",
+	"gp2,",
+	"gp3,",
+	"gp4,",
+	"gp5,",
+	"gp6,",
+	"gp7,"
+]
 
 def get_source_file():
 	'''gets source text from the requested file. unit -> string'''
@@ -73,7 +87,7 @@ def compile():
 
 def processBlock(parseTree,scope,result):
 	if len(parseTree.children) == 3:
-		return (processLine(parseTree.children[0],scope,processLine(parseTree.children[1],scope,result)[1]),"TODO: type = unit")
+		return (processLine(parseTree.children[0],scope,processLine(parseTree.children[1],scope,result)[1]),Type('primitive','unit'))
 	else:
 		return processLine(parseTree.children[0],result)
 def processLine(parseTree,scope,result):
@@ -101,7 +115,7 @@ def processLine(parseTree,scope,result):
 	elif len(parseTree.children) == 3:
 
 	else:
-		raise nodeError("SomeError") 
+		raise NodeError("SomeError") 
 
 	raise incompleteError()
 
@@ -138,7 +152,80 @@ def processFunCall(ParseTree,scope,result):
 
 #___________________________ expression processing functions __________________________
 
-def processExpr(ParseTree,scope,result):
+def processExpr(ParseTree,scope,result,freeRegs,resReg):
+	if len(ParseTree.children) == 1:
+		child = ParseTree.children[0]
+		if child.type == "FunCall":
+
+		elif child.type == "Term"
+			return ProcessTerm(child,scope,result,freeRegs,resReg)
+		elif child.type == "TernaryOp":
+			 
+		else:
+			raise NodeError()
+	elif len(ParseTree.children) == 2:
+		child = ParseTree.children[0]
+
+	elif len(ParseTree.children) == 3:
+		return	processAddop(parseTree,scope,result,freeRegs,resReg)
+	else:
+		raise NodeError()
+
+def processAddop(parseTree,scope,result,freeRegs,resReg):
+	# preconditions:
+	# 	parseTree is an "Expr -> Expr addOp Term" node 
+	# 	resReg is in freeRegs
+	# 	freeRegs is the list of registers currently available to the compiler
+	#	the result is moved into resReg at the end of the operation
+
+
+	# post conditions: returns result, type
+	pushedRegs = []
+	if len(freeRegs)<2: # if there is not enough register space for the operation, push some registers
+		pushedRegs = filter((lambda s: not s in freeRegs),registerNames)[:2-len(freeRegs)]
+		result = "".join(map ((lambda s: s+" Pop;\n"),pushedRegs)) + result
+		(result,exprType) = processAddop(parseTree,scope,result,freeRegs+pushedRegs,resReg)
+		result = "".join(map ((lambda s: s+" Push;\n"),pushedRegs)) + result
+		return (result,exprType)
+
+	else:
+		(r1,t1) = processExpr(parseTree.children[0],scope,'',freeRegs,resReg)
+		(r2,t2) = processTerm(parseTree.children[1],scope,'',freeRegs[1:],freeRegs[0])
+		operator = getOperator(parseTree.children[1])
+		(fasm,resultant_type) = operator.getVersion(t1,t2)
+		return operator.process(result,resReg,freeRegs[0],resReg,fasm)
+
+
+def processMulop(parseTree,scope,result,freeRegs,resReg):
+	# preconditions:
+	# 	parseTree is an "Expr -> Expr addOp Term" node 
+	# 	resReg is in freeRegs
+	# 	freeRegs is the list of registers currently available to the compiler
+	#	the result is moved into resReg at the end of the operation
+
+
+	# post conditions: returns result, type
+	pushedRegs = []
+	if len(freeRegs)<2: # if there is not enough register space for the operation, push some registers
+		pushedRegs = filter((lambda s: not s in freeRegs),registerNames)[:2-len(freeRegs)]
+		result = "".join(map ((lambda s: s+" Pop;\n"),pushedRegs)) + result
+		(result,exprType) = processAddop(parseTree,scope,result,freeRegs+pushedRegs,resReg)
+		result = "".join(map ((lambda s: s+" Push;\n"),pushedRegs)) + result
+		return (result,exprType)
+
+	else:
+		(r1,t1) = processTerm(parseTree.children[0],scope,'',freeRegs,resReg)
+		(r2,t2) = processFactor(parseTree.children[1],scope,'',freeRegs[1:],freeRegs[0])
+		operator = getOperator(parseTree.children[1])
+		(fasm,resultant_type) = operator.getVersion(t1,t2)
+		return operator.process(result,resReg,freeRegs[0],resReg,fasm)
+
+
+
+
+
+
+
 
 def processTerm(parseTree,scope,result):
 
@@ -155,5 +242,15 @@ def process():
 
 # ____________________________________________________________________
 def getScope(parseTree):
+	# ( parseTree -> scopeObject )
+	# look up the name of a scope
+	raise incompleteError()
+def getDefinedTypes(scope):
+	raise incompleteError()
+def getDefinedVariables(scope):
 	raise incompleteError()
 
+def getOperator(parseTree):
+	# ( parseTree -> operatorObject )
+	# lookup operator in operator dictionary
+	raise incompleteError()
