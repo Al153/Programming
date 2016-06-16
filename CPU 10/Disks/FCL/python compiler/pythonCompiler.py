@@ -12,25 +12,33 @@ from DataStructures import *
 
 
 #_______________________ TO DO __________________________________________
-# - add fp, char terminals to the LR1 parser
-# - create a "Type" type in python, which records the types of values
-# - create a type checking function
-# - scope classes and hierarchy
+# - Parser/Parser generator
+# 		- add fp, char terminals to the LR1 parser
+
+# - Scopes 
+# 		- scope classes and hierarchy
+# 		- scope lookup function
+# 		- defined types by scope? - future maybe
 # - Code generator
-# - run-time bounds checking where appropriate
+#		- write struct access FASM
+#		- Write Allocation/deallocation FASM
+#		- Fix fasm namespaces
+# 		- write stack code
+# 		- FASM environment - whiles, calls, breaks, returns etc
+# 		- FASM errors library
+# 		- FASM nameSpacing
+
 # - optimisation?
+# 		- Mark expressions and functions as pure
+#		- use pureness to do CSE
+
 # - Type dictionary
-# - FASM environment - whiles, calls, breaks, returns etc
-# - typeError exceptions
-# - NodeError exceptions
-# - scope lookup function
-# - defined types by scope
+# - Exceptions
+# 		- typeError exceptions
+# 		- NodeError exceptions
+
 # - incomplete exceptions
-# - type comparison
 # - create operation definitions 
-# - update grammar to include array sizes
-# - FASM errors library
-# - FASM nameSpacing
 # - initialise operators and functions
 
 #_________________________________________________________________________
@@ -55,7 +63,7 @@ from DataStructures import *
 #		return -> test expression and create return code
 #____________________________________________________________________________
 primitiveTypes = ["int","char","float","bool","unit"] # holds names of primitive type
-definedTypes = {} # typeId -> struct
+
 typeSizes = {"int":4,"char":1, "float":4,"bool":4,"unit":0} # type -> sizeOfType in bytes
 
 operators = {}
@@ -227,11 +235,11 @@ def processMulop(parseTree,scope,result,freeRegs,resReg):
 
 
 
-def processTerm(parseTree,scope,result):
+def processTerm(parseTree,scope,result,freeRegs,resReg):
 
-def processFactor(parseTree,scope,result):
+def processFactor(parseTree,scope,result,freeRegs,resReg):
 
-def processValue():
+def processValue(parseTree,scope,result,freeRegs,resReg):
 
 def processFunCall():
 

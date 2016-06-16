@@ -1,0 +1,22 @@
+ ________________________________ fcl runtime registers: _____________________________ 
+	stackPointer: top of data stack
+	jmp:  top of callStack
+	acc: temp to manipulate address
+
+____________________________ FCL stack frame: ________________________________
+	| jmp+0: currentAddress // address to return to to get to this function
+	| jmp+4: gp0
+	| jmp+8: gp1
+	| jmp+16: gp2
+	| jmp+: gp3
+	| jmp+: gp4
+	| jmp+: gp5
+	| jmp+: gp6
+	| jmp+: gp7
+	| jmp+4...: vars
+	| .
+	| . 
+	| . 
+	|jmp+n-4: return value
+	---------------------
+	| previous frame

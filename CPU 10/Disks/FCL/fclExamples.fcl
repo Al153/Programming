@@ -5,9 +5,45 @@ type Treenode = {
 	type TreeNode right;
 }
 
-int searchTree (type TreeNode A) (int Key) = if (Treenode == Null) then
-													return Null;											
-												else if (Key == A.val)
-												then (A.payload)
+int searchTree (type TreeNode A, int Key) = if (Treenode == Null) then Null;											
+												else if (Key == A.val) (A.payload)
 												else if ( Key < A.val ) then
-													(searchTree A.left) else ( searchTree A.right);
+													(searchTree A.left) else (searchTree A.right);
+
+type intList = { 
+	int head; type intList tail;
+}
+
+scope Lists { 
+	type intList intList ( int head, type intList tail){
+		type intList toReturn = new intList;
+		toReturn.head = head;
+		toReturn.tail = tail;
+	}
+
+	type intList MapInt ( type intList x, ( int -> int ) f ) =
+			if x == Null then
+				Null
+			else intList (f x.head) ( mapInt (f) x.tail);
+
+	type intList FilterInt ( type intList x, ( int -> bool ) f ) = 
+			if x == Null then Null
+			else if f x.head then (intList x.head  (FilterInt (f) x.tail))
+				else (FilterInt (f) x.tail);
+}
+
+bool filterGreater(int v , type intList x) = 
+			if x == Null then Null
+			else if x.head > v then  (intList x.head (filterGreater v x.tail))
+				else (filterGreater v x.tail);
+bool filterLess(int v , type intList x) = 
+			if x == Null then Null
+			else if x.head < v then  (intList x.head (filterGreater v x.tail))
+				else (filterGreater v x.tail);
+
+type intList qSort ( type intList x, type intList r ) = 
+	if x == Null then r else
+	if x.tail == Null then intList x.head r
+		else
+			qSort (filterLess x.head x.tail) (intList x.head (qSort (filterGreater x.head x.tail));
+

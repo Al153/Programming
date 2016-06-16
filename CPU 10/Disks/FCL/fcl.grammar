@@ -6,6 +6,8 @@
 -- 					Tuples
 -- 					Not polymorphic
 --
+
+
 PROGRAM -> Block
 ELEMENTARY_TOKENS -> " " | "\t" | "\n" | "(" | ")" | "+" | "-" | "*" | "/" | "%" | "|" | "^" | "&" | "~" | "<" | "=" | ">" | ";" | "," | "[" | "]" | "!" | "{" | "}" | "."
 IGNORE -> " " | "\t" | "\n"
@@ -48,11 +50,11 @@ Type -> "type" id | Type "[" "]" | "int" | "char" | "float" | "unit" | "bool" | 
 FunType -> "(" TypeList "->" Type ")"
 TypeList -> Type | TypeList "*" Type
 FunArgs -> FunArg | FunArgs FunArg
-FunArg -> id ":" Type
+FunArg -> Type id
 StatementVar -> id | StatementVar "[" Expr "]" | StatementVar "." id | Expr "." id
 
 FunDec -> Type id FunArgs
 Primitive -> num | fp | "True" | "False" | chr | "Null" | "(" ")"
-TypeInst -> "new" DecType | Primitive
+TypeInst -> "new" Type | Primitive | "new" Type "[" Expr "]" 
 VarDec -> Type id | Type id "=" Expr
 
