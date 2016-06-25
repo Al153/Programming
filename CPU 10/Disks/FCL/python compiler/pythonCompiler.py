@@ -99,70 +99,81 @@ def processBlock(parseTree,scope,result):
 	else:
 		return processLine(parseTree.children[0],result)
 def processLine(parseTree,scope,result):
-	Onetable = {
-		"Statement": processStatement,
-		"VarDec": processVarDec,
-		"FunDec": processFunDec,
-		"PureFunDec": processPureFunDec,
-		"TypeDec": processTypeDec,
-		"Ifstatement": processIfstatement,
-		"WhileLoop": processWhileLoop,
-		"ForLoop": processForLoop,
-		"FunCall": processFunCall,
-		"Scope": processScope
+ 	extendedTable = {
+		1: {
+			"FunDec": processFunDec,
+			"TypeDec": processTypeDec,
+			"Ifstatement": processIfstatement,
+			"WhileLoop": processWhileLoop,
+			"ForLoop": processForLoop,
+			"Scope": processScope
+		}
+		
+		3:{
+		 	"Block":processBlock
+		}
 	}
 
-	TwoTable = {
-		"return":processReturn
+	simpleTable = {
+		1:{	
+			"PureFunDec": processPureFunDec,
+			"FunCall": processFunCall,
+			"break":processBreak,
+			"continue":processContinue,
+			"Statement": processStatement,
+			"VarDec": processVarDec,}
+		2:{
+			"return":processReturn,
+		}
 	}
-	TerminalTable = {"break":processBreak,"continue":processContinue}
-	if len(parseTree.children) == 1:
 
-	elif len(parseTree.children) == 2:
+	if parseTree.type == "Simple":
+		simpleTable(parseTree.children[0],scope,result)
 
-	elif len(parseTree.children) == 3:
+	elif parseTree.type == "Extended":
 
 	else:
-		raise NodeError("SomeError") 
-
-	raise incompleteError()
+		raise NodeErrorException()
 
 
-def processScope(ParseTree,scope,result):
+
+
+
+def processScope(parseTree,scope,result):
 	return processLine(parseTree.children[2],ScopeList(getScope(parseTree.children[1]),scope),result)
 
-def processStatement(ParseTree,scope,result):
+def processStatement(parseTree,scope,result):
 	raise incompleteError()
 
-def processVarDec(ParseTree,scope,result):
+def processVarDec(parseTree,scope,result):
 	raise incompleteError()
 
-def processFunDec(ParseTree,scope,result):
+def processFunDec(parseTree,scope,result):
 	raise incompleteError()
 
-def processPureFunDec(ParseTree,scope,result):
+def processPureFunDec(parseTree,scope,result):
 	raise incompleteError()
 
-def processTypeDec(ParseTree,scope,result):
+def processTypeDec(parseTree,scope,result):
 	raise incompleteError()
 
-def processIfstatement(ParseTree,scope,result):
+def processIfstatement(parseTree,scope,result):
 	raise incompleteError()
 
-def processWhileLoop(ParseTree,scope,result):
+def processWhileLoop(parseTree,scope,result):
 	raise incompleteError()
 
-def processForLoop(ParseTree,scope,result):
+def processForLoop(parseTree,scope,result):
 	raise incompleteError()
 
-def processFunCall(ParseTree,scope,result):
+def processFunCall(parseTree,scope,result):
 	raise incompleteError()
 
 #___________________________ expression processing functions __________________________
 
-def processExpr(ParseTree,scope,result,freeRegs,resReg):
-	if len(ParseTree.children) == 1:
-		child = ParseTree.children[0]
+def processExpr(parseTree,scope,result,freeRegs,resReg):
+	if len(parseTree.children) == 1:
+		child = parseTree.children[0]
 		if child.type == "FunCall":
 
 		elif child.type == "Term"
@@ -171,10 +182,10 @@ def processExpr(ParseTree,scope,result,freeRegs,resReg):
 			 
 		else:
 			raise NodeError()
-	elif len(ParseTree.children) == 2:
-		child = ParseTree.children[0]
+	elif len(parseTree.children) == 2:
+		child = parseTree.children[0]
 
-	elif len(ParseTree.children) == 3:
+	elif len(parseTree.children) == 3:
 		return	processAddop(parseTree,scope,result,freeRegs,resReg)
 	else:
 		raise NodeError()

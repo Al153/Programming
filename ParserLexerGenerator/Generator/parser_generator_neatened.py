@@ -1,21 +1,16 @@
 import json
 import sys
 
-def generate_parser(name,ABNF_grammar):
+def generate_parser(ABNF_grammar):
 	parser = Parser(ABNF_grammar)
 	print "Writing to file ...",	
 	parser_summary =  {
 						"lookahead_action_table":parser.lookahead_action_table,
 						"goto_table":parser.LHS_goto_table,
-						"elementary_tokens":parser.elementary_tokens,
-						"to_ignore":parser.to_ignore,
 						"terminals":parser.terminals,
 						"rules":[(rule.lhs,rule.rhs,rule.number) for rule in parser.enum_rules]
 					}
-	parser_summary_string = json.dumps(parser_summary)
-	output_file = open(name+".parse","w")
-	output_file.write(parser_summary_string)
-	print "Done!"
+	return parser_summary
 class Parser:
 	def __init__(self,ABNF_grammar):
 		print "Extracting ABNF rules ...",
@@ -23,15 +18,15 @@ class Parser:
 		self.rules = self.get_rules_table()                                             #gets a list of rules from the ABNF tree
 		print "Done!\nGetting grammar symbols ...",
 
-		self.elementary_tokens = [character[0][1:-1] for character in self.rules["ELEMENTARY_TOKENS"].rhs] 
-		del self.rules["ELEMENTARY_TOKENS"]
-		self.to_ignore = [character[0][1:-1] for character in self.rules["IGNORE"].rhs]
-		del self.rules["IGNORE"]
-
 		self.non_terminals = self.get_non_terminals()
-		self.terminals = self.get_terminals()                                                #searches rules to get a list of terminal strings which are directly referenced in the grammar
+		self.terminals = self.get_terminals()                                               #searches rules to get a list of terminal strings which are directly referenced in the grammar
+		###########################################################
+		##skip this section.
+		##for debugging purposes
+		#self.lookahead_action_table = {}
+		#self.LHS_goto_table = {}
+		#############################################################
 		self.grammar_symbols = [symbol for symbol in self.rules] + self.terminals                        #gets all grammar symbols
-		#self.first_sets = {}                                                                     #used to speed up testing of first sets
 		print "Done!\nProducing first sets ...",
 		self.initialise_first_sets()
 		print "Done!\nProducing item sets ...",
@@ -58,7 +53,7 @@ class Parser:
 					self.LHS_goto_table[state][symbol] = self.enumerated_states[state].goto_table[symbol]       #once a reduction has occured, get the new state
 
 			for item in self.enumerated_states[state].own_set:
-				if item.rhs.index("BLOB")+1 == item.length: #reduce
+				if item.blobIndex+1 == item.length: #reduce
 					for rule in self.enum_rules:              #searching for acceptable rules
 						found = 0
 						if rule.lhs == item.lhs and rule.rhs == item.rhs[:-1]: #if rule is correct
@@ -114,8 +109,8 @@ class Parser:
 		items = list(input_items)
 
 		for item in items:
-			if item.rhs.index("BLOB") + 1 < item.length:
-				next_symbol = item.rhs[item.rhs.index("BLOB")+1]
+			if item.blobIndex + 1 < item.length:
+				next_symbol = item.rhs[item.blobIndex+1]
 				if next_symbol not in self.terminals:
 					lookaheads = self.lookaheads(next_symbol,items)
 					for production in self.rules[next_symbol].rhs:
@@ -123,20 +118,23 @@ class Parser:
 							item_to_add = Item(next_symbol,["BLOB"]+production,terminal)
 							if not self.is_in_item_set(item_to_add,items):
 								items.append(item_to_add)
-		item_set = set(items)
-		return frozenset(item_set)
+		
+		#item_set = set(items)
+		return frozenset(items)
 
 	def goto(self,item_set,token):  
 		j_item_set = set([])
 		for item in item_set:
 			if token in item.rhs:
-				blob_ptr = item.rhs.index("BLOB")
-				if blob_ptr+1 < item.length and item.rhs[blob_ptr+1] == token:
-					token_ptr = blob_ptr + 1
-					try:
-						j_item_set |= set([Item(item.lhs, item.rhs[:blob_ptr]+[token,"BLOB"]+item.rhs[token_ptr+1:],item.lookahead)])
-					except IndexError:
-						pass
+				blobIndex = item.blobIndex
+				if blobIndex+1 < item.length and item.rhs[blobIndex+1] == token:
+					token_ptr = blobIndex + 1
+					if token_ptr < len(item.rhs):
+						j_item_set |= set([Item(item.lhs, item.rhs[:blobIndex]+[token,"BLOB"]+item.rhs[token_ptr+1:],item.lookahead)])
+#					try:
+#						j_item_set |= set([Item(item.lhs, item.rhs[:blobIndex]+[token,"BLOB"]+item.rhs[token_ptr+1:],item.lookahead)])
+#					except IndexError:
+#						pass
 		return self.closure(j_item_set) if len(j_item_set) else frozenset(j_item_set)
 
 	def get_item_sets(self):
@@ -223,7 +221,7 @@ class Parser:
 		return_set = set([])
 		item_sets = []
 		for item in item_set: 						#lookahead is the union of the follow sets of all items in the item set where the symbol is a immediately to the right of the blob
-			if item.rhs.index("BLOB")+1 <item.length and item.rhs[item.rhs.index("BLOB")+1] == symbol:
+			if item.blobIndex+1 <item.length and item.rhs[item.blobIndex+1] == symbol:
 				return_set |= self.follow(item)
 		return return_set
 
@@ -231,7 +229,7 @@ class Parser:
 	def follow(self,item):
 		nullable = 1
 		lookaheads = set([])
-		for symbol in item.rhs[item.rhs.index("BLOB")+2:]: 		#iterates through symbols, follow of an item is the first set of the symbol to the right of the one to the rights of the blob, in the current context
+		for symbol in item.rhs[item.blobIndex+2:]: 		#iterates through symbols, follow of an item is the first set of the symbol to the right of the one to the rights of the blob, in the current context
 			lookaheads |= set(self.first_sets[symbol])
 			if not self.null_dict[symbol]:
 				nullable = 0
@@ -335,6 +333,7 @@ class Item:
 		self.length = len(rhs)
 		self.lookahead = lookahead
 		self.attrs = self.__dict__
+		self.blobIndex = self.rhs.index("BLOB")
 
 class Finite_automaton_state:
 	def __init__(self,own_set,number):
@@ -438,4 +437,5 @@ class ABNF_rule:
 		return replacement_possibilities
 		
 if __name__ == '__main__':
-	generate_parser(sys.argv[1].split(".")[0],open(sys.argv[1]).read())
+	table = generate_parser(sys.argv[1].split(".")[0],open(sys.argv[1]).read())
+	open(sys.argv[1].split(".")[0]+".parse","w").write(json.dumps(table))

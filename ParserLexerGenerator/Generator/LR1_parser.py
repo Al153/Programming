@@ -2,36 +2,22 @@ import json
 import parseTreeNodes
 
 class Parser:
-	def __init__(self,parse_file_name,new_tokeniser = False):
-		self.external_tokeniser = 0
-		if new_tokeniser:
-			self.tokenise = new_tokeniser
-			self.external_tokeniser = 1
-		parse_table_file = open(parse_file_name,"r")
-		self.parse_settings = json.loads(parse_table_file.read())
-		self.elementary_tokens = self.parse_settings["elementary_tokens"]
-		self.to_ignore = self.parse_settings["to_ignore"]
-
-		temp_goto_table = self.parse_settings["goto_table"]
+	def __init__(self,parse_settings):
+		temp_goto_table = parse_settings["goto_table"]
 		self.LHS_goto_table = {int(state):temp_goto_table[state] for state in temp_goto_table}
 
-		temp_lookahead_table = self.parse_settings["lookahead_action_table"]
+		temp_lookahead_table = parse_settings["lookahead_action_table"]
 		self.lookahead_action_table = {int(state):temp_lookahead_table[state] for state in temp_lookahead_table}
 
-		self.terminals = self.parse_settings["terminals"]
-		self.enum_rules = [EnumRule(rule[0],rule[1],rule[2]) for rule in self.parse_settings["rules"]]
+		self.enum_rules = [EnumRule(rule[0],rule[1],rule[2]) for rule in parse_settings["rules"]]
 
-	def parse(self,source):
-		self.debug_string = ''
-		if self.external_tokeniser:
-			self.tokens = self.tokenise(self,source)                                                    #tokeniser takes in text and produces a list of terminal objects
-		else:
-			self.tokens = self.tokenise(source)
+	def parse(self,tokens): # parses a stream of tokens
+		self.tokens = tokens
+		self.tokens.append(parseTreeNodes.Terminal_parse_tree_node("END","END"))
 		self.parse_tree_stack = [0]                                                                 #starts with just starting state
-
 		self.lookahead = self.tokens[0]                                                             #Loads in lookahead token 
 		self.token_index = 1  
-
+		self.debug_string = ''
 		while not self.parse_step():
 			pass
 		return self.parse_tree_stack[1]
@@ -56,7 +42,7 @@ class Parser:
 				return 1
 		elif next_action_tuple[0] == "error":                                                       #otherwise report an error
 
-			self.print_parse_tree(self.parse_tree_stack[-2])
+			#self.print_parse_tree(self.parse_tree_stack[-2])
 			#self.print_parse_tree(self.parse_tree_stack[-4])
 			print top_state
 			self.error(next_action_tuple[1])
@@ -77,7 +63,7 @@ class Parser:
 		self.parse_tree_stack = self.parse_tree_stack[:-length_to_pop]                              #rest of pop operation
 		state_p = self.parse_tree_stack[-1]                                                         #gets previous state
 		next_state = self.LHS_goto_table[state_p][lhs]                                                   #calculates new state
-		tree_to_push = Non_terminal_parse_tree_node(lhs,popped)                                     #creates  new parse tree node
+		tree_to_push = parseTreeNodes.Non_terminal_parse_tree_node(lhs,popped)                                     #creates  new parse tree node
 		self.parse_tree_stack += [tree_to_push,next_state]                                          #pushes new tree and state
 		return 0
 
@@ -93,44 +79,15 @@ class Parser:
 		print "current_tokens: ",self.debug_string[-50:] if len(self.debug_string)>50 else self.debug_string
 		quit()
 
-	def tokenise(self,source_text):                                                                 #splits text according to elementary tokens - chars which indicate a new token
-		token_triggers =self.elementary_tokens	                                                    #fetch elementary tokens
-		#print token_triggers
-		current_token = ''                                                                          #initialise current token and token list
-		token_list = []
-		for character in source_text:                                                               #iterate through source text
-			if character in token_triggers:                                                         #splits if elementary token found
-				if current_token not in self.to_ignore and current_token != '':
-					token_list.append(self.get_parse_tree_node(current_token))                          #generates parse tree node object
-				if character not in self.to_ignore:
-					token_list.append(self.get_parse_tree_node(character))                              #adds in parse tree node for elementary token causing splitting
-				current_token = ''
-			else:
-				current_token += character                                                          #otherwise place the character in the token
-
-		if current_token != '' and current_token not in self.to_ignore:                         	#clean up final token
-			token_list.append(self.get_parse_tree_node(current_token))
-		token_list.append(Terminal_parse_tree_node("END","END"))                                    #adds end symbol to end of code
-		return token_list           
-
-	def get_parse_tree_node(self,current_token):                                                    #gets a node for the parse tree
-		if '"' + current_token + '"' in self.terminals:                                              #if it is a special string, eg "=" then create a terminal 
-			return Terminal_parse_tree_node('"'+current_token+'"',current_token)
-		else:
-			try:
-				int(current_token)
-				return Terminal_parse_tree_node("num",current_token)                                #if integerise-able then produce an integer token
-			except ValueError:
-				return Terminal_parse_tree_node("id",current_token)                                 #otherwise then produce an identifier
-
-	def print_parse_tree(self,parse_tree_node,offset = ''):
+	@staticmethod
+	def print_parse_tree(parse_tree_node,offset = ''):
 		if parse_tree_node.terminal:
 			print offset+parse_tree_node.type+"("+parse_tree_node.string+")"
 			return
 		else:
 			print offset+parse_tree_node.type+"("
 			for child in parse_tree_node.children:
-				self.print_parse_tree(child,offset+"  ")
+				Parser.print_parse_tree(child,offset+"  ")
 			print offset+")"
 
 
@@ -142,12 +99,6 @@ class EnumRule:
 		self.lhs = lhs
 		self.rhs = rhs
 		self.number = number
-
-
-import struct
-def float_to_raw_int(f):
-	return struct.unpack('<I',struct.pack('<f',f))[0]
-
 
 if __name__ == "__main__":
 	import sys

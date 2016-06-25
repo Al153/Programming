@@ -1,4 +1,5 @@
-import ParseTreeNodes
+import parseTreeNodes
+import LR1_parser
 from collections import defaultdict
 
 class stateCounter: # a simple object which generates a unique number for each state
@@ -22,6 +23,7 @@ class Relation: # a simple class which represents a state transition
 
 class NFA_state: # a class representing an NFA state
 	def __init__(self,state_id,relations_list):
+		self.marked = 0
 		self.__relations = []
 		self.__relations_dict = defaultdict(lambda: [])
 
@@ -46,18 +48,21 @@ class NFA_state: # a class representing an NFA state
 	def getID(self):
 		return self.__id
 
-	def clone(self,state_dict):
-		n = NFA_state(self.___id,[]) # clones an NFA by walking through each state
-		state_dict[self.__id] = n
-		for r in self.getRelations:
+	def clone(self,stateDict):
+		#if not self.marked:
+		n = NFA_state(self.__id,[]) # clones an NFA by walking through each state
+		stateDict[self.__id] = n
+		#self.marked = 1	
+		for r in self.getRelations():
 			next_id = r.get_result_state().getID() # id of state pointed to by r
 			c = r.get_character() # character of relation r
 			q = r.get_result_state() # state pointed to by relation r
-			if next_id in state_dict:
-				self.addRelation(Relation(c,state_dict[next_id]))
-
+			if next_id in stateDict:
+				n.addRelation(Relation(c,stateDict[next_id]))	
 			else:
-				self.addRelation(Relation(c,q.clone(state_dict)))
+				n.addRelation(Relation(c,q.clone(stateDict)))
+		return n
+
 
 
 
@@ -124,9 +129,12 @@ class NFA:
 		
 		# traverses the NFA n, cloning it
 		stateDict = {} # ( id -> state )
-		new = NFA([],self.getStart().clone(state_dict),[])
-		new.__states = [state_dict[i] for i in state_dict]
-		new.__accept = [ state_dict[s.getID()] for s in self.__accept]
+		new = NFA([],self.getStart().clone(stateDict),[])
+		for s in self.__states:
+			s.marked = 0
+		new.__states = [stateDict[i] for i in stateDict]
+		new.__accept = [ stateDict[s.getID()] for s in self.__accept]
+		return new
 
 
 def TerminalNFA(char):
@@ -143,53 +151,50 @@ def TerminalNFA(char):
 
 def CreateNFA(ParseTree,nfa_dict):
 	# creates an NFA from a parse tree of a regex
-	if ParseTree.terminal: #terminal node case
-		return TerminalNFA(ParseTree.string)
-	else:
-		if ParseTree.type == "PROGRAM": # Program -> Expr
-			return CreateNFA(ParseTree.children[0])
-		if ParseTree.type == "Expr": 
-			if len(ParseTree.children) == 3: # Expr -> Expr "|" Term
-				nfa =  CreateNFA(ParseTree.children[0])
-				nfa.alternate(CreateNFA(ParseTree.children[2]))
-				return nfa
-			else: # Expr -> Term
-				return CreateNFA(ParseTree.children[0])
-		if  ParseTree.type == "Term":
-			if len(ParseTree.children) == 2: # Term -> Term Factor
-				nfa = CreateNFA(ParseTree.children[0])
-				nfa.concatenate(CreateNFA(ParseTree.children[1]))
-				return nfa
-			else: 							 # Term -> Factor
-				return CreateNFA(ParseTree.children[0])
-		if ParseTree.type == "Factor":
-			if len(ParseTree.children) == 2: # Factor -> Lit "*"
-				nfa = CreateNFA(ParseTree.children[0])
-				nfa.star()
-				return nfa
-			else: 								# Factor -> Lit
-				return CreateNFA(ParseTree.children[0])
-		if ParseTree.type == "Lit":
-			if len(ParseTree.children) == 3: # Lit -> "(" Expr ")"
-				return CreateNFA(ParseTree.children[1])
-			else: 							 # Lit -> letter
-				return CreateNFA(ParseTree.children[0])
-		if ParseTree.type == "id":
-			try: # it's terminal
-				newNFA = nfa_dict[ParseTree.string]
-				return NFA.clone(newNFA)
-
-			except KeyError:
-				print "Cigar Lexer Generator Error: Unknown regex fragment used"
-
-		if ParseTree.type == "string":
-			n = TerminalNFA("") # the null NFA
-			for char in ParseTree.string:
-				n.concatenate(TerminalNFA(char))
-
-		else:
-			print "Unexpected node type: " + ParseTree.type
+	#LR1_parser.Parser.print_parse_tree(ParseTree)
+	if ParseTree.type == "PROGRAM": # Program -> Expr
+		return CreateNFA(ParseTree.children[0],nfa_dict)
+	elif ParseTree.type == "Expr": 
+		if len(ParseTree.children) == 3: # Expr -> Expr "|" Term
+			nfa =  CreateNFA(ParseTree.children[0],nfa_dict)
+			nfa.alternate(CreateNFA(ParseTree.children[2],nfa_dict))
+			return nfa
+		else: # Expr -> Term
+			return CreateNFA(ParseTree.children[0],nfa_dict)
+	elif  ParseTree.type == "Term":
+		if len(ParseTree.children) == 3: # Term -> Term . Factor
+			nfa = CreateNFA(ParseTree.children[0],nfa_dict)
+			nfa.concatenate(CreateNFA(ParseTree.children[2],nfa_dict))
+			return nfa
+		else: 							 # Term -> Factor
+			return CreateNFA(ParseTree.children[0],nfa_dict)
+	elif ParseTree.type == "Factor":
+		if len(ParseTree.children) == 2: # Factor -> Lit "*"
+			nfa = CreateNFA(ParseTree.children[0],nfa_dict)
+			nfa.star()
+			return nfa
+		else: 								# Factor -> Lit
+			return CreateNFA(ParseTree.children[0],nfa_dict)
+	elif ParseTree.type == "Lit":
+		if len(ParseTree.children) == 3: # Lit -> "(" Expr ")"
+			return CreateNFA(ParseTree.children[1],nfa_dict)
+		else: 							 # Lit -> letter
+			return CreateNFA(ParseTree.children[0],nfa_dict)
+	elif ParseTree.type == "id":
+		try: # it's terminal
+			newNFA = nfa_dict[ParseTree.string]
+			return NFA.clone(newNFA)
+		except KeyError:
+			print "Cigar Lexer Generator Error: Unknown regex fragment used", ParseTree
 			quit()
+	elif ParseTree.type == "string":
+		n = TerminalNFA("") # the null NFA
+		for char in ParseTree.string:
+			n.concatenate(TerminalNFA(char))
+		return n
+	else:
+		print "Unexpected node type: " + ParseTree.type
+		quit()
 
 def printState(s):
 	print "-------------------------------------------------------------"

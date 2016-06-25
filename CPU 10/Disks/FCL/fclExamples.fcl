@@ -47,3 +47,8 @@ type intList qSort ( type intList x, type intList r ) =
 		else
 			qSort (filterLess x.head x.tail) (intList x.head (qSort (filterGreater x.head x.tail));
 
+int fib (n) = if n == 0 then 1 else n * (fib (n-1));
+
+(int -> int) pickFun (n) {
+	return fDict[n];
+}

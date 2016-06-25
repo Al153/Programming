@@ -7,9 +7,9 @@
 -- 					Not polymorphic
 --
 
-ELEMENTARY_TOKENS:
+ElementaryTokens:
 	" " | "\t" | "\n" | "(" | ")" | "+" | "-" | "*" | "/" | "%" | "|" | "^" | "&" | "~" | "<" | "=" | ">" | ";" | "," | "[" | "]" | "!" | "{" | "}" | "."
-IGNORE:
+Ignore:
 	" " | "\t" | "\n"
 Terminals:
 	lower -> "a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|"v"|"w"|"x"|"y"|"z"
@@ -19,14 +19,16 @@ Terminals:
 	digit -> "0"|pos_digit
 	string_symbol -> "_"
 	id -> (letter|string_symbol).(letter|digit|string_symbol)*
-	num -> (pos_digit.digit*)|"0"
 	floatFract -> digit.digit*
+	num -> (pos_digit.digit*)|"0"
 
 Grammar:
 	PROGRAM -> Block
 
-	Block -> Block Line ";" | Line ";"
-	Line -> Statement | VarDec | FunDec | PureFunDec | TypeDec |  IfStatement | WhileLoop | ForLoop | "{" Block "}" | FunCall | Scope | "break" | "continue" | "return" Expr
+	Block -> Block Line  | Line
+	Line -> Simple ";" | Extended -- extended  parts end with a line
+	Simple -> Statement | VarDec | PureFunDec | FunCall | "break" | "continue" | "return" Expr
+	Extended -> FunDec |  TypeDec |  IfStatement | WhileLoop | ForLoop | "{" Block "}" | Scope 
 	
 	Scope -> "scope" id Line
 	
@@ -56,19 +58,19 @@ Grammar:
 	ForLoop -> "for" "(" ForInstantiation ";" Expr ";" Statement ")" Line
 	ForInstantiation -> Statement | VarDec
 	WhileLoop -> "while" "(" Expr ")" Line
-	PureFunDec -> Type id FunArgs "=" Expr
+	PureFunDec -> Type id "(" FunArgs ")" "=" Expr
 	
 	
 	Type -> "type" id | Type "[" "]" | "int" | "char" | "float" | "unit" | "bool" | FunType
-	FunType -> "(" TypeList "->" Type ")"
+	FunType -> "(" TypeList "-" ">" Type ")"
 	TypeList -> Type | TypeList "*" Type
-	FunArgs -> FunArg | FunArgs FunArg
+	FunArgs -> FunArg | FunArgs "," FunArg
 	FunArg -> Type id
 	StatementVar -> id | StatementVar "[" Expr "]" | StatementVar "." id | Expr "." id
 	
-	FunDec -> Type id FunArgs
+	FunDec -> Type id "(" FunArgs ")" Line
 	Primitive -> num | fp | "True" | "False" | chr | "Null" | "(" ")"
-	Fp -> num "." floatFract
+	Fp -> num "." floatFract | num "." num
 	TypeInst -> "new" Type | Primitive | "new" Type "[" Expr "]" 
 	VarDec -> Type id | Type id "=" Expr
 
