@@ -93,151 +93,6 @@ def compile():
 # process nodes:
 # (parseTree * scopeList * string -> (string * type))
 
-def processBlock(parseTree,scope,result):
-	if len(parseTree.children) == 3:
-		return (processLine(parseTree.children[0],scope,processLine(parseTree.children[1],scope,result)[1]),Type('primitive','unit'))
-	else:
-		return processLine(parseTree.children[0],result)
-def processLine(parseTree,scope,result):
- 	extendedTable = {
-		1: {
-			"FunDec": processFunDec,
-			"TypeDec": processTypeDec,
-			"Ifstatement": processIfstatement,
-			"WhileLoop": processWhileLoop,
-			"ForLoop": processForLoop,
-			"Scope": processScope
-		}
-		
-		3:{
-		 	"Block":processBlock
-		}
-	}
-
-	simpleTable = {
-		1:{	
-			"PureFunDec": processPureFunDec,
-			"FunCall": processFunCall,
-			"break":processBreak,
-			"continue":processContinue,
-			"Statement": processStatement,
-			"VarDec": processVarDec,}
-		2:{
-			"return":processReturn,
-		}
-	}
-
-	if parseTree.type == "Simple":
-		simpleTable(parseTree.children[0],scope,result)
-
-	elif parseTree.type == "Extended":
-
-	else:
-		raise NodeErrorException()
-
-
-
-
-
-def processScope(parseTree,scope,result):
-	return processLine(parseTree.children[2],ScopeList(getScope(parseTree.children[1]),scope),result)
-
-def processStatement(parseTree,scope,result):
-	raise incompleteError()
-
-def processVarDec(parseTree,scope,result):
-	raise incompleteError()
-
-def processFunDec(parseTree,scope,result):
-	raise incompleteError()
-
-def processPureFunDec(parseTree,scope,result):
-	raise incompleteError()
-
-def processTypeDec(parseTree,scope,result):
-	raise incompleteError()
-
-def processIfstatement(parseTree,scope,result):
-	raise incompleteError()
-
-def processWhileLoop(parseTree,scope,result):
-	raise incompleteError()
-
-def processForLoop(parseTree,scope,result):
-	raise incompleteError()
-
-def processFunCall(parseTree,scope,result):
-	raise incompleteError()
-
-#___________________________ expression processing functions __________________________
-
-def processExpr(parseTree,scope,result,freeRegs,resReg):
-	if len(parseTree.children) == 1:
-		child = parseTree.children[0]
-		if child.type == "FunCall":
-
-		elif child.type == "Term"
-			return ProcessTerm(child,scope,result,freeRegs,resReg)
-		elif child.type == "TernaryOp":
-			 
-		else:
-			raise NodeError()
-	elif len(parseTree.children) == 2:
-		child = parseTree.children[0]
-
-	elif len(parseTree.children) == 3:
-		return	processAddop(parseTree,scope,result,freeRegs,resReg)
-	else:
-		raise NodeError()
-
-def processAddop(parseTree,scope,result,freeRegs,resReg):
-	# preconditions:
-	# 	parseTree is an "Expr -> Expr addOp Term" node 
-	# 	resReg is in freeRegs
-	# 	freeRegs is the list of registers currently available to the compiler
-	#	the result is moved into resReg at the end of the operation
-
-
-	# post conditions: returns result, type
-	pushedRegs = []
-	if len(freeRegs)<2: # if there is not enough register space for the operation, push some registers
-		pushedRegs = filter((lambda s: not s in freeRegs),registerNames)[:2-len(freeRegs)]
-		result = "".join(map ((lambda s: s+" Pop;\n"),pushedRegs)) + result
-		(result,exprType) = processAddop(parseTree,scope,result,freeRegs+pushedRegs,resReg)
-		result = "".join(map ((lambda s: s+" Push;\n"),pushedRegs)) + result
-		return (result,exprType)
-
-	else:
-		(r1,t1) = processExpr(parseTree.children[0],scope,'',freeRegs,resReg)
-		(r2,t2) = processTerm(parseTree.children[1],scope,'',freeRegs[1:],freeRegs[0])
-		operator = getOperator(parseTree.children[1])
-		(fasm,resultant_type) = operator.getVersion(t1,t2)
-		return operator.process(result,resReg,freeRegs[0],resReg,fasm)
-
-
-def processMulop(parseTree,scope,result,freeRegs,resReg):
-	# preconditions:
-	# 	parseTree is an "Expr -> Expr addOp Term" node 
-	# 	resReg is in freeRegs
-	# 	freeRegs is the list of registers currently available to the compiler
-	#	the result is moved into resReg at the end of the operation
-
-
-	# post conditions: returns result, type
-	pushedRegs = []
-	if len(freeRegs)<2: # if there is not enough register space for the operation, push some registers
-		pushedRegs = filter((lambda s: not s in freeRegs),registerNames)[:2-len(freeRegs)]
-		result = "".join(map ((lambda s: s+" Pop;\n"),pushedRegs)) + result
-		(result,exprType) = processAddop(parseTree,scope,result,freeRegs+pushedRegs,resReg)
-		result = "".join(map ((lambda s: s+" Push;\n"),pushedRegs)) + result
-		return (result,exprType)
-
-	else:
-		(r1,t1) = processTerm(parseTree.children[0],scope,'',freeRegs,resReg)
-		(r2,t2) = processFactor(parseTree.children[1],scope,'',freeRegs[1:],freeRegs[0])
-		operator = getOperator(parseTree.children[1])
-		(fasm,resultant_type) = operator.getVersion(t1,t2)
-		return operator.process(result,resReg,freeRegs[0],resReg,fasm)
 
 
 
@@ -246,15 +101,15 @@ def processMulop(parseTree,scope,result,freeRegs,resReg):
 
 
 
-def processTerm(parseTree,scope,result,freeRegs,resReg):
 
-def processFactor(parseTree,scope,result,freeRegs,resReg):
 
-def processValue(parseTree,scope,result,freeRegs,resReg):
 
-def processFunCall():
 
-def process():
+
+
+
+
+
 
 
 
@@ -269,7 +124,4 @@ def getDefinedTypes(scope):
 def getDefinedVariables(scope):
 	raise incompleteError()
 
-def getOperator(parseTree):
-	# ( parseTree -> operatorObject )
-	# lookup operator in operator dictionary
-	raise incompleteError()
+
