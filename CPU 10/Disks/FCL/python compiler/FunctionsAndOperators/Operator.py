@@ -1,39 +1,21 @@
 # class representing an operator in FCL
 
 class BinaryOperator:
-	def __init__(self,name,TypeList):
+	def __init__(self,name,type,fasmFunction):
 		self.name = name
-		self.TypeList = TypeList # type list is: ((Type * Type) -> (Type * FasmCode)) list
-								 
+		self.type = type # type is: ((Type , Type) , (type))
+		self.getFasm = fasmFunction # fasmFunction is of type (reg1 * reg2 * resultantReg -> fasm)				 
 	
-	def getVersion(self,Type1, Type2):
-		# ( Type * Type -> FASM * Type)
-
-		# compare type pair with internal type list
-		for (t in self.TypeList):
-			thisType = t[0] # ( Type * Type )
-			if (Type.CompareType(Type1,thisType[0])) and (Type.CompareType(Type1,thisType[1])):
-				return t[1] # ( FASM * TYPE)
-
-		raise TypeError()
-
-	def processOperation(self,result,reg1,reg2,resultReg,version):
-		# ( string * reg * reg * reg * FASM -> string * type )
-		raise IncompleteError()
 
 class UnaryOperator:
-	def __init__(self,name,TypeList):
+	def __init__(self,name,type,fasmFunction):
 		self.name = name
-		self.TypeList = TypeList # type list is: (Type -> Type * FasmCode) list
+		self.type = type # type list is: (type,type) list
+		self.getFasm = fasmFunction
 
-								 
-	
-	def Process(self, inType):
-		# ( Type List -> FASM * Type)
+Operators = {} # name -> Operator list
+UnaryOperators = {} # name -> UnaryOperator list
 
-		# compare inType with internal type list
-		for (t in self.TypeList):
-			thisType = t[0] # (  Type )
-			if (Type.CompareType(Type1,thisType)):
-				return t[1] # ( FASM * TYPE)
-		raise TypeError()
+def getOperator(OpNode,type1,type2):
+
+def getUnaryOperator(OpNode,exprType):

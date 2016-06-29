@@ -13,8 +13,12 @@ from DataStructures import *
 
 #_______________________ TO DO __________________________________________
 # - Parser/Parser generator
-# 		- add fp, char terminals to the LR1 parser
-
+# 		- integrate PAL parser to compiler
+# - Variables
+#		- investigate loads and stores
+#		- write code to look up a variable
+# - Structure.py 
+#		- write statement code
 # - Scopes 
 # 		- scope classes and hierarchy
 # 		- scope lookup function
@@ -24,7 +28,7 @@ from DataStructures import *
 #		- Write Allocation/deallocation FASM
 #		- Fix fasm namespaces
 # 		- write stack code
-# 		- FASM environment - whiles, calls, breaks, returns etc
+# 		- returns etc
 # 		- FASM errors library
 # 		- FASM nameSpacing
 

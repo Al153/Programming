@@ -1,1 +1,0 @@
-class TypeError(Exception): # an exception signifying that a type error has occured

@@ -54,7 +54,7 @@ Grammar:
 	FunCall -> StatementVar Args | Type "(" Expr ")"
 	Args -> Args Expr | Expr
 	
-	IfStatement -> "if" "(" Expr ")" Line | "if" "(" Expr ")" Line else Line -- expressions in if statements, for loops and while loops should all be of type bool
+	IfStatement -> "if" "(" Expr ")" Line | "if" "(" Expr ")" Line "else" Line -- expressions in if statements, for loops and while loops should all be of type bool
 	ForLoop -> "for" "(" ForInstantiation ";" Expr ";" Statement ")" Line
 	ForInstantiation -> Statement | VarDec
 	WhileLoop -> "while" "(" Expr ")" Line

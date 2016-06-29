@@ -1,6 +1,9 @@
 def processVarDec(parseTree,scope,result):
 	raise incompleteError()
 
+def processStatementVarDec(parseTree,scope,result):
+	raise incompleteError()
+
 def processFunDec(parseTree,scope,result):
 	raise incompleteError()
 
