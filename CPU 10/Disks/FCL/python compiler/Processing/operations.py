@@ -24,5 +24,5 @@ def processOp(parseTree,scope,result,freeRegs,resReg):
 		(r2,t2,p2) = processExpr(parseTree.children[2],scope,'',freeRegs[1:],freeRegs[0])
 		(operator,opType) = getOperator(parseTree.children[1],t1,t2)
 		
-		(opFasm) = operator.getFasm(resReg,freeRegs[0],resReg)
+		(opFasm,opType) = operator.getFasm(resReg,freeRegs[0],resReg)
 		return (r1+r2+opFasm+result,opType,p1 and p2)
