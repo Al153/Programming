@@ -40,7 +40,7 @@ def processLine(parseTree,scope,result):
 		else:
 			return processFunction(parseTree.children[1],scope,result)
 	else:
-		raise NodeErrorException(parseTree)
+		raise NodeError(parseTree)
 
 
 
@@ -50,7 +50,14 @@ def processScope(parseTree,scope,result):
 	return processLine(parseTree.children[2],ScopeList(getScope(parseTree.children[1]),scope),result)
 
 def processStatement(parseTree,scope,result):
-	raise incompleteError()
+	if parseTree.type != "Statement":
+		raise NodeError()
+	(result,storeType,pure) = processStoreValue(parseTree,scope,result,registerNames.regNames[0],registerNames.regNames[1:])
+	(result,exprType,pure) = processExpression(parseTree.children[2],scope,result)
+	if not Types.Type.compare(storeType,exprType):
+		raise TypeError("Error: the expression and variable in the statement:"+ parseTree.generate()+ "do not have the same type: " + Types.Type.toString(storeType) + " and " + Types.Type.toString(exprType) + ".")
+	else:
+		return result
 
 def processIfstatement(parseTree,scope,result):
 	if len(parseTree.children) == 5:
@@ -61,7 +68,7 @@ def processIfstatement(parseTree,scope,result):
 		result = processLine(trueCode,scope,"endif;\n"+result)
 		(result,exprType,pure) = processExpression(test,scope,"gp0, if;\n"+result,registerNames.regNames,"gp0,")
 		if not (Type.compareType(exprType,Type('primitive','"bool"'))):
-			raise typeErrorException("The type of the condition expression in an if statement's definition must be boolean.")
+			raise TypeErrorException("The type of the condition expression in an if statement's definition must be boolean.")
 		return result
 	elif len(parseTree.children) == 7:
 		# if ... else .. end
@@ -72,10 +79,10 @@ def processIfstatement(parseTree,scope,result):
 		result = processLine(trueCode,scope,"else;\n"+result)
 		(result,exprType,pure) = processExpression(test,scope,"gp0, if;\n"+result,registerNames.regNames,"gp0,")
 		if not (Type.compareType(exprType,Type('primitive','"bool"'))):
-			raise typeErrorException("The type of the condition expression in an if statement's definition must be boolean.")
+			raise TypeErrorException("The type of the condition expression in an if statement's definition must be boolean.")
 		return result
 	else:
-		raise NodeErrorException()
+		raise NodeError()
 
 def processWhileLoop(parseTree,scope,result):
 	test = parseTree.children[2]
@@ -84,7 +91,7 @@ def processWhileLoop(parseTree,scope,result):
 	result = processLine(loopedCode,scope,'next;\nloop;\n'+result)
 	(result,exprType,pure) = processExpression(test,scope,"gp0, do;\n"+result,registerNames.regNames,"gp0,")
 	if not (Type.compareType(exprType,Type('primitive','"bool"'))):
-		raise typeErrorException("The type of the condition expression in a while loop's definition must be boolean.")
+		raise TypeErrorException("The type of the condition expression in a while loop's definition must be boolean.")
 	result = "while;\n" + result
 	return result
 
@@ -99,18 +106,18 @@ def processForLoop(parseTree,scope,result):
 	(result,exprType, pure) = processExpression(test,scope,"gp0, do;\n"+result,registerNames.regNames,"gp0,")
 
 	if not (Type.compareType(exprType,Type('primitive','"bool"'))):
-		raise typeErrorException("The type of the condition expression in a for loop's definition must be boolean.")
+		raise TypeErrorException("The type of the condition expression in a for loop's definition must be boolean.")
 	if instantiation.children[0].type == 'Statement':
 		result = processStatement(instantiation.children[0],scope,"while;\n"+result)
 
 	elif instantiation.children[0].type == 'VarDec':
 		varDec = instantiation.children[0]
 		if len(varDec.children) == 2:
-			raise Errors.semanticError("Error: the variable declaration in a for loop instantiation must be of the statement type")
+			raise Errors.SemanticError("Error: the variable declaration in a for loop instantiation must be of the statement type")
 		else:
 			result =  processStatementVarDec(varDec,scope,"while;\n"+result)
 	else:
-		raise NodeErrorException()
+		raise NodeError()
 	return result
 
 def processContinue(parseTree,scope,result):
@@ -118,3 +125,14 @@ def processContinue(parseTree,scope,result):
 
 def processBreak(parseTree,scope,result):
 	return "break;\n" + result
+
+def processReturn(parseTree,scope,result):
+	if scope.head.isFunction:
+		result = "gp0, return;\n"+result
+		result,exprType,pure = processExpression(parseTree,scope,result,registerNames.regNames,"gp0,")
+		if Types.Type.compare(scope.head.localFunction.resultType,exprType):
+			return result
+		else:
+			raise TypeError 
+	else:
+		raise SemanticError("Cannot return when not in a function")

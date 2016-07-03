@@ -3,4 +3,4 @@
 def getOperator(parseTree):
 	# ( parseTree -> operatorObject )
 	# lookup operator in operator dictionary
-	raise incompleteError()
+	raise IncompleteError()

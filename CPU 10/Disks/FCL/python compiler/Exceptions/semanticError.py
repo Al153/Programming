@@ -1,4 +1,4 @@
-class semanticError(Exception):
+class SemanticError(Exception):
 	def __init__(self,msg):
 		super()
 		self.msg = msg

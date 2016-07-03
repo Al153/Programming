@@ -1,0 +1,11 @@
+int i = 10;
+
+int prev = 1;
+int current = 1;
+for (int j = 0 ; j <= i; i = i + 1 ){
+	int next = prev + current;
+	prev = current;
+	current = next;
+}
+
+print(current);

@@ -5,6 +5,8 @@ class Non_terminal_parse_tree_node:                                             
 		self.children = children
 	def __str__(self):
 		return self.type + "(" + ",".join([x.type for x in self.children]) + ")"
+	def generate(self): # prints out a reconstruction of the original text
+		return " ".join(map((lambda x: x.generate()),self.children))
 
 class Terminal_parse_tree_node:                                                                     #class for terminals
 	def __init__(self,node_type,token_string):
@@ -13,3 +15,5 @@ class Terminal_parse_tree_node:                                                 
 		self.string = token_string
 	def __str__(self):
 		return self.type + "(" + self.string + ")"
+	def generate(self): # prints out a reconstruction of the original text
+		return self.string

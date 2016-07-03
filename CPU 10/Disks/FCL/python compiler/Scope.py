@@ -1,10 +1,12 @@
 class Scope:
-	def __init__(self,name):
+	def __init__(self,name,isFunction = False, function = main):
 		self.var_dict = {} # id -> type
 		self.definedTypes = {} # typeId -> structObject
 		self.scopes = {} # id -> ScopeObject#
 		self.fasmNames = {} # name -> fasm readable name
 		self.name = name
+		self.isFunction = isFunction
+		self.localFunction = function
 		
 	def getFasmName(self,string):
 		# ( str -> str )

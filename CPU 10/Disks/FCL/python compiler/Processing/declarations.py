@@ -1,14 +1,14 @@
 def processVarDec(parseTree,scope,result):
-	raise incompleteError()
+	raise IncompleteError()
 
 def processStatementVarDec(parseTree,scope,result):
-	raise incompleteError()
+	raise IncompleteError()
 
 def processFunDec(parseTree,scope,result):
-	raise incompleteError()
+	raise IncompleteError()
 
 def processPureFunDec(parseTree,scope,result):
-	raise incompleteError()
+	raise IncompleteError()
 
 def processTypeDec(parseTree,scope,result):
-	raise incompleteError()
+	raise IncompleteError()

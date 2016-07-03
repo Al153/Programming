@@ -14,7 +14,7 @@ def processExpr(parseTree,scope,result,freeRegs,resReg):
 			return ProcessTernaryOp(child,scope,result,freeRegs,resReg)
 
 		elif child.type == "Value":
-
+			return processValue(child.children[0],scope,result,freeRegs,resReg)
 		else:
 			raise NodeError()
 	elif len(parseTree.children) == 2:
@@ -35,16 +35,45 @@ def processExpr(parseTree,scope,result,freeRegs,resReg):
 	else:
 		raise NodeError()
 
-def getValue(var,type):
+def processGetValue(parseTree,scope,result,freeRegs,resReg):
 	raise IncompleteError()
 
-def storeValue(var,type,value):
+def processStoreValue(parseTree,scope,result,freeRegs,resReg):
 	raise IncompleteError()
 
 def processValue(parseTree,scope,result,freeRegs,resReg):
-	raise IncompleteError()
+	if parseTree.type == 'TypeInst':
+		raise IncompleteError()
+	elif parseTree.type == 'Primitive':
+		prim = parseTree.children[0]
+		if prim.type == "num":
+			return (resReg+ " "+ prim.string +" # lda;\n"+result,Types.Type('primititive','"int"'),True)
 
-def processFunCall(parseTree,scope,result):
+		elif prim.type == "fp":
+			return (resReg+ " "+ convertFloat(prim) + " # lda;\n"+result,Types.Type('primitive','"float"'),True)
+
+		elif prim.type in ('"True"','"False"'):
+			value =  "one, " if prim.type == '"True"' else "zro, "
+			return (value + resReg + " mov;\n",Types.Type('primitive','"bool"'),True) 
+
+		elif prim.type == 'chr':
+			value = prim.string[:-1] # remove c suffix
+			return (resReg+" " str(int(value)&255)+ " # lda;\n"+result,Types.Type('primitive','"char"'),True)
+
+		elif prim.type == '"Null"':
+			return ("zro, "+ resReg+" mov;\n",Types.Type('Null','Null'),True)
+
+		elif prim.type == '"("': # unit
+			return ("zro, "+ resReg+" mov;\n",Types.Type('primitive','"unit"'),True)
+		else:
+			raise NodeError(prim)
+	elif parseTree.type == 'StatementVar':
+		raise IncompleteError()
+	else:
+		raise NodeError(parseTree)
+
+def processFunCall(parseTree,scope,result,freeRegs,resReg):
+
 	raise IncompleteError()
 
 def processStatementVar(parseTree,scope,result):

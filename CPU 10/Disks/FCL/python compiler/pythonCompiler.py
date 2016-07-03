@@ -9,6 +9,11 @@ from Scope import *
 from FunctionsAndOperators import *
 from Exceptions import *
 from DataStructures import * 
+from Processing import *
+
+sys.path.insert(0, '..\\..\\..\\..\\..\\ParserAndLexerGenerator')
+import PAL
+from tempfile import TemporarySpooledFile
 
 
 #_______________________ TO DO __________________________________________
@@ -38,7 +43,7 @@ from DataStructures import *
 
 # - Type dictionary
 # - Exceptions
-# 		- typeError exceptions
+# 		- TypeError exceptions
 # 		- NodeError exceptions
 
 # - incomplete exceptions
@@ -82,28 +87,47 @@ registerNames = [
 	"gp7,"
 ]
 
-def get_source_file():
-	'''gets source text from the requested file. unit -> string'''
-	file_name = sys.argv[1]
-	return open(file_name,"r").read()
+
 
 def compile():
 		print "getting source = ",			
-		self.source = get_source_file()
+		source = get_source_file()
 		print "DONE!\nParsing = ",
-		self.parse_tree = get_parse_tree(self.source)
-		print "DONE!"
+		parse_tree = get_parse_tree(source)
+		print "DONE!\nCompilation = ",
+		fasm = processBlock(parse_tree.children[0].children[0])
+		print "DONE!\nWriting to file = ",
+		writeToFile(fasm)
+		print "DONE!\n"
 
-# process nodes:
-# (parseTree * scopeList * string -> (string * type))
+def get_parse_tree(text):
+	
+	text = preprocess(text)
+	virtualFile = TemporarySpooledFile()
+	virtualFile.write(text)
+	virtualFile.seek(0)
+	# parse:
+	return PAL.ParserLexer.PAL(virtualFile,open("GrammarAndParsing\\FCL.spec",r))
+
+def get_source_file():
+	'''gets source text from the requested file. unit -> string'''
+	fileName = sys.argv[1]
+	return open(fileName,"r").read()
+
+def writeToFile(text):
+	fileName = "".join(sys.argv[1].split(".")[:-1]+[".fth"])
+	resFile = open(fileName,"w")
+	res.write(text)
+
+def preprocess(text):
+
+	# remove comments:
+	# look for string and character literal and replace them with char arrays and chrs
+	return text
 
 
-
-
-
-
-
-
+if __name__ == "__main__":
+	compile()
 
 
 
@@ -122,10 +146,10 @@ def compile():
 def getScope(parseTree):
 	# ( parseTree -> scopeObject )
 	# look up the name of a scope
-	raise incompleteError()
+	raise IncompleteError()
 def getDefinedTypes(scope):
-	raise incompleteError()
+	raise IncompleteError()
 def getDefinedVariables(scope):
-	raise incompleteError()
+	raise IncompleteError()
 
 

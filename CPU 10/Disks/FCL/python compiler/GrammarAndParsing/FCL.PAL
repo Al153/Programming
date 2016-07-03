@@ -21,6 +21,7 @@ Terminals:
 	id -> (letter|string_symbol).(letter|digit|string_symbol)*
 	floatFract -> digit.digit*
 	num -> (pos_digit.digit*)|"0"
+	chr -> num."c"
 
 Grammar:
 	PROGRAM -> Block
@@ -38,7 +39,7 @@ Grammar:
 	Factor -> "(" Expr ")" | Value
 	
 	TernaryOp -> "if" Expr "then" Expr "else" Expr
-	Value -> TypeInst | Primitive | BoolComp | StatementVar
+	Value -> TypeInst | Primitive | StatementVar
 	
 	MulOp -> "*" | "/" | "mod" | "&" | "^" | "andalso" 
 	AddOp -> "+" | "-" | "|" | "orelse" | BoolComp

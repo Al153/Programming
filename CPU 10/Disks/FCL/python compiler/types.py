@@ -7,6 +7,8 @@ class Type:
 	@staticmethod
 	def compare(type1,type2):
 		# (Type * Type -> Bool)
+		if type1.typeClass == "Null" or type2.typeClass == "Null":
+			return True									# Null value always has the right type
 		if type1.typeClass != type2.typeClass: # compares two type
 			return False
 		if type1.typeClass == 'primitive':
@@ -60,7 +62,7 @@ class ParseTreeType(Type):
 						super(typeClass,value)
 					elif typeClass == 'function':
 						parseTreeNode = parseTreeNode.children[0] # if it is a function, then we need to look at the function's arguments and parameters
-						value = (ParseTreeType(parseTreeNode.children[1],scope),ParseTreeType(parseTreeNode.children[3],scope))
+						value = (ParseTreeType(parseTreeNode.children[1],scope),ParseTreeType(parseTreeNode.children[4],scope))
 						super(typeClass,value)
 					else: raise NodeError()	
 				except KeyError:
