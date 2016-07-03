@@ -13,8 +13,24 @@ class UnaryOperator:
 		self.type = type # type is: (type,type)
 		self.getFasm = fasmFunction # fasmFunction is of type ( reg1 * reg2 * resultantReg -> fasm)
 
-Operators = {} # name -> Operator list
-UnaryOperators = {} # name -> UnaryOperator list
+Operators = {			# name -> Operator list
+	'"*"': []
+	'"+"':[]
+	'"-"':[]
+	'"/"':[]
+	'"|"':[]
+	'"&"':[]
+	'"^"':[]
+	'"andalso"':[]
+	'"orelse"':[]
+	'"mod"':[]
+	'BoolComp':[]
+} 
+UnaryOperators = { 		# name -> UnaryOperator list
+	'"-"':[]
+	'"~"':[]
+	'not':[]
+} 
 
 def getOperator(OpNode,type1,type2):
 	try:
