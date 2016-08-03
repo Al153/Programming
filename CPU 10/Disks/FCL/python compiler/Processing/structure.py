@@ -47,7 +47,10 @@ def processLine(parseTree,scope,result):
 
 
 def processScope(parseTree,scope,result):
-	return processLine(parseTree.children[2],ScopeList(getScope(parseTree.children[1]),scope),result)
+
+	scopeObject = scopeLookup(scope,parseTree.children[1].string)
+	if  scopeObject.type == "Namespace":
+		return scopeObject.process(processLine(parseTree.children[2],scope+[scopeObject],result))
 
 def processStatement(parseTree,scope,result):
 	if parseTree.type != "Statement":

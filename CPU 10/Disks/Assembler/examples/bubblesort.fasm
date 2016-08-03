@@ -1,0 +1,54 @@
+FASM ->
+	INLINE ->
+		400 400 #Segs
+	;;
+
+	// use gp0 as outer loop
+	// use gp1 as inner
+	gp0, CONST i
+	gp1, CONST j
+	10 INT[] ARRAY
+
+	: deci; i one, subr;
+	: decj; j one, subr;
+	i 10 # ldi;
+	Assemble ->
+		LABEL: OUTRLOOP
+		LABEL: INNRLOOP
+		LABEL: doSWAP
+		LABEL: DONE
+		LABEL: print
+
+		OUTRLOOP !LABEL
+			deci;
+			i j mov;
+			INNRLOOP !LABEL
+				gp2, j ARRAY ldi[];
+				decj;			
+				gp2, j ARRAY cma[];
+				gre, doSWAP bra;
+
+				j, testr, INNRLOOP bra;
+		i, testr, OUTRLOOP bra;
+	
+		DONE !LABEL
+			echo( done!)
+			jmp, pc, mov;
+
+		doSWAP !LABEL
+			gp3, j ARRAY ldi[];
+			gp2, j ARRAY sti[];
+			j one, addr;
+			gp3, j ARRAY sti[];
+			decj;
+
+			j testr, INNRLOOP bra;
+			unc, DONE jmp;
+
+
+		INLINE -> 
+			init
+			0 easyRun ;;
+		;;
+	;;
+;;

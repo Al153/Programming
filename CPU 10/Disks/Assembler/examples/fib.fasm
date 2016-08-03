@@ -1,0 +1,32 @@
+FASM ->
+	INLINE ->
+		400 400 #Segs
+	;;
+	Assemble ->
+	
+		one, gp0, mov;
+		one, gp1, mov;
+		
+		
+		LABEL: loop
+		loop LABEL!
+			gp0, odr;
+			13 # oca;
+			10 # oca;
+			gp0, gp2, mov;
+			gp0, gp1, addr;
+			gp2, gp1, mov;
+			gp1, 1000 # cma;
+			gre, 1 nskip;
+			unc, loop bra;
+		
+		echo( done!)
+		jmp, pc, mov;
+
+		INLINE -> 
+			init
+			0 easyRun ;;
+		;;
+	;;
+;;
+

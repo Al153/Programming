@@ -1,4 +1,4 @@
-class Struct:
+class Struct(value):
 	def __init__(self,typeDict,scope):
 		self.size = 0
 		self.typeDict = typeDict # typeDictis { id -> type }
@@ -15,6 +15,7 @@ class Struct:
 	def getOffset(self,name):
 		# generates the numerical offsets of variables within the struct
 		
+		
 
-		pass
+		
 
