@@ -5,46 +5,79 @@ FASM ->
 
 	// use gp0 as outer loop
 	// use gp1 as inner
-	gp0, CONST i
-	gp1, CONST j
-	10 INT[] ARRAY
-
-	: deci; i one, subr;
-	: decj; j one, subr;
-	i 10 # ldi;
 	Assemble ->
+		gp0, CONST i,
+		gp1, CONST j,
+		10 INT[ 9 , 2 , 3 , 0 , 6 , 4 , 1 , 7 , 8 , 5 ] ARRAY
+	
+		: deci; i, 4 # suba; ; // ( -- )
+		: decj; j, 4 # suba; ; // ( -- )
+		: inci; i, 4 # adda; ; // ( -- )
+		: incj; j, 4 # adda; ; // ( -- )
+
+		0 INT ret
+		i, 40 # ldi;
+		jmp, ret sti;
+		: hlt; pc, ret ldi; ;
+
+
 		LABEL: OUTRLOOP
 		LABEL: INNRLOOP
 		LABEL: doSWAP
 		LABEL: DONE
-		LABEL: print
+
+		: doPrint; // ( -- )
+			ARRAY 0 4 * + oda;
+			32 # oca;
+			ARRAY 1 4 * + oda;
+			32 # oca;
+			ARRAY 2 4 * + oda;
+			32 # oca;
+			ARRAY 3 4 * + oda;
+			32 # oca;
+			ARRAY 4 4 * + oda;
+			32 # oca;
+			ARRAY 5 4 * + oda;
+			32 # oca;
+			ARRAY 6 4 * + oda;
+			32 # oca;
+			ARRAY 7 4 * + oda;
+			32 # oca;
+			ARRAY 8 4 * + oda;
+			32 # oca;
+			ARRAY 9 4 * + oda;
+			10 # oca;
+			13 # oca;
+		;
 
 		OUTRLOOP !LABEL
+			doPrint;
 			deci;
-			i j mov;
+			zro, j, mov;
 			INNRLOOP !LABEL
-				gp2, j ARRAY ldi[];
-				decj;			
-				gp2, j ARRAY cma[];
+				gp2, j, ARRAY ldi[];
+				incj;			
+				gp2, j, ARRAY cma[];
 				gre, doSWAP bra;
 
-				j, testr, INNRLOOP bra;
+				j, i, cmr;
+				les, INNRLOOP bra;
 		i, testr, OUTRLOOP bra;
 	
 		DONE !LABEL
 			echo( done!)
-			jmp, pc, mov;
+			doPrint;
+			hlt;
 
 		doSWAP !LABEL
-			gp3, j ARRAY ldi[];
-			gp2, j ARRAY sti[];
-			j one, addr;
-			gp3, j ARRAY sti[];
+			gp3, j, ARRAY ldi[];
+			gp2, j, ARRAY sti[];
 			decj;
+			gp3, j, ARRAY sti[];
+			incj;
 
-			j testr, INNRLOOP bra;
-			unc, DONE jmp;
-
+			j, testr, INNRLOOP bra;
+			unc, DONE bra;
 
 		INLINE -> 
 			init

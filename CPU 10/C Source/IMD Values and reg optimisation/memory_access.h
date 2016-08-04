@@ -1,5 +1,5 @@
 //________________ memory access functions ____________________
-#include <stdint.h>
+//#include <stdint.h>
 
 unsigned int bswap_32(unsigned int a){ //swaps from little endian to big endian and vice versa
 	return ((a>>24)&0xff) | // move byte 3 to byte 0

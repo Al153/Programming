@@ -176,7 +176,12 @@ void compileStringPrint(@int retArray) //compiles a string to be printed
 			retArray[1] = prev;
 			return;
 		endif;
-		if (newChar == '\\') then newChar = readStringChar(); endif; //take into account escaped "s
+		if (newChar == '\\') then
+			newChar = readStringChar();
+			if (newChar == 'n') then newChar = '\n';
+				else if (newChar == 't') then newChar = '\t'; endif;
+			endif;
+		endif; //take into account escaped "s
 		prev[2] = newByteCodeNode(PUSHLIT,int(newChar),newByteCodeNode(PRIMITIVE,35,0));
 		prev = prev[2]; prev = prev[2];
 	loop;

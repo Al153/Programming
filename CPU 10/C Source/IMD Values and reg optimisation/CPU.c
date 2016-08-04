@@ -10,13 +10,13 @@
 
 #define MEMORY_SIZE 67108864  //26bits of address space for this implementation
 #define MEMORY_LIMIT 67108863
-unsigned int instruction;
-unsigned char opcode;
-unsigned char reg1;
-unsigned char reg2;
-unsigned char conditional;
-unsigned int address;
-unsigned char useImmediate;
+register unsigned int instruction asm("r8");
+register unsigned char opcode asm("r9");
+register unsigned char reg1 asm("r10");
+register unsigned char reg2 asm("r11");
+register unsigned char conditional asm("r12");
+register unsigned int address asm("r13");
+register unsigned char useImmediate asm("r14");
 
 unsigned char MEMORY[MEMORY_SIZE] = {0}; 					//setting up memory and registers
 unsigned int registers[16] = {0,1};
@@ -40,7 +40,7 @@ unsigned int registers[16] = {0,1};
 
 
 int step(void){   //returns halt, carries out game logic
-	instruction = fetch_instruction();
+	fetch_instruction();
 	opcode = (instruction&0x7f000000)>>24;
 	reg1 =  ((instruction&0x000f0000)>>16); 
 	reg2 =  ((instruction&0x00000f00)>>8);
@@ -50,7 +50,7 @@ int step(void){   //returns halt, carries out game logic
 }
 
 int debug_step(void){   //returns halt? values, carries out logic
-	instruction = fetch_instruction(); 
+	fetch_instruction(); 
 	opcode = (instruction&0xff000000)>>24;    
 	reg1 = ((instruction&0x000f0000)>>16);  
 	reg2 = ((instruction&0x00000f00)>>8); 

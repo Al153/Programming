@@ -1,13 +1,11 @@
 // _______________________ execution of instructions ________________________
 
-unsigned int fetch_instruction(void){ //fetches next instruction
-	unsigned int instruction; 				
+void fetch_instruction(void){ //fetches next instruction	
 	instruction = read_step_memory(registers[4]); //reads instruction from memory, using registers[4] (program counter as an index)
 	registers[4] += 8; 								//increments program counter
-	return instruction;
 }
 
-unsigned int fetch_address(void){ //fetches address of instruction
+void fetch_address(void){ //fetches address of instruction
 											//mostly the same as fetch_instruction
 	address = read_step_memory(registers[4]-4);
 }

@@ -437,7 +437,7 @@ byteArray CLL.array_of_string36 30 [69, 82, 82, 79, 82, 58, 32, 70, 111, 114, 11
 int CLL.string36 CLL.array_of_string36
 byteArray CLL.array_of_string37 30 [69, 82, 82, 79, 82, 58, 32, 70, 111, 114, 116, 104, 32, 83, 116, 97, 99, 107, 32, 85, 110, 100, 101, 114, 102, 108, 111, 119, 10, 0]
 int CLL.string37 CLL.array_of_string37
-array CLL.array_of_MALLOC_HEAP 1048576 []
+array CLL.array_of_MALLOC_HEAP 4194304 []
 int CLL.MALLOC_HEAP CLL.array_of_MALLOC_HEAP
 byteArray CLL.array_of_string35 30 [69, 82, 82, 79, 82, 58, 32, 70, 111, 114, 116, 104, 32, 83, 116, 97, 99, 107, 32, 85, 110, 100, 101, 114, 102, 108, 111, 119, 10, 0]
 int CLL.string35 CLL.array_of_string35
@@ -1085,7 +1085,7 @@ ADD gp0 gp1 														#ADD
 Store gp0 Local.i [Stack_pointer] 						#STORE GP0
 Load PC loopmalloc_init-0entry
 Pass 										%loopmalloc_init-0exit
-Load gp0 @1048576
+Load gp0 @4194304
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
@@ -11508,12 +11508,51 @@ Compare gp1 gp0
 if Equal then Load  gp2 @4294967295
 Move gp2 gp0
 NOT gp0 														    #IF STATEMENT
-if gp0 then Load PC ifcompileStringPrint-1endif
+if gp0 then Load PC ifcompileStringPrint-3endif
 Goto function:readStringChar 												#CALLING readStringChar
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 StoreByte gp0 Local.newChar [Stack_pointer] 					#STORE GP0 (CHAR)
+LoadByte gp0 Local.newChar [Stack_pointer] 					#LOAD GP0 (CHAR)
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp0 @110
+AND gp0 @255 													  #CASTING INT TO CHAR
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+if gp0 then Load PC ifcompileStringPrint-2true 									#IF ELSE STATEMENT
+LoadByte gp0 Local.newChar [Stack_pointer] 					#LOAD GP0 (CHAR)
+Store gp0 Expression_stack [gp7]									#PUSH GP0
+ADD gp7 @4
+Compare gp7 stack_length
+if Greater then Load PC Stack_overflow_error
+Load gp0 @116
+AND gp0 @255 													  #CASTING INT TO CHAR
+SUB gp7 @4 															#POP GP1
+Load gp1 Expression_stack [gp7]
+Move Zero gp2 														#COMPARE (IS EQUAL)
+Compare gp1 gp0
+if Equal then Load  gp2 @4294967295
+Move gp2 gp0
+NOT gp0 														    #IF STATEMENT
+if gp0 then Load PC ifcompileStringPrint-1endif
+Load gp0 @9
+AND gp0 @255 													  #CASTING INT TO CHAR
+StoreByte gp0 Local.newChar [Stack_pointer] 					#STORE GP0 (CHAR)
 Pass										%ifcompileStringPrint-1endif
+Load PC ifcompileStringPrint-2endif
+Pass 										%ifcompileStringPrint-2true
+Load gp0 @10
+AND gp0 @255 													  #CASTING INT TO CHAR
+StoreByte gp0 Local.newChar [Stack_pointer] 					#STORE GP0 (CHAR)
+Pass 										%ifcompileStringPrint-2endif           
+Pass										%ifcompileStringPrint-3endif
 Load gp0 @2
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4

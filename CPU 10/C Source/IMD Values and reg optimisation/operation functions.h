@@ -237,7 +237,7 @@ unsigned int execute(){
 	reg2 = reg2&15;
 	int will_exe = get_conditional(); //tests the conditional byte of the instruction
 	if (will_exe){
-		if (instruction<54){
+		if (opcode<54){
 			return CPU_OPS[opcode]();
 		}
 		else return 0;
