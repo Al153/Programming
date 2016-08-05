@@ -1,5 +1,5 @@
-gcc -O3 "C source\Hard Disk Version\CPU.c" -o CEmuTest.exe -std=c99    (for testing)
-gcc -O3 "C source\Hard Disk Version\CPU.c" -o CEmu.exe 		(for real)
+gcc -O3 "C source\Hard Disk Version - Current version\CPU.c" -o CEmu.exe 		(for real)
+gcc -O3 "C source\Hard Disk Version - Current version\CPU.c" -o CEmuTest.exe -std=c99    (for testing)
 
 to do profiling:
 

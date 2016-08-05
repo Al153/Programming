@@ -19,6 +19,7 @@ void store_memory(unsigned int addr,unsigned int data,unsigned char *MEMORY){
 	unsigned int *int_MEM = MEMORY + addr;
 	if (addr+3>MEMORY_LIMIT){
 		printf("ADDRESS OVERFLOW: %u\n",addr);
+		exit(1);
 	}
 	*int_MEM = bswap_32(data);
 }
@@ -27,6 +28,7 @@ void store_word_memory(unsigned int addr,unsigned int data, unsigned char *MEMOR
 	unsigned short *word_MEM = MEMORY + addr;
 	if (addr+1>MEMORY_LIMIT){
 		printf("ADDRESS OVERFLOW: %u\n",addr);
+		exit(1);
 	}
 	*word_MEM = bswap_16((unsigned short) data);
 }
@@ -34,6 +36,7 @@ void store_word_memory(unsigned int addr,unsigned int data, unsigned char *MEMOR
 void store_byte_memory(unsigned int addr, unsigned int data, unsigned char *MEMORY){
 	if (addr>MEMORY_LIMIT){
 		printf("ADDRESS OVERFLOW: %u\n",addr);
+		exit(1);
 	}
 	MEMORY[addr&MEMORY_LIMIT] = (unsigned char)data&255;
 };
@@ -45,15 +48,24 @@ unsigned int read_memory(unsigned int addr, unsigned char *MEMORY){ //reads an i
 	unsigned int *int_MEM = MEMORY + addr;
 	if (addr+3>MEMORY_LIMIT){
 		printf("ADDRESS OVERFLOW: %u\n",addr);
+		exit(1);
 	}
 	return bswap_32(*int_MEM);
 }
 
 unsigned int read_word_memory(unsigned int addr, unsigned char *MEMORY){ //reads a 16 bit word from memory
 	unsigned short *word_MEM = MEMORY + addr;
+	if (addr+1>MEMORY_LIMIT){
+		printf("ADDRESS OVERFLOW: %u\n",addr);
+		exit(1);
+	}
 	return bswap_16((unsigned int) *word_MEM);
 }
 
 unsigned int read_byte_memory(unsigned int addr, unsigned char *MEMORY){ //reads an 8 bit byte from memory
+	if (addr>MEMORY_LIMIT){
+		printf("ADDRESS OVERFLOW: %u\n",addr);
+		exit(1);
+	}
 	return (unsigned int) MEMORY[addr&MEMORY_LIMIT]; 
 }

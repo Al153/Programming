@@ -1,6 +1,6 @@
 FASM ->
 	INLINE ->
-		400 400 #Segs
+		1600 400 #Segs
 	;;
 
 	// use gp0 as outer loop
@@ -65,7 +65,7 @@ FASM ->
 		i, testr, OUTRLOOP bra;
 	
 		DONE !LABEL
-			echo( done!)
+			echo( \tdone!\n)
 			doPrint;
 			hlt;
 
