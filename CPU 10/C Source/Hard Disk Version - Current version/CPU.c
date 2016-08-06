@@ -21,23 +21,28 @@
 
 
 //C implementation of my CPU 10
-
+// This version includes a hard disk and instructions for accessing it.
+// It also implements immediate mode addressing - load instructions use the calculated address as the disk information
+// (although in reality this is slower than preloading variables with the values due to the host's branch prediction faults )
 
 int step(unsigned int *registers, unsigned char *MEMORY){   //returns halt, carries out game logic
 	register unsigned int instruction = fetch_instruction(registers,MEMORY);
-	register unsigned char 	instr = (instruction&0xff000000)>>24;
+	register unsigned char 	instr = ((instruction&0x7f000000)>>24);
+	register unsigned char useIMD = ((instruction&0x80000000)>>24);
 	register unsigned char 	reg1 =  ((instruction&0x000f0000)>>16); 
 	register unsigned char 	reg2 =  ((instruction&0x00000f00)>>8);
 	register unsigned char 	conditional = instruction&0xff;
-	return execute(instr,reg1,reg2,conditional,registers,MEMORY);   //returned value is 1 if needs to return, otherwise false
+
+	return execute(instr,reg1,reg2,conditional,registers,MEMORY,useIMD);   //returned value is 1 if needs to return, otherwise false
 }
 
 int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt? values, carries out logic
 	unsigned int  	instruction = fetch_instruction(registers,MEMORY); 
-	unsigned char 	instr = (instruction&0xff000000)>>24;    
-	unsigned char 	reg1 = ((instruction&0x000f0000)>>16);  
-	unsigned char 	reg2 = ((instruction&0x00000f00)>>8); 
-	unsigned char 	conditional = instruction&0xff; 
+	register unsigned char 	instr = ((instruction&0x7f000000)>>24);
+	register unsigned char useIMD = ((instruction&0x80000000)>>24);
+	register unsigned char 	reg1 =  ((instruction&0x000f0000)>>16); 
+	register unsigned char 	reg2 =  ((instruction&0x00000f00)>>8);
+	register unsigned char 	conditional = instruction&0xff;
 
 	printf("\n%u|  ",registers[4]-8);  //prints out runtime data
 	printf("%i   ", (int) instr);
@@ -45,10 +50,10 @@ int debug_step(unsigned int *registers, unsigned char *MEMORY){   //returns halt
 	printf("%i   ", (int) reg2);
 	printf("%i   ", (int) conditional);
 
-	printf(" address = %u", read_memory(registers[4]-4,MEMORY));
+	printf(" address = %u", read_memory(registers[4]-4,MEMORY,0));
 	getchar();
 
-	int result =  execute(instr,reg1,reg2,conditional,registers,MEMORY);   //returned value is 1 if needs to return, otherwise false
+	int result =  execute(instr,reg1,reg2,conditional,registers,MEMORY,useIMD);   //returned value is 1 if needs to return, otherwise false
 	printf("gp0 = %u\n", registers[8]);
 	return result;
 }
@@ -84,7 +89,7 @@ void init_memory(unsigned char *MEMORY, char *name){
 			address = address + chr;
 		} else if (state == 4){
 			state = 5;
-			store_byte_memory(address,chr,MEMORY);
+			store_byte_memory(address,chr,MEMORY,0);
 		} else if (state == 5){ //sixth byte is 1 for an EOF or 0 for continue
 			if (chr == 1){
 				state = 6;

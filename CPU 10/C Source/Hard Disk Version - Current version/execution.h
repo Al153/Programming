@@ -2,29 +2,29 @@
 
 unsigned int fetch_instruction(unsigned int *registers, unsigned char *MEMORY){ //fetches next instruction
 	unsigned int instruction; 				
-	instruction = read_memory(registers[4],MEMORY); //reads instruction from memory, using registers[4] (program counter as an index)
+	instruction = read_memory(registers[4],MEMORY,0); //reads instruction from memory, using registers[4] (program counter as an index)
 	registers[4] += 8; 								//increments program counter
 	return instruction;
 }
 
 unsigned int fetch_address(unsigned int *registers, unsigned char *MEMORY){ //fetches address of instruction
 	unsigned int address;													//mostly the same as fetch_instruction
-	address = read_memory(registers[4]-4,MEMORY);
+	address = read_memory(registers[4]-4,MEMORY,0);
 	return address;
 }
 
 unsigned char get_conditional(unsigned int *registers,unsigned char conditional){ //checks whether instr is conditional and if condition is true returns 1
 	//woop woop, lots of logic!
+	register unsigned int flagsCopy = registers[5]; // keep a store of the flags, allowing us to lift the reset operation
 	if (conditional&128){ //if there is a conditional bit set (if instruction is conditional)
 		if (!(conditional & 64)){ //if conditional based on a flag
-			if (!((1<<(31-(conditional & 31))) & registers[5])){ //if condition true
-				if (((conditional&31) == 24) || ((conditional&31) == 25) || ((conditional&31) == 26)){
+			if (!((1<<(31-(conditional & 31))) & flagsCopy)){ //if condition true
+				if (((conditional&31) == 24) || ((conditional&31) == 25) || ((conditional&31) == 26)){ // if this was an arithmetic comparison flag (><=), all need to be reset
 					registers[5] &= 4294967071; //reset all three of the  ><= flags
 				} else {
 					registers[5] &=  (1<<(31 - (conditional&31)))^4294967295;   //resets just the tested flag
 				}
 				return 0;
-
 			} else {
 				if  (((conditional&31) == 24) || ((conditional&31) == 25) || ((conditional&31) == 26)){
 					registers[5] &= 4294967071;					//#reset all three of the  ><= flags
