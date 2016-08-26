@@ -1,11 +1,7 @@
-FASM ->
-	INLINE ->
-		1600 400 #Segs
-	;;
+	1600 400 #Segs
 
 	// use gp0 as outer loop
 	// use gp1 as inner
-	Assemble ->
 		gp0, CONST i,
 		gp1, CONST j,
 		10 INT[ 9 , 2 , 3 , 0 , 6 , 4 , 1 , 7 , 8 , 5 ] ARRAY
@@ -14,6 +10,7 @@ FASM ->
 		: decj; j, 4 # suba; ; // ( -- )
 		: inci; i, 4 # adda; ; // ( -- )
 		: incj; j, 4 # adda; ; // ( -- )
+
 
 		0 INT ret
 		i, 40 # ldi;
@@ -25,29 +22,10 @@ FASM ->
 		LABEL: INNRLOOP
 		LABEL: doSWAP
 		LABEL: DONE
+		LABEL: PRINT
 
 		: doPrint; // ( -- )
-			ARRAY 0 4 * + oda;
-			32 # oca;
-			ARRAY 1 4 * + oda;
-			32 # oca;
-			ARRAY 2 4 * + oda;
-			32 # oca;
-			ARRAY 3 4 * + oda;
-			32 # oca;
-			ARRAY 4 4 * + oda;
-			32 # oca;
-			ARRAY 5 4 * + oda;
-			32 # oca;
-			ARRAY 6 4 * + oda;
-			32 # oca;
-			ARRAY 7 4 * + oda;
-			32 # oca;
-			ARRAY 8 4 * + oda;
-			32 # oca;
-			ARRAY 9 4 * + oda;
-			10 # oca;
-			13 # oca;
+			PRINT goto;
 		;
 
 		OUTRLOOP !LABEL
@@ -79,9 +57,32 @@ FASM ->
 			j, testr, INNRLOOP bra;
 			unc, DONE bra;
 
-		INLINE -> 
-			init
-			0 easyRun ;;
-		;;
-	;;
-;;
+		PRINT !LABEL
+			ARRAY 0 4 * + oda;
+			32 # oca;
+			ARRAY 1 4 * + oda;
+			32 # oca;
+			ARRAY 2 4 * + oda;
+			32 # oca;
+			ARRAY 3 4 * + oda;
+			32 # oca;
+			ARRAY 4 4 * + oda;
+			32 # oca;
+			ARRAY 5 4 * + oda;
+			32 # oca;
+			ARRAY 6 4 * + oda;
+			32 # oca;
+			ARRAY 7 4 * + oda;
+			32 # oca;
+			ARRAY 8 4 * + oda;
+			32 # oca;
+			ARRAY 9 4 * + oda;
+			10 # oca;
+			13 # oca;
+			jmp, pc, mov;
+
+	init
+	0 easyRun
+
+	VARIABLE bubble
+	SEGMENTS -> codeSegm bubble ! ;;  

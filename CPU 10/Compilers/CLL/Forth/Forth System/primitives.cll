@@ -303,6 +303,10 @@ void printBUF() // ( -- ) [ prints word on the input buffer ]
 	printf(WORD_BUF); //prints out the most recent word to be read in
 end;
 
+void pushBUF() // ( --  BUF ) [ Pushes the address of the word buffer - useful for meta execution etc]
+	Push(WORD_BUF);
+end;
+
 void readC() // ( -- c ) [ reads in a character to the stack ]
 	Push(int(readStringChar()));
 end;

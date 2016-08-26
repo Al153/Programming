@@ -1,0 +1,33 @@
+// requires lib\controlFlow
+
+400 400 #Segs	
+	gp0, CONST i, // define i and j to be names for the gp0 and gp1 regs
+	gp1, CONST j,			
+
+	: i++; i, one, addr; ; // ( -- ) Define i++; to add the one register to i
+
+	zro, i, mov;		// (set i = 0 - using the zero register)
+	while;				// while, do, next, loop, if, else, and endif words are defined in controlFlow.fasm
+			i, 100 # cma; les, // 
+		do
+			i, j, mov;		// j := i
+			j, j, mulr; 	// j := j * j
+			j, odr; 		// output the number in j
+			j, 3 # moda; 	// j := j % 3
+			j, testr, if; 	// if j then
+				else;		// otherwhise print "fizz"
+				echo( fizz) // echo( ..) is a forth word that compiles assembler to print a string
+			endif;
+			echo( \n)
+		next;				// - next makes it easy to translate  for loops
+			i++;		// increment i
+	loop;				
+
+	echo( done!)
+	jmp, pc, mov; // jump back to the forth interpreter by moving the jump register to the program counter
+
+	INLINE -> 
+		init 				// init the environment to inline assembler
+		0 easyRun ;;		// execute the above code
+
+

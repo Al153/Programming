@@ -1,0 +1,136 @@
+
+	: jmp; // ( address -- )
+		pc, SWAP ldi;
+	;
+
+N_SPACE: CONTROL
+R_STACK ->
+CONTROL ->
+	1024 TABLE ifSTCK // stores if addresses
+	1024 TABLE whilSTCK // stores while addresses
+	65536 TABLE CTRLTABL // contains all the jump values
+
+	VARIABLE ifPTR 0 ifPTR !
+	VARIABLE whilePTR
+	VARIABLE tablePTR 0 tablePTR !
+
+	: new tablePTR @ DUP 65536 = if DROP ." Load Error: Control flow table full." HALT else 4 * CTRLTABL + tablePTR ++ then  ; // ( -- int ) returns a pointer to the table cell holding a jump value
+	: pushif ifSTCK ifPTR @ int[!] ifPTR ++ ifPTR @ 1024 = if ." Load Error: Control stack overflow." HALT then ; // ( int -- ) pushes address to stack
+	: popif ifPTR @ 0 = if ." Load Error: Control stack underflow." else ifPTR -- ifSTCK ifPTR @ int[@] then ; // ( -- int ) removes address from stack
+	: pushwh whilSTCK whilePTR @ int[!] whilePTR ++ whilePTR @ 1024 = if ." Load Error: Control stack overflow." HALT then ; // ( int -- ) pushes address to stack
+	: popwh whilePTR @ 0 = if ." Load Error: Control stack underflow." else whilePTR -- whilSTCK whilePTR @ int[@] then ; // ( -- int ) removes address from stack
+
+	// if statement structure:
+		// 			calculateTestValue<reg>
+		//			<reg> testr, 1 nskip;
+		//			false jmp;
+		//			trueCode
+		//				.
+		//				.
+		// false -> restOfCode
+
+	// ifElse statement structure:
+		//			calculateTestValue<reg>
+		//			<reg> testr, 1 nskip
+		//			false jmp;
+		//				.
+		//				.
+		//			End jmp;
+		// false -> falseCode
+		//				.
+		//				.
+		// end ->	restOfCode
+
+	// Usage:
+		//			CalculateTestValue<reg>
+		//			<reg> if;
+		//				trueCode
+		//			endif;
+		//				restOfCode
+
+	// Usage:
+		//			CalculateTestValue<reg>
+		//			<reg> if;
+		//				trueCode
+		//			else;
+		// 				falseCost
+		//			endif;
+		//				rest of Code
+
+
+	: if; // ( cond -- )
+		// sets up if statement
+		
+		new DUP pushif
+		SWAP 1 nskip;
+		jmp;
+	;
+	: else; // ( -- ) handles an else
+		new DUP >r jmp;
+		{ LABELS -> } labelVal { ;; } // stores current position to table
+		popif !
+		r> pushif
+	;
+	: endif;  // ( -- )
+		{ LABELS -> } labelVal { ;; } // stores current position to table
+		popif !
+	;
+
+	// While loop structure:
+		// loop ->  calculateTestValue<reg>
+		//			<reg> testr, 1 nskip;
+		//			break jmp;
+		//			startOfCode
+		// 				.
+		//				.
+		// next -> 	genNextValue (for)
+		//				.
+		//				.
+		// 			loop jmp;
+		// break -> rest of code
+
+	// called like so:
+		// while;
+		//		generate BooleanTest
+		// <reg> do;
+		//		looped code		
+		// next;
+		// 		generate next value (for loop)
+		// loop;
+
+	: while; // ( -- )
+		{ LABELS -> } labelVal { ;; } new DUP pushwh ! // pushes loop
+		
+
+	;
+	: do // ( cond -- )
+		1 nskip;
+		new DUP jmp;
+		pushwh 		 									// pushes break								 
+		new pushwh 										// pushes continue
+	;
+	: contin; // ( -- )
+		popwh DUP pushwh
+		jmp;
+	;
+	: break; // ( -- )
+		popwh popwh DUP jmp;
+		pushwh pushwh
+	;
+	: next;  // ( -- )
+		{ LABELS -> } labelVal { ;; }
+		popwh DUP pushwh // get the continue value
+		! // store current position
+	;
+	: loop; // ( -- )
+		popwh DROP // continue (gets dropped)
+		popwh	 	// break
+		popwh jmp;		// loop (returns to start)
+		{ LABELS -> } labelVal { ;; } SWAP ! // stores label
+	;
+
+
+
+	EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT
+;;
+	EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT

@@ -1,8 +1,6 @@
-FASM ->
-	INLINE ->
-		400 400 #Segs
-	;;
-	Assemble ->
+
+400 400 #Segs
+
 	
 		one, gp0, mov;
 		one, gp1, mov;
@@ -23,10 +21,9 @@ FASM ->
 		echo( done!)
 		jmp, pc, mov;
 
-		INLINE -> 
-			init
-			0 easyRun ;;
-		;;
-	;;
-;;
 
+init
+0 easyRun
+
+VARIABLE fib
+SEGMENTS -> codeSegm fib ! ;;

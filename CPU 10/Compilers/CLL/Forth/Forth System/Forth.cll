@@ -49,7 +49,7 @@
 	// @     00   	| +  08 	| ~  		10 | == 		18 | ISINT		20 | DROPALL	28 | !DISK		30
 	// !     01 	| -  09 	| ~&        11 | VARIABLE 	19 | CONVERTINT 21 | // 		29 | SWITCH 	31
 	// .     02 	| *  0A 	| ~|  		12 | CONST   	1A | .BUF 		22 | READC		2A | GETDICT	32
-	// DUP   03 	| /  0B 	| ~^ 	  	13 | TABLE      1B | .c 		23 | ALLOC 		2B |
+	// DUP   03 	| /  0B 	| ~^ 	  	13 | TABLE      1B | .c 		23 | ALLOC 		2B | WORDBUF	33
 	// SWAP  04 	| %  0C 	| << 		14 | READ 		1C | PASS		24 | DALLOC 	2C |
 	// ROT   05 	| &  0D 	| >> 	    15 | EXEC 		1D | .s 		25 | SETDICT	2D |
 	// OVER  06 	| |  0E 	| < 		16 | INDICT		1E | .dict 		26 | ADDBLOCK 	2E |
@@ -59,8 +59,7 @@
 	// the functions of these primitives are explained in precompiledWords.cll
 	//in the future more words such as anonymous allocate, deallocate may be added
 
-#include STD:allocation.cll
-#include STD:radix.cll
+
 
 #include innerInterpreter.cll
 #include CompilerAndOuterInterpreter.cll
@@ -68,6 +67,8 @@
 #include precompiledWords.cll
 #include pageQueue.cll
 
+#include STD:allocation.cll
+#include STD:radix.cll
 void main()
 	printf("______________________ Welcome to Al Forth (2016) ______________________\n");
 	printf(">>FORTH SYSTEM STARTED\n");

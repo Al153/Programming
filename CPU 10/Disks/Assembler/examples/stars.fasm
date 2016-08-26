@@ -1,0 +1,31 @@
+400 400 #Segs	
+	gp0, CONST i, // define i and j to be names for the gp0 and gp1 regs
+	gp1, CONST j,			
+
+	: i++; i, one, addr; ; // ( -- ) Define i++; to add the one register to i
+	: j++; j, one, addr; ;
+
+	zro, i, mov;		// (set i = 0 - using the zero register)
+	while;				// while, do, next, loop, if, else, and endif words are defined in controlFlow.fasm
+			i, 10 # cma; les, // 
+			echo( &) 
+		do
+			zro, j, mov;
+			while;
+				j, 10 # cma; les,
+			do
+				echo( *)
+			next;
+				j++;
+			loop;
+		next;				// - next makes it easy to translate  for loops
+			echo( bleh\n)
+			i++;		// increment i
+	loop;				
+
+	echo( done!)
+	jmp, pc, mov; // jump back to the forth interpreter by moving the jump register to the program counter
+
+	INLINE -> 
+		init 				// init the environment to inline assembler
+		0 easyRun		// execute the above code

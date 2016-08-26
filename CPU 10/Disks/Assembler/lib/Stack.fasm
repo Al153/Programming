@@ -1,0 +1,84 @@
+N_SPACE Stack
+Stack ->
+	1024 CONST stckSize
+	stckSize INT[ 0 ] stack
+	0	INT retValue
+
+
+	LABEL: sOflow
+	LABEL: sUflow
+	LABEL: entry
+
+
+	: init; // ( -- )
+		jmp, retValue sti;
+		stp, 0 # ldi;
+		pc, entry ldi;
+		sOflow !LABEL
+			[ STRINGS -> str( Error: Stack overflow.) ;;
+			] echo;
+			pc, retValue ldi;
+		sUflow !LABEL
+			[ STRINGS -> str( Error: Stack overflow.) ;;
+			] echo;
+			pc, retValue ldi;
+		entry !LABEL
+	;
+
+	: push; // ( reg -- )
+		stp, stckSize 1 - 4 * # cma;
+		gre, sOflow bra;
+		stp, stack sti[];
+		stp, 4 # adda;
+	;
+	
+	: pop; // ( reg -- )
+		stp, testr, 1 nskip;
+		sUflow jmp;
+		stp, 4 # suba;
+		stp, stack ldi[];
+	;
+
+	: peek
+		stp, testr, 1 nskip;
+		sUflow jmp;
+		stp, stack 4 - ldi[];
+	;
+
+: 8push;
+	one, push;
+	one, push;
+	one, push;
+	one, push;
+	one, push;
+	one, push;
+	one, push;
+;
+: 88push;
+	8push; 8push;
+	8push; 8push;
+	8push; 8push;
+	8push; 8push;
+;
+
+: 888push;
+	88push; 88push;
+	88push; 88push;
+	88push; 88push;
+	88push; 88push;
+;
+
+40000 400 #Segs
+init;
+echo( Done 0\n)
+888push;
+echo( Done 1\n)
+888push;
+echo( done 2????\n)
+888push;
+echo( done 3????\n)
+pc, retValue ldi;
+init
+
+SEGEMENTS -> codeSegm codePtr @ +  DEBUG -> 1024 addrDump
+0 easyRun
