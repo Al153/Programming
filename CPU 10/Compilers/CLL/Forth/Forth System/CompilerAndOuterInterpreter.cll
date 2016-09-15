@@ -18,14 +18,13 @@ void compileWord()
 	@int 3 newWord;
 	while (1) do
 		compileSingleWord(newWord); //get the next word
-		if (dontBreak == 0) then scanToEndOfDef(); return; endif; //if there was an error then halt
+		if (dontBreak == 0) then scanToEndOfDef(); return; endif; //if there was an error then halt // todo - memory leak from bad compilation?
 		if (newWord[2]) then break; endif; //if it hits a semicolon then break
 		last[2] = newWord[0]; //if there was no error, then do the linkage
 		last = newWord[1];
 	loop;
 	addToDict(name,top[0]);
 end;
-
 
 
 void compileSingleWord(@int retArray) //compiles a single word from the buffer, places a pointer to the first node in retArray[0], last node in retArray[1]

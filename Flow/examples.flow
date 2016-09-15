@@ -1,0 +1,54 @@
+
+#built ins:
+#	pipelines:
+#		(1)->split(dict->bool)->(2)
+#		(2)->pick(dict*dict->bool)->(1) -	for every pair that comes in on the streams, the predicate is applied.
+#											if it returns true
+#		(2)->merge(dict*dict->bool)->(1) - A merge non-destructively takes from
+#		(1)->filter(dict->bool)->(1) - drops inputs from the stream if they do not satisfy the input
+
+#	functions:
+#		(dict*dict) -> dict:update -  creates a clone of the first input, and adds or overwrites it with the keys of the second.
+#									- ie update({a=1;b=2;c=3},{c=4;d=5;e=6;}) = {a=1;b=2;c=4;d=5;e=6;}
+
+# 	Variables:
+#		$Ground - any streams here are deleted
+
+
+fib = ($in) -> ($out) () {
+	createFib =
+    x: 
+		update(x.value,{                    # the update built-in
+			target = x;
+			current = 0;
+			currentFib = 1;
+			prevFib = 0;
+		}
+	);
+
+	getNextFib = x: 
+		update(x, {
+			current = x.current + 1;
+			currentFib = x.currentFib + x.prevFib;
+			prevFib = x.currentFib;
+		})
+
+	$in -> createFib -> $start;
+	$start -> split(x: x.current == s.target) -> ($result,$loop);
+
+	$loop -> getNextFib -> $start; 
+	$return -> (x: {value = x.target; result = z.currentFib}) -> $out;
+}
+
+sort = ($in) -> ($out) (isGreater) {
+	$in -> x: {value=x;lChild=None;lChild=None;}
+}
+
+
+
+thisCharIsValid = string, trieEntry: string.string[string.i] == trieEntry.char
+charV
+CharIsValid = ($string,$trieEntry,) -> ($next) (){
+	$string -> update(string,{i=0}) -> $start
+	($start,$trieEntry) -> thisCharIsValid 
+}

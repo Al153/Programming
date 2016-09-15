@@ -16,8 +16,10 @@ public class BucketBuffer {
 	private byte[] mBuffer = new byte[BUFFER_SIZE]; // a small buffer = 4mb / 256 buckets
 	private int mBufferLength = 0;
 	private int mOffset;
+	private boolean firstFill = true; // the first fill of the buffer should only fill up to the end of a block to avoid unaligned seeks in the future
 	private FileOutputStream mWriter;
 	private RandomAccessFile mFile;
+	private int firstFillThreshold; // this stores the size of the buffer when we need to fill
 
 	public BucketBuffer(int startAddress, FileOutputStream writer, RandomAccessFile file, int bufferSize){
 		// PRECONDITION: writer is a FileOutPutStream of file
@@ -28,6 +30,7 @@ public class BucketBuffer {
 		BUFFER_SIZE = bufferSize;
 		//System.out.println("buffer size = " + BUFFER_SIZE);
 		mBuffer = new byte[BUFFER_SIZE];
+		firstFillThreshold = ((BUFFER_SIZE+mOffset)&(0xfffff000))-mOffset;
 	}
 
 	public void write(int i) throws IOException {
@@ -39,8 +42,17 @@ public class BucketBuffer {
 		mBuffer[mBufferLength] = (byte) (i>>>24);
 
 
-		// TODO: on the first filling of the buffer, flush when bufferLength+offset at the end of a segment 
+		
+
+
 		mBufferLength += 4;
+
+		// TODO: on the first filling of the buffer, flush when bufferLength+offset is at the end of a segment
+		if (firstFill && ((mBufferLength >= firstFillThreshold) == 0)){
+			this.flush();
+			firstFill = false;
+		}
+
 		if (mBufferLength == BUFFER_SIZE){
 			this.flush();
 		}
