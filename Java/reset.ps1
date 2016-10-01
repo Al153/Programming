@@ -1,1 +1,1 @@
-robocopy "C:\Users\Al\Documents\GitHub\Programming\Java\testSuite2 - Copy" "C:\Users\Al\Documents\GitHub\Programming\Java\testSuite2"
+robocopy "\dev\Programming\Java\testSuite2 - Copy" "\dev\Programming\Java\testSuite2"

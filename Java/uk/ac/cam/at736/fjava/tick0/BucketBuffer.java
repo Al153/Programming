@@ -1,7 +1,8 @@
 /**
 * this file defines a BucketBuffer.
-* When the radix sort phase is occurring, 256 bucketBuffers are created.
-* They then abstract away the part of counting sort where values are written from the first file to the second using the histogram as a key
+* When the radix sort phase is occurring, an array bucketBuffers are created.
+* They then abstract away the part of counting sort where values are written from the first file to the second using the
+* histogram as a key
 */
 
 package uk.ac.cam.at736.fjava.tick0;
@@ -13,10 +14,11 @@ import java.io.IOException;
 
 public class BucketBuffer {
 	private int BUFFER_SIZE;
-	private byte[] mBuffer = new byte[BUFFER_SIZE]; // a small buffer = 4mb / 256 buckets
+	private byte[] mBuffer 	  = new byte[BUFFER_SIZE]; // a small buffer = 4mb / 256 buckets
 	private int mBufferLength = 0;
 	private int mOffset;
-	private boolean firstFill = true; // the first fill of the buffer should only fill up to the end of a block to avoid unaligned seeks in the future
+	private boolean firstFill = true; // the first fill of the buffer should only fill up to the end of a block to
+									  // avoid unaligned seeks in the future
 	private FileOutputStream mWriter;
 	private RandomAccessFile mFile;
 	private int firstFillThreshold; // this stores the size of the buffer when we need to fill
@@ -28,9 +30,12 @@ public class BucketBuffer {
 		mWriter = writer;
 
 		BUFFER_SIZE = bufferSize;
-		//System.out.println("buffer size = " + BUFFER_SIZE);
+
 		mBuffer = new byte[BUFFER_SIZE];
-		firstFillThreshold = ((BUFFER_SIZE+mOffset)&(0xfffff000))-mOffset;
+		firstFillThreshold = ((BUFFER_SIZE+mOffset)&(0xfffff000))-mOffset; // this calculates the largest threshold
+																		   // smaller than the buffer size, such that
+																		   // the end of the writtend section is
+																		   // aligned (multiple of 0x1000)
 	}
 
 	public void write(int i) throws IOException {
@@ -48,7 +53,7 @@ public class BucketBuffer {
 		mBufferLength += 4;
 
 		// TODO: on the first filling of the buffer, flush when bufferLength+offset is at the end of a segment
-		if (firstFill && ((mBufferLength >= firstFillThreshold) == 0)){
+		if (firstFill && ((mBufferLength >= firstFillThreshold))) {
 			this.flush();
 			firstFill = false;
 		}

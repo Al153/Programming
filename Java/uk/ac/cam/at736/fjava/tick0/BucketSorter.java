@@ -1,15 +1,16 @@
-/**
-* this file defines a BucketSorter.
-* This class loads a bucket from disk into a bucket-sized buffer, sorts it, and writes it into the target file
-* 
-*/
-
 package uk.ac.cam.at736.fjava.tick0;
+
 import java.util.Arrays;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-
 import java.io.IOException;
+
+/**
+* this file defines a BucketSorter.
+* This class repeatedly loads a bucket from disk into a bucket-sized buffer, sorts it,
+* and writes it into the target file
+* 
+*/
 
 public class BucketSorter {
 	private final int mMaxBucketSize;
@@ -28,9 +29,7 @@ public class BucketSorter {
 
 	public void sort(int bucketSize, int number) throws IOException {
 		bucketSize = bucketSize >> 2; // comes in as the byte length
-		//System.out.println(" bucket size = " + bucketSize);
-		if (bucketSize > mMaxBucketSize){
-			// Todo: error handling
+		if ( bucketSize > mMaxBucketSize ){
 			System.out.println("Error: bucket too large.");
 			throw new IOException("Error: a bucket was too large.");
 		}
@@ -38,19 +37,13 @@ public class BucketSorter {
 
 		int i;
 		mBucket = new int[bucketSize];
-		for (i = 0; i<bucketSize; i += 1){
+		for (i = 0; i < bucketSize; i += 1){
 			mBucket[i] = mIn.readInt();
 		}
 
 
-		// ______________________________________________________DEBUG_______________________________________________________
-			Arrays.sort(mBucket);
-			//if (bucketSize > 0){
-			//	lowest = mBucket[0];
-			//	highest = mBucket[bucketSize-1];
-			//}
-		// ______________________________________________________DEBUG_______________________________________________________
-		for (i = 0; i< bucketSize; i += 1){
+		Arrays.sort(mBucket);
+		for ( i = 0; i < bucketSize; i += 1 ){
 			mOut.writeInt(mBucket[i]);
 		}
 		mOut.flush();

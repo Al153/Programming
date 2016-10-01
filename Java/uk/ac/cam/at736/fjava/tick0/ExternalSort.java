@@ -4,11 +4,11 @@
 * Not Protectively marked
 */
 
+// Todo use custom file input and outputs for the phase which sorts buckets
+
 package uk.ac.cam.at736.fjava.tick0;
 
 import java.io.RandomAccessFile;
-
-
 import java.io.BufferedOutputStream;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
@@ -16,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 import java.util.Arrays;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.DigestInputStream;
@@ -26,8 +25,10 @@ import java.security.NoSuchAlgorithmException;
 /**
 * Externally sorts large files of integers
 * I propose to do this by using a pass of a counting sort based radix sort to sort the data into buckets
-* (ideally of size around  1.5m items - about as many as can fit in memory) which can then be sorted in memory using the built in timsortand and written in order into the result file.
-* I identify the files by the first integer (originally the sha) in order to pick the best bucketing strategy (all are variants of counting sort)
+* (ideally of size around  1.5m items - about as many as can fit in memory) which can then be sorted in
+* memory using the built in timsortand and written in order into the result file.
+* I identify the files by the first integer (originally, I used the sha) in order to pick the best bucketing
+* strategy (all are variants of counting sort)
 * The default bucket algorithm is valid for file up to around 40mb that are evenly distributed.
 * Some files can be sorted in place as they are smaller than memory.
 * Larger files or those with non-even distributions can be accomodated with an appropriate bucketing strategy.
@@ -37,41 +38,52 @@ public class ExternalSort {
 	static int[] bucketPositions; // bucketPositions[257] contains the length of the file
 	private static final int BUCKET_SIZE = 1<<20;
 	private static BucketStrategy radixSorter;
-	
-	public static void sort(String f1, String f2) throws FileNotFoundException, IOException {
+	private static final int FILE_BUFFER_SIZE = 16 * 8192;
 
-		/**
-		* TODO: check inputs for nulls?
-		*/
+	public static void sort(String f1, String f2) throws FileNotFoundException, IOException {
 		
 		RandomAccessFile fileARandom = new RandomAccessFile(f1,"rw");
-		int inputLength = (int) fileARandom.length(); // this is ok, since we know the lenght to be less than 2GB
-		if (inputLength == 0){
+		int inputLength = (int) fileARandom.length(); // this cast is ok, since we know the length to be less than 2GB
+		if (inputLength == 0){ // already sorted
 			return;
 		}
 		
 
-		RandomAccessFile fileBRandom = new RandomAccessFile(f2,"rw");
-		//System.out.println("Opened files");
+		RandomAccessFile fileBRandom = new RandomAccessFile(f2,"rw");	
 		try {
-			DataInputStream fileAIn 	= new  DataInputStream(new  BufferedInputStream(new  FileInputStream(fileARandom.getFD()), 16*8192));
-			DataInputStream fileBIn 	= new  DataInputStream(new  BufferedInputStream(new  FileInputStream(fileBRandom.getFD()), 16*8192));
+			DataInputStream fileAIn 	= new  DataInputStream(
+											new BufferedInputStream(
+												new  FileInputStream(fileARandom.getFD()),
+												FILE_BUFFER_SIZE
+											)
+										);
+			DataInputStream fileBIn 	= new  DataInputStream(
+												new  BufferedInputStream(
+													new  FileInputStream(fileBRandom.getFD()),
+													FILE_BUFFER_SIZE
+												)
+											);
 			FileOutputStream fileAOut 	= new FileOutputStream(fileARandom.getFD());
 			FileOutputStream fileBOut 	= new FileOutputStream(fileBRandom.getFD());
 
 			fileAIn.mark(8);
-			int topVal = fileAIn.readInt();
+			int topVal = fileAIn.readInt(); // we want to read the first int to identify the file
 			fileAIn.reset();
 
-			radixSorter = pickStrategy(f1, inputLength, topVal);
-			DataOutputStream fileAOutFinal = new DataOutputStream(new BufferedOutputStream(fileAOut, 16*8192));
+			radixSorter = pickStrategy(inputLength, topVal);
+			DataOutputStream fileAOutFinal = new DataOutputStream(
+												new BufferedOutputStream(fileAOut, FILE_BUFFER_SIZE)
+											);
 			
 			Class cls = SortInMem.class;
 			if ( cls.isInstance(radixSorter)){   // i.e is the file sm,all enough to be sorted whole in memory?
 				sortSingleBucket(inputLength, fileAIn, fileAOutFinal, fileARandom);
 			} else {
-				BucketSorter sorter = new BucketSorter(fileBIn, fileAOutFinal, BUCKET_SIZE);
-				doRadixSort(fileAIn, fileBOut, fileARandom, fileBRandom, (inputLength >> 2)); // length in ints = length in bytes / 4
+				BucketSorter sorter;
+
+				sorter = new BucketSorter(fileBIn, fileAOutFinal, BUCKET_SIZE);
+				// 															\/	length in ints = length in bytes / 4
+				doRadixSort(fileAIn, fileBOut, fileARandom, fileBRandom, (inputLength >> 2));
 				fileARandom.seek(0); // reset the files
 				fileBRandom.seek(0);
 
@@ -89,7 +101,7 @@ public class ExternalSort {
 		}
 	}
 
-	private static BucketStrategy pickStrategy(String fileName, int length, int topVal){//, DataInputStream fileIn, RandomAccessFile file){
+	private static BucketStrategy pickStrategy(int length, int topVal){
 		// identify classes of input files by the top integer or the length.
 		// this was previously done with hashes. 
 		if (length < 0x400000){ // (max len is about 4mb)
@@ -107,14 +119,22 @@ public class ExternalSort {
 		}
 		if (topVal ==  241){
 			// the values in test011 are all less than 256, so we bucket off of the top nybble
+			// of the bottom byte
 			return new RadixSortTest011();
 		}
 		return new RegularRadixSort(); // default
 	}
 
-	private static void doRadixSort(DataInputStream in, FileOutputStream out, RandomAccessFile inFile, RandomAccessFile outFile, int length) throws IOException {
-		bucketPositions = radixSorter.doRadixSort(in, out, inFile, outFile, length); // bucket positions are the positions where each bucket starts in the file
-		System.gc(); // need to test speed of this. poke GC to remove the bucketBuffer objects
+	private static void doRadixSort( 				
+								DataInputStream in,
+								FileOutputStream out,
+								RandomAccessFile inFile,
+								RandomAccessFile outFile,
+								int length
+							) throws IOException { // Too many arguments for one line
+			// bucket positions are the positions where each bucket starts in the I/O files
+		bucketPositions = radixSorter.doRadixSort(in, out, inFile, outFile, length);
+		System.gc(); // May be too slow. poke GC to remove the bucketBuffer objects
 	}
 
 	private static String byteToHex(byte b) {
@@ -149,11 +169,16 @@ public class ExternalSort {
 		return "<error computing checksum>";
 	}
 
-	private static void sortSingleBucket(int inputLength, DataInputStream mIn, DataOutputStream mOut, RandomAccessFile file) throws IOException {
+	private static void sortSingleBucket(
+						int inputLength, 
+						DataInputStream mIn, 
+						DataOutputStream mOut,
+						RandomAccessFile file
+					) throws IOException {
 		// This sorts inputs that are shorter than the length of the
 		inputLength = inputLength >> 2; // comes in as the byte length
-		int i;
-		int[] mBucket = new int[inputLength];
+		int 	i;
+		int[] 	mBucket = new int[inputLength];
 		for (i = 0; i<inputLength; i += 1){
 			mBucket[i] = mIn.readInt();
 		}
