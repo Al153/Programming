@@ -23,16 +23,16 @@ public abstract class BucketStrategy {
 	protected int BUFFER_NUMBER;
 	protected int BUFFER_SIZE;
 
-	public static BucketBuffer[] createBuckets(int[] bucketSizes, FileOutputStream out, RandomAccessFile outFile, int bufferSize){
+	public static BucketOutBuffer[] createBuckets(int[] bucketSizes, FileOutputStream out, RandomAccessFile outFile, int bufferSize){
 		// Converts bucketSizes into a histogram and creates the right number of bucket buffers
-		BucketBuffer[] buckets = new BucketBuffer[bucketSizes.length - 1];
+		BucketOutBuffer[] buckets = new BucketOutBuffer[bucketSizes.length - 1];
 		int total = 0;
 		int value;
 		for ( int i = 0; i < bucketSizes.length - 1; i ++ ){
 			value = bucketSizes[i];
 			bucketSizes[i] = total;
 			total += value;
-			buckets[i] = new BucketBuffer(bucketSizes[i], out, outFile, bufferSize);
+			buckets[i] = new BucketOutBuffer(bucketSizes[i], out, outFile, bufferSize);
 		}
 		bucketSizes[bucketSizes.length -1] = total;
 		return buckets;
@@ -57,20 +57,21 @@ public abstract class BucketStrategy {
 			value = getBucket(in.readInt());
 			bucketPositions[value] += 4;
 		}
+		printHistogram(bucketPositions);
 
 		inFile.seek(0); // reset the input stream for a second run
-		BucketBuffer[] buckets =  BucketStrategy.createBuckets(bucketPositions, out, outFile, BUFFER_SIZE);
+		BucketOutBuffer[] buckets =  BucketStrategy.createBuckets(bucketPositions, out, outFile, BUFFER_SIZE);
 		
 		for (i = 0; i < length; i ++ ){
 			value = in.readInt();
-			buckets[getBucket(value)].write(value);
+			buckets[getBucket(value)].writeInt(value);
 		}
 		flushAllBuckets(buckets);
 		return bucketPositions;
 	}
 
 
-	protected void flushAllBuckets(BucketBuffer[] buckets) throws IOException{
+	protected void flushAllBuckets(BucketOutBuffer[] buckets) throws IOException{
 		// flush all buckets at the end of the sort
 		for ( int i = 0; i < buckets.length; i ++ ){
 			buckets[i].flush();

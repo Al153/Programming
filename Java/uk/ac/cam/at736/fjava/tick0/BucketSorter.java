@@ -14,14 +14,14 @@ import java.io.IOException;
 
 public class BucketSorter {
 	private final int mMaxBucketSize;
-	private DataOutputStream mOut;
-	private DataInputStream mIn;
+	private BucketOutBuffer mOut;
+	private BucketInBuffer mIn;
 	private int[] mBucket;
 
 	public int lowest;
 	public int highest;
 
-	public BucketSorter(DataInputStream in, DataOutputStream out, int bucketSize){
+	public BucketSorter(BucketInBuffer in, BucketOutBuffer out, int bucketSize){
 		mOut = out;
 		mIn = in;
 		mMaxBucketSize = bucketSize;
@@ -46,7 +46,6 @@ public class BucketSorter {
 		for ( i = 0; i < bucketSize; i += 1 ){
 			mOut.writeInt(mBucket[i]);
 		}
-		mOut.flush();
 		mBucket = null;
 	}
 }

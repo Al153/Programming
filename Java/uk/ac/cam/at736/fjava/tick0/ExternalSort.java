@@ -53,47 +53,50 @@ public class ExternalSort {
 		try {
 			DataInputStream fileAIn 	= new  DataInputStream(
 											new BufferedInputStream(
-												new  FileInputStream(fileARandom.getFD()),
-												FILE_BUFFER_SIZE
+												new  FileInputStream(fileARandom.getFD())
 											)
-										);
-			DataInputStream fileBIn 	= new  DataInputStream(
+										)
+									;
+			BucketInBuffer fileBIn 	= new BucketInBuffer(
+											new  DataInputStream(
 												new  BufferedInputStream(
-													new  FileInputStream(fileBRandom.getFD()),
-													FILE_BUFFER_SIZE
+													new  FileInputStream(fileBRandom.getFD())
 												)
-											);
-			FileOutputStream fileAOut 	= new FileOutputStream(fileARandom.getFD());
-			FileOutputStream fileBOut 	= new FileOutputStream(fileBRandom.getFD());
+											), fileBRandom, FILE_BUFFER_SIZE
+										);
+			FileOutputStream fileAOutStream = new FileOutputStream(fileARandom.getFD());
+			FileOutputStream fileBOutStream = new FileOutputStream(fileBRandom.getFD());
+			BucketOutBuffer fileAOut 	= new BucketOutBuffer(0, fileAOutStream, fileARandom, FILE_BUFFER_SIZE);
+			BucketOutBuffer fileBOut 	= new BucketOutBuffer(0, fileBOutStream, fileBRandom, FILE_BUFFER_SIZE);
 
 			fileAIn.mark(8);
 			int topVal = fileAIn.readInt(); // we want to read the first int to identify the file
 			fileAIn.reset();
 
 			radixSorter = pickStrategy(inputLength, topVal);
-			DataOutputStream fileAOutFinal = new DataOutputStream(
-												new BufferedOutputStream(fileAOut, FILE_BUFFER_SIZE)
-											);
+			// DataOutputStream fileAOut = new DataOutputStream(
+												// new BufferedOutputStream(fileAOut)
+											// );
 			
 			Class cls = SortInMem.class;
 			if ( cls.isInstance(radixSorter)){   // i.e is the file sm,all enough to be sorted whole in memory?
-				sortSingleBucket(inputLength, fileAIn, fileAOutFinal, fileARandom);
+				System.out.println("Sorting in memory");
+				sortSingleBucket(inputLength, new BucketInBuffer(fileAIn, fileARandom, FILE_BUFFER_SIZE), fileAOut, fileARandom);
 			} else {
 				BucketSorter sorter;
 
-				sorter = new BucketSorter(fileBIn, fileAOutFinal, BUCKET_SIZE);
+				sorter = new BucketSorter(fileBIn, fileAOut, BUCKET_SIZE);
 				// 															\/	length in ints = length in bytes / 4
-				doRadixSort(fileAIn, fileBOut, fileARandom, fileBRandom, (inputLength >> 2));
-				fileARandom.seek(0); // reset the files
-				fileBRandom.seek(0);
+				doRadixSort(fileAIn, fileBOutStream, fileARandom, fileBRandom, (inputLength >> 2));
+				 fileARandom.seek(0); // reset the files
+				 fileBRandom.seek(0);
 
 				for (int i = 0; i < bucketPositions.length-1; i++){
 					int bucketSize = bucketPositions[i+1]-bucketPositions[i];
 					sorter.sort(bucketSize,i);
 				}
+				fileAOut.flush();
 			}
-
-
 
 		} finally {
 			fileARandom.close();
@@ -134,7 +137,7 @@ public class ExternalSort {
 							) throws IOException { // Too many arguments for one line
 			// bucket positions are the positions where each bucket starts in the I/O files
 		bucketPositions = radixSorter.doRadixSort(in, out, inFile, outFile, length);
-		System.gc(); // May be too slow. poke GC to remove the bucketBuffer objects
+		System.gc(); // May be too slow. poke GC to remove the BucketOutBuffer objects
 	}
 
 	private static String byteToHex(byte b) {
@@ -171,19 +174,22 @@ public class ExternalSort {
 
 	private static void sortSingleBucket(
 						int inputLength, 
-						DataInputStream mIn, 
-						DataOutputStream mOut,
+						BucketInBuffer mIn, 
+						BucketOutBuffer mOut,
 						RandomAccessFile file
 					) throws IOException {
 		// This sorts inputs that are shorter than the length of the
+		// Memory
 		inputLength = inputLength >> 2; // comes in as the byte length
 		int 	i;
 		int[] 	mBucket = new int[inputLength];
 		for (i = 0; i<inputLength; i += 1){
 			mBucket[i] = mIn.readInt();
 		}
-		file.seek(0);
+		//file.seek(0);
+		//System.out.println(Arrays.toString(mBucket));
 		Arrays.sort(mBucket);
+		//System.out.println(Arrays.toString(mBucket));
 		for (i = 0; i< inputLength; i += 1){
 			mOut.writeInt(mBucket[i]);
 		}
