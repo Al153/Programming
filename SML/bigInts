@@ -1,0 +1,15 @@
+datatype bigInt = Cons of int * bigInt | End
+
+fun Add x End End = x
+|	Add End x End = x
+|	Add End End x = x
+|	Add (Cons(i,next_i)) (Cons(j,next_j)) End =
+	let
+		val sum = (i+j) mod 65536;
+		val carry = (i+j) div 65536;
+	in
+		Cons(sum,(Add next_i next_j carry))
+	end
+| Add (Cons(i,next_i)) End (Cons(j,next_j)) = Add (Cons(i,next_i)) (Cons(j,next_j)) End
+| Add End (Cons(i,next_i)) (Cons(j,next_j))  = (Cons(i,next_i)) (Cons(j,next_j)) End
+| Add 

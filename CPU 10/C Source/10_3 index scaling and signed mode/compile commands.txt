@@ -1,0 +1,8 @@
+gcc -O3 "C Source\IMD Values and reg optimisation\CPU.c" -o CEmuTest.exe -std=c99    (for testing)
+gcc -O3 "C Source\IMD Values and reg optimisation\CPU.c" -o CEmu.exe 		(for real)
+
+to do profiling:
+
+gcc -O3 -pg "C Source\IMD Values and reg optimisation" -o CEmuTest.exe
+ then run the emulator
+gprof CEmuTest.exe gmon.out > analysis.txt
