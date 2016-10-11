@@ -8,21 +8,21 @@ Stack ->
 	0	INT retValue
 
 
+
 	LABEL: sOflow
 	LABEL: sUflow
 	LABEL: entry
-
 
 	: init; // ( -- )
 		jmp, retValue sti;
 		stp, 0 # ldi;
 		pc, entry ldi;
 		sOflow !LABEL
-			[ str( Error: Stack overflow.) ;;
+			[ str( Error: Stack overflow.) 
 			] echo;
 			pc, retValue ldi;
 		sUflow !LABEL
-			[ str( Error: Stack overflow.) ;;
+			[ str( Error: Stack overflow.)
 			] echo;
 			pc, retValue ldi;
 		entry !LABEL
@@ -48,21 +48,22 @@ Stack ->
 		stp, stack 4 - ldi[];
 	;
 
-: 8push;
-	one, push;
-	one, push;
-	one, push;
-	one, push;
-	one, push;
-	one, push;
-	one, push;
-;
-: 88push;
-	8push; 8push;
-	8push; 8push;
-	8push; 8push;
-	8push; 8push;
-;
+	: 8push;
+		one, push;
+		one, push;
+		one, push;
+		one, push;
+		one, push;
+		one, push;
+		one, push;
+	;
+
+	: 88push;
+		8push; 8push;
+		8push; 8push;
+		8push; 8push;
+		8push; 8push;
+	;
 
 	: 888push;
 		88push; 88push;

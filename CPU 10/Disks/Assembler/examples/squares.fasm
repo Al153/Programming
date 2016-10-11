@@ -23,7 +23,7 @@
 			i++;		// increment i
 	loop;				
 
-	echo( done!)
+	echo( done!\n)
 	jmp, pc, mov; // jump back to the forth interpreter by moving the jump register to the program counter
 
 	INLINE -> 
