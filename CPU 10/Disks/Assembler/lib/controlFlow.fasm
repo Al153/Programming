@@ -1,10 +1,7 @@
-
-	: jmp; // ( address -- )
-		pc, SWAP ldi;
-	;
-
+PRINTING -> .( Compiling control FASM WORDS...) ;;
 N_SPACE: CONTROL
 R_STACK ->
+MEMORY ->
 CONTROL ->
 	1024 TABLE ifSTCK // stores if addresses
 	1024 TABLE whilSTCK // stores while addresses
@@ -131,6 +128,9 @@ CONTROL ->
 
 
 
-	EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT
+
 ;;
-	EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT EXPORT
+;;
+;;
+.dict
+PRINTING -> .( Done\n) ;;

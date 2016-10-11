@@ -1,0 +1,8 @@
+.\StdDisks\std.fth
+.\Assembler\fasm.fth
+.\Assembler\disasm.fth
+.\Assembler\lib\libStart.fth
+.\Assembler\lib\callsJumpsReturns.fasm
+.\Assembler\lib\controlFlow.fasm
+.\Assembler\lib\stack.fasm
+.\Assembler\lib\libEnd.fth

@@ -1,4 +1,4 @@
-
+PRINTING -> .( Compiling calling and jumping FASM WORDS...) ;;
 	: jmp; // ( address -- )
 		pc, SWAP ldi;
 	;
@@ -40,15 +40,16 @@
 	;
 
 	: saveReg; // ( flag reg --  )
-		SWAP DUP >r if
+		SWAP DUP { R_STACK -> } >r { ;; } if
 			DUP 8 - # jmp, SWAP sti[]; // store the register to its place in the
 									   // stack frame (reg addr - 8)
 		else
 			DROP
 		then
 	;
-	: restReg // ( reg -- )
-		r> if
+	: restReg; // ( reg -- )
+		{ R_STACK -> } r> { ;; } 
+		if
 			DUP 8 - # jmp, SWAP ldi[]; // load the register from the right place in the stack frame
 		else DROP then
 	;
@@ -64,7 +65,7 @@
 		gp6, saveReg;
 		gp7, saveReg;
 
-		call; // call the function
+		calla; // call the function
 		// restore the register values
 		gp7, restReg;
 		gp6, restReg;
@@ -88,7 +89,7 @@
 		gp6, saveReg;
 		gp7, saveReg;
 
-		call[]; // call the function
+		calla[]; // call the function
 		// restore the register values
 		gp7, restReg;
 		gp6, restReg;
@@ -101,10 +102,4 @@
 
 		jmp, -4 ldi[]; // load reg1 with the result of the fCaLL
 	;
-
-
-
-
-;;
-;;
-;;
+PRINTING -> .( Done!\n) ;;
