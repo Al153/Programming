@@ -135,9 +135,50 @@ qNameOrCollegeOrNone('blank','blank').
 % 	If, at any point, the cannibals outnumber the missionaries then they will eat them.
 %	Discover the procedure for a safe crossing. [10  marks]
 
-safe((Missionaries,Cannibals)) :- Missionaries >= Cannibals.
-move((OldM,OldC),(NewN,NewC)) :- NewM is  OldM + 1, NewC is OldC - 1.
+safe(b(0,_)).
+safe(b(Missionaries,Cannibals)) :- Missionaries >= Cannibals.
 
+
+moveFrom(b(OldM,OldC),b(NewM,OldC),p(2,0)) :- NewM is  OldM - 2, safe(b(NewM, OldC)), NewM >= 0.
+moveFrom(b(OldM,OldC),b(OldM,NewC),p(0,2)) :- NewC is OldC - 2, NewC >= 0. % (this move is always safe at this end)
+moveFrom(b(OldM,OldC),b(NewM,NewC),p(1,1)) :- NewM is OldM - 1, NewC is OldC - 1, NewC >= 0, NewM >= 0.
+moveFrom(b(OldM,OldC),b(OldM,NewC),p(0,1)) :- NewC is OldC - 1, NewC >= 0. % (this move is always safe at this end)
+moveFrom(b(OldM,OldC),b(NewM,OldC),p(1,0)) :- NewM is OldM - 1, safe(b(NewM, OldC)), NewM >= 0.
+
+
+moveTo(b(OldM,OldC),p(DifM,DifC),b(NewM,NewC)) :- NewM is OldM + DifM, NewC is OldC + DifC, safe(b(NewM,NewC)).
+
+doMoves(Start,Start,[],_,_).
+doMoves(c(LeftBank,RightBank),c(EndLeftBank,EndRightBank),[Party|T],PastMoves,left) :-
+				moveFrom(LeftBank,NewL,Party),					% find a safe move from the left bank
+				moveTo(RightBank,Party,NewR),					% that's safe on the right bank
+				\+member(c(NewL,NewR),PastMoves),
+				doMoves(c(NewR,NewL),c(EndRightBank,EndLeftBank),T,[c(LeftBank,RightBank)|PastMoves],right). % find a set of moves that complete the current puzzle.
+																	% the boat is now on the right bank, so need to swap
+
+
+doMoves(c(LeftBank,RightBank),c(EndLeftBank,EndRightBank),[Party|T],PastMoves,right) :-
+				moveFrom(LeftBank,NewL,Party),					% find a safe move from the left bank
+				moveTo(RightBank,Party,NewR),					% that's safe on the right bank
+				\+member(c(NewL,NewR),PastMoves),
+				doMoves(c(NewR,NewL),c(EndRightBank,EndLeftBank),T,[c(RightBank,LeftBank)|PastMoves],left). % find a set of moves that complete the current puzzle.
+% doMoves(c(b(3,3),b(0,0)),c(b(0,0),b(3,3)),L,[],left).
+
+
+% __________________________________ Q5 __________________________________
+
+% Regular Quicksort:
+
+split([],_,[],[]).
+split([H|T], Pivot, [H|L], R) :- H<Pivot, split(T,Pivot,L,R).
+split([H|T], Pivot, L, [H|R]) :- H>=Pivot, split(T,Pivot,L,R).
+
+quicksort([],[]).
+quicksort([A],[A]).
+quicksort([H|T], Result) :- split(T, H, L, R),
+							quicksort(L, LSorted),
+							quicksort(R,RSorted),
+							append(LSorted, [H|RSorted], Result).
 % __________________________________ Q6 _______________________
 remove([V|T],V,T). % last param is the resulting list when second param is removed from the first
 remove([H|T],V,[H|T_new]) :- remove(T,V,T_new).
@@ -146,7 +187,7 @@ member(H,[H|_]). % checks if H is a member of a list
 member(H,[_|T]) :- member(H,T).
 
 perm([],[]).
-perm(L,[H|T]) :- member(H,L), remove(L,H,L_New), perm(L_New,T).
+perm(L,[H|T]) :- remove(L,H,L_New), perm(L_New,T).
 				 % Checks if top value is a member of L
 				 % if it is, then finds the list L_New that is the result
 				 % of removing the top value from L
