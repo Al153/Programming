@@ -16,6 +16,44 @@
 
 % _______________________________ Q2 _____________________________________
 
+% Non logical behaviour occurs because of the macro nature of negation.
+
+% consider the following world
+
+red(w).
+blue(x).
+blue(y).
+orange(z).
+
+square(w).
+square(x).
+triangle(y).
+triangle(z).
+
+% let's now try to find a triangle that's not blue
+
+notBlueTriangle(S) :- \+blue(S),triangle(S).
+
+% the "logical" way of resolving this is \+blue instantiates S to a member of {w,z}, then triangle narrows that down to z.
+% (that is \+blue returns S=w, then S=z), however:
+	
+	% [1] 2 ?- notBlueTriangle(S).
+	% false.
+% this is because
+	% \+blue(S)
+% expands to
+	% blue(S), !, fail,
+
+% So instead, blue(S) returns true with S unified to {x,y}, then a cut occurs and the
+% fail predicate is reached, which fails the whole notBlueTriangle(S) clause.
+
+% if S were fully instantiated, then the predicate would work fine
+
+notBlueTriangle2(S) :- triangle(S), \+blue(S).
+
+%	?- notBlueTriangle2(S).
+% 	S = z. 
+
 % _______________________________ Q3 _______________________________
 tName(acr31,'Andrew Rice').
 tName(arb33,'Alastair Beresford').
@@ -126,10 +164,14 @@ countFirsts(Count) :- aggregate_all(count, tGrade(_,_,1), Count).
 	% SELECT crsid,count(grade) from tGrade
 		% WHERE grade=1 GROUP BY crsid
 
+countList([], 0). % predicate to count instances of X in a list
+countList([_|T], N) :- countList(T,M), N is M+1. 
+numFirsts2((CRSID,Count)) :- findall(Part, tGrade(CRSID,Part,1), List), countList(List,Count).
+
 % Hint: This is not the number of rows with First class marks in the tGrade table. You will need build a list of
 % First class CRSIDs by repeatedly querying tGrade and checking if the result is already in your list. Every
 % time you find a new unique CRSID, increment an accumulator which will form the result
-% 3
+% 3.
 
 % __________________________________ Q4 __________________________________
 
