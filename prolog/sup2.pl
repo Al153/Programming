@@ -25,7 +25,7 @@ tName(rkh23,'Robert Harle').
 tCollege(acr31, 'Churchill').
 tCollege(arb33, 'Robinson').
 tCollege(at736, 'St John\'s').
-tNoCollege(rkh23)
+tNoCollege(rkh23).
 
 tGrade(acr31,'IA',2.1).
 tGrade(acr31,'IB',1).
@@ -54,7 +54,6 @@ tDOB(acr31,'28/10/1980').
 % query and also an example invocation of these rules. For example:
 % % The full name of each person in the database
 qFullName(A) :- tName(_,A).
-:- qFullName(A).
 % 1
 
 % Each query should return one row of the answer at a time, subsequent rows should be returned by backtracking.
@@ -101,8 +100,7 @@ qNameAndCollegePlus(Name,'blank') :- qFullName(Name), tName(CRSID, Name), tNoCol
 			% ON tName.crsid = tCollege.crsid
 
 qNameOrCollegeOrNone(Name,College) :- qNameAndCollegePlus(Name,College).
-qNameOrCollegeOrNone('blank',College) :- tCollege(CRSID,College),!,\+tName(CRSID,X).
-qNameOrCollegeOrNone('blank','blank').
+qNameOrCollegeOrNone('blank',College) :- tCollege(CRSID,College),\+tName(CRSID,_).
 
 
 % Deeper Find the lowest (numerically) grade where the CRSID is specified by the user. Note that this
@@ -112,9 +110,15 @@ qNameOrCollegeOrNone('blank','blank').
 	% WHERE crsid = ?
 
 
+qMinGrade(CRSID,Grade) :-
+	tGrade(CRSID,_,Grade),
+  \+ (tGrade(CRSID,_,OtherGrade), OtherGrade < Grade).
+
 % Deeper Find the number First class marks given out
 	% SELECT count(grade) from tGrade
 		% WHERE grade = 1
+
+countFirsts(Count) :- aggregate_all(count, tGrade(_,_,1), Count).
 
 % Deeper (Hard) Find the number of First class marks awarded to each person. Your output should consist
 % of a tuple (CRSID,NumFirsts) which iterates through all CRSIDs which have at least one First class mark
@@ -139,30 +143,55 @@ safe(b(0,_)).
 safe(b(Missionaries,Cannibals)) :- Missionaries >= Cannibals.
 
 
-moveFrom(b(OldM,OldC),b(NewM,OldC),p(2,0)) :- NewM is  OldM - 2, safe(b(NewM, OldC)), NewM >= 0.
+moveFrom(b(OldM,OldC),b(NewM,OldC),p(2,0)) :- NewM is  OldM - 2, NewM >= 0, safe(b(NewM, OldC)).
 moveFrom(b(OldM,OldC),b(OldM,NewC),p(0,2)) :- NewC is OldC - 2, NewC >= 0. % (this move is always safe at this end)
 moveFrom(b(OldM,OldC),b(NewM,NewC),p(1,1)) :- NewM is OldM - 1, NewC is OldC - 1, NewC >= 0, NewM >= 0.
 moveFrom(b(OldM,OldC),b(OldM,NewC),p(0,1)) :- NewC is OldC - 1, NewC >= 0. % (this move is always safe at this end)
-moveFrom(b(OldM,OldC),b(NewM,OldC),p(1,0)) :- NewM is OldM - 1, safe(b(NewM, OldC)), NewM >= 0.
+moveFrom(b(OldM,OldC),b(NewM,OldC),p(1,0)) :- NewM is OldM - 1,  NewM >= 0, safe(b(NewM, OldC)).
 
 
 moveTo(b(OldM,OldC),p(DifM,DifC),b(NewM,NewC)) :- NewM is OldM + DifM, NewC is OldC + DifC, safe(b(NewM,NewC)).
 
+notMember(_,[]).
+notMember(X,[H|_]) :- X=H, !, fail.
+notMember(X,[_|T]) :- notMember(X,T).
+
+
 doMoves(Start,Start,[],_,_).
-doMoves(c(LeftBank,RightBank),c(EndLeftBank,EndRightBank),[Party|T],PastMoves,left) :-
+doMoves(c(LeftBank,RightBank),c(EndLeftBank,EndRightBank),[Party|T],PastStates,left) :-
 				moveFrom(LeftBank,NewL,Party),					% find a safe move from the left bank
 				moveTo(RightBank,Party,NewR),					% that's safe on the right bank
-				\+member(c(NewL,NewR),PastMoves),
-				doMoves(c(NewR,NewL),c(EndRightBank,EndLeftBank),T,[c(LeftBank,RightBank)|PastMoves],right). % find a set of moves that complete the current puzzle.
+				\+member((c(NewL,NewR),left),PastStates),
+				doMoves(c(NewL,NewR),c(EndLeftBank,EndRightBank),T,[(c(NewL,NewR),left)|PastStates],right). % find a set of moves that complete the current puzzle.
 																	% the boat is now on the right bank, so need to swap
 
 
-doMoves(c(LeftBank,RightBank),c(EndLeftBank,EndRightBank),[Party|T],PastMoves,right) :-
-				moveFrom(LeftBank,NewL,Party),					% find a safe move from the left bank
-				moveTo(RightBank,Party,NewR),					% that's safe on the right bank
-				\+member(c(NewL,NewR),PastMoves),
-				doMoves(c(NewR,NewL),c(EndRightBank,EndLeftBank),T,[c(RightBank,LeftBank)|PastMoves],left). % find a set of moves that complete the current puzzle.
-% doMoves(c(b(3,3),b(0,0)),c(b(0,0),b(3,3)),L,[],left).
+doMoves(c(LeftBank,RightBank),c(EndLeftBank,EndRightBank),[Party|T],PastStates,right) :-
+				moveFrom(RightBank,NewR,Party),					% find a safe move from the left bank
+				moveTo(LeftBank,Party,NewL),					% that's safe on the right bank
+				\+member((c(NewL,NewR),right),PastStates),
+				doMoves(c(NewL,NewR),c(EndLeftBank,EndRightBank),T,[(c(NewL,NewR),right)|PastStates],left). % find a set of moves that complete the current puzzle.
+
+solve(Start,End,Side,Moves) :- doMoves(Start, End, Moves, [(Start, Side)], Side).
+
+
+
+% solve(  c(b(3,3),b(0,0)),       c(b(0,0),b(3,3)), left, M), print(M).
+% [p(0,2),p(0,2),p(1,1),p(1,0),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(0,1),p(0,2)]
+% [p(0,2),p(0,2),p(1,1),p(1,0),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(1,0),p(1,1)]
+% [p(0,2),p(0,1),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(0,1),p(0,2)]
+% [p(0,2),p(0,1),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(1,0),p(1,1)]
+% [p(1,1),p(1,1),p(0,2),p(0,1),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(0,1),p(0,2)]
+% [p(1,1),p(1,1),p(0,2),p(0,1),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(1,0),p(1,1)]
+% [p(1,1),p(1,0),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(0,1),p(0,2)]
+% [p(1,1),p(1,0),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(1,0),p(1,1)]
+% [p(0,1),p(0,1),p(0,2),p(0,1),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(0,1),p(0,2)]
+% [p(0,1),p(0,1),p(0,2),p(0,1),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(1,0),p(1,1)]
+% [p(0,1),p(0,1),p(1,1),p(1,0),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(0,1),p(0,2)]
+% [p(0,1),p(0,1),p(1,1),p(1,0),p(0,2),p(0,1),p(2,0),p(1,1),p(2,0),p(0,1),p(0,2),p(1,0),p(1,1)]
+% false.
+
+% (I've removed where the unification for m is printed)
 
 
 % __________________________________ Q5 __________________________________
@@ -179,12 +208,26 @@ quicksort([H|T], Result) :- split(T, H, L, R),
 							quicksort(L, LSorted),
 							quicksort(R,RSorted),
 							append(LSorted, [H|RSorted], Result).
+
+% now with difference lists
+
+split(A-A1,_,B-B1,C-C1) :- unify_with_occurs_check(A,A1), unify_with_occurs_check(B,B1), unify_with_occurs_check(C,C1). 
+split([H|T]-N1, Pivot, [H|L]-N2, R-N3) :- H<Pivot, split(T-N1,Pivot,L-N2,R-N3).
+split([H|T]-N1, Pivot, L-N2, [H|R]-N3) :- H>=Pivot, split(T-N1,Pivot,L-N2,R-N3).
+
+quicksort(A-A1,A-A1) :- unify_with_occurs_check(A,A1).
+quicksort([H|T]-N, Result) :- split(T-N, H, L, R),
+							quicksort(R,RSorted-RN),
+							quicksort(L, LSorted-[H|RSorted]),
+							Result = LSorted - RN.
+
+% [1] 2 ?- quicksort([3,4,7,6,5,1,2,9,8|R]-R,Result).
+% Result = [1, 2, 3, 4, 5, 6, 7, 8|...]-_G90 ;
+% ERROR: </2: Arguments are not sufficiently instantiated
+
 % __________________________________ Q6 _______________________
 remove([V|T],V,T). % last param is the resulting list when second param is removed from the first
 remove([H|T],V,[H|T_new]) :- remove(T,V,T_new).
-
-member(H,[H|_]). % checks if H is a member of a list
-member(H,[_|T]) :- member(H,T).
 
 perm([],[]).
 perm(L,[H|T]) :- remove(L,H,L_New), perm(L_New,T).
@@ -194,6 +237,8 @@ perm(L,[H|T]) :- remove(L,H,L_New), perm(L_New,T).
 				 % then check if the tail is a permutation of the new L
 % a)
 
+choose(0, _, []).
+choose(N, L, [H|T]) :- remove(L,H,L_New), M is N-1, choose(M,L_New,T).
 
 
 sum([],0).
@@ -212,15 +257,32 @@ solve1([S,E,N,D],[M,O,R,E],[M,O,N,E,Y]) :-
 % Z = [0, 3, 1, 8, 5] ;
 % X = [2, 8, 1, 9],
 % Y = [0, 3, 6, 8],
-% Z = [0, 3, 1, 8, 7] .
+% Z = [0, 3, 1, 8, 7] ;
+% X = [2, 8, 1, 7],
+% Y = [0, 3, 6, 8],
+% Z = [0, 3, 1, 8, 5] ;
+% . . . 
+% false.
+% 50 solutions
 
+% there are lots of first-digit-zeroes in the solutions
 solve2([S,E,N,D],[M,O,R,E],[M,O,N,E,Y]) :-   
 	Var = [S,E,N,D,M,O,R,Y|_],
-	NoFirstDigits = [E,N,D,O,R,Y|_],
-	perm(NoFirstDigits,[0,1,2,3,4,5,6,7,8,9]),
-	perm(Var,[0,1,2,3,4,5,6,7,8,9]),
+	choose(2,[1,2,3,4,5,6,7,8,9], [S,M]),
+	perm([0,1,2,3,4,5,6,7,8,9],Var),
 	sum([D,N,E,S],Top), sum([E,R,O,M],Middle), sum([Y,E,N,O,M], Bottom),
 	Bottom is Top+Middle.
+
+% [1] 2 ?- solve2(X,Y,Z).
+% X = [9, 5, 6, 7],
+% Y = [1, 0, 8, 5],
+% Z = [1, 0, 6, 5, 2] ;
+% X = [9, 5, 6, 7],
+% Y = [1, 0, 8, 5],
+% Z = [1, 0, 6, 5, 2] ;
+% false
+
+
 
 % _______________________________
 
@@ -228,19 +290,124 @@ sumb([],0,_).
 sumb([H|T],Res,Base) :- sumb(T,Im,Base), Res is H + (Im * Base).
 
 
+range(1,[0]).
+range(N,[M|T]) :- N > 1, M is N-1, range(M,T).
 
-% [1] 2 ?- solve1(X,Y,Z).
-% X = [2, 8, 1, 7],
-% Y = [0, 3, 6, 8],
-% Z = [0, 3, 1, 8, 5] ;
-% X = [2, 8, 1, 9],
-% Y = [0, 3, 6, 8],
-% Z = [0, 3, 1, 8, 7] .
+noZeroes(2,[1]).
+noZeroes(N,[M|T]) :- N > 2, M is N-1, noZeroes(M,T).
 
-solve2([S,E,N,D],[M,O,R,E],[M,O,N,E,Y]) :-   
-	Var = [S,E,N,D,M,O,R,Y|_],
-	NoFirstDigits = [E,N,D,O,R,Y|_],
-	perm(NoFirstDigits,[0,1,2,3,4,5,6,7,8,9])
-	perm(Var,[0,1,2,3,4,5,6,7,8,9]),
-	sum([D,N,E,S],Top), sum([E,R,O,M],Middle), sum([Y,E,N,O,M], Bottom),
+solveBase([S,E,N,D],[M,O,R,E],[M,O,N,E,Y],B) :-
+	range(B,All), noZeroes(B,FirstDigit),
+	Var = [S,M,E,N,D,O,R,Y],
+	choose(2,FirstDigit, [S,M]),
+	choose(8,All,Var),
+	sumb([D,N,E,S],Top,B), sumb([E,R,O,M],Middle,B), sumb([Y,E,N,O,M],Bottom,B),
 	Bottom is Top+Middle.
+% [1] 2 ?- solveBase(X,Y,Z,16).
+% X = [15, 12, 13, 11],
+% Y = [1, 0, 14, 12],
+% Z = [1, 0, 13, 12, 7] ;
+% X = [15, 12, 13, 10],
+% Y = [1, 0, 14, 12],
+% Z = [1, 0, 13, 12, 6] ;
+% X = [15, 12, 13, 9],
+% Y = [1, 0, 14, 12],
+% Z = [1, 0, 13, 12, 5] ;
+% X = [15, 12, 13, 8],
+% Y = [1, 0, 14, 12],
+% Z = [1, 0, 13, 12, 4] ;
+% X = [15, 12, 13, 7],
+% Y = [1, 0, 14, 12],
+% Z = [1, 0, 13, 12, 3] ;
+% X = [15, 12, 13, 6],
+% Y = [1, 0, 14, 12],
+% Z = [1, 0, 13, 12, 2] ;
+% X = [15, 11, 12, 13],
+% Y = [1, 0, 14, 11],
+% Z = [1, 0, 12, 11, 8] ;
+% X = [15, 11, 12, 10],
+% Y = [1, 0, 14, 11],
+% Z = [1, 0, 12, 11, 5]
+% X = [15, 11, 12, 9],
+% Y = [1, 0, 14, 11],
+% Z = [1, 0, 12, 11, 4] ;
+% X = [15, 11, 12, 8],
+% Y = [1, 0, 14, 11],
+% Z = [1, 0, 12, 11, 3] ;
+% X = [15, 11, 12, 7],
+% Y = [1, 0, 14, 11],
+% Z = [1, 0, 12, 11, 2] ;
+% X = [15, 10, 11, 13],
+% Y = [1, 0, 14, 10],
+% Z = [1, 0, 11, 10, 7] ;
+% X = [15, 10, 11, 12],
+% Y = [1, 0, 14, 10],
+% Z = [1, 0, 11, 10, 6] ;
+% X = [15, 10, 11, 9],
+% Y = [1, 0, 14, 10],
+% Z = [1, 0, 11, 10, 3] ;
+% X = [15, 10, 11, 8],
+% Y = [1, 0, 14, 10],
+% Z = [1, 0, 11, 10, 2] ;
+% X = [15, 9, 10, 13],
+% Y = [1, 0, 14, 9],
+% Z = [1, 0, 10, 9, 6] ;
+% X = [15, 9, 10, 12],
+% Y = [1, 0, 14, 9],
+% Z = [1, 0, 10, 9, 5]
+% X = [15, 9, 10, 11],
+% Y = [1, 0, 14, 9],
+% Z = [1, 0, 10, 9, 4] ;
+% X = [15, 8, 9, 13],
+% Y = [1, 0, 14, 8],
+% Z = [1, 0, 9, 8, 5] ;
+% X = [15, 8, 9, 12],
+% Y = [1, 0, 14, 8],
+% Z = [1, 0, 9, 8, 4]
+% X = [15, 8, 9, 11],
+% Y = [1, 0, 14, 8],
+% Z = [1, 0, 9, 8, 3] ;
+% X = [15, 8, 9, 10],
+% Y = [1, 0, 14, 8],
+% Z = [1, 0, 9, 8, 2] ;
+% X = [15, 7, 8, 13],
+% Y = [1, 0, 14, 7],
+% Z = [1, 0, 8, 7, 4] ;
+% X = [15, 7, 8, 12],
+% Y = [1, 0, 14, 7],
+% Z = [1, 0, 8, 7, 3] ;
+% X = [15, 7, 8, 11],
+% Y = [1, 0, 14, 7],
+% Z = [1, 0, 8, 7, 2] ;
+% X = [15, 6, 7, 13],
+% Y = [1, 0, 14, 6],
+% Z = [1, 0, 7, 6, 3] ;
+% X = [15, 6, 7, 12],
+% Y = [1, 0, 14, 6],
+% Z = [1, 0, 7, 6, 2] ;
+% X = [15, 5, 6, 13],
+% Y = [1, 0, 14, 5],
+% Z = [1, 0, 6, 5, 2] ;
+% false.
+
+% ______________________________________ Q7 __________________________________________
+
+max(X, Y, X) :- X >= Y, !.
+max(X, Y, Y).
+
+% a)
+%  	max(3,2,2). returns true.
+% b)
+%	doesn't unify with top clause, but does unify trivially with the bottom.
+%  	this error could be introduced because the programmer may think that the 
+%  	cut is enough to prevent the bottom case from being entered if X >= Y.
+
+%  This is valid thinking if the query is used to lookup the max of X and Y
+%  rather than to test the validity of a result.
+
+% c)
+	max2(X, Y, X) :- X >= Y, !. % make the cut a green cut.
+	max2(X, Y, Y) :- Y >= X.
+% d)
+	maxList([V], V).
+	maxList([H|T], V) :- maxList(T, Max), max2(H,Max,V).

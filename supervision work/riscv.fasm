@@ -1,0 +1,14 @@
+.global myfun
+
+myfunL
+	add a0, a0, a1
+
+	ret
+
+
+
+ori rd, r0, (x>>21)			; set low bits of rd with high 11 bits of x
+slli rd, rd, 11				; shift bits up 11
+ori rd, rd, ((x>>10)&0x7ff 	; insert next 11 bits
+slli rd, rd, 10				; shift into place
+ori rd, rd, (x&0x3ff) 		; insert last 10 bits
