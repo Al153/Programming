@@ -1,4 +1,7 @@
-400 400 #Segs	
+CONTROL ->
+
+	400 400 #Segs	
+	
 	gp0, CONST i, // define i and j to be names for the gp0 and gp1 regs
 	gp1, CONST j,			
 
@@ -26,6 +29,7 @@
 	echo( done!)
 	jmp, pc, mov; // jump back to the forth interpreter by moving the jump register to the program counter
 
-	INLINE -> 
 		init 				// init the environment to inline assembler
 		0 easyRun		// execute the above code
+
+;;

@@ -6,3 +6,4 @@
 .\Assembler\lib\controlFlow.fasm
 .\Assembler\lib\stack.fasm
 .\Assembler\lib\libEnd.fth
+.\Assembler\examples\startAssembler.fth

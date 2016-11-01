@@ -105,7 +105,7 @@ fun infertype gamma (Integer n) = SOME int
   | infertype gamma (Skip) = SOME unit
   | infertype gamma (Seq (e1,e2))  
     = (case (infertype gamma e1, infertype gamma e2) of
-           (SOME unit, SOME t2) => SOME t2
+           (SOME t1, SOME t2) => SOME t2
          | _ => NONE )
   | infertype gamma (While (e1,e2)) 
     = (case (infertype gamma e1, infertype gamma e2) of

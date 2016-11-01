@@ -234,7 +234,7 @@ solve(Start,End,Side,Moves) :- doMoves(Start, End, Moves, [(Start, Side)], Side)
 % false.
 
 % (I've removed where the unification for m is printed)
-
+% I have struggled to remove the duplicated move at the start from the list of moves
 
 % __________________________________ Q5 __________________________________
 
@@ -319,6 +319,7 @@ solve2([S,E,N,D],[M,O,R,E],[M,O,N,E,Y]) :-
 % X = [9, 5, 6, 7],
 % Y = [1, 0, 8, 5],
 % Z = [1, 0, 6, 5, 2] ;
+
 % X = [9, 5, 6, 7],
 % Y = [1, 0, 8, 5],
 % Z = [1, 0, 6, 5, 2] ;

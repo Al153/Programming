@@ -15,7 +15,7 @@
 			j, odr; 		// output the number in j
 			j, 3 # moda; 	// j := j % 3
 			j, testr, if; 	// if j then
-				else;		// otherwhise print "fizz"
+				else;		// otherwise print "fizz"
 				echo( fizz) // echo( ..) is a forth word that compiles assembler to print a string
 			endif;
 			echo( \n)
@@ -26,7 +26,7 @@
 	echo( done!\n)
 	jmp, pc, mov; // jump back to the forth interpreter by moving the jump register to the program counter
 
-	INLINE -> 
+
 		init 				// init the environment to inline assembler
 		0 easyRun ;;		// execute the above code
 
