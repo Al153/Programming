@@ -1,0 +1,240 @@
+r@ LABEL! // [ addr -- *addr ]
+	gp0, popE;
+	gp1, gp0, 0 pushE;
+	next;
+
+r+ LABEL!
+	// TODO
+
+r~ 	LABEL!
+	// TODO
+
+r== 	LABEL!
+	// TODO
+	
+
+rISINT 	LABEL!
+	// TODO
+
+rDROPALL 	LABEL! // [ . . . -- ]
+	zro, esp, mov;
+	next;
+
+r!DISK 	LABEL!
+	// TODO
+
+r! 	LABEL!	// [ value addr -- ] stores value to address
+	gp0, popE;
+	gp1, popE;
+	gp1, gp0, 0 sti[];
+	next;
+
+r- 	LABEL!
+	// TODO
+
+r~& 	LABEL!
+	// TODO
+
+rVARIABLE 	LABEL!
+	// TODO
+
+rCONVERTINT 	LABEL!
+	// TODO
+
+r// 	LABEL!
+	// TODO
+
+rSWITCH 	LABEL!
+	// TODO
+
+r. 	LABEL! // [ a -- ] prints the numericalvalue of a to the terminal
+	esp, testr, ESP_UF bra;
+	esp, 4 # suba;
+	esp, EXPRSTCK odr[];
+	next;
+
+r* 	LABEL!
+	// TODO
+
+r~| 	LABEL!
+	// TODO
+
+rCONST 	LABEL!
+	// TODO
+
+r.BUF 	LABEL! // [ -- ] print out the contents of the word buf
+	zro, gp0, mov; // gp0 is the counter
+	CONTROL ->
+		while;
+			gp1, -1 # ldi;
+			gp0, 8 # cma;
+				eq, gp0, zro, op_mov, 0 asm;
+			gp1, gp0, W_BUF anda[];
+
+		gp1, testr, do;
+			gp0, W_BUF oca[];
+		next;
+			gp0, one, addr;
+		loop;
+	;;
+	next;
+
+
+
+rREADC 	LABEL!
+	// TODO
+
+rGETDICT 	LABEL! // [ -- d ] pushes the current dict pointer to the stack
+	dict, DICT ldi;
+	dict, pushE;
+	next
+
+rDUP 	LABEL! // [ A -- A A ]
+	esp, 4 # cma;
+	les, ESP_UF bra;
+	gp0, esp, EXPRSTCK 4 - ldi[];
+	gp0, pushE;
+	next;
+
+r/ 	LABEL!
+	// TODO
+
+r~^ 	LABEL!
+	// TODO
+
+rTABLE 	LABEL!
+	// TODO
+
+r.c 	LABEL! // [ a -- ] prints the character of a to the terminal
+	esp, testr, ESP_UF bra;
+	esp, 4 # suba;
+	esp, EXPRSTCK ocr[];
+	next;
+
+rALLOC 	LABEL!
+	// TODO
+
+rWORDBUF 	LABEL! // ( -- W ) pushes the addressof the wordbuff
+	gp0, W_BUF # ldi;
+	gp0, pushE;
+	next;
+
+rSWAP 	LABEL! // [ A B -- B A ]
+	esp, 8 # cma;
+	les, ESP_UF bra;
+	gp0, esp, EXPRSTCK 4 - ldi[];
+	gp1, esp, EXPRSTCK 8 - ldi[];
+	gp0, esp, EXPRSTCK 8 - sti[];
+	gp1, esp, EXPRSTCK 4 - sti[];
+	next;
+
+r% 	LABEL!
+	// TODO
+
+r<< 	LABEL!
+	// TODO
+
+rREAD 	LABEL! // [ -- ] reads the next token into the word buf
+	// TODO
+
+rPASS 	LABEL! // [--] does nothing
+	next;
+
+rDALLOC 	LABEL!
+	// TODO
+
+rROT 	LABEL!
+	// TODO
+
+ r& 	LABEL!
+ // TODO
+
+r>> 	LABEL!
+	// TODO
+
+rEXEC 	LABEL! // [ ?? addr -- ?? ] calls the address on the stack
+	gp0, popE;
+	pushIP
+	gp0, ip, mov;
+	next;
+
+r.s 	LABEL! // [ -- ] prints out the stack
+	// TODO
+
+rSETDICT 	LABEL! // [ d -- ] sets the DICT value to dict
+	dict, popE;
+	dict, DICT sti;
+	next;
+
+rOVER 	LABEL!
+	// TODO
+
+r| 	LABEL!
+	// TODO
+
+r< 	LABEL!
+	// TODO
+
+rINDICT 	LABEL! // [ -- address? ] tests if the current word buffer is in the dictionary
+	N_SPACE inDict
+
+	dict, DICT ldi;
+	CONTROL ->
+		inDict -> 
+			LABEL: true
+			LABEL: false
+			while;
+					dict, zro, cmr;
+					equ, false bra;
+					one, gp1, mov;
+					gp0, dict, 0 ldi;
+					gp0, W_BUF suba;
+					gp0, testr, true, bra;
+					gp0, dict, 4 ldi;
+					gp0, W_BUF 4 + suba;
+					gp0, testr, true, bra;
+
+					false !LABEL
+					zro, gp1, mov;
+				true !LABEL
+
+	
+	
+			gp1, testr, do;
+				dict, dict, 12 ldi[];			
+			next;
+
+			loop;
+
+			dict, pushE;
+			next;
+
+			
+		;;
+	;;
+
+r.dict 	LABEL!
+	// TODO
+
+rADDBLOCK 	LABEL!
+	// TODO
+
+rDROP 	LABEL!
+	// TODO
+
+r^ 	LABEL!
+	// TODO
+
+r> 	LABEL!
+	// TODO
+
+rCOMPILE 	LABEL!
+	// TODO
+
+rHALT 	LABEL!
+	// TODO
+	RETURN jmp;
+
+r@DISK 	LABEL!
+	// TODO
+

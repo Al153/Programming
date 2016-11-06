@@ -6,17 +6,35 @@ PRINTING -> .( Compiling calling and jumping FASM WORDS...) ;;
 	: jmp[]; // ( reg addr -- )
 		pc, ROT ldi[];
 	;
+
+
+	// Calling convention
+	//
+	//    stack grows up		jmp is the stack pointer
+	//			.
+	//			.
+	// 	|	(Next frame)	|
+	//	|   Return value    | 	- jmp[-4]
+	// 	|-------------------|
+	//	|					|  - jmp[0] points to the bottom of this frame. 
+	//	|					|  - jmp[4] address to return to in this function
+	//	|	Stack pointer	|	
+	//	|	Return Address	|
+	//	|	return value 	|
+	//	|-------------------|
+	//			
+
+
+
 	: calla; // ( address -- )
 		pc, acc, mov;
 		acc, 4 8 * # adda;
-		acc, jmp, 0 sti[];
 		jmp;
 	;
 
 	: calla[]; // ( indexReg address -- )
 		pc, acc, mov;
 		acc, 4 8 * # adda;
-		acc, jmp, 0 sti[];
 		jmp[];
 	;
 
@@ -35,7 +53,7 @@ PRINTING -> .( Compiling calling and jumping FASM WORDS...) ;;
 
 	: return; // ( register frameSize  -- )
 		jmp, SWAP # adda;
-		jmp, -4 sti[]; // takes previous frame
+		jmp, -4 sti[]; // takes from previous frame
 		jmp, 0 jmp[];
 	;
 

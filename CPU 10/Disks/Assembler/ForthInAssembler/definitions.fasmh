@@ -1,0 +1,174 @@
+// Header defining things for whole system
+
+// ( ABC -- DEF ) gives effects on the host stack
+// [ ABC -- DEF ] gives effects on the guest stack
+
+// _________________________ VARIABLES TO RETURN TO THE HSOT FORTH _______________________
+
+0 INT RETURN
+jmp, RETURN sti[];
+
+LABEL: MAIN
+MAIN, jmp;
+
+// _________________________ STACK POINTERS AND REGISTER MAPPINGS ________________________
+
+jmp,  CONST ip,
+stp, CONST esp,
+0 INT TSP_STORE // Assume calls are rare, so store in mem. load into acc when we want to use it
+acc, CONST tsp,
+
+gp7, CONST dict, // pointer to the dict when looping
+
+0 INT DICT
+0 INT C_DICT
+
+// ________________________ stacks _______________________________________
+
+1024 INT[] THRDSTCK
+4096 INT[] EXPRSTCK
+zro, esp, mov;
+
+1024 INT TSP_MAX
+4096 INT ESP_MAX
+
+// _______________________ Global locations ______________________________
+
+8 CHAR[] W_BUF
+
+// ________________________ Thread model labels ______________________________
+
+// labels for code that carries out thread operation
+
+LABEL: tCALL
+
+// ________________________ Primitive labels _____________________________
+
+
+// rNAME : routine to do name
+LABEL: r@
+LABEL: r+
+LABEL: r~
+LABEL: r==
+LABEL: rISINT
+LABEL: rDROPALL
+LABEL: r!DISK
+LABEL: r!
+LABEL: r-
+LABEL: r~&
+LABEL: rVARIABLE
+LABEL: rCONVERTINT
+LABEL: r//
+LABEL: rSWITCH
+LABEL: r.
+LABEL: r*
+LABEL: r~|
+LABEL: rCONST
+LABEL: r.BUF
+LABEL: rREADC
+LABEL: rGETDICT
+LABEL: rDUP
+LABEL: r/
+LABEL: r~^
+LABEL: rTABLE
+LABEL: r.c
+LABEL: rALLOC
+LABEL: rWORDBUF
+LABEL: rSWAP
+LABEL: r%
+LABEL: r<<
+LABEL: rREAD
+LABEL: rPASS
+LABEL: rDALLOC
+LABEL: rROT
+ LABEL: r&
+LABEL: r>>
+LABEL: rEXEC
+LABEL: r.s
+LABEL: rSETDICT
+LABEL: rOVER
+LABEL: r|
+LABEL: r<
+LABEL: rINDICT
+LABEL: r.dict
+LABEL: rADDBLOCK
+LABEL: rDROP
+LABEL: r^
+LABEL: r>
+LABEL: rCOMPILE
+LABEL: rHALT
+LABEL: r@DISK
+
+// ________________________ Exception labels _____________________________
+
+LABEL: ESP_OF
+LABEL: ESP_UF
+LABEL: TSP_OF
+LABEL: TSP_UF
+
+
+// ________________________ Pseudo ops ___________________________________
+
+: _ 0 DROP ; // a do nothing placeholder
+
+: ip++  // ( -- ip, -4) increment ip and leave its previous address on the assemble stack
+	ip 4 # adda;
+	ip -4
+;
+
+: next;		// ( -- ) jumps to the next instruction in the thread
+	pc ip++ ldi[];
+;
+
+: pushE; // ( reg -- ) push a register to the expression stack
+	_ esp, EXPRSTCK sti[];
+	esp, 4 # adda;
+	esp, ESP_MAX cmpa;
+	gre, ESP_OF bra;
+;
+
+: popE; // ( reg -- ) pop into a register
+	esp, testr, ESP_UF bra;
+	esp, 4 # suba;
+	_ esp, EXPRSTCK ldi[];
+;
+
+: 2popE; // ( reg1, reg2 -- ) pop top value into first reg on stack, pop second value into second reg
+	esp, 8 # cma;
+	les, ESP_UF bra;
+	_	esp, EXPRSTCK 4 - ldi[];
+	_ 	esp, EXPRSTCK 8 - ldi[];
+	esp, 8 # suba;
+;
+
+: spushE // ( reg -- ) push a register onto the stack, when we know for sure that it won't overflow. therefore we can avoid the checks
+
+;
+
+: pushIP; // ( -- ) push ip register to the IP stack
+	tsp, TSP_STORE ldi;
+		ip, tsp, THRDSTCK sti[];
+		ip, 4 # adda;
+		tsp, TSP_MAX cmpa;
+		gre, TSP_OF bra;
+	tsp, TSP_STORE sti;
+;
+
+: popIP; // ( -- ) recovers the ip
+	tsp, TSP_STORE ldi;
+		tsp, testr, TSP_UF bra;
+		tsp, 4 # suba;
+		ip, tsp, THRDSTCK ldi[];
+	tsp, TSP_STORE sti;
+;
+
+
+
+
+
+
+tCALL !LABEL
+	gp0 ip++ ldi[];
+	pushIP
+	gp0, ip, mov;
+	next;

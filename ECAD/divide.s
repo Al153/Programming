@@ -25,11 +25,6 @@ do_div:
   		# end
 	# end
 	# 
-	# In assembly, write a function div that for two numbers in
-	# registers a0 and a1, calculates (a0/a1) and returns the quotient
-	# in a0 and remainder in a1. Use the provided example-asm
-	# framework as a starting point, and put your function at
-	# the top of main.s. Call it from the main() function. 
 
 	# Q: a0
 	# R: a1
