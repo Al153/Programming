@@ -48,7 +48,7 @@ module rotary
 			else begin
 			  	if(count_enable) // if we have a count to make
   				begin
-    				if(count_direction) begin // od hte count according to the direction
+    				if(count_direction) begin // do the count according to the direction
     					internalRotPos<=internalRotPos-1;
     					rot_cw <= 1;
     					rot_ccw <= 0;
