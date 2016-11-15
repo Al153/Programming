@@ -1,0 +1,19 @@
+
+spinlock:	
+	loadi r1, 1
+	xchg r1, lock
+	bnez spinlock		if the value read was 1: spin
+
+	do_work
+
+	store zero, lock  unlocks lock
+
+
+lock: 
+
+	call wait_for_lock
+	mov r3, #1
+	ll r4, 0(r1)
+	sc r3, 0(r1)
+	beqz r3, lock
+	bneq r4, lock
