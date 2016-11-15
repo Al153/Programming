@@ -1,6 +1,6 @@
 
 N_SPACE Stack
-PRINTING -> .( Compiling stack FASM WORDS...)
+PRINTING -> .( Compiling stack FASM WORDS...) 
 Stack ->
 	1024 CONST stckSize
 	0 stckSize 1 + #Segs
