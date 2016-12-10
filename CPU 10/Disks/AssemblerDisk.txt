@@ -1,5 +1,6 @@
 .\StdDisks\std.fth
 .\StdDisks\reflection.fth
+.\StdDisks\debug.fth
 .\Assembler\fasm.fth
 .\Assembler\disasm.fth
 .\Assembler\lib\libStart.fth

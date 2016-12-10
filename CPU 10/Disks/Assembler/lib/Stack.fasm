@@ -7,6 +7,7 @@ Stack ->
 	stckSize INT[ 0 ] stack
 	0	INT retValue
 
+	.( HERE\n)
 
 
 	LABEL: sOflow
@@ -28,6 +29,8 @@ Stack ->
 		entry !LABEL
 	;
 
+.( THERE\n)
+
 	: push; // ( reg -- )
 		stp, stckSize 1 - 4 * # cma;
 		gre, sOflow bra;
@@ -48,6 +51,7 @@ Stack ->
 		stp, stack 4 - ldi[];
 	;
 
+.( WHERE\n)
 	: 8push;
 		one, push;
 		one, push;
@@ -58,6 +62,8 @@ Stack ->
 		one, push;
 	;
 
+
+.( EHHH)
 	: 88push;
 		8push; 8push;
 		8push; 8push;
@@ -65,25 +71,15 @@ Stack ->
 		8push; 8push;
 	;
 
+.( PEEKABOO)
+
 	: 888push;
 		88push; 88push;
 		88push; 88push;
 		88push; 88push;
 		88push; 88push;
 	;
+
+.( YOLESNOOBS\n)
 ;;
 .( Done!\n) ;;
-// 40000 400 #Segs
-// init;
-// echo( Done 0\n)
-// 888push;
-// echo( Done 1\n)
-// 888push;
-// echo( done 2????\n)
-// 888push;
-// echo( done 3????\n)
-// pc, retValue ldi;
-// init
-// 
-// SEGMENTS -> codeSegm codePtr @ +  DEBUG -> 1024 addrDump
-// 0 easyRun
