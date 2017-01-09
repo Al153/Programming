@@ -1,5 +1,5 @@
 // _____________ register access functions ________________
-void write_registers(unsigned char addr,unsigned int data){
+inline void write_registers(uint8_t addr,uint32_t data){
 	if (addr > 1){ 				//checks not one and zero regs
 		if (addr == 5){   		//flags set
 			registers[5] |= data;
@@ -13,7 +13,7 @@ void write_registers(unsigned char addr,unsigned int data){
 	}
 }
 
-unsigned int read_registers(unsigned char addr){
+inline uint32_t read_registers(uint8_t addr){
 	if(addr == 6){
 		return registers[5];
 	}

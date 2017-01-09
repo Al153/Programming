@@ -79,6 +79,8 @@ Out @'C'
 Out @'H'
 Out @'E'
 Out @'D'
+Out @32
+Outd Jump
 Halt
 
 Out @'E' %DIV_BY_ZERO
@@ -117,7 +119,7 @@ Move Jump PC
 ####################################################################################################
 
 
-##################### GETC ###############################################
+##################### built in function getc ###############################################
 #returns a char
 In gp0 %function:getc #gets a char without waiting (state of keyboard)
 Store gp0 Expression_stack [gp7]
@@ -136,8 +138,24 @@ Store gp0 Expression_stack [gp7]
 ADD gp7 @4
 Move Jump PC 
 #######################################################################################
+################## built in function dRead ##############################################
 
-########################## PUTC (char) ########################################
+SUB gp7 @4 		 		 %function:dRead									
+								# disk addr, start, length ==> success?
+Load gp3 Expression_stack [gp7] #len
+SUB gp7 @4
+Load gp2 Expression_stack [gp7] #start
+SUB gp7 @4						
+Load gp1 Expression_stack [gp7] #addr
+HDScan gp1 						#scan to the right position
+HDRead gp3 gp2 0 				# read l characters to memory at addr s
+Move Zero gp0 		
+if EOF then Move One gp0 			#test for EOF
+Store gp0 Expression_stack [gp7]  #push flag
+ADD gp7 @4
+Move Jump PC 
+#######################################################################################
+########################## built in function putc ########################################
 SUB gp7 @4 															%function:putc
 Load gp0  Expression_stack [gp7]
 Out gp0
@@ -159,21 +177,41 @@ Out gp1
 ADD gp0 One
 Load PC PrintfLoop
 ############################################################################################################################################
+################## built in function dWrite ##############################################
+
+SUB gp7 @4 		 		 %function:dWrite									
+								# disk addr, start, length ==> success?
+Load gp3 Expression_stack [gp7] #len
+SUB gp7 @4
+Load gp2 Expression_stack [gp7] #start
+SUB gp7 @4						
+Load gp1 Expression_stack [gp7] #addr
+HDScan gp1 						#scan to the right position
+HDWrite gp3 gp2 0 				# write l characters from memory at addr s
+Move Zero gp0 		
+if EOF then Move One gp0 			#test for EOF
+Store gp0 Expression_stack [gp7]  #push flag
+ADD gp7 @4
+Move Jump PC 
+################################################################################################################################################################################################################
 																	Scope main
-def length gp4
 def expression_stack_ptr gp7
 def ret_addr Jump
 def previous_stack_ptr gp5
+#__________ Defining offsets of local variables __________#
+def Local.i 8
+def @Local.i @8
+#__________ End of local variable definitions __________#
 Move Stack_pointer previous_stack_ptr								%function:main
 SUB Stack_pointer @12 									#OVERHEAD FOR FUNCTION main
 Compare Stack_pointer Callstack_ptr
 if Less then Load PC Recursion_limit_reached
 Store ret_addr 0 [Stack_pointer]
-Store previous_stack_ptr 4 [Stack_pointer]
+Store previous_stack_ptr 4 [Stack_pointer]							#GETTING PARAMETERS FOR FUNCTION main
 Load gp0 @0
-Store gp0 8 [Stack_pointer] 						#STORE GP0
+Store gp0 Local.i [Stack_pointer] 						#STORE GP0
 Pass 										%loopmain-0entry
-Load gp1 8 [Stack_pointer] 						#LOAD GP0
+Load gp1 Local.i [Stack_pointer] 						#LOAD GP0
 Load gp0 @100000000
 Move Zero gp2 														#COMPARE (IS LESS)
 Compare gp1 gp0
@@ -181,24 +219,23 @@ if Less then Load gp2 @4294967295
 Move gp2 gp0
 NOT gp0
 if gp0 then Load PC loopmain-0exit 								#WHILE LOOP
-Load gp1 8 [Stack_pointer] 						#LOAD GP0
+Load gp1 Local.i [Stack_pointer] 						#LOAD GP0
 Load gp0 @1
 ADD gp0 gp1 														#ADD
-Store gp0 8 [Stack_pointer] 						#STORE GP0
+Store gp0 Local.i [Stack_pointer] 						#STORE GP0
 Load PC loopmain-0entry					%loopmain-0continue
 Pass 										%loopmain-0exit
-Load gp0 8 [Stack_pointer] 						#LOAD GP0
+Load gp0 Local.i [Stack_pointer] 						#LOAD GP0
 Store gp0 Expression_stack [gp7]									#PUSH GP0
 ADD gp7 @4
 Compare gp7 stack_length
 if Greater then Load PC Stack_overflow_error
 Goto function:print_i 												#CALLING print_i
-Load previous_stack_ptr 4 [Stack_pointer] 							#RETURNING
-Load ret_addr 0 [Stack_pointer]
-Move previous_stack_ptr Stack_pointer
+Load ret_addr 0 [Stack_pointer]										#RETURNING
+Load Stack_pointer 4 [Stack_pointer] 
 Move ret_addr PC
 
-############################## GETW ################################
+############################## built in function getw ################################
 #returns a char
 In gp0 %function:getw 				#waits for a user to press a key
 Compare gp0 Zero

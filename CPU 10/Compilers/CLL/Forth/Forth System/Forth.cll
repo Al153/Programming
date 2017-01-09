@@ -40,9 +40,10 @@
 //
 // Functions relating to Bytecodes:
 
-	// Bytecode interpeter: proceeds through bytecode list executing instructions, can execute any bytecode instruction and when it hits a primitive, performs a Goto to the machine code
-	//						and executes it, storing the current instruction before hand
-	
+	// Bytecode interpeter: proceeds through bytecode list executing instructions, pushLiterals have their data pushed to stack, wordcalls have their data called
+	// Primitive instructions have CLL implementations which are executed. Branches - if the TOS is true, then the first bytecode address is taken
+
+
 	// A  set of primitives: primitives will allow forth to modify its own state.
 
 	////////////////  PRIMITIVE OPCODES //////////////////////////////////////////////////////////////////////////

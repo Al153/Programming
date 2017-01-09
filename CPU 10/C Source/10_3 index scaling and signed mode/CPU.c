@@ -40,8 +40,8 @@ unsigned int registers[16] = {0,1};
 
 //C implementation of my CPU 10
 
-int step(void){   //returns halt, carries out game logic
-	fetch_instruction();
+inline void decode(void){
+
 	opcode = (instruction&0x3f000000)>>24;
 	reg1 =  ((instruction&0x000f0000)>>16); 
 	reg2 =  ((instruction&0x00000f00)>>8);
@@ -49,22 +49,19 @@ int step(void){   //returns halt, carries out game logic
 	useImmediate = instruction>>31; // top bit
 	indexScale = (instruction&0x00f00000)>>20;
 	signedMode = (instruction>>30)&1;
-
 	indexScale = indexScale?indexScale:1;
+}
+
+int step(void){   //returns halt, carries out game logic
+	fetch_instruction();
+	decode();
 	return execute();   //returned value is 1 if needs to return, otherwise false
 }
 
 int debug_step(void){   //returns halt? values, carries out logic
 	fetch_instruction();
-	opcode = (instruction&0x3f000000)>>24;
-	reg1 =  ((instruction&0x000f0000)>>16); 
-	reg2 =  ((instruction&0x00000f00)>>8);
-	conditional = instruction&0xff;
-	useImmediate = instruction>>31; // top bit
-	indexScale = (instruction&0x00f00000)>>20;
-	signedMode = (instruction>>30)&1;
-	indexScale = indexScale?indexScale:1;
-
+	decode();
+	
 	printf("\n%u|  ",registers[4]-8);  //prints out runtime data
 	printf("%i   ", (int) opcode);
 	printf("%i   ", (int) reg1);

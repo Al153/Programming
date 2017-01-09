@@ -79,6 +79,8 @@ Out @'C'
 Out @'H'
 Out @'E'
 Out @'D'
+Out @32
+Outd Jump
 Halt
 
 Out @'E' %DIV_BY_ZERO

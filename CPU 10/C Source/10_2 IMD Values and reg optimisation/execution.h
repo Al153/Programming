@@ -10,9 +10,9 @@ void fetch_address(void){ //fetches address of instruction
 	address = read_step_memory(registers[4]-4);
 }
 
-unsigned char get_conditional(void){ //checks whether instr is conditional and if condition is true returns 1
+uint8_t get_conditional(void){ //checks whether instr is conditional and if condition is true returns 1
 	//woop woop, lots of logic!
-	register unsigned int flagsCopy = registers[5]; // keep a store of the flags, allowing us to lift the reset operation
+	register uint32_t flagsCopy = registers[5]; // keep a store of the flags, allowing us to lift the reset operation
 	if (conditional&128){ //if there is a conditional bit set (if instruction is conditional)
 		if (!(conditional & 64)){ //if conditional based on a flag
 			if (!((1<<(31-(conditional & 31))) & flagsCopy)){ //if condition true
@@ -44,26 +44,26 @@ unsigned char get_conditional(void){ //checks whether instr is conditional and i
 	}
 }
 
-unsigned int do_ALU_op(unsigned int value1,unsigned int value2,unsigned char opcode){
-	unsigned int ALU_return_array[3];
+uint32_t do_ALU_op(uint32_t value1,uint32_t value2,uint8_t opcode){
+	static uint32_t ALU_return_array[3];
 	opcode &= 15;
 	if (opcode == 14){ //add with carry
-		if (!(registers[5]&16)){ //if no carry flag do a normal addition
-			opcode = 0;
-		} else {
+		if (registers[5]&16){ 
 			registers[5] &= 4294967279;  //reset carry flag
+		} else { // if no carry flag do a normal addition
+			opcode = 0;
 		}
 	} else if(opcode == 15){ //sub with borrow
-		if (!(registers[5] & 8)){  //if no borrow flag then do a normal subtract
-			opcode= 1;
-		} else {
-			registers[5] &= 4294967287; //reset carry flag
+		if (registers[5] & 8){ 
+			registers[5] &= 4294967287; //reset carry flag	
+		} else {  //if no borrow flag then do a normal subtract
+			opcode = 1;
 		}
 	}
 	ALU_op(ALU_return_array,value1,value2,opcode); //run ALU operation
-	if (opcode == 2){  //if mmultiplication, ACC register = top 32bits of result
+	if (opcode == 2){  //if multiplication, ACC register = top 32bits of result
 		registers[2] = ALU_return_array[1]; 
 	}
-	registers[5] |= ALU_return_array[2]; //rupdate flags
+	registers[5] |= ALU_return_array[2]; //update flags
 	return ALU_return_array[0]; //return value of result
 }

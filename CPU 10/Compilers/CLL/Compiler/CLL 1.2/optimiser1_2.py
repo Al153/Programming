@@ -8,8 +8,16 @@ def assembly_optimise(assembly_code):
 	assembly_code = reorder_relative_stores_gp1(assembly_code)
 	assembly_code = reorder_relative_loads_gp0(assembly_code)
 	assembly_code = reorder_relative_loads_gp1(assembly_code)
+	assembly_code = remove_double_negate(assembly_code)
 	#assembly_code = remove_redundant_returns(assembly_code) kills not useful code
 	return assembly_code+"\n" 
+
+def replace_pattern(assembly_code, pattern, replace):
+	while pattern in assembly_code:
+		index = assembly_code.index(pattern)
+		assembly_code = assembly_code[:index] + replace + replace_pattern(assembly_code[index+len(pattern):], pattern, replace)
+	return assembly_code
+
 
 def peephole_optimise(assembly_code):
 	return peephole_gp0(peephole_gp1(peephole_gp6(assembly_code)))
@@ -22,11 +30,11 @@ if Greater then Load PC Stack_overflow_error
 SUB gp7 @4 															#POP GP0
 Load gp0 Expression_stack [gp7]
 '''
-	while push_pop_type_0 in assembly_code:
-		#print "optimisations"
-		index = assembly_code.index(push_pop_type_0)
-		assembly_code = assembly_code[:index]+assembly_code[index+len(push_pop_type_0):]
-	return assembly_code
+	return replace_pattern(assembly_code, push_pop_type_0,"")
+#	while push_pop_type_0 in assembly_code:
+#		index = assembly_code.index(push_pop_type_0)
+#		assembly_code = assembly_code[:index]+assembly_code[index+len(push_pop_type_0):]
+#	return assembly_code
 
 def peephole_gp1(assembly_code):
 	push_pop_type_1 = '''Store gp0 Expression_stack [gp7]									#PUSH GP0
@@ -36,11 +44,12 @@ if Greater then Load PC Stack_overflow_error
 SUB gp7 @4 															#POP GP1
 Load gp1 Expression_stack [gp7]
 '''
-	while push_pop_type_1 in assembly_code: #push gp0 pop gp1 ==> Move gp0 gp1
-		#print "optimisations"
-		index = assembly_code.index(push_pop_type_1)
-		assembly_code = assembly_code[:index]+"Move gp0 gp1 						#PUSH gp0 POP gp1\n"+assembly_code[index+len(push_pop_type_1):]
-	return assembly_code
+	return replace_pattern(assembly_code, push_pop_type_1, "Move gp0 gp1 						#PUSH gp0 POP gp1\n")
+#	while push_pop_type_1 in assembly_code: #push gp0 pop gp1 ==> Move gp0 gp1
+#		#print "optimisations"
+#		index = assembly_code.index(push_pop_type_1)
+#		assembly_code = assembly_code[:index]+"Move gp0 gp1 						#PUSH gp0 POP gp1\n"+assembly_code[index+len(push_pop_type_1):]
+#	return assembly_code
 
 def peephole_gp6(assembly_code):
 	push_pop_type_2 = '''Store gp0 Expression_stack [gp7]									#PUSH GP0
@@ -50,12 +59,12 @@ if Greater then Load PC Stack_overflow_error
 SUB gp7 @4 															#POP TO INDEX REGISTER
 Load gp6 Expression_stack [gp7]
 '''
-
-	while push_pop_type_2 in assembly_code: #push gp0 pop gp1 ==> Move gp0 gp1
-		#print "optimisations"
-		index = assembly_code.index(push_pop_type_2)
-		assembly_code = assembly_code[:index]+"Move gp0 gp6 						#PUSH gp0 POP gp6\n"+assembly_code[index+len(push_pop_type_2):]	
-	return assembly_code
+	return replace_pattern(assembly_code, push_pop_type_2, "Move gp0 gp6 						#PUSH gp0 POP gp6\n")
+#	while push_pop_type_2 in assembly_code: #push gp0 pop gp1 ==> Move gp0 gp1
+#		#print "optimisations"
+#		index = assembly_code.index(push_pop_type_2)
+#		assembly_code = assembly_code[:index]+"Move gp0 gp6 						#PUSH gp0 POP gp6\n"+assembly_code[index+len(push_pop_type_2):]	
+#	return assembly_code
 
 def remove_tabs_and_spaces(assembly_code):
 	#removes whitespace in whitespace only lines
@@ -217,8 +226,27 @@ def reorder_relative_loads_gp0(assembly_code):
 	assembly_code = '\n'.join(lines)
 	return peephole_gp0(assembly_code)
 
+def remove_double_negate(assembly_code):
+	pattern = """
+NOT gp0 														
+NOT gp0 														    #IF STATEMENT"""
+	return replace_pattern(assembly_code, pattern,"")
+
+
+# more patterns to optimise out
+
 #Load gp6 @2
 #MUL gp6 @4 														   #INDEXING FOR @INT
 #ADD gp6 36 [Stack_pointer] 							#LOAD GP0 RELATIVE
 #SUB gp7 @4 															#POP GP1
 #Load gp1 Expression_stack [gp7]
+
+#Load gp0 @100000000
+#Move Zero gp2 														#COMPARE (IS LESS)
+#Compare gp1 gp0
+
+#Move gp2 gp0
+#if gp0 then
+
+#Load gp0 0 [gp6]
+#Move gp0 gp1 						#PUSH gp0 POP gp1

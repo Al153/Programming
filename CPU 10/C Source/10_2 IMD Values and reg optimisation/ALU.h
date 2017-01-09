@@ -1,8 +1,8 @@
 // __________________ ALU _____________________________
 
-void ADD(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int flags = 0;
-	unsigned int result = r1_value + r2_value;
+void ADD(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t flags = 0;
+	uint32_t result = r1_value + r2_value;
 	if (result < r1_value){	//if there is a carry
 		flags = 16;
 	} else flags = 0;
@@ -10,9 +10,9 @@ void ADD(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	to_return[2] = flags;
 }
 
-void SUB(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int result = r1_value - r2_value;
-	unsigned int flags = 0;
+void SUB(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t result = r1_value - r2_value;
+	uint32_t flags = 0;
 	if (result > r1_value){ 	//if there is a borrow
 		flags = 8;
 	} else flags = 0;
@@ -20,18 +20,18 @@ void SUB(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	to_return[2] = flags;
 }
 
-void MUL(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned long long long_result = (unsigned long long)r1_value * (unsigned long long)r2_value;
-	unsigned int result = long_result & 4294967295;
-	unsigned int top_of_result = (unsigned int) (long_result>>32);
+void MUL(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint64_t long_result = (uint64_t)r1_value * (uint64_t)r2_value;
+	uint32_t result = long_result & 4294967295;
+	uint32_t top_of_result = (uint32_t) (long_result>>32);
 	to_return[0] = result;
 	to_return[1] = top_of_result;
 	to_return[2] = 0;
 }
 
-void DIV(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int flags = 0;
-	unsigned int result;
+void DIV(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t flags = 0;
+	uint32_t result;
 	if  (r2_value == 0){ 	//division by 0
 		flags = 4;
 		result = 4294967295;	
@@ -44,9 +44,9 @@ void DIV(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	to_return[2] = flags;
 }
 
-void MOD(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int flags = 0;
-	unsigned int result;
+void MOD(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t flags = 0;
+	uint32_t result;
 	if (r2_value == 0){
 		flags = 4;
 		result = 0;
@@ -58,49 +58,49 @@ void MOD(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	to_return[2] = flags;
 }
 
-void AND(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int result = r1_value & r2_value;
+void AND(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t result = r1_value & r2_value;
 	to_return[0] = result;
 	to_return[2] = 0;
 }
 
-void OR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int result = r1_value | r2_value;
+void OR(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t result = r1_value | r2_value;
 	to_return[0] = result;
 	to_return[2] = 0;
 }
 
-void XOR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int result = r1_value ^ r2_value;
+void XOR(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t result = r1_value ^ r2_value;
 	to_return[0] = result;
 	to_return[2] = 0;
 }
 
-void NOT(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
+void NOT(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
 	to_return[0] = r1_value^0xffffffff;
 	to_return[2] = 0;
 }
 
-void NAND(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int result = (r1_value & r2_value) ^ 4294967295;
+void NAND(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t result = (r1_value & r2_value) ^ 4294967295;
 	to_return[0] = result;
 	to_return[2] = 0;
 }
 
-void NOR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int result = (r1_value | r2_value) ^ 4294967295;
+void NOR(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t result = (r1_value | r2_value) ^ 4294967295;
 	to_return[0] = result;
 	to_return[2] = 0;
 }
 
-void XNOR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int result = (r1_value ^ r2_value) ^ 4294967295;
+void XNOR(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t result = (r1_value ^ r2_value) ^ 4294967295;
 	to_return[0] = result;
 	to_return[2] = 0;
 }
 
-void SHL(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int result;
+void SHL(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t result;
 	if (r2_value < 32){
 		result = (r1_value << r2_value)&4294967295;
 	} else {
@@ -110,8 +110,8 @@ void SHL(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	to_return[2] = 0;
 }
 
-void SHR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int result;
+void SHR(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t result;
 	if (r2_value < 32){
 		result = (r1_value >> r2_value)&4294967295;
 	} else {
@@ -121,9 +121,9 @@ void SHR(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
 	to_return[2] = 0;
 }
 
-void ADDc(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int flags = 0;
-	unsigned int result = r1_value + r2_value + 1;
+void ADDc(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t flags = 0;
+	uint32_t result = r1_value + r2_value + 1;
 	if (result < r1_value){	//if there is a carry
 		flags = 16;
 	}
@@ -132,9 +132,9 @@ void ADDc(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value)
 	to_return[2] = flags;
 }
 
-void SUBb(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value){
-	unsigned int flags = 0;	
-	unsigned int result = r1_value - r2_value - 1;
+void SUBb(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value){
+	uint32_t flags = 0;	
+	uint32_t result = r1_value - r2_value - 1;
 	if (result > r1_value){ 	//if there is a borrow
 		flags = 8;
 	}
@@ -142,8 +142,8 @@ void SUBb(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value)
 	to_return[2] = flags;
 }
 
-void (*ALU_OPS[16])(unsigned int *,unsigned int,unsigned int) = {&ADD,&SUB,&MUL,&DIV,&MOD,&AND,&OR,&XOR,&NOT,&NAND,&NOR,&XNOR,&SHL,&SHR,&ADDc,&SUBb};
+void (*ALU_OPS[16])(uint32_t *,uint32_t,uint32_t) = {&ADD,&SUB,&MUL,&DIV,&MOD,&AND,&OR,&XOR,&NOT,&NAND,&NOR,&XNOR,&SHL,&SHR,&ADDc,&SUBb};
 
-void ALU_op(unsigned int *to_return, unsigned int r1_value, unsigned int r2_value, unsigned char opcode){ //need to pass an array to the function
+void ALU_op(uint32_t *to_return, uint32_t r1_value, uint32_t r2_value, uint8_t opcode){ //need to pass an array to the function
 	ALU_OPS[opcode](to_return,r1_value,r2_value);
 }

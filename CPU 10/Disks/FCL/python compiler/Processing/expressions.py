@@ -26,9 +26,9 @@ def processExpr(parseTree,scope,result,freeRegs,resReg):
 
 	elif len(parseTree.children) == 3:
 		middle = parseTree.children[1]
-		if middle.type == "Expr":
+		if middle.type == "Expr": # ( expr )
 			return processExpr(middle,child,scope,result,freeRegs,resReg)
-		if middle.type in ("MulOp","AddOp"):
+		if middle.type in ("MulOp","AddOp"): # expr1 op expr2
 			return	processOp(parseTree,scope,result,freeRegs,resReg)
 		else:
 			raise NodeError()

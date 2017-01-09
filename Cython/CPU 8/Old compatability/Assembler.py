@@ -1,5 +1,5 @@
 #assembly instruction format: <Opcode> <operand1> {operand2} [flags]
-#<cumpulsory> {not used in V-type instruction (e.g. goto)} [optional]
+#<compulsory> {not used in V-type instruction (e.g. goto)} [optional]
 
 #e.g.:
 #LOD gp2 10   @ldd

@@ -1,7 +1,6 @@
 //________________ memory access functions ____________________
-//#include <stdint.h>
 
-inline unsigned int bswap_32(unsigned int a){ //swaps from little endian to big endian and vice versa
+inline uint32_t bswap_32(uint32_t a){ //swaps from little endian to big endian and vice versa
 	return ((a>>24)&0xff) | // move byte 3 to byte 0
                     ((a<<8)&0xff0000) | // move byte 1 to byte 2
                     ((a>>8)&0xff00) | // move byte 2 to byte 1
@@ -13,9 +12,9 @@ inline unsigned short bswap_16(unsigned short a){ //swaps from little endian to 
 }
 
 
-void store_memory(unsigned int data){
+void store_memory(uint32_t data){
 	if (useImmediate) return;
-	unsigned int *int_MEM = (unsigned int *)(MEMORY + (address&MEMORY_LIMIT));
+	uint32_t *int_MEM = (uint32_t *)(MEMORY + (address&MEMORY_LIMIT));
 	if (__builtin_expect(address+3>MEMORY_LIMIT, 0)){
 		printf("ADDRESS OVERFLOW: %u\n",address);
 		exit(1);
@@ -23,7 +22,7 @@ void store_memory(unsigned int data){
 	*int_MEM = bswap_32(data);
 }
 
-void store_word_memory(unsigned int data){
+void store_word_memory(uint32_t data){
 	if (useImmediate) return;
 	unsigned short *word_MEM = (unsigned short *)(MEMORY + (address&MEMORY_LIMIT));
 	if( __builtin_expect(address+1>MEMORY_LIMIT, 0)){
@@ -33,21 +32,21 @@ void store_word_memory(unsigned int data){
 	*word_MEM = bswap_16((unsigned short) data);
 }
 
-void store_byte_memory(unsigned int data){
+void store_byte_memory(uint32_t data){
 	if (useImmediate) return;
 	if (__builtin_expect(address>MEMORY_LIMIT,0)){
 		printf("ADDRESS OVERFLOW: %u\n",address);
 		exit(1);
 	}
-	MEMORY[address&MEMORY_LIMIT] = (unsigned char)data&255;
+	MEMORY[address&MEMORY_LIMIT] = (uint8_t)data&255;
 };
 
 
 
 
-unsigned int read_memory(void){ //reads an int from memory
+uint32_t read_memory(void){ //reads an uint32_t from memory
 	if (useImmediate) return address;
-	unsigned int *int_MEM = (unsigned int *) (MEMORY + (address&MEMORY_LIMIT));
+	uint32_t *int_MEM = (uint32_t *) (MEMORY + (address&MEMORY_LIMIT));
 	if (__builtin_expect(address+3>MEMORY_LIMIT, 0)){
 		printf("ADDRESS OVERFLOW: %u\n",address);
 		exit(1);
@@ -55,8 +54,8 @@ unsigned int read_memory(void){ //reads an int from memory
 	return bswap_32(*int_MEM);
 }
 
-unsigned int read_step_memory(unsigned int addr){ //reads an int from memory using the passed address. This is used to fetch parts of the instruction
-	unsigned int *int_MEM = (unsigned int *) (MEMORY + (addr&MEMORY_LIMIT));
+uint32_t read_step_memory(uint32_t addr){ //reads an uint32_t from memory using the passed address. This is used to fetch parts of the instruction
+	uint32_t *int_MEM = (uint32_t *) (MEMORY + (addr&MEMORY_LIMIT));
 	if (__builtin_expect(addr+3>MEMORY_LIMIT, 0)){
 		printf("ADDRESS OVERFLOW: %u\n",addr);
 		exit(1);
@@ -64,21 +63,21 @@ unsigned int read_step_memory(unsigned int addr){ //reads an int from memory usi
 	return bswap_32(*int_MEM);
 }
 
-unsigned int read_word_memory(void){ //reads a 16 bit word from memory
+uint32_t read_word_memory(void){ //reads a 16 bit word from memory
 	if (useImmediate) return address&0xffff;
 	unsigned short *word_MEM = (unsigned short *) (MEMORY + (address&MEMORY_LIMIT));
 	if (__builtin_expect(address+1>MEMORY_LIMIT, 0)){
 		printf("ADDRESS OVERFLOW: %u\n",address);
 		exit(1);
 	}
-	return bswap_16((unsigned int) *word_MEM);
+	return bswap_16((uint32_t) *word_MEM);
 }
 
-unsigned int read_byte_memory(void){ //reads an 8 bit byte from memory
+uint32_t read_byte_memory(void){ //reads an 8 bit byte from memory
 	if (useImmediate) return address&0xff;
 	if (__builtin_expect(address+3>MEMORY_LIMIT, 0)){
 		printf("ADDRESS OVERFLOW: %u\n",address);
 		exit(1);
 	}
-	return (unsigned int) MEMORY[address&MEMORY_LIMIT]; 
+	return (uint32_t) MEMORY[address&MEMORY_LIMIT]; 
 }

@@ -16,7 +16,7 @@ unit key_schedule(type rc4Table s, char[] key, int keylength){
 }
 
 
-int generate(type rc4Table s, char[] j){
+int generate(type rc4Table s){
 	s.i = (s.i + 1)&255; //loops when hits 255
 	s.j = (s.j + s.array[s.i])&255; //uses @chars to cause side effects - modify outside vars
 	temp = s.array[s.i]; //swap s.array[i] and s.array[j]
@@ -33,5 +33,5 @@ unit encrypt(char[] plaintext, int length,char key, int keylength){
 
 	int char_pointer;
 	for (int char_pointer = 0;char_pointer < length; char_pointer = char_pointer+1)
-		plaintext[char_pointer] = char(int(plaintext[char_pointer])^generate(S,@i,@j));
+		plaintext[char_pointer] = char(int(plaintext[char_pointer])^generate(S));
 }

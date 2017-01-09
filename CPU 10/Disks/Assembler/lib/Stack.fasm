@@ -47,43 +47,5 @@ Stack ->
 		sUflow jmp;
 		stp, stack 4 - ldi[];
 	;
-
-	: 8push;
-		one, push;
-		one, push;
-		one, push;
-		one, push;
-		one, push;
-		one, push;
-		one, push;
-	;
-
-	: 88push;
-		8push; 8push;
-		8push; 8push;
-		8push; 8push;
-		8push; 8push;
-	;
-
-	: 888push;
-		88push; 88push;
-		88push; 88push;
-		88push; 88push;
-		88push; 88push;
-	;
-;;
-.( Done!\n) ;;
-// 40000 400 #Segs
-// init;
-// echo( Done 0\n)
-// 888push;
-// echo( Done 1\n)
-// 888push;
-// echo( done 2????\n)
-// 888push;
-// echo( done 3????\n)
-// pc, retValue ldi;
-// init
-// 
-// SEGMENTS -> codeSegm codePtr @ +  DEBUG -> 1024 addrDump
-// 0 easyRun
+	.( Done!\n)
+;; ;;

@@ -31,7 +31,7 @@ def processAddOp(parseTree,scope,result,freeRegs,resReg):
 	# preconditions:
 	#	parseTree is an "Expr -> addOp Expr" node
 	#	resReg is in freeRegs
-	#	freeRegs is the list of registers currently availible to the compiler
+	#	freeRegs is the list of registers currently available to the compiler
 	#	the result ends up in the resReg
 	if len(freeRegs)<1:
 		pushedReg = filter((lambda s: not s in freeRegs),registerNames.regNames)[0]

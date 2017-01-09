@@ -14,7 +14,7 @@ int load_HD(char *name){
 }
 
 static unsigned int DISK_ADDRESS;
-unsigned int DiskSeekABSOLUTE(){ //seeks to ABSOLUTE position on disk
+unsigned int DiskSeekABSOLUTE(address){ //seeks to ABSOLUTE position on disk
 	if (HD_LOADED == 0) return 1; // failure
 	if (fseek(HD_FILE, (long int) address, SEEK_SET) != 0) return 1; // failure
 	return 0;

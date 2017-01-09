@@ -1,5 +1,5 @@
 
-datatype signal = Dit | Dah
+datatype signal = Dit | Dah;
 datatype trie =
 	Lf0
 	| Lf1 of char

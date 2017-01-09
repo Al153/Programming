@@ -1,0 +1,9 @@
+.\disk.fth
+.\blck.fth
+.\format.fth
+.\datablck.fth
+.\inode.fth
+.\fd.fth
+.\dir.fth
+.\shell.fth
+.\end.fth

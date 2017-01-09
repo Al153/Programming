@@ -1,16 +1,19 @@
 // function for every opcode in the CPU's instruction set
+#define CONTINUE return 0;   		//don't halt
+# define HALT return 1;   		//halt
+
 
 int Halt(void){
-	return 1;   		//halt
+	HALT
 }
 
 int Pass(void){
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Move(void){
 	write_registers(reg2,read_registers(reg1));
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Load(void){
@@ -24,7 +27,7 @@ int Store(void){
 	fetch_address();
 	address += read_registers(reg2);
 	store_memory(read_registers(reg1));
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Compare_regs(void){
@@ -40,7 +43,7 @@ int Compare_regs(void){
 	else {
 		registers[5] |= 32;
 	}	
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Compare_addr(void){
@@ -58,71 +61,71 @@ int Compare_addr(void){
 	else {
 		registers[5] |= 32;
 	}
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Out_reg(void){
 	out_char(read_registers(reg1));
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Out_addr(void){
 	fetch_address();
 	address += read_registers(reg2);
 	out_char(read_memory());
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Outd_reg(void){
 	out_data(read_registers(reg1));
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Outd_addr(void){
 	fetch_address();
 	address += read_registers(reg2);
 	out_data(read_memory());
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Load_byte(void){
 	fetch_address();
 	address += read_registers(reg2);
 	write_registers(reg1,read_byte_memory());
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Store_byte(void){
 	fetch_address();
 	address += read_registers(reg2);
 	store_byte_memory(read_registers(reg1));
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Load_word(void){
 	fetch_address();
 	address += read_registers(reg2);
 	write_registers(reg1,read_word_memory()); 
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int Store_word(void){
 	fetch_address();
 	address += read_registers(reg2);
 	store_word_memory(read_registers(reg1));
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int in_reg(void){
 	write_registers(reg1,input());
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int in_addr(void){
 	fetch_address();
 	address += read_registers(reg2);
 	store_memory(input());
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int ALU_op_reg(void){
@@ -130,7 +133,7 @@ int ALU_op_reg(void){
 	unsigned int reg2_value = read_registers(reg2);
 	reg1_value = do_ALU_op(reg1_value,reg2_value,opcode&15);
 	write_registers(reg1,reg1_value);
-	return 0;   		//don't halt
+	CONTINUE
 }
 
 int ALU_op_addr(void){
