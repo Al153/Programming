@@ -7,7 +7,6 @@ Stack ->
 	stckSize INT[ 0 ] stack
 	0	INT retValue
 
-	.( HERE\n)
 
 
 	LABEL: sOflow
@@ -29,8 +28,6 @@ Stack ->
 		entry !LABEL
 	;
 
-.( THERE\n)
-
 	: push; // ( reg -- )
 		stp, stckSize 1 - 4 * # cma;
 		gre, sOflow bra;
@@ -50,41 +47,5 @@ Stack ->
 		sUflow jmp;
 		stp, stack 4 - ldi[];
 	;
-<<<<<<< HEAD
 	.( Done!\n)
 ;; ;;
-=======
-
-.( WHERE\n)
-	: 8push;
-		one, push;
-		one, push;
-		one, push;
-		one, push;
-		one, push;
-		one, push;
-		one, push;
-	;
-
-
-.( EHHH)
-	: 88push;
-		8push; 8push;
-		8push; 8push;
-		8push; 8push;
-		8push; 8push;
-	;
-
-.( PEEKABOO)
-
-	: 888push;
-		88push; 88push;
-		88push; 88push;
-		88push; 88push;
-		88push; 88push;
-	;
-
-.( YOLESNOOBS\n)
-;;
-.( Done!\n) ;;
->>>>>>> origin/master
