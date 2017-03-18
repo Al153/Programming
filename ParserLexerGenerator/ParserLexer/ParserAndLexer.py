@@ -17,7 +17,7 @@ def PAL(sourceTextFile,PALdictFile): # <- these are file handles
 				"dfas":{},
 				"rules":[]
 			},
-			"Terminals": {},
+			"Terminals": [],
 			"ElementaryTokens":[],
 			"Ignore":[]
 		}

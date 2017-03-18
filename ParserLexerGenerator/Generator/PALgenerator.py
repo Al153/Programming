@@ -131,7 +131,7 @@ def getElements(text):
 
 def getElements(line):
 		whitespace = [' ','\t']
-		escaped_dict = {"n":"\n","t":"\t",'"':'"'}
+		escaped_dict = {"n":"\n","t":"\t",'"':'"',"r":"\r"}
 		line_tokens = []
 		current_token = ''
 		string = 0

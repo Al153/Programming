@@ -24,19 +24,25 @@ class Parser:
 
 	def parse_step(self):                                                                           #main parsing step, repeated till done or error
 		top_state = self.parse_tree_stack[-1]                                                       #get the top state of the stack
+		print "State = ", top_state, "--", self.lookahead.type, "-->",
 		try:
 			#print self.lookahead.type,self.lookahead.string,
 			next_action_tuple = self.lookahead_action_table[top_state][self.lookahead.type]          #uses table to calculate next values
 			#print next_action_tuple
 		except KeyError:
-			next_action_tuple = ("error",'not expecting terminal type = '+self.lookahead.type+', terminal = "'+self.lookahead.string+'"')                                   #if there is an error, then call error
+			next_action_tuple = ("error",'not expecting terminal type = '+self.lookahead.type+', terminal = "'+self.lookahead.string+'"')                                  #if there is an error, then call error
+			print "expecting:", "\n\t".join(self.lookahead_action_table[top_state].keys())
+		print next_action_tuple
 		if next_action_tuple[0] == "shift":                                                         #carries out a shift operation
 			self.debug_string += self.lookahead.string
 			self.shift(next_action_tuple[1])                                                        
 			return 0                                                                                #returns 1 if done, so this is not done
 		elif next_action_tuple[0] == "reduce":
 			return self.reduce(next_action_tuple[1])                                                       #next action tuple[1] = pattern number      #carries out a reduce operation
+		
+		# this state is never reached
 		elif next_action_tuple[0] == "done":                                                        #if parsing complete, report back that it is done
+			print "done!"
 			done = self.done()
 			if done:
 				return 1

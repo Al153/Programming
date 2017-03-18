@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Parser/Parser.iml" filepath="$PROJECT_DIR$/Parser/Parser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Slang.iml" filepath="$PROJECT_DIR$/Slang.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Parser/src/.idea/modules/src.iml" filepath="$PROJECT_DIR$/Parser/src/.idea/modules/src.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Parser/src/.idea/modules/src-build.iml" filepath="$PROJECT_DIR$/Parser/src/.idea/modules/src-build.iml" />
+    </modules>
+  </component>
+</project>
