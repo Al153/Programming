@@ -1,0 +1,108 @@
+// Define how to manipulate the stack
+
+
+N_SPACE STACKTLS
+STACKTLS ->
+	VARIABLE TopReg // points to next gp to put a stack value in
+	0 TopReg !
+	7 CONST topLimit // only use 7 regs for the stack
+
+
+	// stack pointer should always point to the top of the stack that isn't in memory resides
+
+	: dupFrame  // ( -- ) TODO: duplicate frame in registers to the stack
+		temp, HpLimit ldi;
+		temp, sp, 4 # cma[]; // need space for 4 registers, so check there is space
+		fp, sp, 2 CELLS # ldi[]; // fp = sp + 2 * spaces
+		3 ts, sp, STACK 0 CELLS + sti[];
+		2 ts, sp, STACK 1 CELLS + sti[];
+		1 ts, sp, STACK 2 CELLS + sti[];
+		0 ts, sp, STACK 3 CELLS + sti[];
+	;
+
+	: flshRegs // ( -- ) TODO: flush regs representing the stack into memory
+		
+		// check there is space on the stack
+		temp, HpLimit ldi; // load up the heap limit
+		temp, sp, TopReg @ # cma[];
+		less, 1 nskip;
+
+		unc, STACK_OVERFLOW_ERROR bra;
+
+		topreg @ while
+			topreg --
+			topreg @ stp STACK topreg @ CELLS + sti[];
+		topreg @ loop
+		stp, topreg @ CELLS # adda; // make stack space.
+	;
+
+
+	: Recentre // ( n -- ) spill regs to stack, leaving n values in registers
+
+	;
+
+	: expand TopReg += TopReg @ topLimit < if else ." ERROR, top reg has got too high.\n" then ; // ( n -- ) Sets topreg to make space on the stack. Assumes there is enough space
+
+	: check // ( offset, calculated -- [ reg 0 | stackOffset 1 ])
+		DUP
+		topLimit < if
+			0
+		else
+			topLimit - 1 // get original stackOffset
+			// Now we need to bring more stack values into the registers
+
+			4 Recentre
+		then 
+	;
+
+	: pop // ( n -- )
+
+		// TODO
+		// pop n values from the stack
+		DUP TopReg @ =< if
+			TopReg -= // reduce the top reg pointer by n
+		else
+			TopReg @ - // otherwise, move values into the registers, and update the stack pointer
+			0 TopReg !
+			sp, SWAP CELLS # suba;
+		then
+	;
+
+	: pushr; // ( reg -- ) pseudo instr to move a register to the top of the stack, reg should be acc, zro, one etc
+		TopReg @ topLimit < if 
+		else 
+			3 Recentre
+		then
+			TopReg ++
+			TopReg @ gp0, + mov;
+	; 
+	
+
+	: ts, // ( offset -- reg ) gets the register for a particular stack offset
+		// in any one instruction, one should get the register with the greatest offset first
+		// this is in order to ensure that all stack values are in the registers first
+		1 while
+			DUP TopReg @ + check
+		loop gp0, +
+	;
+
+	: restStck // ( -- )
+		// restores the stack upon return from a function so that we are in the right place.
+		4 TopReg ! // simply this, since callee restores registers to half way
+	; 
+
+	: ClsHpPos 3 + CELLS HEAP + ; // ( n -- pos ) get heap offset of nth item in a closure
+	: memStPos CELLS STACK + 1 CELLS - ; // ( n -- pos ) get stack offset of nth item in memory location
+
+	: CLSR_PSH // ( n -- )
+		// picks nth item from the stack into the closure
+		DUP topreg @ < if
+			DUP gp0, + SWAP temp, SWAP ClsHpPos 
+		else 
+			DUP ClsHpPos SWAP // get the position in the closure to move into
+			topreg @ - memStPos // need to get (n-tr)th element from memory stack
+			acc, SWAP sp, SWAP ldi[];
+			acc, SWAP temp, SWAP  sti[]; 
+		then
+	;
+;;

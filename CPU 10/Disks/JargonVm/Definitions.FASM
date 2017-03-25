@@ -1,0 +1,20 @@
+// RUNTIME:
+
+: sp, stp, ; // sp points to where the next spilled register stack value should go
+: fp, jmp, ;
+: temp, acc, ;
+: acc, gp7, ; // use gp7 as an accumulator/spare value
+
+: CELLS 4 * ; // ( n -- 4*n ) scales up indices to cell widths
+: INSTRS 8 * ; // ( n -- 8*n ) scales up to register widths
+
+// Stack Frame
+	// *(fp+4) 	ret addr
+	// *fp:		previous fp
+	// *(fp-4) 	closure ->
+	// *(fp-8) 	argument value
+
+// Heap stuff
+
+	// *obj TypeHeader
+	// *(obj + 4n) info

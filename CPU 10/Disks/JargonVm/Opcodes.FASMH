@@ -1,0 +1,7 @@
+// This file defines common PseudoInstrs and values for Opcodes.FASM
+: TypeChk; // ( TypeHeader -- ) 
+	// does a run time typecheck
+	temp, acc, HEAP ldi[];
+	temp, SWAP # suba;
+	testr, RUNTIME_TYPE_ERROR bra;
+; 

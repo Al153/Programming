@@ -1,0 +1,10 @@
+VARIABLE FORTHRET // address to return back to FORTH land
+
+// define the parts of the data segments
+
+DATASIZE CHAR[] STACK // contains the stack and heap. Stack grows up, heap grows down
+STACK CONST HEAP // same area of memory
+DATASIZE INT HpLimit // points to the furthest extent of heap. sp points to next slot to place items into the stack 
+CFGSIZE CHAR[] CFG
+1024 16 * CONST HpRLimit // max number of heap objects 
+HpRLimit 2 * INT[] HEAPREG // heap registry is an array

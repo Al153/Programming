@@ -1,136 +1,4 @@
-VARIABLE FORTHRET // address to return back to FORTH land
 
-// define the parts of the data segments
-
-DATASIZE CHAR[] STACK // contains the stack and heap. Stack grows up, heap grows down
-STACK CONST HEAP // same area of memory
-DATASIZE INT HpLimit
-CFGSIZE CHAR[] CFG
-
-// RUNTIME:
-
-: sp, stp, ; // sp points to where the next spilled register stack value should go
-: fp, jmp, ;
-: temp, acc, ;
-: acc, gp7, ; // use gp7 as an accumulator/spare value
-
-: CELLS 4 * ; // ( n -- 4*n ) scales up indices to cell widths
-: INSTRS 8 * ; // ( n -- 8*n ) scales up to register widths
-
-// Stack Frame
-	// *(fp+4) 	ret addr
-	// *fp:		previous fp
-	// *(fp-4) 	closure ->
-	// *(fp-8) 	argument value
-
-// Heap stuff
-
-	// *obj TypeHeader
-	// *(obj + 4n) info
-
-: heapAllc // ( itemType -- ) pseudo op
-	// TODO allocates heap space, puts in correct header
-	// leaves value in acc
-; 
-: heapDllc ; // ( -- ) 		TODO
-
-// Type definition
-	: TYPE ; // defines a new type TODO
-	: prim ; // needs to be scanned for GC TODO 
-	: info ; // ignored by GC TODO
-	: size ; // gives size of object for GC
-	TYPE PAIR { prim , prim } // TODO: determine between prims and refs
-	TYPE SUM { info , prim } // info field determines [Inl | Inr]: 11...1 : inr, 00...0: inl
-	4294967295 CONST INR_id
-	0 CONST INL_id
-	TYPE REF { prim }
-	TYPE CLOSURE { // Template. create closure types at compile time
-		size ,
-		info ,		// code pointer
-		prim .. prim
-	}
-
-: defFn // ( -- ) reset stack maintenance words
-	4, TopReg !
-;
-
-// Define how to manipulate the stack
-
-
-N_SPACE STACKTLS
-STACKTLS ->
-	VARIABLE TopReg // points to next gp to put a stack value in
-	0 TopReg !
-	7 CONST topLimit // only use 7 regs for the stack
-
-
-	// stack pointer should always point to the top of the stack that isn't in memory resides
-
-	: dupFrame  // ( -- ) TODO: duplicate frame in registers to the stack
-		temp, HpLimit ldi;
-		temp, sp, 4 # cma[]; // need space for 4 registers, so check there is space
-		fp, sp, 2 CELLS # ldi[]; // fp = sp + 2 * spaces
-		3 ts, sp, STACK 0 CELLS + sti[];
-		2 ts, sp, STACK 1 CELLS + sti[];
-		1 ts, sp, STACK 2 CELLS + sti[];
-		0 ts, sp, STACK 3 CELLS + sti[];
-	;
-
-	: flshRegs // ( -- ) TODO: flush regs representing the stack into memory
-		
-		// check there is space on the stack
-		temp, HpLimit ldi; // load up the heap limit
-		temp, sp, TopReg @ # cma[];
-		less, 1 nskip;
-
-		unc, STACK_OVERFLOW_ERROR bra;
-
-		topreg @ while
-			topreg --
-			topreg @ stp STACK topreg @ CELLS + sti[];
-		topreg @ loop
-		stp, topreg @ CELLS # adda; // make stack space.
-	; 
-	: expand TopReg += TopReg @ topLimit < if else ." ERROR, top reg has got too high.\n" then ; // ( n -- ) Sets topreg to make space onthe stack. Assumes there is enough space
-
-	: check // ( offset, calculated -- [ reg 0 | stackOffset 1 ])
-		DUP
-		topLimit < if
-			0
-		else
-			topLimit - 1 // get original stackOffset
-			// Now we need to bring more stack values into the registers
-
-			Recentre
-		then 
-	;
-
-	: pop // ( n -- )
-
-		// TODO
-		// pop n values from the stack
-		DUP TopReg @ =< if
-			TopReg -= // reduce the top reg pointer by n
-		else
-			TopReg @ - // otherwise, move values into the registers, and update the stack pointer
-			0 TopReg !
-			sp, SWAP CELLS # suba;		
-		then
-	;
-
-	: pushr; // ( reg -- ) pseudo instr to move a register to the top of the stack, reg should be acc, zro, one etc
-		// TODO
-	; 
-	
-
-	: ts // ( offset -- reg ) gets the register for a particular stack offset
-		// in any one instruction, one should get the register with the greatest offset first
-		// this is in order to ensure that all stack values are in the registers first
-		1 while
-			DUP TopReg @ + check
-		loop
-	; EXPORT EXPORT EXPORT
-;;
 // Opcodes
 
 : BPUSH // ( stack_item -- )
@@ -138,18 +6,18 @@ STACKTLS ->
 	acc, pushr;
 ; 
 : BLOOKUPS // ( offset -- )
-	acc, SWAP fp, SWAP, HEAP + ldi[];
+	acc, SWAP fp, SWAP, STACK + ldi[];
 	acc, pushr;
 ;  // lookup in stack with an offset
+
 : BLOOKUPH // ( offset -- )
 	// offset is offset in the closure
-	acc, fp, STACK 4 - ldi[]; // get a pointer to our closure TODO: frame might be in memory or in regs..	
+	acc, fp, STACK 4 - ldi[]; // get a pointer to our closure
+	acc, acc, HEAPREG ldi[]; // get the reference into the heap from the Heap registry
 
-	temp, acc, HEAP ldi[]; // type check
-	temp, closureHeader # suba;
-	temp, testr, RUNTIME_TYPE_ERROR bra;
+	closureHeader typeChk;
 
-	2 + CELLS HEAP + // closure header + 2 fields (to bound var array)
+	ClsHpPos // get particular bound var out of closure
 	acc, SWAP acc, SWAP ldi[]; // pick the var
 	acc, pushr;
 ;
@@ -221,11 +89,13 @@ STACKTLS ->
 	then then then
 ;
 : BASSIGN //  ( -- )
-	acc, 1 ts, HEAP ldi[]; // Typecheck for a ref
-	acc, refHeader # suba;
-	testr, RUNTIME_TYPE_ERROR bra;
+	acc, 1 ts, HEAPREG ldi[]; // get pointer to ref from the heap registry
 
-	1 ts, 0 ts, SWAP HEAP 4 + sti[];	// do the assignment
+	refHeader typeChk;
+
+	acc, 0 ts, SWAP HEAP 1 CELLS + sti[];	// do the assignment
+
+	2 pop
 ;
 : BSWAP  // ( -- )
 	1 ts, 0 ts, SWAP  xorr;
@@ -242,27 +112,32 @@ STACKTLS ->
 //	snd
 
 : BFST // ( -- )
-	acc, 0 ts, HEAP ldi[];
-	acc, pairHeader # suba; // TODO: define the pair header
-	acc, testr RUNTIME_TYPE_ERROR bra; //TODO: define the runtime type error
-	0 ts, 0 ts, HEAP 4 + ldi[]; // load up from the  first part of the index
+	acc, 0 ts, HEAPREG ldi[];
+	
+	pairHeader typeChk; // TODO: define the pair header
+
+	0 ts, acc, HEAP 1 CELLS + ldi[]; // load up from the  first part of the index
 ;
 : BSND // ( -- )
-	acc, 0 ts, HEAP ldi[];
-	acc, pairHeader # suba; // TODO: define the pair header
-	acc, testr RUNTIME_TYPE_ERROR bra; //TODO: define the runtime type error
-	0 ts, 0 ts, HEAP 8 + ldi[]; // load up from the second part of the index
+	acc, 0 ts, HEAPREG ldi[];
+
+	pairHeader typeChk; // TODO: define the pair header
+
+
+	0 ts, acc, HEAP 2 CELLS + ldi[]; // load up from the  first part of the index
 ;
 : BDEREF  // ( -- )
-	acc, 0 ts, HEAP ldi[];
-	acc, refHeader # suba; // TODO: define the pair header
-	acc, testr RUNTIME_TYPE_ERROR bra; //TODO: define the runtime type error
-	0 ts, 0 ts, HEAP 4 + ldi[]; // load up from the  first part of the index
+	acc, 0 ts, HEAPREG  ldi[];
+
+	refHeader typeChk; // TODO: define the pair header
+
+	0 ts, acc, HEAP 1 CELLS + ldi[]; // load up from the  first part of the index
 ;
 : BAPPLY // ( -- )
-	acc, 0 ts, HEAP ldi[]; // check for a closure
-	acc, closureHeader # subi;
-	acc testr, RUNTIME_TYPE_ERROR bra;
+	acc, 0 ts, HEAPREG ldi[]; // check for a closure
+
+	closureHeader typeChk;
+
 
 	// Stack Frame
 	// *(fp+4) 	ret addr
@@ -294,7 +169,12 @@ STACKTLS ->
 				 // 7 instrs
 		dupFrame // duplicate frame into memory, set new fp
 	{ ;; }
-	fp, sp, OFFSET # ldi[]; // new frame pointer is derived from stack pointer with TODO offset
+
+	temp, sp, STACK 2 CELLS + ldi[]; // recover closure reference from the stack
+	temp, temp, HEAPREG ldi[]; // dereference via HEAPREG
+	pc, temp, HEAP 2 CELLS + ldi[]; // do the jump 
+
+	restStck
 ;
 
 : BRETURN  //  ( -- )
@@ -304,57 +184,86 @@ STACKTLS ->
 
 	5 pop // remove stack frame (return value, return addr, frame addr, closure, and argument)
 	acc, pushr;
-	{ STACKTLS } -> Recentre { ;; } // TODO: centres top of stack to be halfway in the registers
+	{ STACKTLS } -> 4 Recentre { ;; } // TODO: centres top of stack to be halfway in the registers
 	temp, pc, mov; // jump
 ;
 
 : BMK_PAIR  //  ( -- )
 	PAIR heapAllc // allocate a heap object into acc
-	1 ts, acc, HEAP 4 + sti[]; // fst element
-	0 ts, acc, HEAP 8 + sti[]; // snd element
+	1 ts, temp, HEAP 1 CELLS + sti[]; // fst element
+	0 ts, temp, HEAP 2 CELLS + sti[]; // snd element
 	acc, 1 ts mov;
 	1 pop
 ;
 
 : BMK_INL // ( -- )
-	SUM heapAllc // allocates a correct heap object into acc
-	temp, INL_id # ldi; // indicates that this is an INL
-	temp, acc, HEAP 4 + sti[]; // store the marker
-	0 ts, acc HEAP 8 + sti[]; // store value
+	SUM heapAllc // allocates a correct HeapReg pointer into acc, Heap pointer into temp
+	0 ts, temp, HEAP 2 CELLS + sti[]; // store value
+
+	0 ts, INL_id # ldi; // indicates that this is an INL
+	temp, temp, HEAP 1 CELLS + sti[]; // store the marker
+	
 	acc, 0 ts mov; // "push" the reference
 ; 
 : BMK_INR // ( -- )
 	SUM heapAllc // allocates a correct heap object into acc
-	temp, INL_id # ldi; // indicates that this is an INR
-	temp, acc, HEAP 4 + sti[]; // store the marker
-	0 ts, acc HEAP 8 + sti[]; // store value
+	0 ts, temp, HEAP 2 CELLS + sti[]; // store value
+	
+	0 ts, INR_id # ldi; // indicates that this is an INR
+	temp, temp, HEAP 1 CELLS + sti[]; // store the marker
+	
 	acc, 0 ts mov; // "push" the reference
-;
+; 
 : BMK_REF //  ( -- )
 	REF heapAllc // create a stack reference
-	0 ts, acc, HEAP 4 + sti[]; // store TOS to i
+	0 ts, temp, HEAP 1 CELLS + sti[]; // store TOS to i
 	acc, 0 ts, mov; 		// "Push" the reference
-; 
-: BMK_CLOSURE //  ( location length -- ) 
-	// int is closure
+;
 
-; 
+0 INT PTRSTOR
+: BMK_CLOSURE //  ( location length -- ) 
+	// length is closure argument length
+	// location is place to jump to for execution
+	// need to pop length items into the closure a run time .. complicated
+	// TODO define CLOSURE to return an n_closure header when called
+	DUP CLOSURE heapAllc // acc = heapreg addr, temp = clo
+	acc, PTRSTOR sti; // save acc in O(1) space in data -- can't guarantee any spare registers so have to use this variable
+	
+	SWAP acc, SWAP # ldi;
+	acc, temp, HEAP 2 CELLS + sti[]; // store the jump location to the header 
+
+	acc, closureHeader # ldi;
+	acc, temp, HEAP 0 CELLS + sti[];
+
+	acc, OVER, # ldi;
+	acc, temnp, HEAP 1 CELLS + sti[];
+
+	DUP
+	DUP while
+		1 - 
+		DUP CLSR_PSH // pops n'th value into closure
+	DUP loop
+	DROP pop // pop n from stack
+
+	acc, PTRSTOR ldi; // restore acc
+	acc, pushr; // push it
+;
+
 : BTEST //    ( location -- )
 	0 ts,
 	1 pop
 	testr, SWAP bra;
 ;
 : BCASE  //  ( location-- )
-	acc, 0 ts, HEAP ldi[];
-	acc, SUMHeader # suba; 
-	acc, testr, RUNTIME_TYPE_ERROR bra;
-	
-	acc, 0 ts, HEAP 8 + ldi[]; // load the value
-	acc pushr; // put it onto stack // TODO: do we need to apply or something?
+	acc, 0 ts, HEAPREG ldi[];
 
-	acc, 1 ts, HEAP 4 + ldi[]; // get the marker
-	acc, testr SWAP bra; // if an INR, then goto the label
+	SUMHeader typeChk;
 
+	temp, acc, HEAP 2 CELLS + ldi[]; // load the value
+	temp, pushr; // put it onto stack
+
+	acc, acc, HEAP 1 CELLS + ldi[]; // get the marker
+	acc, testr SWAP bra; // if an INR, then goto the label, otherwise stay here
 ;
 : BGOTO
 	unc, SWAP bra;

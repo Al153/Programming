@@ -1,0 +1,52 @@
+// Type definition
+	: TYPE ; // defines a new type TODO
+	: prim ; // needs to be scanned for GC TODO 
+	: info ; // ignored by GC TODO
+	: size ; // gives size of object for GC
+	TYPE PAIR { prim , prim } // TODO: determine between prims and refs
+	TYPE SUM { info , prim } // info field determines [Inl | Inr]: 11...1 : inr, 00...0: inl
+	4294967295 CONST INR_id
+	0 CONST INL_id
+	TYPE REF { prim }
+	TYPE CLOSURE { // Template. create closure types at compile time
+		size ,
+		info ,		// code pointer
+		prim .. prim
+	}
+
+	N_SPACE TYPEMeth
+	TYPEMeth ->
+		// This namespace deals with forth side type objects
+		// these help the Static translation system build a garbage collector
+		// A type object has 3 Word fields.
+			// Header - Header identifies this type
+			// Size - Number of member variables of the type to check for GC
+			// Offset - Offset into heap objects the type of where the first member variable can be found
+				//		- all non-member fields of the object must occur before the boundary set by Offset
+			// total size of any heap object represented by a type is Size + offset + 1 cell
+			//
+
+		0 CONST Header
+		4 CONST Size
+		8 CONST Offset
+
+		// getters 
+		: @size Size + @ ; // ( TypeObject -- size )
+		: @header Header + @ ; // ( TypeObject -- header )
+		: @offset Offset + @ ; // ( TypeObject -- offset)
+
+		// setters
+		: !size Size + ! ; // ( size TypeObject -- )
+		: !header Header + ! ; // ( header TypeObject -- )
+		: !offset Offset + ! ; // ( offset TypeObject -- )
+
+		: #Type  // ( offset size header  -- ) 
+			// creates and Populates a type object
+			3 ALLOC
+				DUPBACK !header
+				DUPBACK !size
+				DUPBACK !offset
+		;
+
+
+	;; 
