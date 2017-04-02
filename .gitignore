@@ -28,7 +28,11 @@ local.properties
 # PDT-specific
 .buildpath
 
+#################
+## Java/JVM
+#################
 
+*.class
 #################
 ## Visual Studio
 #################
