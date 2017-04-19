@@ -1,7 +1,277 @@
+.( SETTING UP Opcode prerequisites.\n)
+
 // This file defines common PseudoInstrs and values for Opcodes.FASM
 : TypeChk; // ( TypeHeader -- ) 
 	// does a run time typecheck
+	." \nStart of typecheck: " .s CR
 	temp, acc, HEAP ldi[];
 	temp, SWAP # suba;
-	testr, RUNTIME_TYPE_ERROR bra;
-; 
+	temp, testr, TypeErr bra; // Cause a type error
+;
+
+: ClsrChk; // ( -- )
+	// do a type check for a closure
+	temp, acc, HEAP ldi[];
+	temp, CLSR_LIM # cma;
+	les, 1 nskip;
+	unc, TypeErr bra; // cause a type error
+;
+
+: t_CLOSURE // ( len -- )
+	4 * // very simplistic system to get the closure header
+;
+
+256 CHAR[] inBuf
+0 CHAR end;
+0 INT READTMP
+0 INT GP6
+0 INT GP5
+
+0 INT READ_RET
+0 INT NEGATE
+LABEL: READINT
+
+: readInt;
+	temp, pc, 2 INSTRS # ldi[];
+	temp, READ_RET sti;
+	unc, READINT bra;
+	acc, TOPBIT # orra;
+;
+	// ( reg -- )
+
+.( before Readint stack = ) .s CR
+
+READINT !LABEL
+		gp6, GP6 sti;
+		gp5, GP5 sti;
+
+		gp5, CONST i, // not using temp, since tem gets clobbered by multiplications
+		gp6, CONST in,
+		zro, in, mov;
+		zro, NEGATE sti;
+		zro, i, mov;
+		echo( Input> )
+		while; // this loop fills up the buffer
+			i, 256 # cma;
+			les,
+		do;
+		// loop:
+			while;
+				in, inr;
+				in, zro, cmr;
+				equ, do;
+				next;
+			loop;
+				// fill buffer			
+		
+				in, 13 # cma; // CR character
+				equ, if;
+					zro, i, inBuf stb[];
+					13 # oca;
+					10 # oca;
+					break; // go into the number construction state
+				endif;
+
+				in, 8 # cma;
+				equ, if;
+					// decrement i, if it's valid to
+					i, testr, i, one, csubr;
+					8 # oca; // draw a backspace adn space to overwrite deleted char
+					32 # oca;
+					zro, i, inBuf stb[];
+				else;
+					in, i, inBuf stb[];
+					i, one, addr;
+				endif;
+				
+
+			next;
+				13 # oca;
+				echo( Input> )
+				zro, acc, mov; // print out the buffer
+				while;
+					acc, i, cmr;
+					les, do;
+						acc, inBuf oca[];
+					next;
+					acc, one, addr;
+				loop;
+		loop;
+
+		echo( \nbuffer = \n)
+
+		zro, i, mov;
+		zro, acc, mov; // print out the buffer
+		while;
+			acc, i, inBuf ldb[];
+			acc, testr, do;
+				i, inBuf oca[];
+				32 # oca;
+				acc, odr;
+				32 # oca;
+			next;
+			i, one, addr;
+		loop;
+
+		echo( Converting to int..\n)
+
+
+		zro, acc, mov;
+		zro, i, mov;
+		while; // this loop converts the buffer to an int or else throws an error and returns 0
+			in, i, inBuf ldb[];
+			in, testr, do;
+				in, 45 # cma; // if in = '-'
+				equ, if;
+					i, testr, if;
+						// if i > 0, there is an error
+						zro, acc, mov;
+						echo( ERROR: unrecognised character (not a digit\): ")
+						in, ocr;
+						echo( ".)
+						break;
+					else;
+						in, NEGATE ldi;
+						in, one, xorr;
+						in, NEGATE sti;
+						contin;
+					endif;
+				endif;
+
+				in, 48 # suba; // in = in - ord('0')
+
+				in, 10 # cma;
+				les, if;
+					acc, 10 # mula;
+					acc, in, addr;
+				else;
+					zro, acc, mov;
+					echo( ERROR: unrecognised character (not a digit\): ")
+					in, ocr;
+					echo( ".)
+					in, odr;
+					break;
+				endif;
+			next;
+			i, one, addr;
+			
+		loop;
+
+
+		i, NEGATE ldi;
+		i, testr, if; // invert the value
+			zro, i, mov;
+			i, acc, subr;
+			i, acc, mov;
+		endif;
+
+		gp6, GP6 ldi;
+		gp5, GP5 ldi;
+		pc, READ_RET ldi; // return
+
+gp7, CONST val,
+temp, CONST primBit,
+
+: hexVal; // ( -- ) prints out value in acc as hex. uses temp
+	{ INPUT -> }
+		temp, [ hex f0000000 ] # ldi;
+		temp, acc, andr;
+		temp, 28 # shra;
+		temp, HEXTABLE oca[];
+	
+		temp, [ hex 0f000000 ] # ldi;
+		temp, acc, andr;
+		temp, 24 # shra;
+		temp, HEXTABLE oca[];
+	
+		temp, [ hex 00f00000 ] # ldi;
+		temp, acc, andr;
+		temp, 20 # shra;
+		temp, HEXTABLE oca[];
+	
+		temp, [ hex 000f0000 ] # ldi;
+		temp, acc, andr;
+		temp, 16 # shra;
+		temp, HEXTABLE oca[];
+	
+		temp, [ hex 0000f000 ] # ldi;
+		temp, acc, andr;
+		temp, 12 # shra;
+		temp, HEXTABLE oca[];
+	
+		temp, [ hex 00000f00 ] # ldi;
+		temp, acc, andr;
+		temp, 8 # shra;
+		temp, HEXTABLE oca[];
+	
+		temp, [ hex 000000f0 ] # ldi;
+		temp, acc, andr;
+		temp, 4 # shra;
+		temp, HEXTABLE oca[];
+	
+		temp, [ hex 0000000f ] # ldi;
+		temp, acc, andr;
+		temp, HEXTABLE oca[];
+	{ ;; }
+;
+
+: prntVal; // ( -- )	value arrives in acc (gp7 = val)
+	// check for prim or reference type
+	// if prim, print as int
+	// otherwise print out hex
+
+	primBit, TOPBIT # ldi;
+	primBit, val, andr;
+	primBit, testr, if;
+		val, OTHERS # anda;
+		[ str( Primitive: ) ] echoKp;
+		primBit, SIGNBIT # ldi;
+		primBit, val, andr;
+		primBit, testr, if; // if signed
+			[ str( -) ] echoKp;
+			primBit, TOPBIT # ldi; // find the complemented value
+			primBit, val, subr;
+			primBit, val, mov;
+		endif;
+		hexVal;
+		[ str(  )] echoKp;
+	else;
+		[ str( Reference: ) ] echoKp;
+		hexVal;
+	endif;
+;
+
+.( After readin stack = ) .s CR
+
+VARIABLE CL_LENGTH // used by BMK_CLOSURE for extra values
+VARIABLE CL_LOC
+
+0 INT OP_TEMP // used to temporariy store temp to avoid clobbering during opcode calculations
+
+BYTECODE -> 
+
+	0 CONST U_NEG
+	1 CONST U_READ
+	2 CONST U_NOT
+	
+	3 CONST O_AND
+	4 CONST O_OR
+	5 CONST O_EQB
+	6 CONST O_EQI
+	7 CONST O_LT
+	8 CONST O_ADD
+	9 CONST O_SUB
+	10 CONST O_MUL
+	
+	
+	
+	VARIABLE t_PAIR // Compiler puts t_pair, t_sum, t_ref into these
+	VARIABLE t_SUM
+	VARIABLE t_REF
+
+	-1 CONST SELF // in a BLOOKUPS, a lookup of -1 => LOOKUP the function itself
+	-2 CONST ARG // in a single arg fn, a lookup of -2 => lookup of the arf
+	: LABEL: LABEL: ;
+;;
+
+.( Opcodes .fasmh Stack = ) .s CR

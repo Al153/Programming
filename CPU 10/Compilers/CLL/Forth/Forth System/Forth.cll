@@ -67,8 +67,8 @@
 #include precompiledWords.cll
 #include pageQueue.cll
 
-#include STD:allocation.cll
 #include STD:radix.cll
+#include STD:allocation.cll
 void main()
 	printf("______________________ Welcome to Al Forth (2016) ______________________\n");
 	printf(">>FORTH SYSTEM STARTED\n");

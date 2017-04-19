@@ -1,10 +1,27 @@
-VARIABLE FORTHRET // address to return back to FORTH land
+.( SETTING UP Runtime variables.\n)
+0 INT FORTHRET // address to return back to FORTH land
 
 // define the parts of the data segments
-
-DATASIZE CHAR[] STACK // contains the stack and heap. Stack grows up, heap grows down
+8 INT[] STACK_CAN // Junk area before the stack to absorb out of bound values written by a negative stp.
+STCKSIZE CHAR[] STACK // contains the stack and heap. Stack grows up, heap grows down
+8 INT[] STACK_CAN // Junk area after the stack
+16 CHAR[ '0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8' , '9' , 'A' , 'B' , 'C' , 'D' , 'E' , 'F' ] HEXTABLE
 STACK CONST HEAP // same area of memory
-DATASIZE INT HpLimit // points to the furthest extent of heap. sp points to next slot to place items into the stack 
-CFGSIZE CHAR[] CFG
-1024 16 * CONST HpRLimit // max number of heap objects 
-HpRLimit 2 * INT[] HEAPREG // heap registry is an array
+STCKSIZE INT HpLimit // points to the furthest extent of heap. sp points to next slot to place items into the stack 
+
+HpRLimit RegWidth * INT[] HEAPREG // heap registry is an array containing a linked list	
+	// A header is always a multiple of 4 for easy lookup
+	0 INT LIMIT // Heap GC search limit
+	0 INT GC_RET // where to return to from the Garbage collector
+	1024 INT GC_LIM // Variable which gives the heap space left limit to do a GC
+
+
+
+// Heap Reg Structure:
+
+// ////////////////////
+//  ObjectPtr
+//	Colour
+//	NextInColour
+//	NextSorted
+// ////////////////////

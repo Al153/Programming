@@ -1,7 +1,12 @@
+.\NameSpaces.fth
 .\Definitions.FASM
 .\Variables.FASM
 .\Types.FASM
 .\StackTools.FASM
 .\HeapTools.FASM
+.\errors.FASM
 .\Opcodes.FASMH
+.\Debug.fth
 .\Opcodes.FASM
+.\closeNamespaces.fth
+.\init.fasm

@@ -1,0 +1,59 @@
+add1 // implement comments
+add2 // implement comments
+add3 yes
+add4 yes
+add5 yes
+add6 yes
+add7 // implement comments and !
+
+alpha yes
+bool // || syntax error... why isn't this splitting into '|' '|'
+case1
+eq1
+eq2
+eq3
+eq4
+
+expr
+expr2 // wrong value
+fib0 yes
+fib1 yes
+fib2 yes
+fib3
+fib4
+fib5
+fib5_v2
+fib10
+
+fun
+gcd
+int
+lambda1
+lambda2
+lambda3
+
+let1
+let2
+
+lt1
+lt2
+
+nest
+nest2
+
+pair1
+pair2
+
+ref1
+ref2
+ref3
+
+seq0 // issue with bangs -syntax
+seq1
+seq2
+
+stack yes
+stack2 yessss
+sub
+while
+

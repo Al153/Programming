@@ -31,7 +31,7 @@ def getSegments(textFile):
 	currentSegment = ''
 	for line in textFile:
 		line = getLine(line)
-		if line == "": continue # ignroe emptylines
+		if line == "": continue # ignore emptylines
 		if isSegmentName(line):
 			if not(currentSegmentName == ""):
 				segments[currentSegmentName] = currentSegment

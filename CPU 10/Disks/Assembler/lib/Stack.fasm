@@ -2,11 +2,11 @@
 N_SPACE Stack
 PRINTING -> .( Compiling stack FASM WORDS...) 
 Stack ->
+
 	1024 CONST stckSize
 	0 stckSize 1 + #Segs
-	stckSize INT[ 0 ] stack
+	stckSize INT[] stack
 	0	INT retValue
-
 
 
 	LABEL: sOflow

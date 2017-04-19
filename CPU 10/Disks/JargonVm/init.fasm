@@ -1,0 +1,6 @@
+// This file should close up FASM namespaces
+// initialise vars
+// and present a run function to the programmer in the bytecode namespace
+
+BYTECODE ->
+INPUT -> // needed for hex

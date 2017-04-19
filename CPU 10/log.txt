@@ -1,0 +1,4219 @@
+initialising memory
+Tried to load HD.
+Success
+______________________ running ______________________
+______________________ Welcome to Al Forth (2016) ______________________
+>>FORTH SYSTEM STARTED
+>>COMPILING BUILT INS
+>>COMPILING REPL ENVIRONMENT
+>>BUILT INS COMPILED
+OK
+________________________________________________________________________
+>>0 ADDBLOCK SWITCH
+COMPILED: Printing words.
+COMPILED: More comparison words
+COMPILED: Advanced memory access and basic dictionary tools.
+COMPILED: FOR loops and basic dictionary tools.
+COMPILED: Advanced printing words.
+COMPILED: string maniuplation words.
+COMPILED: RSTACK manipulation words.
+COMPILING Reflection tools.
+COMPILING basic graphics code.
+COMPILING DEBUGGING CODE.
+COMPILED: Debugging words.
+COMPILING Assembler.
+COMPILED Assembler segment words.
+COMPILED loading code.
+COMPILED Array code.
+COMPILED Labels code.
+COMPILING Assembly constants.
+COMPILED Assembly constants.
+COMPILED Ops.
+COMPILED Conditions.
+COMPILED pseudo commands.
+COMPILED Char literals.
+COMPILED Inlining tools.
+Compiling disassembler...Done!
+Compiling calling and jumping FASM WORDS...Done!
+Compiling control FASM WORDS...Done
+Compiling stack FASM WORDS...Done!
+LOADING FASM.
+LOADING Assembler.
+LOADING INLINE.
+LOADING CONTROL.
+LOADING JARGON.
+LOADED NAMESPACES.
+SETTING UP Forth side definitions.
+Definitions Stack = 
+SETTING UP Runtime variables.
+SETTING UP Type definitions.
+DEFINED VARS
+DEFINED TYPE
+SETTING UP Stack manipulation tools.
+Stack tools Stack = 
+SETTING UP Heap tools and garbage collection.
+Initialising heap registry...DONE
+FORTH GC Stack = 
+ERRORS Stack = 
+SETTING UP Opcode prerequisites.
+before Readint stack = 
+After readin stack = 
+Opcodes .fasmh Stack = 
+SETTING UP Opcodes... DONE!
+
+OK
+
+>>LABEL: L1
+
+OK
+
+>>LABEL: L0
+
+OK
+
+>>LABEL: L2
+
+OK
+
+>>LABEL: L4
+
+OK
+
+>>LABEL: L5
+
+OK
+
+>>LABEL: L3
+
+OK
+
+>>2 2 TYPE T0
+
+OK
+
+>>SET_LIM
+
+OK
+
+>>3 1 TYPE T2
+
+OK
+
+>>2 1 TYPE T3
+
+OK
+
+>>3 2 TYPE T4
+
+OK
+
+>>T2 t_PAIR !
+
+OK
+
+>>T4 t_SUM !
+
+OK
+
+>>T3 t_SUM !
+
+OK
+
+>>hex 14 TypeLim !
+
+OK
+
+>>BINIT
+First instrs: 0x00000000 
+After GC RUN: 0x00000000 0x00000000 
+Start recentre: 0x00000000 0x00000000 
+Path1
+recentre, TopReg = 0 
+recentr, Stack: 0x00000000 
+0x00000000 0x00000002 
+Done some linkage: 0x00000000 
+End of closure: 
+start dupframets, stack = 0x00000003 
+CheckSTack = 0x00000003 0x00000000 
+ts, topReg = 4 
+ts, stack = 0x00000002 
+CheckSTack = 0x00000002 0x00000001 
+ts, topReg = 4 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000003 
+ts, topReg = 4 
+Done dupFrame
+
+OK
+
+>>	L0 hex 0 BMK_CLOSURE
+Location = 00377E2D
+@Location = 00000000First instrs: 0x00000000 
+
+Looping flshRegs4 
+
+Looping flshRegs3 
+
+Looping flshRegs2 
+
+Looping flshRegs1 
+After GC RUN: 0x00000000 0x00000004 
+Start recentre: 0x00000000 0x00000004 
+Path2
+FROMSTCK, saved values 0x00000000 
+recentre, TopReg = 4 
+recentr, Stack: 0x00000000 
+0x00000000 0x00000002 
+Done some linkage: 0x00000000 
+End of closure: 
+Before closure push loop: 
+Pop, n = 0 
+Pop, TopReg = 4 
+Start of pushr: 0x00000002 
+Pushr, TopReg = 5 
+End of make closure: 
+
+OK
+
+>>	L1 hex 0 BMK_CLOSURE
+Location = 00377E29
+@Location = 00000000First instrs: 0x00000000 
+
+Looping flshRegs5 
+
+Looping flshRegs4 
+
+Looping flshRegs3 
+
+Looping flshRegs2 
+
+Looping flshRegs1 
+After GC RUN: 0x00000000 0x00000005 
+Start recentre: 0x00000000 0x00000005 
+Path2
+FROMSTCK, saved values 0x00000000 
+recentre, TopReg = 5 
+recentr, Stack: 0x00000000 
+0x00000000 0x00000002 
+Done some linkage: 0x00000000 
+End of closure: 
+Before closure push loop: 
+Pop, n = 0 
+Pop, TopReg = 5 
+Start of pushr: 0x00000002 
+Pushr, TopReg = 6 
+End of make closure: 
+
+OK
+
+>>	BAPPLY
+ts, stack = 0x0000000F 0x00000000 
+CheckSTack = 0x0000000F 0x00000000 0x00000005 
+ts, topReg = 6 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000004 
+ts, topReg = 6 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000005 
+ts, topReg = 6 
+Pop, n = 2 
+Pop, TopReg = 4 
+
+Looping flshRegs4 
+
+Looping flshRegs3 
+
+Looping flshRegs2 
+
+Looping flshRegs1 
+ts, stack = 0x0000000F 0x00000003 
+CheckSTack = 0x0000000F 0x00000003 0x00000000 
+ts, topReg = 4 
+ts, stack = 0x00000002 0x00000002 
+CheckSTack = 0x00000002 0x00000002 0x00000001 
+ts, topReg = 4 
+ts, stack = 0x00000003 0x00000001 
+CheckSTack = 0x00000003 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000003 
+ts, topReg = 4 
+start dupframets, stack = 0x00000003 
+CheckSTack = 0x00000003 0x00000000 
+ts, topReg = 4 
+ts, stack = 0x00000002 
+CheckSTack = 0x00000002 0x00000001 
+ts, topReg = 4 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000003 
+ts, topReg = 4 
+Done dupFrame
+
+OK
+
+>>	BHALT
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000003 
+ts, topReg = 4 
+
+OK
+
+>>L1 BLABEL
+
+OK
+
+>>BSTART_F
+
+OK
+
+>>	hex 80000003 BPUSH
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 1 
+
+OK
+
+>>	ARG BLOOKUPS
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 2 
+
+OK
+
+>>	BAPPLY
+ts, stack = 0x0000000F 0x00000000 
+CheckSTack = 0x0000000F 0x00000000 0x00000001 
+ts, topReg = 2 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000000 
+ts, topReg = 2 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000001 
+ts, topReg = 2 
+Pop, n = 2 
+Pop, TopReg = 0 
+ts, stack = 0x0000000F 0x00000003 
+CheckSTack = 0x0000000F 0x00000003 0x00000000 
+ts, topReg = 4 
+ts, stack = 0x00000002 0x00000002 
+CheckSTack = 0x00000002 0x00000002 0x00000001 
+ts, topReg = 4 
+ts, stack = 0x00000003 0x00000001 
+CheckSTack = 0x00000003 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000003 
+ts, topReg = 4 
+start dupframets, stack = 0x00000003 
+CheckSTack = 0x00000003 0x00000000 
+ts, topReg = 4 
+ts, stack = 0x00000002 
+CheckSTack = 0x00000002 0x00000001 
+ts, topReg = 4 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000003 
+ts, topReg = 4 
+Done dupFrame
+
+OK
+
+>>	BRETURN
+ts, stack = 0x00000004 0x00000000 
+CheckSTack = 0x00000004 0x00000000 0x00000003 
+ts, topReg = 4 
+Pop, n = 5 
+Pop, TopReg = 0 
+Start of pushr: 0x00000004 0x0000000F 
+Pushr, TopReg = 1 
+Start recentre: 0x00000004 0x00000004 
+Path2
+FROMSTCK, saved values 0x00000004 
+recentre, TopReg = 4 
+recentr, Stack: 0x00000004 
+
+OK
+
+>>BEND_F
+
+OK
+
+>>L0 BLABEL
+
+OK
+
+>>BSTART_F
+
+OK
+
+>>	ARG BLOOKUPS
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 1 
+
+OK
+
+>>	hex 80000000 BPUSH
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 2 
+
+OK
+
+>>	O_EQI BOPER
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000000 
+ts, topReg = 2 
+ts, stack = 0x00000008 0x00000000 
+CheckSTack = 0x00000008 0x00000000 0x00000001 
+ts, topReg = 2 
+ts, stack = 0x0000000F 0x00000001 
+CheckSTack = 0x0000000F 0x00000001 0x00000000 
+ts, topReg = 2 
+Pop, n = 1 
+Pop, TopReg = 1 
+
+OK
+
+>>	L2  BTEST
+ts, stack = 0x00377E31 0x00000000 
+CheckSTack = 0x00377E31 0x00000000 0x00000000 
+ts, topReg = 1 
+ts, stack = 0x00377E31 0x00000000 
+CheckSTack = 0x00377E31 0x00000000 0x00000000 
+ts, topReg = 1 
+Pop, n = 1 
+Pop, TopReg = 0 
+
+OK
+
+>>BSTART_I
+Start recentre: 0x00000004 
+Path2
+FROMSTCK, saved values 
+recentre, TopReg = 4 
+recentr, Stack: 
+
+OK
+
+>>	hex 80000001 BPUSH
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 5 
+
+OK
+
+>>BEND_I
+Start recentre: 0x00000004 
+Path3
+Before toStck: 0x00000004 0x00000001 
+Before loop: 
+recentre, TopReg = 4 
+recentr, Stack: 
+
+OK
+
+>>	L3 BGOTO
+
+OK
+
+>>L2 BLABEL
+
+OK
+
+>>BSTART_I
+Start recentre: 0x00000004 
+Path1
+recentre, TopReg = 4 
+recentr, Stack: 
+
+OK
+
+>>	ARG BLOOKUPS
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 5 
+
+OK
+
+>>	hex 80000001 BPUSH
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 6 
+
+OK
+
+>>	O_EQI BOPER
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000004 
+ts, topReg = 6 
+ts, stack = 0x0000000C 0x00000000 
+CheckSTack = 0x0000000C 0x00000000 0x00000005 
+ts, topReg = 6 
+ts, stack = 0x0000000F 0x00000001 
+CheckSTack = 0x0000000F 0x00000001 0x00000004 
+ts, topReg = 6 
+Pop, n = 1 
+Pop, TopReg = 5 
+
+OK
+
+>>	L4  BTEST
+ts, stack = 0x00377E35 0x00000000 
+CheckSTack = 0x00377E35 0x00000000 0x00000004 
+ts, topReg = 5 
+ts, stack = 0x00377E35 0x00000000 
+CheckSTack = 0x00377E35 0x00000000 0x00000004 
+ts, topReg = 5 
+Pop, n = 1 
+Pop, TopReg = 4 
+
+OK
+
+>>BSTART_I
+Start recentre: 0x00000004 
+Path1
+recentre, TopReg = 4 
+recentr, Stack: 
+
+OK
+
+>>	hex 80000001 BPUSH
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 5 
+
+OK
+
+>>BEND_I
+Start recentre: 0x00000004 
+Path3
+Before toStck: 0x00000004 0x00000001 
+Before loop: 
+recentre, TopReg = 4 
+recentr, Stack: 
+
+OK
+
+>>	L5 BGOTO
+
+OK
+
+>>L4 BLABEL
+
+OK
+
+>>BSTART_I
+Start recentre: 0x00000004 
+Path1
+recentre, TopReg = 4 
+recentr, Stack: 
+
+OK
+
+>>	ARG BLOOKUPS
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 5 
+
+OK
+
+>>	hex 80000001 BPUSH
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 6 
+
+OK
+
+>>	O_SUB BOPER
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000004 
+ts, topReg = 6 
+ts, stack = 0x0000000C 0x00000000 
+CheckSTack = 0x0000000C 0x00000000 0x00000005 
+ts, topReg = 6 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000004 
+ts, topReg = 6 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000004 
+ts, topReg = 6 
+Pop, n = 1 
+Pop, TopReg = 5 
+
+OK
+
+>>	SELF BLOOKUPS
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 6 
+
+OK
+
+>>	BAPPLY
+ts, stack = 0x0000000F 0x00000000 
+CheckSTack = 0x0000000F 0x00000000 0x00000005 
+ts, topReg = 6 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000004 
+ts, topReg = 6 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000005 
+ts, topReg = 6 
+Pop, n = 2 
+Pop, TopReg = 4 
+
+Looping flshRegs4 
+
+Looping flshRegs3 
+
+Looping flshRegs2 
+
+Looping flshRegs1 
+ts, stack = 0x0000000F 0x00000003 
+CheckSTack = 0x0000000F 0x00000003 0x00000000 
+ts, topReg = 4 
+ts, stack = 0x00000002 0x00000002 
+CheckSTack = 0x00000002 0x00000002 0x00000001 
+ts, topReg = 4 
+ts, stack = 0x00000003 0x00000001 
+CheckSTack = 0x00000003 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000003 
+ts, topReg = 4 
+start dupframets, stack = 0x00000003 
+CheckSTack = 0x00000003 0x00000000 
+ts, topReg = 4 
+ts, stack = 0x00000002 
+CheckSTack = 0x00000002 0x00000001 
+ts, topReg = 4 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000003 
+ts, topReg = 4 
+Done dupFrame
+
+OK
+
+>>	ARG BLOOKUPS
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 5 
+
+OK
+
+>>	hex 80000002 BPUSH
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 6 
+
+OK
+
+>>	O_SUB BOPER
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000004 
+ts, topReg = 6 
+ts, stack = 0x0000000C 0x00000000 
+CheckSTack = 0x0000000C 0x00000000 0x00000005 
+ts, topReg = 6 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000004 
+ts, topReg = 6 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000004 
+ts, topReg = 6 
+Pop, n = 1 
+Pop, TopReg = 5 
+
+OK
+
+>>	SELF BLOOKUPS
+Start of pushr: 0x0000000F 
+Pushr, TopReg = 6 
+
+OK
+
+>>	BAPPLY
+ts, stack = 0x0000000F 0x00000000 
+CheckSTack = 0x0000000F 0x00000000 0x00000005 
+ts, topReg = 6 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000004 
+ts, topReg = 6 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000005 
+ts, topReg = 6 
+Pop, n = 2 
+Pop, TopReg = 4 
+
+Looping flshRegs4 
+
+Looping flshRegs3 
+
+Looping flshRegs2 
+
+Looping flshRegs1 
+ts, stack = 0x0000000F 0x00000003 
+CheckSTack = 0x0000000F 0x00000003 0x00000000 
+ts, topReg = 4 
+ts, stack = 0x00000002 0x00000002 
+CheckSTack = 0x00000002 0x00000002 0x00000001 
+ts, topReg = 4 
+ts, stack = 0x00000003 0x00000001 
+CheckSTack = 0x00000003 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000003 
+ts, topReg = 4 
+start dupframets, stack = 0x00000003 
+CheckSTack = 0x00000003 0x00000000 
+ts, topReg = 4 
+ts, stack = 0x00000002 
+CheckSTack = 0x00000002 0x00000001 
+ts, topReg = 4 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x00000000 
+CheckSTack = 0x00000000 0x00000003 
+ts, topReg = 4 
+Done dupFrame
+
+OK
+
+>>	O_ADD BOPER
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x0000000A 0x00000000 
+CheckSTack = 0x0000000A 0x00000000 0x00000003 
+ts, topReg = 4 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000002 
+ts, topReg = 4 
+ts, stack = 0x00000001 
+CheckSTack = 0x00000001 0x00000002 
+ts, topReg = 4 
+Pop, n = 1 
+Pop, TopReg = 3 
+
+OK
+
+>>BEND_I
+Start recentre: 0x00000004 
+Path2
+FROMSTCK, saved values 
+recentre, TopReg = 4 
+recentr, Stack: 
+
+OK
+
+>>L5 BLABEL
+
+OK
+
+>>BEND_I
+Start recentre: 0x00000004 
+Path1
+recentre, TopReg = 4 
+recentr, Stack: 
+
+OK
+
+>>L3 BLABEL
+
+OK
+
+>>	BRETURN
+ts, stack = 0x00000004 0x00000000 
+CheckSTack = 0x00000004 0x00000000 0x00000003 
+ts, topReg = 4 
+Pop, n = 5 
+Pop, TopReg = 0 
+Start of pushr: 0x00000004 0x0000000F 
+Pushr, TopReg = 1 
+Start recentre: 0x00000004 0x00000004 
+Path2
+FROMSTCK, saved values 0x00000004 
+recentre, TopReg = 4 
+recentr, Stack: 0x00000004 
+
+OK
+
+>>BEND_F
+
+OK
+
+>>0 run
+Write to low memory value: 568
+Write to low memory value: 572
+Arrived in assembler land!
+
+Checking for Garbage collection
+Getting Heap reg entry
+Allocating HR:16368
+Got heap reg entry
+Doing linkage
+ Done Linkage
+Writing header
+Finished init
+
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 0005CBBC
+gp4	| Reference: 00000000
+gp3	| Reference: 0028244C<- TOS
+gp2	| Reference: 00000000
+gp1	| Reference: 0000FFF8
+gp0	| Primitive: -00000001 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+MK_CLOSURE
+Checking for Garbage collection
+Getting Heap reg entry
+Allocating HR:16352
+Got heap reg entry
+Doing linkage
+ Done Linkage
+Writing header
+
+After allocation, heapreg index, object = 16352 65520
+Before loop
+ After loop, temp(HEAPREG index) = 16352
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 0005CBBC
+gp4	| Reference: 00003FE0<- TOS
+gp3	| Reference: 0028244C
+gp2	| Reference: 00000000
+gp1	| Reference: 0000FFF8
+gp0	| Primitive: -00000001 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+MK_CLOSURE
+Checking for Garbage collection
+Getting Heap reg entry
+Allocating HR:16336
+Got heap reg entry
+Doing linkage
+ Done Linkage
+Writing header
+
+After allocation, heapreg index, object = 16336 65512
+Before loop
+ After loop, temp(HEAPREG index) = 16336
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FD0<- TOS
+gp4	| Reference: 00003FE0
+gp3	| Reference: 0028244C
+gp2	| Reference: 00000000
+gp1	| Reference: 0000FFF8
+gp0	| Primitive: -00000001 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+APPLY
+Before dupFrame
+
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FD0
+gp4	| Reference: 00003FE0
+gp3	| Reference: 004681BC
+gp2	| Reference: 00000008
+gp1	| Reference: 00003FD0
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000003 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FD0
+gp4	| Reference: 00003FE0
+gp3	| Reference: 004681BC
+gp2	| Reference: 00000008
+gp1	| Reference: 00003FD0
+gp0	| Primitive: 00000003 <- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FD0
+gp4	| Reference: 00003FE0
+gp3	| Reference: 004681BC
+gp2	| Reference: 00000008
+gp1	| Reference: 00003FE0<- TOS
+gp0	| Primitive: 00000003 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+APPLY
+Before dupFrame
+
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FD0
+gp4	| Reference: 00003FE0
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000003 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FD0
+gp4	| Reference: 00003FE0
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000003 <- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000000 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FD0
+gp4	| Reference: 00003FE0
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 <- TOS
+gp0	| Primitive: 00000003 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FD0
+gp4	| Reference: 00003FE0
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000<- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+TEST
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FD0
+gp4	| Reference: 00003FE0
+gp3	| Reference: 00468BD4<- TOS
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FD0
+gp4	| Primitive: 00000003 <- TOS
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 <- TOS
+gp4	| Primitive: 00000003 
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Reference: 00000000<- TOS
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+TEST
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Reference: 00000000
+gp3	| Reference: 00468BD4<- TOS
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000003 <- TOS
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 <- TOS
+gp4	| Primitive: 00000003 
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+Subbed: Primitive: 00000002 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000002 <- TOS
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0<- TOS
+gp4	| Primitive: 00000002 
+gp3	| Reference: 00468BD4
+gp2	| Reference: 00000018
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+APPLY
+Before dupFrame
+
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000002 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000002 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000002 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000002 <- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000000 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000002 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 <- TOS
+gp0	| Primitive: 00000002 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000002 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000<- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+TEST
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000002 
+gp3	| Reference: 0046AE5C<- TOS
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000002 <- TOS
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 <- TOS
+gp4	| Primitive: 00000002 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Reference: 00000000<- TOS
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+TEST
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Reference: 00000000
+gp3	| Reference: 0046AE5C<- TOS
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000002 <- TOS
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 <- TOS
+gp4	| Primitive: 00000002 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+Subbed: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 <- TOS
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0<- TOS
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+APPLY
+Before dupFrame
+
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000048
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000001 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000048
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000001 <- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000000 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000048
+gp1	| Primitive: 00000000 <- TOS
+gp0	| Primitive: 00000001 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000048
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000<- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+TEST
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046AE5C<- TOS
+gp2	| Reference: 00000048
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 <- TOS
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000048
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 <- TOS
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000048
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: -00000001 <- TOS
+gp3	| Reference: 0046AE5C
+gp2	| Reference: 00000048
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+TEST
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Reference: 7FFFFFFF
+gp3	| Reference: 0046AE5C<- TOS
+gp2	| Reference: 00000048
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000048
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000070	| Reference: 00000000
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+GOTO
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000048
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000070	| Reference: 00000000
+RetAddr	| 0000006C	| 0046AE5C
+Frame->	| 00000068	| 00000048
+Closure	| 00000064	| Reference: 00003FE0
+Argument| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+RETURN
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000048
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000070	| Reference: 00000000
+	| 0000006C	| Reference: 0046AE5C
+	| 00000068	| Reference: 00000048
+	| 00000064	| Reference: 00003FE0
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+4632156
+Middle 4632156
+ about to jump, temp = 4632156
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000048
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000002 <- TOS
+gp3	| Primitive: 00000001 
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000048
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000002 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000002 <- TOS
+gp4	| Primitive: 00000002 
+gp3	| Primitive: 00000001 
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000048
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+Subbed: Primitive: 00000000 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000002 
+gp4	| Primitive: 00000000 <- TOS
+gp3	| Primitive: 00000001 
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000048
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0<- TOS
+gp4	| Primitive: 00000000 
+gp3	| Primitive: 00000001 
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000048
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+APPLY
+Before dupFrame
+
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000000 
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000048
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000080	| 0046B98C
+Frame->	| 0000007C	| 00000048
+Closure	| 00000078	| Reference: 00003FE0
+Argument| 00000074	| Primitive: 00000000 
+	| 00000070	| Primitive: 00000001 
+	| 0000006C	| Reference: 0046AE5C
+	| 00000068	| Reference: 00000048
+	| 00000064	| Reference: 00003FE0
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000000 
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000048
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000000 <- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000080	| 0046B98C
+Frame->	| 0000007C	| 00000048
+Closure	| 00000078	| Reference: 00003FE0
+Argument| 00000074	| Primitive: 00000000 
+	| 00000070	| Primitive: 00000001 
+	| 0000006C	| Reference: 0046AE5C
+	| 00000068	| Reference: 00000048
+	| 00000064	| Reference: 00003FE0
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000000 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000000 
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000048
+gp1	| Primitive: 00000000 <- TOS
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000080	| 0046B98C
+Frame->	| 0000007C	| 00000048
+Closure	| 00000078	| Reference: 00003FE0
+Argument| 00000074	| Primitive: 00000000 
+	| 00000070	| Primitive: 00000001 
+	| 0000006C	| Reference: 0046AE5C
+	| 00000068	| Reference: 00000048
+	| 00000064	| Reference: 00003FE0
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000000 
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000048
+gp1	| Primitive: 00000000 
+gp0	| Primitive: -00000001 <- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000080	| 0046B98C
+Frame->	| 0000007C	| 00000048
+Closure	| 00000078	| Reference: 00003FE0
+Argument| 00000074	| Primitive: 00000000 
+	| 00000070	| Primitive: 00000001 
+	| 0000006C	| Reference: 0046AE5C
+	| 00000068	| Reference: 00000048
+	| 00000064	| Reference: 00003FE0
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+TEST
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000000 
+gp3	| Reference: 0046B98C<- TOS
+gp2	| Reference: 00000048
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000080	| 0046B98C
+Frame->	| 0000007C	| 00000048
+Closure	| 00000078	| Reference: 00003FE0
+Argument| 00000074	| Primitive: 00000000 
+	| 00000070	| Primitive: 00000001 
+	| 0000006C	| Reference: 0046AE5C
+	| 00000068	| Reference: 00000048
+	| 00000064	| Reference: 00003FE0
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046B98C
+gp1	| Reference: 00000048
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000080	| 0046B98C
+Frame->	| 0000007C	| 00000048
+Closure	| 00000078	| Reference: 00003FE0
+Argument| 00000074	| Primitive: 00000000 
+	| 00000070	| Primitive: 00000001 
+	| 0000006C	| Reference: 0046AE5C
+	| 00000068	| Reference: 00000048
+	| 00000064	| Reference: 00003FE0
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+GOTO
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046B98C
+gp1	| Reference: 00000048
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000080	| 0046B98C
+Frame->	| 0000007C	| 00000048
+Closure	| 00000078	| Reference: 00003FE0
+Argument| 00000074	| Primitive: 00000000 
+	| 00000070	| Primitive: 00000001 
+	| 0000006C	| Reference: 0046AE5C
+	| 00000068	| Reference: 00000048
+	| 00000064	| Reference: 00003FE0
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+RETURN
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046B98C
+gp1	| Reference: 00000048
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000074	| Primitive: 00000000 
+	| 00000070	| Primitive: 00000001 
+	| 0000006C	| Reference: 0046AE5C
+	| 00000068	| Reference: 00000048
+	| 00000064	| Reference: 00003FE0
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+4635020
+Middle 4635020
+ about to jump, temp = 4635020
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Primitive: 00000001 
+gp1	| Reference: 0046AE5C
+gp0	| Reference: 00000048
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000064	| Reference: 00003FE0
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+ADDED: Primitive: 00000002 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000002 <- TOS
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000048
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+RetAddr	| 0000004C	| 0046AE5C
+Frame->	| 00000048	| 00000028
+Closure	| 00000044	| Reference: 00003FE0
+Argument| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+RETURN
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000002 <- TOS
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000048
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000060	| Primitive: 00000001 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+4632156
+Middle 4632156
+ about to jump, temp = 4632156
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000002 <- TOS
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000028
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000003 <- TOS
+gp3	| Primitive: 00000002 
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000028
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000002 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000002 <- TOS
+gp4	| Primitive: 00000003 
+gp3	| Primitive: 00000002 
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000028
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+Subbed: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000002 
+gp4	| Primitive: 00000001 <- TOS
+gp3	| Primitive: 00000002 
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000028
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0<- TOS
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000002 
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000028
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+APPLY
+Before dupFrame
+
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000028
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000001 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000028
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000001 <- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000000 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 <- TOS
+gp0	| Primitive: 00000001 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000<- TOS
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+TEST
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046B98C<- TOS
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+LOOKUPS
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Reference: 00003FE0
+gp4	| Primitive: 00000001 <- TOS
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 <- TOS
+gp4	| Primitive: 00000001 
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: -00000001 <- TOS
+gp3	| Reference: 0046B98C
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+TEST
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Reference: 7FFFFFFF
+gp3	| Reference: 0046B98C<- TOS
+gp2	| Reference: 00000028
+gp1	| Primitive: 00000000 
+gp0	| Reference: 00000000
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+Pushing: Primitive: 00000001 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046B98C
+gp1	| Reference: 00000028
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000074	| Reference: 00000000
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+GOTO
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046B98C
+gp1	| Reference: 00000028
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000074	| Reference: 00000000
+RetAddr	| 00000070	| 0046B98C
+Frame->	| 0000006C	| 00000028
+Closure	| 00000068	| Reference: 00003FE0
+Argument| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+RETURN
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046B98C
+gp1	| Reference: 00000028
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000074	| Reference: 00000000
+	| 00000070	| Reference: 0046B98C
+	| 0000006C	| Reference: 00000028
+	| 00000068	| Reference: 00003FE0
+	| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+4635020
+Middle 4635020
+ about to jump, temp = 4635020
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 00000001 <- TOS
+gp2	| Reference: 0046B98C
+gp1	| Reference: 00000028
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000064	| Primitive: 00000001 
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+OPERAND
+ADDED: Primitive: 0046B98D 
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 0046B98D <- TOS
+gp2	| Reference: 00000028
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000001 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+RetAddr	| 0000002C	| 00468BD4
+Frame->	| 00000028	| 00000018
+Closure	| 00000024	| Reference: 00003FE0
+Argument| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+RETURN
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 0046B98D <- TOS
+gp2	| Reference: 00000028
+gp1	| Reference: 00003FE0
+gp0	| Primitive: 00000001 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000060	| Primitive: 00000002 
+	| 0000005C	| Reference: 0046AE5C
+	| 00000058	| Reference: 00000028
+	| 00000054	| Primitive: 00000000 
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+	| 0000002C	| Reference: 00468BD4
+	| 00000028	| Reference: 00000018
+	| 00000024	| Reference: 00003FE0
+	| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+4623316
+Middle 4623316
+ about to jump, temp = 4623316
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 0046B98D <- TOS
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000028
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+	| 0000002C	| Reference: 00468BD4
+	| 00000028	| Reference: 00000018
+	| 00000024	| Reference: 00003FE0
+	| 00000020	| Primitive: 00000003 
+RetAddr	| 0000001C	| 004681BC
+Frame->	| 00000018	| 00000008
+Closure	| 00000014	| Reference: 00003FD0
+Argument| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+RETURN
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 0046B98D <- TOS
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000028
+gp0	| Primitive: 00000000 
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000050	| Reference: 00000000
+	| 0000004C	| Reference: 0046AE5C
+	| 00000048	| Reference: 00000028
+	| 00000044	| Reference: 00003FE0
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+	| 0000002C	| Reference: 00468BD4
+	| 00000028	| Reference: 00000018
+	| 00000024	| Reference: 00003FE0
+	| 00000020	| Primitive: 00000003 
+	| 0000001C	| Reference: 004681BC
+	| 00000018	| Reference: 00000008
+	| 00000014	| Reference: 00003FD0
+	| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+4620732
+Middle 4620732
+ about to jump, temp = 4620732
+__________________________________________________________________________
+Dumping stack:
+Registers:
+Reg	| value
+__________________________
+gp6	| Reference: 0022179B
+gp5	| Primitive: 00000001 
+gp4	| Primitive: 00000001 
+gp3	| Primitive: 0046B98D <- TOS
+gp2	| Reference: 0046AE5C
+gp1	| Reference: 00000028
+gp0	| Reference: 00003FE0
+STACK in memory:
+Note	| Address	| Value
+___________________________________________________
+	| 00000040	| Primitive: 00000002 
+	| 0000003C	| Reference: 00468BD4
+	| 00000038	| Reference: 00000018
+	| 00000034	| Primitive: 00000000 
+	| 00000030	| Reference: 00000000
+	| 0000002C	| Reference: 00468BD4
+	| 00000028	| Reference: 00000018
+	| 00000024	| Reference: 00003FE0
+	| 00000020	| Primitive: 00000003 
+	| 0000001C	| Reference: 004681BC
+	| 00000018	| Reference: 00000008
+	| 00000014	| Reference: 00003FD0
+	| 00000010	| Reference: 00003FE0
+RetAddr	| 0000000C	| 0028244C
+Frame->	| 00000008	| 00000000
+Closure	| 00000004	| Reference: 0000FFF8
+Argument| 00000000	| Primitive: -00000001 
+
+__________________________________________________________________________
+
+HALTPrimitive: 0046B98D Write to low memory value: 572
+Write to low memory value: 568
+
+OK
+
+>>
+HALT
+
+______________________ Execution halted ______________________
+executed 435498412 instructions in 20.311242 seconds at 21441249.727614 ips

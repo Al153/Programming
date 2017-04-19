@@ -9,7 +9,7 @@
 	zro, i, mov;		// (set i = 0 - using the zero register)
 	while;				// while, do, next, loop, if, else, and endif words are defined in controlFlow.fasm
 			i, 100 # cma; les, // 
-		do
+		do;
 			i, j, mov;		// j := i
 			j, j, mulr; 	// j := j * j
 			j, odr; 		// output the number in j

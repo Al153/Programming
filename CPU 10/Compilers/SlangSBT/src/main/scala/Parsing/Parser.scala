@@ -4,6 +4,9 @@ import Logging.PrettyPrinter
 import Exceptions._
 import Parsing.SyntaxTree.{ConcreteSyntaxTree, NonTerminal, Terminal}
 
+// TODO: fix || token error
+// TODO: comm
+
 class Parser(var config: String) {
   val configuration:ParserConfiguration = new ParserConfiguration(config)
   val lexer: Lexer = configuration.getLexer

@@ -38,7 +38,7 @@ uint32_t registers[16] = {0,1};
 #include "io.h"
 #include "execution.h"
 #include "hardDisk.h"
-#include "operation functions.h"
+#include "operation_functions.h"
 #include "timing.h"
 
 

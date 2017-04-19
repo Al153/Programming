@@ -1,52 +1,61 @@
-// Type definition
-	: TYPE ; // defines a new type TODO
-	: prim ; // needs to be scanned for GC TODO 
-	: info ; // ignored by GC TODO
-	: size ; // gives size of object for GC
-	TYPE PAIR { prim , prim } // TODO: determine between prims and refs
-	TYPE SUM { info , prim } // info field determines [Inl | Inr]: 11...1 : inr, 00...0: inl
-	4294967295 CONST INR_id
-	0 CONST INL_id
-	TYPE REF { prim }
-	TYPE CLOSURE { // Template. create closure types at compile time
-		size ,
-		info ,		// code pointer
-		prim .. prim
-	}
+.( SETTING UP Type definitions.\n)
+	BYTECODE ->
+		0 INT TypeLim // This stores the type limit (4 + max header)
+		MaxTypes INT[] TYPELENS EXPORT // Stores the lengths of each type
+		MaxTypes INT[] TYPEOFFS EXPORT // Stores the index into each Type's objects where the values to search are (where the metadata stops)
+	;;
+	.( DEFINED VARS\n)
 
-	N_SPACE TYPEMeth
-	TYPEMeth ->
-		// This namespace deals with forth side type objects
-		// these help the Static translation system build a garbage collector
-		// A type object has 3 Word fields.
-			// Header - Header identifies this type
-			// Size - Number of member variables of the type to check for GC
-			// Offset - Offset into heap objects the type of where the first member variable can be found
-				//		- all non-member fields of the object must occur before the boundary set by Offset
-			// total size of any heap object represented by a type is Size + offset + 1 cell
-			//
+	VARIABLE lim
+	: CLSR_LIM lim @ ;  //  ( -- lim ) highest value for a closure
+	VARIABLE TYPCNT 0 TYPCNT !
+	
+	BYTECODE ->
+		: SET_LIM  TYPCNT lim ! ; // ( lim -- ) set the closure lim
 
-		0 CONST Header
-		4 CONST Size
-		8 CONST Offset
+		: TYPE // ( length, offset -- ), [in: name -- ] register a new type
+			CELLS SWAP CELLS SWAP TYPCNT @ // multiply length and offset by cells for  use by assembler code
+			DUPBACK TYPEOFFS + !
+			DUPBACK TYPELENS + !
+		CONST 
+		TYPCNT 1 CELLS += ;
+	;;
 
-		// getters 
-		: @size Size + @ ; // ( TypeObject -- size )
-		: @header Header + @ ; // ( TypeObject -- header )
-		: @offset Offset + @ ; // ( TypeObject -- offset)
+.( DEFINED TYPE\n)
 
-		// setters
-		: !size Size + ! ; // ( size TypeObject -- )
-		: !header Header + ! ; // ( header TypeObject -- )
-		: !offset Offset + ! ; // ( offset TypeObject -- )
+	// insert all closure types
+	// x y TYPE t_1c
+	// .
+	// .
+	// .
+	// x y TYPE t_nc
+	// SET_LIM 				// end of closures
+	// 2 1 TYPE t_ref
+	// 3 2 TYPE t_sum
+	// 3 1 TYPE t_pair
+ 
+// Default type formats:
 
-		: #Type  // ( offset size header  -- ) 
-			// creates and Populates a type object
-			3 ALLOC
-				DUPBACK !header
-				DUPBACK !size
-				DUPBACK !offset
-		;
+	// n_closure:
+		// Header = 4*n
+		// jump address
+		//   .
+		//   .
+		//   n values
+		//   .
 
+	// Pair:
+		// Pair_header
+		// First Value
+		// SecondValue
 
-	;; 
+	// Sum:
+		// Sum_header
+		// Inr/Inl marker
+		// value
+	
+	// Ref
+		// ref header
+		// value
+
+// compile time number of types of object * 4 and store to TypeLim

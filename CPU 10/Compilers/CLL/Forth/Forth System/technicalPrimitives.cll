@@ -36,7 +36,7 @@ void createConstant() // ( val -- ) [ reads a word from the input, creates a con
 	getWordName();   //produces an acceptable name
 	copyName(name);
 	int n = Pop(); 					 //n on stack
-	editDictEntry(name,newByteCodeNode(PUSHLIT,n,0)); //creates a word
+	addToDict(name,newByteCodeNode(PUSHLIT,n,0)); //creates a word
 end;
 
 void createVariable() // ( -- ) [ reads a word from the input, creates a variable with that word as a name which pushes the address of the variable ]
@@ -44,7 +44,7 @@ void createVariable() // ( -- ) [ reads a word from the input, creates a variabl
 	getWordName();   //produces an acceptable name
 	copyName(name);
 	@int address = malloc(1); 					 //allocates memory
-	editDictEntry(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
+	addToDict(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
 end;
 
 void createTable() // ( size -- ) [ reads a word from the input, creates a variable with that word as a name which pushes the address of a table of size size ]
@@ -52,7 +52,7 @@ void createTable() // ( size -- ) [ reads a word from the input, creates a varia
 	getWordName();   //produces an acceptable name
 	copyName(name);
 	@int address = malloc(Pop()); 					 //n on stack
-	editDictEntry(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
+	addToDict(name,newByteCodeNode(PUSHLIT,address,0)); //creates a word
 end;
 
 void dropAll() // ( whole stack -- ) [ deletes everything on the stack ]

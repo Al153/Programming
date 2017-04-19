@@ -4,3 +4,8 @@ compile
 quit
 :quit
 exit
+sbt build
+dir
+ls
+xit
+exit

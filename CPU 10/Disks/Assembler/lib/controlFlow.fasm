@@ -100,7 +100,7 @@ CONTROL ->
 		
 
 	;
-	: do // ( cond -- )
+	: do; // ( cond -- )
 		1 nskip;
 		new DUP jmp;
 		pushwh 		 									// pushes break								 
@@ -125,9 +125,6 @@ CONTROL ->
 		popwh jmp;		// loop (returns to start)
 		{ LABELS -> } labelVal { ;; } SWAP ! // stores label
 	;
-
-
-
 
 ;;
 ;;

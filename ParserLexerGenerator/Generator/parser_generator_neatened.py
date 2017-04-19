@@ -11,6 +11,7 @@ def generate_parser(ABNF_grammar):
 						"rules":[(rule.lhs,rule.rhs,rule.number) for rule in parser.enum_rules]
 					}
 	return parser_summary
+
 class Parser:
 	def __init__(self,ABNF_grammar):
 		print "Extracting ABNF rules ...",
@@ -20,12 +21,6 @@ class Parser:
 
 		self.non_terminals = self.get_non_terminals()
 		self.terminals = self.get_terminals()                                               #searches rules to get a list of terminal strings which are directly referenced in the grammar
-		###########################################################
-		##skip this section.
-		##for debugging purposes
-		#self.lookahead_action_table = {}
-		#self.LHS_goto_table = {}
-		#############################################################
 		self.grammar_symbols = [symbol for symbol in self.rules] + self.terminals                        #gets all grammar symbols
 		print "Done!\nProducing first sets ...",
 		self.initialise_first_sets()
@@ -79,7 +74,8 @@ class Parser:
 		return rules
 
 	def get_enumerated_rules_table(self,rules):                                                         #separates out rules into a version for each rhs an enumberates them
-		rules_to_ignore = ["ELEMENTARY_TOKENS","IGNORE"]
+		# rules_to_ignore = ["ELEMENTARY_TOKENS","IGNORE"]
+		rules_to_ignore = []
 		self.enum_rules = []                                                                        #new list
 		rule_number = 0
 		for rule_name in rules:                                                                     #cycles through rules
@@ -131,10 +127,6 @@ class Parser:
 					token_ptr = blobIndex + 1
 					if token_ptr < len(item.rhs):
 						j_item_set |= set([Item(item.lhs, item.rhs[:blobIndex]+[token,"BLOB"]+item.rhs[token_ptr+1:],item.lookahead)])
-#					try:
-#						j_item_set |= set([Item(item.lhs, item.rhs[:blobIndex]+[token,"BLOB"]+item.rhs[token_ptr+1:],item.lookahead)])
-#					except IndexError:
-#						pass
 		return self.closure(j_item_set) if len(j_item_set) else frozenset(j_item_set)
 
 	def get_item_sets(self):
@@ -152,7 +144,7 @@ class Parser:
 				goto_of_x = self.goto(item_set,X)
 				in_c_set, index = self.is_in_c_set(goto_of_x,C_set)
 				if len(goto_of_x)>0 and not in_c_set:
-					C_set += [goto_of_x]
+					C_set.append(goto_of_x)
 					self.enumerated_states[state_number] = Finite_automaton_state(goto_of_x,state_number)
 					self.enumerated_states[state_index].goto_table[X] = state_number
 					state_number += 1

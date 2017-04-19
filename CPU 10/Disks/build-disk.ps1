@@ -9,7 +9,7 @@ function add-file ($s){
         $text = ""
         foreach ($fileName in (Get-Content (Split-Path $s -leaf))){
             write-host "filename = $fileName`n"
-            if ($fileName){
+            if ($fileName -and (-not $filename.StartsWith("#")) ){
                 $extn = [IO.Path]::GetExtension($fileName)
                 if ($extn -eq ".spec" ){
                     $text = "$text `n`n`n`n$(add-file $fileName)"            

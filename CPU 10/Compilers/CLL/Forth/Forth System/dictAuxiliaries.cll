@@ -1,6 +1,6 @@
 //////////////////////// Dictionary management //////////////////////
 
-//dictionary does not need initialisation or construction, since editDictEntry edis the forthDictHead directly
+//dictionary does not need initialisation or construction, since editDictEntry edits the forthDictHead directly
 
 @int ForthDictHead = 0;
 
@@ -10,23 +10,28 @@ void addToDict(@char name, @int codePtr)
 	ForthDictHead = newEntry;
 end;
 
-void editDictEntry(@char name, @int codePtr)
-	//tries to edit the code pointer of a word in the dictionary, if word doesnt already exist, then add a new one at the top of the dictionary
-	int dict = ForthDictHead;
-	@int address = isInDict(name,dict);
-	if (address) then 
-		if ((address[2])and(address[2] != codePtr)) then
-			collectGarbage(address[2]);
-			address[2] = codePtr;
 
-		endif;
-	else
-		//add to dictionary
-		@int newEntry = newDictInst(name,codePtr);
-		newEntry[3] = ForthDictHead;
-		ForthDictHead = newEntry;
-	endif;
-end;
+
+// Unused
+////////////////////////////////////////////////////////////////////////
+//void editDictEntry(@char name, @int codePtr)
+//	//tries to edit the code pointer of a word in the dictionary, if word doesnt already exist, then add a new one at the top of the dictionary
+//	int dict = ForthDictHead;
+//	@int address = isInDict(name,dict);
+//	if (address) then 
+//		if ((address[2])and(address[2] != codePtr)) then
+//			collectGarbage(address[2]);
+//			address[2] = codePtr;
+//
+//		endif;
+//	else
+//		//add to dictionary
+//		@int newEntry = newDictInst(name,codePtr);
+//		newEntry[3] = ForthDictHead;
+//		ForthDictHead = newEntry;
+//	endif;
+//end;
+/////////////////////////////////////////////////////////////////////////
 
 int checkDictName(@char name, @char reference)
 //returns 1 for match, 0 for fail
@@ -76,15 +81,17 @@ end;
 	return returnPTR;
 end;
 
-
-void collectGarbage(@int node)
-	//deallocates node and all its descendents, recursively
-	if (not(node[3])) then 		//if not marked
-		node[3] = 1; 			//marks
-		if (node[0] == BRANCH) then
-			collectGarbage(node[2]); //deallocates other node
-		endif;
-		collectGarbage(node[1]); //deallocates default pointed to node
-		dalloc(node); 			 //calls actual dalloc routine for deallocation
-	endif;
-end;
+////////////////////////////////////////////////////////////////////////////
+//void collectGarbage(@int node)
+//	//deallocates node and all its descendents, recursively
+//	if (not(node[3])) then 		//if not marked
+//		node[3] = 1; 			//marks
+//		if (node[0] == BRANCH) then
+//			collectGarbage(node[2]); //deallocates other node
+//		endif;
+//		collectGarbage(node[1]); //deallocates default pointed to node
+//		printf("Collecting Garbage\n");
+//		dalloc(node); 			 //calls actual dalloc routine for deallocation
+//	endif;
+//end;
+////////////////////////////////////////////////////////////////////////////

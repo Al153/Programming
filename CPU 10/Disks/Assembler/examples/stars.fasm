@@ -16,7 +16,7 @@ CONTROL ->
 			zro, j, mov;
 			while;
 				j, 10 # cma; les,
-			do
+			do;
 				echo( *)
 			next;
 				j++;

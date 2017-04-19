@@ -1,5 +1,9 @@
 val json4sNative = "org.json4s" %% "json4s-native" % "3.5.0"
 
+val dummy = ""
+
+
+
 name := "SlangSBT"
 
 version := "1.0"

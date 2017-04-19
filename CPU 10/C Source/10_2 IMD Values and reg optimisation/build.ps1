@@ -2,6 +2,8 @@ param([String] $mode="real", [String] $pFile='".\c machine code\benchmark2.cml"'
 
     if ($mode -eq "test"){
         gcc -O3 "C:\dev\Programming\CPU 10\C Source\10_2 IMD Values and reg optimisation\cpu.c" -o .\CEmuTest.exe -std=c99    #(for testing)
+    } elseif ($mode -eq "debug"){
+        gcc -O3 "C:\dev\Programming\CPU 10\C Source\10_2 IMD Values and reg optimisation\cpu.c" -o .\CEmuTest.exe -std=c99 -D DEBUG
     } elseif ($mode -eq "profile"){
         gcc -O3 -pg "C:\dev\Programming\CPU 10\C Source\10_2 IMD Values and reg optimisation\cpu.c" -o .\CEmuProf.exe -std=c99 
         & .\CEmuProf.exe $pFile

@@ -14,6 +14,8 @@ class Lexer(configuration :JsObject, ruleNames:List[String], elementaryTokens:Li
 
   def lex(s: String) : List[Terminal] = {
     val tokens = split(s)
+    println("Elementary tokens = " + elementaryTokens)
+    println("tokens = " + tokens)
     val getToken = (s:String) => pickToken(s, ruleNames)
     tokens.map(getToken)
   }
@@ -38,7 +40,7 @@ class Lexer(configuration :JsObject, ruleNames:List[String], elementaryTokens:Li
             pickToken(s, rss)
           }
         }
-      case Nil => throw new UnrecognisedTokenException(s)
+      case Nil => throw UnrecognisedTokenException(s)
     }
   }
   def split(s: String) : List[String] = {

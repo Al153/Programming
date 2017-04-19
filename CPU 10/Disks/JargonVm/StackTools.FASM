@@ -1,4 +1,8 @@
+.( SETTING UP Stack manipulation tools.\n)
+
 // Define how to manipulate the stack
+
+// The stu, flag is used to indicate when the stack ptr has gone negative for the sake of comparison
 
 
 N_SPACE STACKTLS
@@ -8,101 +12,237 @@ STACKTLS ->
 	7 CONST topLimit // only use 7 regs for the stack
 
 
-	// stack pointer should always point to the top of the stack that isn't in memory resides
+	// stack pointer should always point to the where the next pushed element to the memory stack should go
 
-	: dupFrame  // ( -- ) TODO: duplicate frame in registers to the stack
-		temp, HpLimit ldi;
-		temp, sp, 4 # cma[]; // need space for 4 registers, so check there is space
-		fp, sp, 2 CELLS # ldi[]; // fp = sp + 2 * spaces
-		3 ts, sp, STACK 0 CELLS + sti[];
-		2 ts, sp, STACK 1 CELLS + sti[];
-		1 ts, sp, STACK 2 CELLS + sti[];
-		0 ts, sp, STACK 3 CELLS + sti[];
-	;
-
-	: flshRegs // ( -- ) TODO: flush regs representing the stack into memory
+	: flshRegs // ( -- ) flush regs representing the stack into memory
 		
 		// check there is space on the stack
-		temp, HpLimit ldi; // load up the heap limit
-		temp, sp, TopReg @ # cma[];
-		less, 1 nskip;
+		stu, if;
+			// can't have hit heap limit if stack is entirely in regs
+			// don't need to keep the flag, since all registers are written ot the stack
+		else;
+			temp, HpLimit ldi; // load up the heap limit
+			temp, sp, TopReg @ # cma[];
+			gre, 1 nskip; // if heap lim > stackPtr, all good
 
-		unc, STACK_OVERFLOW_ERROR bra;
+			unc, STOFlow bra; // throw an error
+		endif;
+		
+		TopReg @
+			TopReg @ while
+				." \nLooping flshRegs" TopReg @ . CR
+				TopReg --
+				TopReg @ gp0, + stp, STACK TopReg @ CELLS + sti[];
+			TopReg @ loop
+		stp, SWAP CELLS # adda; // make stack space.
 
-		topreg @ while
-			topreg --
-			topreg @ stp STACK topreg @ CELLS + sti[];
-		topreg @ loop
-		stp, topreg @ CELLS # adda; // make stack space.
+
 	;
 
+	VARIABLE MovDist
+	: fromStck // ( n MovDist -- ) moves values from stack to regs, leaving TopReg = n
+			// n is new TopReg
+			// Dist is the distance to move
+		// for (i=n-1; i>=0; i-- ){
+		// 		if (i>=MovDist){
+		//			mov(reg(i-MovDist) => reg(i))
+		//		} else {
+		//			loadFromStack(regi)
+		//		}
+		// }
+		MovDist !
+		TopReg !
 
-	: Recentre // ( n -- ) spill regs to stack, leaving n values in registers
+		." FROMSTCK, saved values " .s CR
+		stu, STUFlow bra; // if stu is true (all stack values in reg, then there is an error)
+		sp, MovDist @ CELLS # cma; // First check there are moveDist entries in the stack
+		les, fst, UNDERFLW cldi; // Gone into underflow state, so sets the stu, flag
+													// solve
+		sp, MovDist @ CELLS # suba;
+		//  i = n
+ 		TopReg @ TopReg @
+ 		while
+ 			1 - // i --
+ 			DUP MovDist @ { COMPARE -> } => { ;; } if 
+ 				DUP MovDist @ - gp0, + OVER gp0, + mov;
+ 			else
+ 				DUP gp0, + OVER CELLS sp, SWAP STACK + ldi[];
+ 			then
+ 			DUP
+ 		loop DROP
+ 	;
+ 
+ 
+ 	: toStck // ( n MovDist-- )
+ 		MovDist !
+ 		TopReg !
+ 		sp, MovDist @ CELLS # adda; // First check there is moveDist space in the stack
+ 		stu, if;
+ 			// if stu (all stack values are in registers, then we need to see if this toStck will put us in the positive , since some registers may be dead values from the canary)
+ 			sp, OTHERS # cma; // if the new sp =<0x7fffffff, then the sp has gone back positive. back in the black
+ 			// otherwise, in the red still, keep underfow flag
 
-	;
+ 			gre, if;
+ 				fst, UNDERFLW # ldi; // reset the overflow flag
+ 									// stack stays negative
+ 									// safe to do the move
+ 				
+ 			else;
+ 				sp, HpLimit cma;
+ 				les, 1 nskip;
+ 					unc, STOFlow bra;
+ 			endif;
+  		else;
+ 			sp, HpLimit cma;
+ 			les, 1 nskip;
+ 				unc, STOFlow bra;
+ 		endif;
+ 			
+ 
+ 			sp, MovDist @ CELLS # suba; // reset for easy stack manipulation
+		 
+ 
+ 	//  moves values from stack to regs
+ 	// for (i=0; i<n; i++) {
+ 	//		if (i<MovDist){
+ 	//			PushToStack(reg(i))
+ 	//		} else {
+ 	//			mov(reg(i) => reg(i-moveDist))
+ 	//		}
+ 		." Before loop: " .s CR
+ 		0 0 TopReg @ MovDist @ + < while
+ 			DUP MovDist @ < if
+ 				DUP gp0, + OVER CELLS sp, SWAP STACK + sti[]; 
+ 			else
+ 				DUP gp0, + DUP MovDist @ - mov;
+ 			then
+ 			1 + DUP TopReg @ MovDist @ + <
+ 		loop DROP
 
-	: expand TopReg += TopReg @ topLimit < if else ." ERROR, top reg has got too high.\n" then ; // ( n -- ) Sets topreg to make space on the stack. Assumes there is enough space
+ 		sp, MovDist @ CELLS # adda;
+ 	;
+ 
+ 	: recentr; // ( n -- ) spill regs to stack, or fill, leaving n values in registers
+ 		." Start recentre: " .s CR
+ 		TopReg @ OVER = if 
+ 			// do Nothing, n values in registers already
+ 			DROP
+ 			." Path1\n"
+ 		else 
+ 			TopReg @ OVER < if
+ 				// if TopReg < n
+ 				// move regs up by the above value, then shift in from stack
+ 				." Path2\n"
+ 				DUP TopReg @ - fromStck
+ 			else
+ 				// if TopReg > n
+ 				." Path3\n"
+ 				TopReg @ OVER -
+ 				." Before toStck: " .s CR
+ 				toStck
 
-	: check // ( offset, calculated -- [ reg 0 | stackOffset 1 ])
-		DUP
-		topLimit < if
-			0
-		else
-			topLimit - 1 // get original stackOffset
-			// Now we need to bring more stack values into the registers
+ 			then
+ 		then
 
-			4 Recentre
-		then 
-	;
+ 		." recentre, TopReg = " TopReg @ . CR
+ 		." recentr, Stack: " .s CR
+ 	;
+ 
+ 	: expand TopReg SWAP += TopReg @ topLimit < if else ." ERROR, top reg has got too high.\n" then ; // ( n -- ) Sets TopReg to make space on the stack. Assumes there is enough space
+ 
+ 	: check // ( offset, calculated -- [ reg 0 | stackOffset 1 ])
+ 		." CheckSTack = " .s CR
+ 		DUP
+ 		topLimit < if // if there is no underflow..
+ 			SWAP DROP
+ 			0
+ 		else
+ 			DROP 1 // get original stackOffset
+ 			// Now we need to bring more stack values into the registers
+ 
+ 			4 recentr;
+ 		then 
+ 	;
+ 
+ 	: pop // ( n -- )
+ 		." Pop, n = " DUP . CR
+ 		// pop n values from the stack
+ 		DUP TopReg @ { COMPARE -> } <= { ;; } if
+ 			TopReg SWAP -= // reduce the top reg pointer by n
+ 		else
+ 			TopReg @ - // otherwise, move values into the registers, and update the stack pointer
+ 			0 TopReg !
+ 			sp, SWAP CELLS # suba;
+ 		then
 
-	: pop // ( n -- )
+ 		." Pop, TopReg = " TopReg @ . CR
+ 	;
+ 
+ 	: pushr; // ( reg -- ) pseudo instr to move a register to the top of the stack, reg should be acc, zro, one etc
+ 		." Start of pushr: " .s CR
+ 		TopReg @ topLimit { COMPARE -> } >= { ;; } if 
+ 			." before recentre " .s CR
+ 			3 recentr;
+ 		then
+ 		TopReg @ gp0, + mov; // reg from argument
+ 		TopReg ++
+ 			
 
-		// TODO
-		// pop n values from the stack
-		DUP TopReg @ =< if
-			TopReg -= // reduce the top reg pointer by n
-		else
-			TopReg @ - // otherwise, move values into the registers, and update the stack pointer
-			0 TopReg !
-			sp, SWAP CELLS # suba;
-		then
-	;
+ 		." Pushr, TopReg = " TopReg @ . CR
+ 	; 
+	 
+ 
+ 	: ts, // ( offset -- reg ) gets the register for a particular stack offset
+ 		// in any one instruction, one should get the register with the greatest offset first
+ 		// this is in order to ensure that all stack values are in the registers first
+ 		." ts, stack = " .s CR
+ 		1 while
+ 			DUP TopReg @ 1 -  SWAP - check // 1 - since TopReg points to next reg to insert
+ 		loop gp0, +
 
-	: pushr; // ( reg -- ) pseudo instr to move a register to the top of the stack, reg should be acc, zro, one etc
-		TopReg @ topLimit < if 
-		else 
-			3 Recentre
-		then
-			TopReg ++
-			TopReg @ gp0, + mov;
-	; 
-	
+ 		." ts, topReg = " TopReg @ . CR
+ 	;
+ 
+ 	: restStck // ( -- )
+ 		// restores the stack upon return from a function so that we are in the right place.
+ 		4 TopReg ! // simply this, since callee restores registers to half way
+ 	; 
+ 
+ 	: ClsHpPos 2 + CELLS HEAP + ; // ( n -- pos ) get heap offset of nth item in a closure
+ 	: memStPos CELLS STACK + 1 CELLS - ; // ( n -- pos ) get stack offset of nth item in memory location
+ 	: rgStPos, TopReg @ OVER - 1 - gp0, + SWAP ; // ( n -- pos) get correct register of nth stack item in regs
+ 	: CLSR_PSH // ( n -- )
+ 		// picks nth item from the stack into the closure
+ 		." START CLOSURE PUSH: " .s CR
+ 		DUP TopReg @ < if
+ 			rgStPos, acc, SWAP ClsHpPos sti[];
+ 		else 
+ 			DUP ClsHpPos SWAP // get the position in the closure to move into
+ 			TopReg @ - memStPos // need to get (n-tr)th element from memory stack
+ 			temp, SWAP sp, SWAP ldi[];
+ 			temp, SWAP acc, SWAP  sti[]; 
+ 		then
+ 		." END CLOSURE PUSH: " .s CR
+ 	;
+ 
+ 	: dupFrame  // ( -- )
+ 		." start dupframe"
+ 		stu, 3 nskip; // using nskips for a reliable number of instructions
+ 			temp, HpLimit ldi;
+ 			temp, sp, 4 # cma[]; // need space for 4 registers, so check there is space
+ 			unc, 1 nskip;
+ 		// else
+ 			fst, UNDERFLW ldi; // reset the flag
+ 
+ 		fp, sp, 2 CELLS # ldi[]; // fp = sp + 2 * spaces
+ 		3 ts, sp, STACK 0 CELLS + sti[];
+ 		2 ts, sp, STACK 1 CELLS + sti[];
+ 		1 ts, sp, STACK 2 CELLS + sti[];
+ 		0 ts, sp, STACK 3 CELLS + sti[];
 
-	: ts, // ( offset -- reg ) gets the register for a particular stack offset
-		// in any one instruction, one should get the register with the greatest offset first
-		// this is in order to ensure that all stack values are in the registers first
-		1 while
-			DUP TopReg @ + check
-		loop gp0, +
-	;
+ 		 sp, 4 CELLS # adda;
+ 		." Done dupFrame\n"
+ 	;
+ ;;
 
-	: restStck // ( -- )
-		// restores the stack upon return from a function so that we are in the right place.
-		4 TopReg ! // simply this, since callee restores registers to half way
-	; 
-
-	: ClsHpPos 3 + CELLS HEAP + ; // ( n -- pos ) get heap offset of nth item in a closure
-	: memStPos CELLS STACK + 1 CELLS - ; // ( n -- pos ) get stack offset of nth item in memory location
-
-	: CLSR_PSH // ( n -- )
-		// picks nth item from the stack into the closure
-		DUP topreg @ < if
-			DUP gp0, + SWAP temp, SWAP ClsHpPos 
-		else 
-			DUP ClsHpPos SWAP // get the position in the closure to move into
-			topreg @ - memStPos // need to get (n-tr)th element from memory stack
-			acc, SWAP sp, SWAP ldi[];
-			acc, SWAP temp, SWAP  sti[]; 
-		then
-	;
-;;
+ .( Stack tools Stack = ) .s CR

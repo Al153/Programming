@@ -1,92 +1,445 @@
+.( SETTING UP Heap tools and garbage collection.\n)
+
 N_SPACE HeapSetp
 HeapSetp -> 
-	: setCells DUP 2 CELLS + ! ; // ( n -- ) adds in a link between adjacent cells
-	: lessLmt HpRLimit 1 - 2 * CELLS < ; // ( n -- bool ) checks that n < 2*(HpRLimit - 1)
+	// Heap Reg Structure:
 
-	: initHeap // ( -- topOfHeapReg )
+	// ////////////////////
+	//  ObjectPtr 		| pointer to the object
+	//	colour 			| maintains the colour of the object ( 0 - white, 1 - grey, 2 - black)
+	//	NextInColour	| linked list which maintains a queue of grey objects to scan
+	//	NextSorted 		| linked list sorted by position in heap, this allows for easy compaction
+	// ////////////////////
+
+	0 CELLS CONST obj
+	1 CELLS CONST colour
+	2 CELLS CONST nextCol
+	3 CELLS CONST nextSrt
+
+	0 CELLS CONST nextFree // for use in the Linked list mode
+
+	// Forth side access words
+	: @obj obj + @ ; // ( RegEntry -- object )
+	: @colour colour + @ ; // ( RegEntry -- colour )
+	: @nextCol nextCol + @ ; // ( RegEntry -- nextRegEntry )
+	: @nxtSrt nextSrt + @ ; // ( RegEntry -- nextRegEntry )
+	: @free nextFree + @ ; // ( FreeRegEntry -- NextFreeRegEntry )
+
+	: !obj obj + ! ;
+	: !colour colour + ! ;
+	: !nextCol nextCol + ! ;
+	: !nextSrt nextCol + ! ;
+	: !free nextFree + ! ; 
+
+	// Runtime side access pseudoOps
+	: >obj; HEAPREG obj + sti[]; ; // ( rVal rDest -- )
+	: >col; HEAPREG colour + sti[]; ; // ( rVal rDest -- )
+	: >nxtCol; HEAPREG nextCol + sti[]; ; // ( rVal rDest -- )
+	: >nxtSrt; HEAPREG nextSrt + sti[]; ;  // ( rVal rDest -- )
+	: >free; HEAPREG nextFree + sti[]; ; // ( rVal rDest -- )
+
+	: obj>; SWAP HEAPREG obj + ldi[]; ; // ( rSource rDest -- )
+	: col>; SWAP HEAPREG colour + ldi[];  ; // ( rSource rDest -- )
+	: nxtCol>; SWAP HEAPREG nextCol + ldi[]; ; // ( rSource rDest -- )
+	: nxtSrt>; SWAP HEAPREG nextSrt + ldi[]; ; // ( rSource rDest -- )
+	: free>; SWAP HEAPREG nextFree + ldi[]; ; // ( rSource rDest -- )
+
+
+	: setCells DUP HEAPREG + RegWidth CELLS + !free ; // ( n -- ) adds in a link between adjacent cells
+	: lessLmt HpRLimit 1 - RegWidth * CELLS  < ; // ( n -- bool ) checks that n < 2*(HpRLimit - 1)
+
+	: initHeap // ( -- topOfHEAPREG )
 		0 DUP lessLmt while
 			DUP setCells
-			2 CELLS +
-		DUP lessLmt loop 
+			RegWidth CELLS +
+		DUP lessLmt
+		loop 
 	;
 
-	initHeap INT TopHeap EXPORT
+	.( Initialising heap registry...) initHeap .( DONE\n) INT TopHeap EXPORT
+
+	N_SPACE tempRegs
+	tempRegs ->
+		VARIABLE rTemp
+		VARIABLE r1
+	;;
+
+	: >rTemp [ tempRegs -> rTemp ;; ] ! ; // ( r -- )
+	: >r1 	 [ tempRegs -> r1    ;; ] ! ; // ( r -- )
+	: rTemp, [ tempRegs -> rTemp ;; ] @ ; // ( -- r )
+	: r1,    [ tempRegs -> r1    ;; ] @ ; // ( -- r )
 
 	: nextHR; // ( rTemp r1  -- )
 	// pseudo op, gets next Heap Reg entry from the registry
-		OVER OVER DUP TopHeap ldi;	// (r1, TopHeap ldi;)
-		testr, 1 nskip; // ( r1, testr, 1 nskip;)
-		unc, RUN_OUT_OF_HEAP_REG_SPACE_EXCEPTION bra; // TODO: where does this go?
-		HEAPREG 1 CELLS + ldi[]; // (rTemp, r1, HEAPREG 1 CELLS + ldi[];)
- 		TopHeap sti; // (rTemp, TopHeap sti;)
-	; 
+		>r1 >rTemp
+
+
+
+		r1, .s CR TopHeap ldi; // get top of heap, the result
+		[ str( \nAllocating HR:)] echoKp; r1, odr;
+
+		r1, testr, 1 nskip;
+			unc, HROFlow bra; // caise am error if out
+		r1, rTemp, free>;
+ 		rTemp, TopHeap sti; // result left in r1
+	;
 
 	 : PushHR;
-	 // ( rTemp r1  -- ) pseudo op, gets next Heap Reg entry from the
-		OVER, TopHeap ldi;	// (rTemp, TopHeap ldi;)
-		SWAP OVER HEAPREG 1 CELLS + ldi[]; // (rTemp, r1, HEAPREG 1 CELLS + ldi[];)
- 		TopHeap sti; // (r1, TopHeap sti;)
-	; 
+	 // ( rTemp r1  -- ) pseudo op, pushes a Heap registry object to the free list
+		>r1 >rTemp // r1 contains ref to object
+		rTemp, TopHeap ldi;	// get old top of heap reg
+		rTemp, r1, >free; // store into our reg object to be deallocated
+ 		r1, TopHeap sti; // store our reg object to heap reg
+	;
+
+
+	gp0, CONST this,
+	gp1, CONST obj,
+	gp2, CONST hdr,
+	gp4, CONST prev,
+	gp4, CONST child,
+	gp5, CONST colour,
+	gp6, CONST offset,
+	gp7, CONST i,
+
+	0 INT STPTR
+	0 INT FPTR
+
+	gp3, CONST blk,
+	one, CONST gr,
+	zro, CONST wh,
+
+
+// Linked lists over HEAPREG entries
+	0 INT GREY // To be processed no need to be initialised
+
+	0 INT SORTED // sorted by position in heap
+	0 INT ENDSRTED // end of the sorted list
+
+	: doGCRun; // ( -- )
+		// jump to GC run
+		temp, pc, 2 INSTRS # ldi[];
+		temp, GC_RET sti;
+		unc, GC_RUN bra;
+	;
+	
+
+
+	: heapAllc // ( itemType -- ) pseudo op
+		// leaves HEAPREG pointer in temp, leaves actual heap instance in acc,
+	
+		
+		// Assumption: heap is full up to the TopHeap pointer
+		// So steps are:
+		// 	- find out size of object
+		// 	- increment top heap and check it's within size
+		// 	- store header
+		// 	- create instance in
+	
+		// allocation is reasonably easy
+	
+		// //////////////////////////////////////////
+		// Simple Heuristic - do we do a GC run?
+		
+		[ str( \nChecking for Garbage collection)] echoKp;
+		acc, HpLimit ldi;
+		acc, sp, subr; // get heap space left
+		acc, GC_LIM cma;
+		." First instrs: " .s CR
+		les, if;
+			{ STACKTLS -> }
+			TopReg @
+				flshRegs
+				doGCRun;
+				." After GC RUN: " .s CR
+			recentr; // recentre using old TopReg value
+			{ ;; }
+		endif;
+		// ///////////////////////////////////////////
+		
+		[ str( \nGetting Heap reg entry)] echoKp;
+
+		acc, temp, nextHR; // get a heap reg entry
+
+		[ str( \nGot heap reg entry)] echoKp;
+
+		zro, temp, >col; // store colour=white to temp entry
+		zro, temp, >nxtSrt;
+
+		." Done some linkage: " .s CR
+	
+		acc, ENDSRTED ldi; // get last value in the sorted list
+		
+		[ str( \nDoing linkage)] echoKp;
+
+		acc, testr, if;
+			temp, acc, >nxtSrt; // do the SORTED list linkage, iff acc is populated
+		else;
+			temp, SORTED sti; // if acc is empty, then this is the first sorted item
+		endif;
+		
+		temp, ENDSRTED sti; // this is the new last sorted node
+							// stores this object for now to free up a register
+		
+		[ str( \n Done Linkage)] echoKp;
+
+		acc, HpLimit ldi; // get top of heap
+		acc, OVER TYPELENS + suba; // increment top of heap to the end of our object
+									// this looks up length from the TYPELENS table
+		acc, HpLimit sti; // store the new top of heap
+		stu, if; // we can't have used up heap space if the stack is entirely in regs (stu)
+			fst, UNDERFLW # ldi;
+	
+		else;
+			acc, sp, cmr; // check whether we've used up the heap space
+			les, HPOFlow bra;
+		endif;
+	
+		[ str( \nWriting header\n)] echoKp;
+	
+		temp, SWAP # ldi; // get hold of the type's header
+		temp, acc, HEAP sti[]; // store the header into the heap object
+	
+		temp, ENDSRTED ldi; // restore the HEAPREG reference
+		acc, temp, HEAPREG sti[];  // register the object
+
+		." End of closure: " .s CR
+	; EXPORT
+	
+	VARIABLE thisReg
+	VARIABLE thisStck
+
+	: >stack; // ( reg, stack -- )
+		thisStck !
+		thisReg !
+
+		temp, thisStck @ ldi;
+		temp, thisReg @ >nxtCol;
+		thisReg @ thisStck @ sti;
+	;
+	
+	: stack>; // ( stack reg --)
+		thisReg !
+		thisStck !
+
+		thisReg @ thisStck @ ldi;
+		thisReg @ temp, nxtCol>;
+		temp, thisStck @ sti;
+	;
+	
+	: vld8hdr; // ( -- )
+		// check the header is within range
+		hdr, { BYTECODE -> } TypeLim { ;; } cma;
+		les, 1 nskip;
+		unc, NoHdr bra;
+	;
+	
+
+
+	GC_RUN !LABEL
+		temp, GC_RET sti;
+		// STEPS:
+			// Traverse stack - split into frame items and regular stack entries
+				// add references into the grey list
+	
+			// for element in the grey list: - how do we know when done?
+				//  go to its links
+				//  For each link:
+					// check if in the Grey or black lists - how?
+					// if not in Grey or black, add to end of grey list
+	
+			// then we want to sort by starting address to do a compaction
+	
+ 		// Regs have been flushed, so don't need to worry about stu flag
+	
+	
+		blk, 2 # ldi;
+		this, GREY ldi;
+		temp, this, nxtCol>;
+		temp, GREY sti;
+	
+		LABEL: SETBLACK
+		LABEL: KEEPOBJ
+	
+
+	
+	
+		// ////////////////////////////////////////////////
+		// Phase 1: stack scan to populate reachable set //
+		// ////////////////////////////////////////////////
+	
+		// Stack Frame
+		// *(fp+4) 	ret addr
+		// *fp:		previous fp
+		// *(fp-4) 	closure ->
+		// *(fp-8) 	argument value
+
+
+		// Store the original stack pointers
+		stp, STPTR sti;
+		fp, FPTR sti;
+
+
+		while; // while fp:
+			fp, testr,
+			do;
+
+
+				while; // while stp > fp + 4
+					stp, fp, 1 CELLS # cma[];
+
+
+					gre, do;
+						obj, stp, STACK ldi[];
+						obj, this, mov;
+
+
+						this, TOPBIT # anda;
+						this, testr, if;		// if a prim (top bit = 1)
+						else; 					// if a ref (top bit = 0 )
+							gr, obj, >col;
+												// add to grey stack
+							obj, GREY >stack; // Use argument reg
+						endif;
+					next;
+
+					stp, 1 CELLS # suba;
+				loop;
+			next;
+			stp, fp, -4 # ldi[]; // move on stack pointer to point to where closure is 
+			fp, fp, STACK ldi[];
+		loop;
+
+		// Extra search down to zero do deal with arg and closure of bottom frame on stack
+		while; // while stp > fp + 4
+			stp, fp, 1 CELLS # cma[];
+
+			gre, do;
+				obj, stp, STACK ldi[];
+					obj, this, mov;
+						this, TOPBIT # anda;
+						this, testr, if;		// if a prim (top bit = 1)
+						else; 					// if a ref (top bit = 0 )
+							gr, obj, >col;
+												// add to grey stack
+							obj, GREY >stack; // Use argument reg
+						endif;
+					next;
+					stp, 1 CELLS # suba;
+				loop;
+		fp, FPTR ldi;
+		stp, STPTR ldi;
+	
+
+		// ////////////////////////////////////////////////
+		// Phase 2: trace objects to find reacheable set //
+		// ////////////////////////////////////////////////
+		while;
+			this, testr, do;
+				this, obj, obj>; // get the object pointer
+				hdr, obj, HEAP ldi[]; // get the header of the object
+
+				vld8hdr;
+	
+				i, hdr, TYPEOFFS ldi[]; // bound of where the searcheable members end
+				i, LIMIT sti;
+				i, hdr, TYPELENS ldi[]; // start i at typelength associated with the header
+				while;
+					i, LIMIT cma; // while (i > )
+					gre, do;
+
+
+						i, 1 CELLS # suba;
+						temp, i, HEAP ldi[];
+						// need to check if temp is a ref or prim
+						temp, TOPBIT # anda;
+						temp, testr, if; // if temp>0 then it was a primitive
+							contin;
+						else;
+
+
+							temp, i, HEAP ldi[];
+							child, temp, HEAPREG ldi[];
+							child, colour, col>;
+							colour, testr, if;
+								// if black or grey, need to do nothing
+								contin;
+							else;
+
+								gr, child, >col;
+								child, GREY >stack;
+							endif;
+						endif;
+					next;
+				loop;
+	
+				blk, obj, >col;
+			next;
+			GREY this, stack>;
+		loop;
+	
+		// ////////////////////////////
+		// Phase 3: Sweep/copy phase //
+		// ////////////////////////////
+
+
+	
+		prev, SORTED nextSrt - HEAPREG - # ldi; // prev pointer initialised so >nxtSrt; writes to the sorted pointer
+		this, SORTED ldi;
+		offset, 0 # ldi;
+	
+		while;
+			this, testr, do;
+				this, colour, col>;
+				colour, testr, KEEPOBJ bra; // If white..
+					this, temp, nxtSrt>; // unlink this
+					temp, prev, >nxtSrt;
+					this, obj, obj>;
+					hdr, obj, HEAP ldi[]; // get the header
+	
+					vld8hdr;
+	
+					offset, hdr, HEAP adda[]; // look up and add header from table
+					temp, this, PushHR; // assume this's next field is not changed. reclaims this
+					contin; // do next loop
+	
+				KEEPOBJ !LABEL // otherwise if grey or blacks
+					// Nothing to reclaim
+	
+					// set colour to white
+					wh, this, >col;
+					offset, testr, if; // if there is an offset, the need to move the object
+						// when moving:
+							// Heap grows down in addresses,
+							// therefore items need to move up in address
+							// therefore need to move highest address part first
+							// therefor do a high -> low loop
+						this, obj, obj>;
+						hdr, obj, HEAP ldi[]; // get the header
+						i, hdr, TYPELENS ldi[]; // get the length of the item
+						i, obj, addr; // add on the reference to the item to get to the end
+						offset, i, addr; // offset becomes a pointer to the space to move to
+						while;
+							i, obj, cmr;
+							i, 4 # suba;
+							offset, 4 # suba; // decrement pointers
+							// while (offset --; i-- > obj)
+	
+							gre, do;
+								temp, i, HEAP ldi[]; // do the move
+								temp, offset, HEAP sti[];
+							next;
+						loop;
+	
+						zro, offset, mov; // reset the offset
+						this, prev, mov; // update previous
+					endif;
+			next;
+				this, this, nxtSrt>; // move onto next item in the sorted list
+			loop;
+
+	
+		pc, GC_RET ldi; // return
 ;;
 
-: heapAllc // ( itemType -- ) pseudo op
-	// TODO allocates heap space, puts in correct header
-	// leaves HeapReg pointer in acc, leaves actual heap instance in temp,
-	// TODO dereferencing should dereference twice
-	
-	// Assumption: heap is full up to the TopHeap pointer
-	// So steps are:
-	// 	- find out size of object
-	// 	- increment top cheap and check it's within size
-	// 	- store header
-	// 	- create instance in
-
-	// allocation is reasonably easy
-	{ TYPE -> } DUP DUP @size SWAP @offset 1 + + CELLS { ;; } // get size to allocate
-	temp, acc, nextHR; // get a heap reg entry
-
-	temp, RegEntry sti;	// store this for now to free up a register
-	
-	acc, HpLimit ldi; // get top of heap
-	acc, OVER # suba; // increment top of heap to the end of our object
-	
-	acc, sp, cmr; // check whether we've used up the heap space
-	les, HEAP_OVERFLOW bra;
-
-	temp, SWAP @header # ldi; // get hold of the type's header
-	temp, acc, HEAP sti[]; // store the header int othe heap object
-
-	temp, RegEntry ldi; // restore the HeapReg reference
-	acc, temp, HeapReg sti[];  // register the object
-;
-: heapDllc  // ( reg -- )
-	// Dealloc object in r1
-;
-
-
-LABEL: GC_RUN
-	// store all 8 regs
-	// TODO
-
-	 // Linked lists over second field of HeapReg entries
-	0 INT BLACK // no links to white set
-	0 INT GREY // To be processed
-	0 INT WHITE // condemned set
-	
-	// TODO
-	// STEPS:
-		// Traverse stack - split into frame items and regular stack entries
-			// add references into the grey list
-
-		// for element in the grey list: - how do we know when done?
-			//  go to its links
-			//  For each link:
-				// check if in the Grey or black lists - how?
-				// if not in Grey or black, add to end of grey list
-
-		// then we want to sort by starting address to do a compaction
-
-
-
-
-	// TODO: restore all 8 regs
+.( FORTH GC Stack = ) .s CR

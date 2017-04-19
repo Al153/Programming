@@ -14,6 +14,11 @@ inline unsigned short bswap_16(unsigned short a){ //swaps from little endian to 
 
 void store_memory(uint32_t data){
 	if (useImmediate) return;
+	#ifdef DEBUG
+		if (address < 10000){
+			printf("Write to low memory value: %i\n", address);
+		}
+	#endif
 	uint32_t *int_MEM = (uint32_t *)(MEMORY + (address&MEMORY_LIMIT));
 	if (__builtin_expect(address+3>MEMORY_LIMIT, 0)){
 		printf("ADDRESS OVERFLOW: %u\n",address);

@@ -1,0 +1,39 @@
+// This file defines assembler for errors
+
+
+
+: gtForth; // ( -- )
+	// Pseudo instruction
+	// returns to forth mode
+	unc, FORTHRET bra;
+
+;
+
+NoHdr !LABEL
+	echo( ERROR: Garbage collection encountered an invalid header: )
+	// header is stored in gp2 (hdr)
+	gp0, odr;
+	gtForth;
+
+TypeErr !LABEL
+	echo( ERROR: Type error: )
+	temp, odr;
+	gtForth;
+
+HPOFlow !LABEL
+	echo( ERROR: Run out of heap space.)
+	gtForth;
+
+HROFlow !LABEL
+	echo( ERROR: Run out of heap registry space)
+	gtForth;
+
+STOFlow !LABEL
+	echo( ERROR: Stack overflow.)
+	gtForth;
+
+STUFlow !LABEL
+	echo( ERROR: Stack underflow.)
+
+
+.( ERRORS Stack = ) .s CR

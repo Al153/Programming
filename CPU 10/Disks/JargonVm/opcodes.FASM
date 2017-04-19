@@ -1,277 +1,524 @@
-
+.( SETTING UP Opcodes... )
 // Opcodes
+STACKTLS ->
+	BYTECODE ->
 
-: BPUSH // ( stack_item -- )
-	acc, SWAP # ldi;
-	acc, pushr;
-; 
-: BLOOKUPS // ( offset -- )
-	acc, SWAP fp, SWAP, STACK + ldi[];
-	acc, pushr;
-;  // lookup in stack with an offset
 
-: BLOOKUPH // ( offset -- )
-	// offset is offset in the closure
-	acc, fp, STACK 4 - ldi[]; // get a pointer to our closure
-	acc, acc, HEAPREG ldi[]; // get the reference into the heap from the Heap registry
+		: BPUSH // ( stack_item -- )
+			dumpStack
 
-	closureHeader typeChk;
+			acc, SWAP # ldi;
+			acc, pushr;
 
-	ClsHpPos // get particular bound var out of closure
-	acc, SWAP acc, SWAP ldi[]; // pick the var
-	acc, pushr;
-;
+			[ str( \nPushing: ) ] echoKp;
+			prntVal;
 
-: BUNARY  // ( unary_oper  -- )
-	DUP U_NOT = if DROP
-		0 ts, [ INPUT -> hex 7fffffff ;; ] # xora;
-		 // we're using 31 bit ints since we need to distinguish between values and references for the GC to properly run
-	else DUP U_NEG = if DROP
-		0 ts, 1 # xora;
-	else DUP U_READ = if DROP
-		// TODO call a readint fn and write to 0 ts,
-	else
-		Throw an error // TODO
-	then then then
-;
-
-: BOPER // ( oper -- ) 
-	DUP O_AND = if DROP
-		1 ts, 0 ts, andr;
-		1 pop
-
-	else DUP O_OR = if DROP
-		1 ts, 0 ts, orrr;
-		1 pop
-
-	else DUP O_EQB = if DROP
-		acc, [ INPUT -> hex ffffffff ;; ] ldi;
-		1 ts, 0 ts, subr;
-		1 ts, testr, 1 nskip;
-			acc, [ INPUT -> hex ffffffff ;; ] ldi;
-		acc, 1 ts, mov;
-		1 pop
-
-	else DUP O_EQI = if DROP
-		acc, [ INPUT -> hex ffffffff ;; ] ldi;
-		1 ts, 0 ts, subr;
-		1 ts, testr, 1 nskip;
-			acc, [ INPUT -> hex ffffffff ;; ] ldi;
-		acc, 1 ts, mov;
-		1 pop
+		;
 		
-	else DUP O_LT = if DROP
-		acc, [ INPUT -> hex ffffffff ;; ] ldi;
-		1 ts, 0 ts, cmp;
-		les, 1 nskip;
-			acc, [ INPUT -> hex ffffffff ;; ] ldi;
-		acc, 1 ts, mov;
-		1 pop
+		: BLOOKUPS // ( offset -- )
+			dumpStack
+			[ str( \nLOOKUPS)] echoKp;
 
-	else DUP U_ADD = if DROP
-		1 ts, 0 ts, addr;
-		1 ts, [ INPUT -> hex 80000000 ;; ] # orra; // account for top bit
-		1 pop
+			acc, SWAP fp, SWAP CELLS STACK + ldi[];
+			acc, pushr;
+		;  // lookup in stack with an offset
+		
+		: BLOOKUPH // ( offset -- )
+			dumpStack
+			[ str( \nLOOKUPH, closure index, closure address = )] echoKp;
 
-	else DUP U_SUB = if DROP
-		1 ts, 0 ts, subr;
-		1 ts, [ INPUT -> hex 80000000 ;; ] # orra; // account for top bit
-		1 pop
+			// offset is offset in the closure
+			acc, fp, STACK 1 CELLS - ldi[]; // get a pointer to our closure
+			acc, acc, HEAPREG ldi[]; // get the reference into the heap from the Heap registry
+		
+			ClsrChk;
+		
+			acc, fp, STACK 1 CELLS - ldi[]; // get a pointer to our closure
+			acc, odr;
+			32 # oca;
 
-	else DUP U_MUL = if DROP
-		1 ts, [ INPUT -> hex 7fffffff ;; ] # anda;
-		0 ts, [ INPUT -> hex 7fffffff ;; ] # anda
-		1 ts, 0 ts, mulr;
-		1 ts, [ INPUT -> hex 80000000 ;; ] # orra; // account for top bit
-		1 pop
-	else
-		Throw an error // TODO
-	then then then
-;
-: BASSIGN //  ( -- )
-	acc, 1 ts, HEAPREG ldi[]; // get pointer to ref from the heap registry
+			acc, acc, HEAPREG ldi[];
 
-	refHeader typeChk;
+			acc, odr;
+		 	
+		 	// get particular bound var out of closure
+			acc, SWAP acc, SWAP ClsHpPos ldi[]; // pick the var
+			acc, pushr;
+		;
+		
+		: BUNARY  // ( unary_oper  -- )
+			dumpStack
+			[ str( \nUNARY)] echoKp;
 
-	acc, 0 ts, SWAP HEAP 1 CELLS + sti[];	// do the assignment
+			DUP U_NOT = if DROP
+				0 ts, OTHERS # xora;
+		 		// we're using 31 bit ints since we need to distinguish between values and references for the GC to properly run
+			else DUP U_NEG = if DROP
+				0 ts, 1 # xora;
+			else DUP U_READ = if DROP
+				readInt;
+				acc, 0 ts, mov;
+			else
+				." ERROR: unrecognised Unary op code: " . CR
+			then then then
+		;
 
-	2 pop
-;
-: BSWAP  // ( -- )
-	1 ts, 0 ts, SWAP  xorr;
-	1 ts, 0 ts, xorr;
-	1 ts, 0 ts, SWAP xorr;
-;
-: BPOP // ( -- )
-	1 pop
-; 
+		
+		: BOPER // ( oper -- )
+			
+			dumpStack
+			[ str( OPERAND)] echoKp;
 
-// Pair heap definition
-//	Header (type val) - indicates that this is a pair
-//	fst
-//	snd
+			DUP O_AND = if DROP
+				1 ts, 0 ts, andr;
+				1 pop
+		
+			else DUP O_OR = if DROP
+				1 ts, 0 ts, orrr;
+				1 pop
+		
+			else DUP O_EQB = if DROP
+				zro, acc, mov;
+				1 ts, 0 ts, cmr;
+				equ, acc, ONES # cldi; // conditional load
+				acc, 1 ts, mov;
+				1 pop
+		
+			else DUP O_EQI = if DROP
+				zro, acc, mov;
+				1 ts, 0 ts, cmr;
+				equ, acc, ONES # cldi; // conditional load
+				acc, 1 ts, mov;
+				1 pop
+				
+			else DUP O_LT = if DROP
+		
+				// need to account for signs
+				zro, acc, mov;
+				temp, SIGNBIT ldi;
+				temp, 1 ts, andr;
+				temp, testr, if;
+					temp, 0 ts, andr;
+					temp, testr, if; // if sign bits match, just compare
+						1 ts, 0 ts, cmr;
+						les, 1 nskip;
+							acc, ONES ldi;
+					else;
+						// ts[1] signed, ts[0] not -> ts[0] > ts[1], so lt is false
+					endif;
+				else;
+					temp, SIGNBIT ldi;
+					temp, 0 ts, andr;
+					temp, testr, if;
+						acc, ONES ldi; // ts[0] signed, ts[1] not -> ts[0] < ts[1] so lt is true
+					else; // if sign bits match, just compare
+						1 ts, 0 ts, cmr;
+						les, 1 nskip;
+							acc, ONES ldi;
+					endif;
+				endif;
+				acc, 1 ts, mov;
+				1 pop
+		
+			else DUP O_ADD = if DROP
+				1 ts, 0 ts, addr;
+				1 ts, TOPBIT # orra; // account for top bit
+				
+				1 ts, acc, mov;
+				[ str( \nADDED: )] echoKp;
+				prntVal;
 
-: BFST // ( -- )
-	acc, 0 ts, HEAPREG ldi[];
+
+				1 pop
+		
+			else DUP O_SUB = if DROP
+				1 ts, 0 ts, subr;
+				1 ts, TOPBIT # orra; // account for top bit
+				
+				1 ts, acc, mov;
+				[ str( \nSubbed: )] echoKp;
+				prntVal;
+
+				1 pop
+		
+			else DUP O_MUL = if DROP
+				1 ts, OTHERS # anda;
+				0 ts, OTHERS # anda;
+
+				[ str( \nMUL arg1: )] echoKp;
+				1 ts, acc, mov;
+				hexVal;
+
+
+				[ str( \nMUL arg2: )] echoKp;
+				0 ts, acc, mov;
+				hexVal;
+
+				1 ts, 0 ts, mulr; // temp gets clobbered here
+				1 ts, TOPBIT # orra; // account for top bit
+
+				1 ts, acc, mov;
+				[ str( \nMulled: )] echoKp;
+				prntVal;
+
+				1 pop
+			else
+				." ERROR: unrecognised Binary op code: " . CR
+			then then then then then then then then
+
+		;
+		: BASSIGN //  ( -- )
+			dumpStack
+			[ str( \nASSIGN)] echoKp;
+
+			acc, 1 ts, HEAPREG ldi[]; // get pointer to ref from the heap registry
+		
+			t_REF @ TypeChk;
+		
+			acc, 0 ts, SWAP HEAP 1 CELLS + sti[];	// do the assignment
+		
+			2 pop
+
+		;
+		: BSWAP  // ( -- )
+
+			dumpStack
+			[ str( \nSWAP)] echoKp;
+
+			1 ts, 0 ts, SWAP  xorr;
+			1 ts, 0 ts, xorr;
+			1 ts, 0 ts, SWAP xorr;
+		;
+		: BPOP // ( -- )
+			dumpStack
+			[ str( \nPOP)] echoKp;
+
+			1 pop
+		; 
+		
+		// Pair heap definition
+		//	Header (type val) - indicates that this is a pair
+		//	fst
+		//	snd
+		
+		: BFST // ( -- )
+			." Dumping stack"
+			dumpStack
+			[ str( \nFST)] echoKp;
+
+			." Load acc"
+			acc, 0 ts, HEAPREG ldi[];
+			." Type check"
+			t_PAIR @ TypeChk;
+			." Load"
+			0 ts, acc, HEAP 1 CELLS + ldi[]; // load up from the  first part of the index
+		;
+
+		: BSND // ( -- )
+			dumpStack
+			[ str( \nSND)] echoKp;
+
+			acc, 0 ts, HEAPREG ldi[];
+			t_PAIR @ TypeChk;
+			0 ts, acc, HEAP 2 CELLS + ldi[]; // load up from the  first part of the index
+		;
+		: BDEREF  // ( -- )
+
+			dumpStack
+			[ str( \nDEREF)] echoKp;
+
+			acc, 0 ts, HEAPREG  ldi[];
+			t_REF @ TypeChk;
+			0 ts, acc, HEAP 1 CELLS + ldi[]; // load up from the  first part of the index
+		;
+		: BAPPLY // ( -- )
+			dumpStack
+			[ str( \nAPPLY)] echoKp;
+		
+
+			acc, 0 ts, HEAPREG ldi[]; // check for a closure
+		
+			ClsrChk;
+		
+			// Stack Frame
+			// *(fp+4) 	ret addr
+			// *fp:		previous fp
+			// *(fp-4) 	closure ->
+			// *(fp-8) 	argument value
+		
+			// Stack: ( frame ... val closure -- frame ... frame val )
+		
+			// save closure and val
+			1 ts, acc, mov; // val
+			0 ts, temp, mov; // closure
+
 	
-	pairHeader typeChk; // TODO: define the pair header
+			2 pop
+			// First, push all stack items in registers to memory
+			temp, OP_TEMP sti;
+				flshRegs // this uses temp so we need to store it temporarily to preserve our closure
+				4 expand
+			temp, OP_TEMP ldi; // restore temp register
 
-	0 ts, acc, HEAP 1 CELLS + ldi[]; // load up from the  first part of the index
-;
-: BSND // ( -- )
-	acc, 0 ts, HEAPREG ldi[];
+			// construct frame
+			acc, 3 ts, mov; // Value
+			temp, 2 ts, mov; // closure
+			fp, 1 ts, mov; // fp
+			[ str( \nBefore dupFrame\n)] echoKp;
+			0 ts, pc, 14 INSTRS # ldi[]; // retAddr = 15 instructions until after the jump
+		
+				 		// 10 instrs
+				dupFrame // duplicate frame into memory, set new fp
 
-	pairHeader typeChk; // TODO: define the pair header
+			temp, fp, STACK 1 CELLS - ldi[]; // recover closure reference from the stack
+			temp, temp, HEAPREG ldi[]; // dereference via HEAPREG
+			pc, temp, HEAP 1 CELLS + ldi[]; // do the jump 
+		
+			restStck // <- returns to here
+		;
+
+		: BRETURN  //  ( -- )
+
+			dumpStack
+			[ str( \nRETURN)] echoKp;
+			TopReg @
+				temp, fp, STACK 1 CELLS + ldi[]; // store return addr
+				fp, fp, STACK ldi[]; // get old frame
+				dumpStack
+				
+				temp, odr;
+				0 ts, acc, mov; // store return value
+				[ str( \nMiddle )] echoKp;
+				temp, odr;
+				5 pop // remove stack frame (return value, return addr, frame addr, closure, and argument)
+				acc, pushr;
+				4 recentr;
+				[ str( \n about to jump, temp = )] echoKp;
+				temp, odr;
+			
+				temp, pc, mov; // jump
+			TopReg ! // this should preserve top reg in a conditional return
+
+		;
+		
+		: BMK_PAIR  //  ( -- )
+			dumpStack
+			[ str( \nMK_PAIR)] echoKp;
+
+			t_PAIR @ heapAllc // allocate a heap object into acc. Temp holds the HeapReg index
+			1 ts, acc, HEAP 1 CELLS + sti[]; // fst element
+			0 ts, acc, HEAP 2 CELLS + sti[]; // snd element
+			temp, 1 ts, mov;
+			1 pop
+
+		;
+		
+		: BMK_INL // ( -- )
+			dumpStack
+			[ str( \nMK_INL)] echoKp;
+
+			t_SUM @ heapAllc // allocate a heap object into acc. Temp holds the HeapReg index
+			0 ts, acc, HEAP 2 CELLS + sti[]; // store value
+		
+			0 ts, INL_id # ldi; // indicates that this is an INL
+			0 ts, acc, HEAP 1 CELLS + sti[]; // store the marker
+			
+			temp, 0 ts, mov; // "push" the reference
+
+		;
+
+		: BMK_INR // ( -- )
+
+			dumpStack
+			[ str( \nMK_INR)] echoKp;
 
 
-	0 ts, acc, HEAP 2 CELLS + ldi[]; // load up from the  first part of the index
-;
-: BDEREF  // ( -- )
-	acc, 0 ts, HEAPREG  ldi[];
+			t_SUM @ heapAllc // allocate a heap object into acc. Temp holds the HeapReg index
+			0 ts, acc, HEAP 2 CELLS + sti[]; // store value
+			
+			0 ts, INR_id # ldi; // indicates that this is an INR
+			0 ts, acc, HEAP 1 CELLS + sti[]; // store the marker
+			
+			temp, 0 ts, mov; // "push" the reference
+			
+		;
 
-	refHeader typeChk; // TODO: define the pair header
+		: BMK_REF //  ( -- )
 
-	0 ts, acc, HEAP 1 CELLS + ldi[]; // load up from the  first part of the index
-;
-: BAPPLY // ( -- )
-	acc, 0 ts, HEAPREG ldi[]; // check for a closure
-
-	closureHeader typeChk;
-
-
-	// Stack Frame
-	// *(fp+4) 	ret addr
-	// *fp:		previous fp
-	// *(fp-4) 	closure ->
-	// *(fp-8) 	argument value
-
-	// Stack: ( frame ... val closure -- frame ... frame val )
-
-	// save closure and val
-	1 ts, acc, mov; // val
-	0 ts, temp, mov; // closure
-
-	2 pop
+			dumpStack
+			[ str( \nMK_REF)] echoKp;
 
 
-	// First, push all stack items in registers to memory
-	{ STACKTLS -> }
-		flshRegs
-		4 expand
-	{ ;; }
+			t_REF @ heapAllc // allocate a heap object into acc. Temp holds the HeapReg index
+			0 ts, acc, HEAP 1 CELLS + sti[]; // store TOS to i
+			temp, 0 ts, mov; 		// "Push" the reference
+		;
+		
+		: BMK_CLOSURE //  ( location length -- )
+			OVER ." Location = " .h8
+			OVER ." \n@Location = " @ .h8
 
-	// construct frame
-	acc, 3 ts, mov;
-	temp, 2 ts, mov;
-	fp, 1 ts, mov;
-	0 ts, pc, OFFSET # ldi[]; // get return address TODO
-	{ STACKTLS -> }
-				 // 7 instrs
-		dupFrame // duplicate frame into memory, set new fp
-	{ ;; }
+			dumpStack
 
-	temp, sp, STACK 2 CELLS + ldi[]; // recover closure reference from the stack
-	temp, temp, HEAPREG ldi[]; // dereference via HEAPREG
-	pc, temp, HEAP 2 CELLS + ldi[]; // do the jump 
+			[ str( \nMK_CLOSURE) ] echoKp;
 
-	restStck
-;
+			CL_LENGTH !
+			CL_LOC !
+			// length is closure argument length
+			// location is place to jump to for execution
+			// need to pop length items into the closure a run time .. complicated
+			// t_CLOSURE defined to return an n_closure header when called
+			CL_LENGTH @ t_CLOSURE heapAllc // acc = closure obj, temp = Heapreg index
 
-: BRETURN  //  ( -- )
-	2 ts, fp, mov; // get old frame
-	1 ts, temp, mov; // store return addr
-	0 ts, acc, mov; // store return value
+			[ str( \nAfter allocation, heapreg index, object = ) ] echoKp;
+						temp, odr;
+						32 # oca;
+						acc, odr;
 
-	5 pop // remove stack frame (return value, return addr, frame addr, closure, and argument)
-	acc, pushr;
-	{ STACKTLS } -> 4 Recentre { ;; } // TODO: centres top of stack to be halfway in the registers
-	temp, pc, mov; // jump
-;
 
-: BMK_PAIR  //  ( -- )
-	PAIR heapAllc // allocate a heap object into acc
-	1 ts, temp, HEAP 1 CELLS + sti[]; // fst element
-	0 ts, temp, HEAP 2 CELLS + sti[]; // snd element
-	acc, 1 ts mov;
-	1 pop
-;
+			temp, OP_TEMP sti; // save temp in O(1) space in data -- can't guarantee any spare registers so have to use this variable
 
-: BMK_INL // ( -- )
-	SUM heapAllc // allocates a correct HeapReg pointer into acc, Heap pointer into temp
-	0 ts, temp, HEAP 2 CELLS + sti[]; // store value
+			temp, CL_LOC @ ldi; // Location is a label name
 
-	0 ts, INL_id # ldi; // indicates that this is an INL
-	temp, temp, HEAP 1 CELLS + sti[]; // store the marker
-	
-	acc, 0 ts mov; // "push" the reference
-; 
-: BMK_INR // ( -- )
-	SUM heapAllc // allocates a correct heap object into acc
-	0 ts, temp, HEAP 2 CELLS + sti[]; // store value
-	
-	0 ts, INR_id # ldi; // indicates that this is an INR
-	temp, temp, HEAP 1 CELLS + sti[]; // store the marker
-	
-	acc, 0 ts mov; // "push" the reference
-; 
-: BMK_REF //  ( -- )
-	REF heapAllc // create a stack reference
-	0 ts, temp, HEAP 1 CELLS + sti[]; // store TOS to i
-	acc, 0 ts, mov; 		// "Push" the reference
-;
+			temp, acc, HEAP 1 CELLS + sti[]; // store the jump location to the header
 
-0 INT PTRSTOR
-: BMK_CLOSURE //  ( location length -- ) 
-	// length is closure argument length
-	// location is place to jump to for execution
-	// need to pop length items into the closure a run time .. complicated
-	// TODO define CLOSURE to return an n_closure header when called
-	DUP CLOSURE heapAllc // acc = heapreg addr, temp = clo
-	acc, PTRSTOR sti; // save acc in O(1) space in data -- can't guarantee any spare registers so have to use this variable
-	
-	SWAP acc, SWAP # ldi;
-	acc, temp, HEAP 2 CELLS + sti[]; // store the jump location to the header 
+			temp, CL_LENGTH @ t_CLOSURE # ldi; // header = length * 4
+			temp, acc, HEAP 0 CELLS + sti[];
+			// acc, OVER, # ldi; // Don't need to store length.. coded by header
+			// acc, temp, HEAP 1 CELLS + sti[];
+			
+			// Can forget about acc now
 
-	acc, closureHeader # ldi;
-	acc, temp, HEAP 0 CELLS + sti[];
+			[ str( \nBefore loop) ] echoKp;
 
-	acc, OVER, # ldi;
-	acc, temnp, HEAP 1 CELLS + sti[];
+			." Before closure push loop: " .s CR
 
-	DUP
-	DUP while
-		1 - 
-		DUP CLSR_PSH // pops n'th value into closure
-	DUP loop
-	DROP pop // pop n from stack
+			CL_LENGTH @
+			DUP while
+				1 - 
+				DUP CLSR_PSH // pops n'th value into closure
+				
+			DUP loop DROP
+			CL_LENGTH @ pop // pop n from stack
 
-	acc, PTRSTOR ldi; // restore acc
-	acc, pushr; // push it
-;
+			temp, OP_TEMP ldi; // restore Heapreg index
 
-: BTEST //    ( location -- )
-	0 ts,
-	1 pop
-	testr, SWAP bra;
-;
-: BCASE  //  ( location-- )
-	acc, 0 ts, HEAPREG ldi[];
 
-	SUMHeader typeChk;
+			[ str( \n After loop, temp(HEAPREG index\) = )] echoKp;
+			temp, odr;
 
-	temp, acc, HEAP 2 CELLS + ldi[]; // load the value
-	temp, pushr; // put it onto stack
+			temp, pushr; // push it
+			." End of make closure: " .s CR
+		;
+		
+		: BTEST //    ( location -- )
+			dumpStack
+			[ str( \nTEST)] echoKp;
 
-	acc, acc, HEAP 1 CELLS + ldi[]; // get the marker
-	acc, testr SWAP bra; // if an INR, then goto the label, otherwise stay here
-;
-: BGOTO
-	unc, SWAP bra;
-; //  ( location -- ) call a function
-: BLABEL // ( labelVar -- ) - labels should be pre declared
-	!LABEL
-;
-: BHALT // return to forth world, print out result too
-	0 ts, odr;
-	unc, FORTHRET @ bra;
-; 
+			0 ts, OTHERS # anda;
+			0 ts,
+			1 pop
+			testr, 1 nskip;
+			unc, SWAP bra; 
+		;
+
+		: BCASE  //  ( location-- )
+			dumpStack
+			[ str( \nCASE)] echoKp;
+
+			acc, 0 ts, HEAPREG ldi[];
+		
+			t_SUM @ TypeChk;
+		
+			temp, acc, HEAP 2 CELLS + ldi[]; // load the value
+			temp, pushr; // put it onto stack
+		
+			acc, acc, HEAP 1 CELLS + ldi[]; // get the marker
+			acc, testr, SWAP bra; // if an INR, then goto the label, otherwise stay here
+		
+		;
+		: BGOTO
+			dumpStack
+			[ str( \nGOTO)] echoKp;
+			unc, SWAP bra; // TODO: how to deal with topreg 
+		; //  ( location -- ) call a function
+		: BLABEL // ( labelVar -- ) - labels should be pre declared
+			!LABEL
+		;
+		
+		: BHALT // return to forth world, print out result too
+			dumpStack
+			[ str( \nHALT)] echoKp;
+
+			0 ts, acc, mov;
+			prntVal;
+			unc, FORTHRET bra;
+		; 
+
+		: BINIT // ( -- )
+			// Extra bytecode for start of program
+			SLANG BLABEL
+
+			[ str( Arrived in assembler land!\n) ] echoKp;
+
+			// Set up stp
+			zro, stp, mov;
+
+			// Program arg arrives in gp0
+			// forth return address in jump register: 
+			jmp, FORTHRET sti;
+			jmp, gp3, mov; // 
+			zro, gp2, mov; // old fp = 0
+			0 t_CLOSURE heapAllc;
+			acc, gp1, mov;
+
+			temp, acc, HEAPREG ldi[];
+			zro, temp, HEAP 1 CELLS + sti[]; // store zero length (zero closure) into closure length field
+
+			4 TopReg ! // set TopReg = 4
+			dupFrame // duplicate frame into memory
+			zro, stp, mov; // reset sp
+			[ str( Finished init\n)] echoKp;
+		;
+
+		: BSTART_F // ( -- )
+			// signal the start of a function
+			0 TopReg !
+		;
+
+		: BEND_F // ( -- )
+			0 DROP // do nohing for now
+		;
+
+		// If
+
+		: BSTART_I
+			// All branches of an if should start with TOPREG = 4
+			4 recentr;
+		;
+
+		: BEND_I // ( -- )
+			// all
+			4 recentr;
+		;
+
+
+		: BSTART_W
+			0 recentr;
+		;
+
+		: BEND_W
+			0 recentr;
+		;
+
+
+		: BSTART_C
+			1 recentr;
+		;
+
+		: BEND_C
+			1 recentr;
+		;
+
+	;;
+;;

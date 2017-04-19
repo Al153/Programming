@@ -17,7 +17,7 @@ sealed abstract class ConcreteSyntaxTree(val nodeType: String) {
   }
 
   def pretty(indent: Int = 0) : String
-  protected val indentation = (n:Int) => PrettyPrinter.indentation(n)
+  protected val indentation: (Int => String) = (n:Int) => PrettyPrinter.indentation(n)
 }
 case class Terminal(override val nodeType: String, value: String)
   extends ConcreteSyntaxTree(nodeType) {
@@ -29,7 +29,7 @@ case class NonTerminal(override val nodeType: String, children: List[ConcreteSyn
   extends ConcreteSyntaxTree(nodeType) {
   override def pretty(indent: Int = 0) : String = {
 
-    var str = indentation((indent)) + nodeType + "{\n"
+    var str = indentation(indent) + nodeType + "{\n"
     for (child <- children){
       str += child.pretty(indent+1) + "\n"
     }

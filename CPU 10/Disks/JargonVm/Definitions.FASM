@@ -1,4 +1,7 @@
-// RUNTIME:
+// RUNTIME: Holds forth side definitions
+.( SETTING UP Forth side definitions.\n)
+
+// TODO: a reset word which allows us to do another Jargon run with another piece of code
 
 : sp, stp, ; // sp points to where the next spilled register stack value should go
 : fp, jmp, ;
@@ -7,6 +10,38 @@
 
 : CELLS 4 * ; // ( n -- 4*n ) scales up indices to cell widths
 : INSTRS 8 * ; // ( n -- 8*n ) scales up to register widths
+4 CONST RegWidth
+
+1024 CONST MaxTypes // Maximum number of types
+65536 CONST STCKSIZE
+1024 CONST HpRLimit // max number of heap objects 
+256 CELLS CONST ARBITARY // holds things like Stack canaries, forth return value, GC vars etc
+
+MaxTypes CELLS 2 * 
+HpRLimit +
+STCKSIZE +
+ARBITARY +
+CONST DATASIZE
+65536 INSTRS CONST CODESIZE
+
+
+
+CODESIZE DATASIZE #Segs
+init
+
+
+BYTECODE ->
+	: run easyRun ; // ( input is the argument )
+;;
+
+INPUT -> hex 80000000 ;; CONST TOPBIT
+INPUT -> hex ffffffff ;; CONST ONES
+INPUT -> hex 7fffffff ;; CONST OTHERS
+INPUT -> hex 40000000 ;; CONST SIGNBIT
+INPUT -> hex 00000001 ;; CONST UNDERFLW // stack underflow flag
+INPUT -> hex fffffffe ;; CONST RESET_SU // reset code 
+	4294967295 CONST INR_id // determines INR or INL
+	0 CONST INL_id
 
 // Stack Frame
 	// *(fp+4) 	ret addr
@@ -18,3 +53,18 @@
 
 	// *obj TypeHeader
 	// *(obj + 4n) info
+
+LABEL: GC_RUN
+LABEL: SLANG // code to run
+
+LABEL: NoHdr
+LABEL: TypeErr
+LABEL: HPOFlow
+LABEL: HROFlow
+LABEL: STOFlow
+LABEL: STUFlow
+
+unc, SLANG bra;
+
+
+.( Definitions Stack = ) .s CR
