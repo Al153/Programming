@@ -45,14 +45,14 @@ case class TProduct(t1: Type, t2: Type) extends Type {
     }
   }
 }
-case class TRef(t: Type) extends Type {
+case class TRef(t1: Type) extends Type {
   override def pretty(): String = {
-    "(" + t.pretty() + ") REF"
+    "(" + t1.pretty() + ") REF"
   }
 
   override def equalTo(t: Type): Boolean = {
     t match {
-      case TRef(u) => t.equalTo(u)
+      case TRef(u) => t1.equalTo(u)
       case _ => false
     }
   }

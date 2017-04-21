@@ -12,13 +12,14 @@ def createPAL(palFile):
 	print "Done!\nGetting token rules, and grammar ...",
 	token_rules = getTokenRules(segments["Terminals"])
 	ABNF = segments["Grammar"]
+	elementaryTokens = segments["ElementaryTokens"]
+	print "elementary tokens = ", getElements(elementaryTokens)
 	print "Done!\nProducing a parser: "
 	parserSummary = parser_generator_neatened.generate_parser(ABNF)
 	print '\nDone!\a\a\a\a\a\a\a\a\a\a\a\a\a'
 	terminals = parserSummary["terminals"]
 	print "Creating a lexer:"
 	lexerSummary = LexerGenerator.createLexer(token_rules,terminals)
-	elementaryTokens = segments["ElementaryTokens"]
 	print "Done!\nPacking structure ...",
 	ignore = segments["Ignore"]
 	structure = { "Parser":parserSummary,"Lexer":lexerSummary,"Terminals":terminals,"ElementaryTokens":getElements(elementaryTokens),"Ignore":getElements(ignore)}
@@ -109,7 +110,24 @@ def getElements(text):
 	escaped = 0
 	elementaryTokens =  [" ","\t","\n","|"]
 	toIgnore  = [''," ","\n","\t","|"]
+	escaped_dict = {"n":"\n","t":"\t",'"':'"',"r":"\r"}
 	for char in text:
+		if string:
+			if escaped:
+				escaped = 0
+				if char in escaped_dict:
+					currentToken += escaped_dict[char]
+				else:
+					currentToken += char
+			else:
+				if char == '"':
+					string = 0
+					currentToken += '"'
+				elif char == "\\":
+					escaped = 1
+				else:
+					currentToken += char
+		else:
 			if char in elementaryTokens:
 				if currentToken not in toIgnore:
 					tokens.append(currentToken)
@@ -117,6 +135,8 @@ def getElements(text):
 					tokens.append(char)
 				currentToken = ''
 			else:
+				if char == '"':
+					string = 1
 				currentToken += char
 	if currentToken not in toIgnore:
 					tokens.append(currentToken)
@@ -129,7 +149,7 @@ def getElements(text):
 			print "Error: a token should begin with and end with quotation marks (\"\")"
 	return retTokens
 
-def getElements(line):
+def getElements2(line): 
 		whitespace = [' ','\t']
 		escaped_dict = {"n":"\n","t":"\t",'"':'"',"r":"\r"}
 		line_tokens = []

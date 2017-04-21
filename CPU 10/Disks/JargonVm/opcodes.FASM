@@ -54,7 +54,10 @@ STACKTLS ->
 				0 ts, OTHERS # xora;
 		 		// we're using 31 bit ints since we need to distinguish between values and references for the GC to properly run
 			else DUP U_NEG = if DROP
-				0 ts, 1 # xora;
+				acc, TOPBIT # ldi; // load accumulator with primiive value 0
+				acc, 0 ts, subr;
+				acc, 0 ts, mov;
+				0 ts, TOPBIT # orra;
 			else DUP U_READ = if DROP
 				readInt;
 				acc, 0 ts, mov;
@@ -92,30 +95,24 @@ STACKTLS ->
 				1 pop
 				
 			else DUP O_LT = if DROP
-		
+				// test if ts[1] < ts[0] 
+
 				// need to account for signs
 				zro, acc, mov;
-				temp, SIGNBIT ldi;
+				temp, SIGNBIT # ldi;
 				temp, 1 ts, andr;
 				temp, testr, if;
 					temp, 0 ts, andr;
-					temp, testr, if; // if sign bits match, just compare
-						1 ts, 0 ts, cmr;
-						les, 1 nskip;
-							acc, ONES ldi;
-					else;
-						// ts[1] signed, ts[0] not -> ts[0] > ts[1], so lt is false
-					endif;
+					temp, testr, 1 nskip; // skip next instr if signs are equal
+							acc, ONES # ldi; // ts[1] signed, ts[0] not -> ts[0] > ts[1], so lt is true
+						1 ts, 0 ts, cmr; // if acc is loaded byabove instr, these instrs become degenerate
+						les, acc, ONES # cldi;
 				else;
-					temp, SIGNBIT ldi;
+					temp, SIGNBIT # ldi;
 					temp, 0 ts, andr;
-					temp, testr, if;
-						acc, ONES ldi; // ts[0] signed, ts[1] not -> ts[0] < ts[1] so lt is true
-					else; // if sign bits match, just compare
-						1 ts, 0 ts, cmr;
-						les, 1 nskip;
-							acc, ONES ldi;
-					endif;
+					temp, testr, 2 nskip; // ts[0] signed, ts[1] not -> ts[0] < ts[1] so lt is false, so skip next two
+						1 ts, 0 ts, cmr; // otherwise compare
+						les, acc, ONES # cldi;
 				endif;
 				acc, 1 ts, mov;
 				1 pop
@@ -175,9 +172,9 @@ STACKTLS ->
 		
 			t_REF @ TypeChk;
 		
-			acc, 0 ts, SWAP HEAP 1 CELLS + sti[];	// do the assignment
-		
-			2 pop
+			0 ts, acc, HEAP 1 CELLS + sti[];	// do the assignment
+			zro, 1 ts, mov; // push a unit value to the stack // required by type system
+			1 pop
 
 		;
 		: BSWAP  // ( -- )

@@ -232,6 +232,8 @@ temp, CONST primBit,
 			primBit, TOPBIT # ldi; // find the complemented value
 			primBit, val, subr;
 			primBit, val, mov;
+		else;
+			32 # oca;
 		endif;
 		hexVal;
 		[ str(  )] echoKp;

@@ -66,6 +66,7 @@ object CompileAST {
         (types1, defs, c1 ++ List(new BMakeInr))
 
       case SCase(e1, lam1, lam2) => // TODO: this implementation
+
         val inr_label = newLabel.apply
         val after_inr_label = newLabel.apply
         val (types1, defs1, c1) = comp(types, e1, vmap)
@@ -82,6 +83,7 @@ object CompileAST {
       case SIf(e1, e2, e3) =>
         val elseLabel: String = newLabel.apply
         val afterElseLabel: String = newLabel.apply
+
         val (types1, defs1, c1) = comp(types, e1, vmap)
         val (types2, defs2, c2) = comp(types1, e2, vmap)
         val (types3, defs3, c3) = comp(types2, e3, vmap)
@@ -118,7 +120,7 @@ object CompileAST {
         (
           types2,
           defs1++defs2,
-          BLabel(endLabel) :: c1
+          BLabel(testLabel) :: c1
             ++ List(BTest(new Location(endLabel, None))) ++
             List(new BStartWhile) ++ c2 ++ List(new BPop, new BEndWhile, BGoto(new Location(testLabel, None)),
             BLabel(endLabel), BPush(StackUnit()))

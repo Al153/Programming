@@ -7,386 +7,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="703edd54-a801-4173-9cd2-c8c8fc7b4d8c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/scala/BackEnd/RuntimeType.scala" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/scala/BackEnd/newLabel.scala" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/scala/Exceptions/ClosureSequenceException.scala" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/scala/Exceptions/CompileFindException.scala" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/scala/Exceptions/MissingIndexException.scala" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../C Source/10_2 IMD Values and reg optimisation/operation functions.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/.idea/libraries/SBT__org_scala_lang_scala_library_2_10_6_jar.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/.idea/misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/.idea/sbt.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/.idea/scala_compiler.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/.idea/vcs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/.idea/workspace.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/AST/AST.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/AST/src/AbstractSyntaxTree.scala" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/Parser.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/.idea/modules/src-build.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/.idea/modules/src.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/ConcreteSyntaxTree.scala" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/Lexer.scala" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/Parser.scala" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/ParserAction.scala" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/Rule.scala" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/SlangExceptions.scala" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/build.sbt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/project/target/config-classes/$89fb7ad28a1f9a8e0f51$$anonfun$$sbtdef$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/project/target/config-classes/$89fb7ad28a1f9a8e0f51$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/project/target/config-classes/$89fb7ad28a1f9a8e0f51.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/project/target/config-classes/$ef3c6e0e67d19084dc18$$anonfun$$sbtdef$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/project/target/config-classes/$ef3c6e0e67d19084dc18$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/project/target/config-classes/$ef3c6e0e67d19084dc18.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/project/target/config-classes/$fe7b1ddf6ca0f7a2c142$$anonfun$$sbtdef$1$$anonfun$apply$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/project/target/config-classes/$fe7b1ddf6ca0f7a2c142$$anonfun$$sbtdef$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/project/target/config-classes/$fe7b1ddf6ca0f7a2c142$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/project/target/config-classes/$fe7b1ddf6ca0f7a2c142.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/.history" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/default/src$sources_2.10/0.1-SNAPSHOT/resolved.xml.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/default/src$sources_2.10/0.1-SNAPSHOT/resolved.xml.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/default/src_2.10/0.1-SNAPSHOT/resolved.xml.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/default/src_2.10/0.1-SNAPSHOT/resolved.xml.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-compile-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-compile.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-docs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-optional.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-plugin.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-provided.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-runtime-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-runtime.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-scala-tool.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-sources.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-test-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src$sources_2.10-test.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-compile-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-compile.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-docs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-optional.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-plugin.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-provided.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-runtime-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-runtime.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-scala-tool.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-sources.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-test-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/default-src_2.10-test.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/ivy-report.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/resolution-cache/reports/ivy-report.xsl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/$global/$global/dumpStructure/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.10/input_dsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.10/output_dsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/$global/ivyConfiguration/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/$global/ivySbt/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/$global/projectDescriptors/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/$global/update/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/$global/update/$global/streams/update_cache_2.10/inputs" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/$global/update/$global/streams/update_cache_2.10/output" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/$global/updateClassifiers/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/compile/externalDependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/compile/managedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/compile/unmanagedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/compile/unmanagedJars/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/runtime/externalDependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/runtime/managedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/runtime/unmanagedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/runtime/unmanagedJars/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/test/externalDependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/test/managedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/test/unmanagedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Parser/src/target/streams/test/unmanagedJars/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/Slang.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/.idea/modules/src-build.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/.idea/modules/src.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/build.sbt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/.history" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/default/src$sources_2.10/0.1-SNAPSHOT/resolved.xml.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/default/src$sources_2.10/0.1-SNAPSHOT/resolved.xml.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/default/src_2.10/0.1-SNAPSHOT/resolved.xml.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/default/src_2.10/0.1-SNAPSHOT/resolved.xml.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-compile-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-compile.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-docs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-optional.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-plugin.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-provided.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-runtime-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-runtime.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-scala-tool.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-sources.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-test-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src$sources_2.10-test.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-compile-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-compile.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-docs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-optional.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-plugin.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-provided.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-runtime-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-runtime.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-scala-tool.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-sources.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-test-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/default-src_2.10-test.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/ivy-report.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/resolution-cache/reports/ivy-report.xsl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/$global/$global/dumpStructure/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.10/input_dsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.10/output_dsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/$global/ivyConfiguration/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/$global/ivySbt/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/$global/projectDescriptors/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/$global/update/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/$global/update/$global/streams/update_cache_2.10/inputs" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/$global/update/$global/streams/update_cache_2.10/output" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/$global/updateClassifiers/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/compile/externalDependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/compile/managedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/compile/unmanagedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/compile/unmanagedJars/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/runtime/externalDependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/runtime/managedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/runtime/unmanagedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/runtime/unmanagedJars/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/test/externalDependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/test/managedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/test/unmanagedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/out/production/Parser/target/streams/test/unmanagedJars/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/.history" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/default/slang_2.10/0.1-SNAPSHOT/resolved.xml.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/default/slang_2.10/0.1-SNAPSHOT/resolved.xml.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-compile-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-compile.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-docs.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-optional.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-plugin.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-provided.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-runtime-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-runtime.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-scala-tool.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-sources.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-test-internal.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/default-slang_2.10-test.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/ivy-report.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/resolution-cache/reports/ivy-report.xsl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/$global/$global/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.10/input_dsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/$global/dependencyPositions/$global/streams/update_cache_2.10/output_dsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/$global/ivyConfiguration/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/$global/ivySbt/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/$global/projectDescriptors/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/$global/update/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/$global/update/$global/streams/update_cache_2.10/inputs" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/$global/update/$global/streams/update_cache_2.10/output" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/$global/updateSbtClassifiers/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/$global/$global/discoveredMainClasses/data" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/compile/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/compileIncremental/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/compileIncremental/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/copyResources/$global/streams/copy-resources" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/copyResources/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/dependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/exportedProducts/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/externalDependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/internalDependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/mainClass/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/managedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/run/$global/streams/out" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/unmanagedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/compile/unmanagedJars/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/runtime/dependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/runtime/exportedProducts/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/runtime/externalDependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/runtime/fullClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/runtime/internalDependencyClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/runtime/managedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/runtime/unmanagedClasspath/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../Slang/target/streams/runtime/unmanagedJars/$global/streams/export" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/json4s_ast_2_10_3_5_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/json4s_native_2_12_3_5_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$4c3eeb7b9fc565a2457b$$anonfun$$sbtdef$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$4c3eeb7b9fc565a2457b$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$4c3eeb7b9fc565a2457b.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$50a5aea8bbe33e678062$$anonfun$$sbtdef$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$50a5aea8bbe33e678062$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$50a5aea8bbe33e678062.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$55271be793293929671d$$anonfun$$sbtdef$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$55271be793293929671d$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$55271be793293929671d.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$5fffe81116b4f65eaad1$$anonfun$$sbtdef$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$5fffe81116b4f65eaad1$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$5fffe81116b4f65eaad1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$7db65242638161dd4630$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$7db65242638161dd4630.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$867c3cf7f46276c010c5$$anonfun$$sbtdef$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$867c3cf7f46276c010c5$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$867c3cf7f46276c010c5.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$b1c5615d754238e35472$$anonfun$$sbtdef$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$b1c5615d754238e35472$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$b1c5615d754238e35472.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$d43a93b30524688d5390$$anonfun$$sbtdef$1$$anonfun$apply$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$d43a93b30524688d5390$$anonfun$$sbtdef$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$d43a93b30524688d5390$.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/project/target/config-classes/$d43a93b30524688d5390.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Main$$anonfun$main$1$$anonfun$apply$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/example_fcl.PAL" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/example_fcl.PAL" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/example_fcl.spec" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../C machine code/Forth.cml" afterPath="$PROJECT_DIR$/../../C machine code/Forth.cml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../CEmu.exe" afterPath="$PROJECT_DIR$/../../CEmu.exe" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../CEmuTest.exe" afterPath="$PROJECT_DIR$/../../CEmuTest.exe" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/BackEnd/ByteCode.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/BackEnd/ByteCode.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Main$$anonfun$main$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Main$$anonfun$main$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Main$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Main$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Main.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Main.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Lexer.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Lexer.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$3.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$getExpectedTransitions$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$getExpectedTransitions$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$getExpectedTransitions$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$getExpectedTransitions$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyActionTable$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyActionTable$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyActionTable$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyActionTable$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyGotoTable$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyGotoTable$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyGotoTable$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyGotoTable$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/AST$class.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/AST$class.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/AST.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/AST.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/Lambda.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/Lambda.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SApp$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SApp$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SApp.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SApp.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SAssign$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SAssign$.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SAssign.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SAssign.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SBoolean$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SBoolean$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SBoolean.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SBoolean.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SCase$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SCase$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SCase.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SCase.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SDeref$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SDeref$.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SDeref.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SDeref.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SFst$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SFst$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SFst.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SFst.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SIf$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SIf$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SIf.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SIf.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInl$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInl$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInl.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInr$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInr$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInr.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInr.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInt$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInt$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInt.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SInt.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLambda$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLambda$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLambda.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLambda.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLetFun$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLetFun$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLetFun.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLetFun.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLetRecFun$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLetRecFun$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLetRecFun.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SLetRecFun.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SOp$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SOp$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SOp.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SOp.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SPair$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SPair$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SPair.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SPair.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SRef$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SRef$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SRef.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SRef.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSeq$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSeq$$anonfun$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSeq$$anonfun$getType$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSeq$$anonfun$getType$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSeq$$anonfun$pretty$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSeq$$anonfun$pretty$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSeq$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSeq$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSeq.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSeq.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSnd$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSnd$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSnd.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SSnd.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SUnaryOp$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SUnaryOp$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SUnaryOp.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SUnaryOp.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SUnit$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SUnit$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SUnit.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SUnit.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SVar$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SVar$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SVar.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SVar.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SWhile$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SWhile$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SWhile.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/SWhile.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/inputs" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/inputs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/output" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/update_cache_2.11/output" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../C Source/10_2 IMD Values and reg optimisation/CPU.c" afterPath="$PROJECT_DIR$/../../C Source/10_2 IMD Values and reg optimisation/CPU.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../C Source/10_2 IMD Values and reg optimisation/build.ps1" afterPath="$PROJECT_DIR$/../../C Source/10_2 IMD Values and reg optimisation/build.ps1" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../C Source/10_2 IMD Values and reg optimisation/memory_access.h" afterPath="$PROJECT_DIR$/../../C Source/10_2 IMD Values and reg optimisation/memory_access.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CLL/Forth/Forth System/Forth.al" afterPath="$PROJECT_DIR$/../CLL/Forth/Forth System/Forth.al" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CLL/Forth/Forth System/Forth.cll" afterPath="$PROJECT_DIR$/../CLL/Forth/Forth System/Forth.cll" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CLL/Forth/Forth System/dictAuxiliaries.cll" afterPath="$PROJECT_DIR$/../CLL/Forth/Forth System/dictAuxiliaries.cll" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../CLL/Forth/Forth System/technicalPrimitives.cll" afterPath="$PROJECT_DIR$/../CLL/Forth/Forth System/technicalPrimitives.cll" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/SBT__org_scala_lang_scala_library_2_11_7_jar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/SBT__org_scala_lang_scala_library_2_11_7_jar.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/slangsbt.iml" afterPath="$PROJECT_DIR$/.idea/modules/slangsbt.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/sbt.xml" afterPath="$PROJECT_DIR$/.idea/sbt.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/TRef$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/TRef$.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/TRef.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/SyntaxTree/TRef.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.sbt" afterPath="$PROJECT_DIR$/build.sbt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/BackEnd/ByteCode.scala" afterPath="$PROJECT_DIR$/src/main/scala/BackEnd/ByteCode.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/slang.spec" afterPath="$PROJECT_DIR$/src/main/resources/slang.spec" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/BackEnd/CompileAST.scala" afterPath="$PROJECT_DIR$/src/main/scala/BackEnd/CompileAST.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/BackEnd/Location.scala" afterPath="$PROJECT_DIR$/src/main/scala/BackEnd/Location.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Compiler.scala" afterPath="$PROJECT_DIR$/src/main/scala/Compiler.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Parsing/Lexer.scala" afterPath="$PROJECT_DIR$/src/main/scala/Parsing/Lexer.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Parsing/Parser.scala" afterPath="$PROJECT_DIR$/src/main/scala/Parsing/Parser.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/AST.scala" afterPath="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/AST.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/ConcreteSyntaxTree.scala" afterPath="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/ConcreteSyntaxTree.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Lambda.scala" afterPath="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Lambda.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/.history" afterPath="$PROJECT_DIR$/target/.history" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt$sources_2.11/1.0/resolved.xml.properties" afterPath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt$sources_2.11/1.0/resolved.xml.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt$sources_2.11/1.0/resolved.xml.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt$sources_2.11/1.0/resolved.xml.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt_2.11/1.0/resolved.xml.properties" afterPath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt_2.11/1.0/resolved.xml.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt_2.11/1.0/resolved.xml.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt_2.11/1.0/resolved.xml.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-compile-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-compile-internal.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-compile.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-compile.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-docs.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-docs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-optional.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-optional.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-plugin.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-plugin.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-pom.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-provided.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-provided.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-runtime-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-runtime-internal.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-runtime.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-runtime.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-scala-tool.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-scala-tool.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-sources.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-sources.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-test-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-test-internal.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-test.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-test.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-compile-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-compile-internal.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-compile.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-compile.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-docs.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-docs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-optional.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-optional.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-plugin.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-plugin.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-pom.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-provided.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-provided.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-runtime-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-runtime-internal.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-runtime.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-runtime.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-scala-tool.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-scala-tool.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-sources.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-sources.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-test-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-test-internal.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-test.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt_2.11-test.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/ivyConfiguration/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/$global/ivyConfiguration/$global/streams/out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/$global/update/$global/streams/out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/updateClassifiers/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/$global/updateClassifiers/$global/streams/out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/Assembler/examples/squares.fasm" afterPath="$PROJECT_DIR$/../../Disks/Assembler/examples/squares.fasm" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/Assembler/examples/stars.fasm" afterPath="$PROJECT_DIR$/../../Disks/Assembler/examples/stars.fasm" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/Assembler/fasm.fth" afterPath="$PROJECT_DIR$/../../Disks/Assembler/fasm.fth" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/Assembler/lib/Stack.fasm" afterPath="$PROJECT_DIR$/../../Disks/Assembler/lib/Stack.fasm" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/Assembler/lib/controlFlow.fasm" afterPath="$PROJECT_DIR$/../../Disks/Assembler/lib/controlFlow.fasm" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/JargonVm/Definitions.FASM" afterPath="$PROJECT_DIR$/../../Disks/JargonVm/Definitions.FASM" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/JargonVm/ForthGC.FTH" afterPath="$PROJECT_DIR$/../../Disks/JargonVm/ForthGC.FTH" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/JargonVm/HeapTools.FASM" afterPath="$PROJECT_DIR$/../../Disks/JargonVm/HeapTools.FASM" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/JargonVm/Jargon.spec" afterPath="$PROJECT_DIR$/../../Disks/JargonVm/Jargon.spec" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/JargonVm/Opcodes.FASMH" afterPath="$PROJECT_DIR$/../../Disks/JargonVm/Opcodes.FASMH" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/JargonVm/StackTools.FASM" afterPath="$PROJECT_DIR$/../../Disks/JargonVm/StackTools.FASM" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/JargonVm/Types.FASM" afterPath="$PROJECT_DIR$/../../Disks/JargonVm/Types.FASM" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/JargonVm/Variables.FASM" afterPath="$PROJECT_DIR$/../../Disks/JargonVm/Variables.FASM" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/JargonVm/opcodes.FASM" afterPath="$PROJECT_DIR$/../../Disks/JargonVm/opcodes.FASM" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/StdDisks/Files/blck.fth" afterPath="$PROJECT_DIR$/../../Disks/StdDisks/Files/blck.fth" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/StdDisks/Files/inode.fth" afterPath="$PROJECT_DIR$/../../Disks/StdDisks/Files/inode.fth" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/StdDisks/memory.fth" afterPath="$PROJECT_DIR$/../../Disks/StdDisks/memory.fth" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/StdDisks/std.spec" afterPath="$PROJECT_DIR$/../../Disks/StdDisks/std.spec" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/build-disk.ps1" afterPath="$PROJECT_DIR$/../../Disks/build-disk.ps1" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Disks/compiler_disk.spec" afterPath="$PROJECT_DIR$/../../Disks/compiler_disk.spec" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Machine code/Forth.ml" afterPath="$PROJECT_DIR$/../../Machine code/Forth.ml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/.spec" afterPath="$PROJECT_DIR$/../../../ParserLexerGenerator/.spec" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/slang.pal" afterPath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/slang.pal" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/parser_generator_neatened.py" afterPath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/parser_generator_neatened.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Type.scala" afterPath="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Type.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/slang.pal" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/slang.pal" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/slang.spec" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/slang.spec" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/PALgenerator.py" afterPath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/PALgenerator.py" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/project/project/target/" />
@@ -427,7 +58,7 @@
     <favorites_list name="SlangSBT" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.8174048">
+    <splitter split-orientation="horizontal" split-proportion="0.4899483">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
           <file leaf-file-name="Compiler.scala" pinned="false" current-in-tab="false">
@@ -435,7 +66,9 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="756">
                   <caret line="43" column="12" lean-forward="false" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
-                  <folding />
+                  <folding>
+                    <element signature="e#0#34#0" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -443,8 +76,8 @@
           <file leaf-file-name="Lambda.scala" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Lambda.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="735">
-                  <caret line="36" column="43" lean-forward="false" selection-start-line="36" selection-start-column="43" selection-end-line="36" selection-end-column="43" />
+                <state relative-caret-position="468">
+                  <caret line="30" column="39" lean-forward="false" selection-start-line="30" selection-start-column="39" selection-end-line="30" selection-end-column="39" />
                   <folding />
                 </state>
               </provider>
@@ -455,7 +88,9 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="315">
                   <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-                  <folding />
+                  <folding>
+                    <element signature="e#16#50#0" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -463,14 +98,16 @@
           <file leaf-file-name="ParserConfiguration.scala" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/ParserConfiguration.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="161">
+                <state relative-caret-position="1554">
                   <caret line="77" column="26" lean-forward="false" selection-start-line="77" selection-start-column="14" selection-end-line="77" selection-end-column="26" />
-                  <folding />
+                  <folding>
+                    <element signature="e#17#108#0" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="slang.pal" pinned="false" current-in-tab="true">
+          <file leaf-file-name="slang.pal" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/resources/slang.pal">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="21">
@@ -483,7 +120,7 @@
           <file leaf-file-name="slang.spec" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/resources/slang.spec">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
+                <state relative-caret-position="-42">
                   <caret line="0" column="6" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="6" />
                   <folding />
                 </state>
@@ -500,21 +137,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ValuePath.scala" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/scala/BackEnd/ValuePath.scala">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="84">
-                  <caret line="4" column="40" lean-forward="false" selection-start-line="4" selection-start-column="40" selection-end-line="4" selection-end-column="40" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="AST.scala" pinned="false" current-in-tab="false">
+          <file leaf-file-name="AST.scala" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/AST.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="252">
-                  <caret line="78" column="0" lean-forward="false" selection-start-line="78" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
+                <state relative-caret-position="192">
+                  <caret line="67" column="0" lean-forward="false" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
                   <folding>
                     <element signature="e#28#51#0" expanded="true" />
                   </folding>
@@ -522,11 +149,21 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Location.scala" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/scala/BackEnd/Location.scala">
+          <file leaf-file-name="MapLike.scala" pinned="false" current-in-tab="false">
+            <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.11.7-sources.jar!/scala/collection/MapLike.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="42">
-                  <caret line="2" column="44" lean-forward="false" selection-start-line="2" selection-start-column="44" selection-end-line="2" selection-end-column="44" />
+                <state relative-caret-position="203">
+                  <caret line="227" column="0" lean-forward="false" selection-start-line="227" selection-start-column="0" selection-end-line="227" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Type.scala" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Type.scala">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-366">
+                  <caret line="55" column="21" lean-forward="false" selection-start-line="55" selection-start-column="21" selection-end-line="55" selection-end-column="21" />
                   <folding />
                 </state>
               </provider>
@@ -536,14 +173,24 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="CompileAST.scala" pinned="false" current-in-tab="false">
+          <file leaf-file-name="CompileAST.scala" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/scala/BackEnd/CompileAST.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="136">
-                  <caret line="77" column="63" lean-forward="false" selection-start-line="77" selection-start-column="57" selection-end-line="77" selection-end-column="63" />
+                <state relative-caret-position="286">
+                  <caret line="55" column="21" lean-forward="true" selection-start-line="55" selection-start-column="21" selection-end-line="55" selection-end-column="21" />
                   <folding>
                     <element signature="e#18#56#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="while.slang" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/../../../../cc2016_cl_cam_ac_uk/slang/tests/while.slang">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -580,12 +227,14 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Lexer.scala" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Lexer.scala" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/Lexer.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="210">
-                  <caret line="16" column="53" lean-forward="false" selection-start-line="16" selection-start-column="53" selection-end-line="16" selection-end-column="53" />
-                  <folding />
+                <state relative-caret-position="105">
+                  <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="16" selection-end-column="54" />
+                  <folding>
+                    <element signature="e#17#45#0" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -614,36 +263,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>protected def getFreeAux</find>
-      <find>hex</find>
-      <find>toString</find>
-      <find>BLABEL</find>
-      <find>ty</find>
-      <find>default</find>
-      <find>fill</find>
-      <find>Goto</find>
-      <find>Lookup</find>
-      <find>BLookup</find>
-      <find>heapLocation</find>
-      <find>StackLoca</find>
-      <find>split</find>
-      <find>lambda</find>
-      <find>SIF</find>
-      <find>TODO</find>
-      <find>SCASE</find>
       <find>vmap</find>
       <find>compLambda</find>
       <find>f</find>
       <find>fib</find>
       <find>find</find>
       <find>letRec</find>
-      <find>new</find>
       <find>whil</find>
-      <find>newLabel</find>
       <find>print</find>
       <find>BSTART</find>
       <find>getJsonArray</find>
       <find>ELEM</find>
+      <find>t</find>
+      <find>n</find>
+      <find>.</find>
+      <find>new</find>
+      <find>newL</find>
+      <find>newLa</find>
+      <find>newLab</find>
+      <find>newLabe</find>
+      <find>newLabel.app;</find>
+      <find>newLabel</find>
+      <find>newLabel.</find>
+      <find>newLabel.aa</find>
+      <find>newLabel.a</find>
+      <find>newLabel.ap</find>
+      <find>newLabel.appk</find>
+      <find>newLabel.app</find>
+      <find>newLabel.appl</find>
+      <find>newLabel.apply</find>
+      <find>printl</find>
     </findStrings>
     <replaceStrings>
       <replace>parser</replace>
@@ -663,7 +312,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/scala/Parsing/Exceptions/EmptyParseStackException.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/Exceptions/EndOfStreamError.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/Exceptions/NoStateException.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/Exceptions/SlangExceptions.scala" />
@@ -688,7 +336,6 @@
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/Exceptions/MissingCSTCaseException.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/Exceptions/MissingCSTTypeCaseException.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/Exceptions/SlangTypeError.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Type.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/Compiler.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/UnaryOperator.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Operator.scala" />
@@ -708,12 +355,14 @@
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/Parser.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/BackEnd/newLabel.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/CSTToAST.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Lambda.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/AST.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/BackEnd/ByteCode.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/BackEnd/CompileAST.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Parsing/Lexer.scala" />
         <option value="$PROJECT_DIR$/src/main/resources/slang.pal" />
+        <option value="$PROJECT_DIR$/src/main/resources/slang.spec" />
+        <option value="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Type.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/BackEnd/CompileAST.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Lambda.scala" />
       </list>
     </option>
   </component>
@@ -764,8 +413,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -778,48 +425,10 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SlangSBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SlangSBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SlangSBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SlangSBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -831,7 +440,7 @@
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="js.eslint.eslintPackage" value="" />
     <property name="js-jscs-nodeInterpreter" value="C:\Program Files\nodejs\node.exe" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../cc2016_cl_cam_ac_uk/slang/tests/add3.slang" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../cc2016_cl_cam_ac_uk/slang/tests/while.slang" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.scala.settings.ScalaProjectSettingsConfigurable" />
   </component>
@@ -1326,7 +935,7 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="&quot;C:\dev\cc2016_cl_cam_ac_uk\slang\tests\while.slang&quot;" />
+      <option name="PROGRAM_PARAMETERS" value="&quot;C:\dev\cc2016_cl_cam_ac_uk\slang\tests\gcd.slang&quot;" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -1414,11 +1023,12 @@
       <workItem from="1492519849565" duration="13542000" />
       <workItem from="1492603707812" duration="15870000" />
       <workItem from="1492631858797" duration="5100000" />
+      <workItem from="1492674141120" duration="11902000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="207375000" />
+    <option name="totallyTimeSpent" value="219277000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1431,76 +1041,45 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1050" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31982476" sideWeight="0.51458335" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4064516" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5815991" sideWeight="0.90833336" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="SBT" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31982476" sideWeight="0.51458335" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3581599" sideWeight="0.48541668" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30010954" sideWeight="0.48541668" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3296875" sideWeight="0.9003286" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.09322917" sideWeight="0.9003286" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32968238" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296875" sideWeight="0.099671416" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4064516" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32968238" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
     </layout>
-    <layout-to-restore>
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31982476" sideWeight="0.51458335" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4064516" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5815991" sideWeight="0.90833336" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="SBT" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4359255" sideWeight="0.48541668" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12951168" sideWeight="0.9003286" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32968238" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296875" sideWeight="0.099671416" order="6" side_tool="true" content_ui="tabs" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="processedProjectFiles" value="true" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.spec" />
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -1516,13 +1095,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/ParserAction.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="11" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="13" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/Logging/Logger.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -1650,13 +1222,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Type.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/build.sbt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -1748,7 +1313,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1786,26 +1350,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.11.7-sources.jar!/scala/collection/MapLike.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="227" column="0" lean-forward="false" selection-start-line="227" selection-start-column="0" selection-end-line="227" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/Compiler.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="756">
           <caret line="43" column="12" lean-forward="false" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Lambda.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="36" column="43" lean-forward="false" selection-start-line="36" selection-start-column="43" selection-end-line="36" selection-end-column="43" />
-          <folding />
+          <folding>
+            <element signature="e#0#34#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1825,6 +1376,68 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/LexerConfiguration.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding>
+            <element signature="e#16#50#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/ParserConfiguration.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1554">
+          <caret line="77" column="26" lean-forward="false" selection-start-line="77" selection-start-column="14" selection-end-line="77" selection-end-column="26" />
+          <folding>
+            <element signature="e#17#108#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/slang.pal">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="21">
+          <caret line="1" column="95" lean-forward="false" selection-start-line="1" selection-start-column="95" selection-end-line="1" selection-end-column="95" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/slang.spec">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-42">
+          <caret line="0" column="6" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/Lexer.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="16" selection-end-column="54" />
+          <folding>
+            <element signature="e#17#45#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../cc2016_cl_cam_ac_uk/slang/tests/while.slang">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Type.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-366">
+          <caret line="55" column="21" lean-forward="false" selection-start-line="55" selection-start-column="21" selection-end-line="55" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/BackEnd/newLabel.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
@@ -1835,61 +1448,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/BackEnd/CompileAST.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="77" column="63" lean-forward="false" selection-start-line="77" selection-start-column="57" selection-end-line="77" selection-end-column="63" />
+        <state relative-caret-position="286">
+          <caret line="55" column="21" lean-forward="true" selection-start-line="55" selection-start-column="21" selection-end-line="55" selection-end-column="21" />
           <folding>
             <element signature="e#18#56#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/Lexer.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/Lambda.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="16" column="53" lean-forward="false" selection-start-line="16" selection-start-column="53" selection-end-line="16" selection-end-column="53" />
+        <state relative-caret-position="468">
+          <caret line="30" column="39" lean-forward="false" selection-start-line="30" selection-start-column="39" selection-end-line="30" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.11.7-sources.jar!/scala/collection/MapLike.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="227" column="0" lean-forward="false" selection-start-line="227" selection-start-column="0" selection-end-line="227" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/SyntaxTree/AST.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="78" column="0" lean-forward="false" selection-start-line="78" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
+        <state relative-caret-position="192">
+          <caret line="67" column="0" lean-forward="false" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
           <folding>
             <element signature="e#28#51#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/LexerConfiguration.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/ParserConfiguration.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="77" column="26" lean-forward="false" selection-start-line="77" selection-start-column="14" selection-end-line="77" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/slang.spec">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="6" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/slang.pal">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="1" column="95" lean-forward="false" selection-start-line="1" selection-start-column="95" selection-end-line="1" selection-end-column="95" />
-          <folding />
         </state>
       </provider>
     </entry>

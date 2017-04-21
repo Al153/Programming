@@ -4,10 +4,10 @@ add3 yes
 add4 yes
 add5 yes
 add6 yes
-add7 // implement comments and !
+add7 // implement comments
 
 alpha yes
-bool // || syntax error... why isn't this splitting into '|' '|'
+bool yes
 case1
 eq1
 eq2
@@ -25,18 +25,18 @@ fib5
 fib5_v2
 fib10
 
-fun
-gcd
-int
-lambda1
-lambda2
-lambda3
+fun yes
+gcd yes - issue when run as second JARGON program
+int yes
+lambda1 yes
+lambda2 yes
+lambda3 yes
 
 let1
 let2
 
-lt1
-lt2
+lt1 yes
+lt2 yes
 
 nest
 nest2
@@ -44,16 +44,16 @@ nest2
 pair1
 pair2
 
-ref1
-ref2
-ref3
+ref1 // need comments
+ref2 // need commentss
+ref3 // need comments
 
-seq0 // issue with bangs -syntax
-seq1
-seq2
+seq0 yes
+seq1  // need comments
+seq2 yes - function refs work!
 
 stack yes
 stack2 yessss
-sub
-while
+sub // need comments
+while yes
 
