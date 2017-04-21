@@ -13,7 +13,8 @@ HpRLimit RegWidth * INT[] HEAPREG // heap registry is an array containing a link
 	// A header is always a multiple of 4 for easy lookup
 	0 INT LIMIT // Heap GC search limit
 	0 INT GC_RET // where to return to from the Garbage collector
-	1024 INT GC_LIM // Variable which gives the heap space left limit to do a GC
+	1024 INT GC_HLIM // Variable which gives the heap space left limit to do a GC
+	64 INT GC_RLIM // Variable holding Heap registry limiti to do a GC
 
 
 

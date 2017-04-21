@@ -1,12 +1,18 @@
 // RUNTIME: Holds forth side definitions
 .( SETTING UP Forth side definitions.\n)
 
+VARIABLE vDEBUG
+0 vDEBUG !
+: DEBUG vDEBUG @ ; // ( -- DebugFlag)
+
 // TODO: a reset word which allows us to do another Jargon run with another piece of code
+// TODO: The above works in most cases, but need to reset heap and code/data segments
 
 : sp, stp, ; // sp points to where the next spilled register stack value should go
 : fp, jmp, ;
 : temp, acc, ;
 : acc, gp7, ; // use gp7 as an accumulator/spare value
+: asReg, gp0, + ; // ( n -- reg )
 
 : CELLS 4 * ; // ( n -- 4*n ) scales up indices to cell widths
 : INSTRS 8 * ; // ( n -- 8*n ) scales up to register widths
@@ -31,6 +37,7 @@ init
 
 
 BYTECODE ->
+	: SETDEBUG 1 vDEBUG ! ; // ( -- ) sets debug to true
 	: run easyRun ; // ( input is the argument )
 ;;
 

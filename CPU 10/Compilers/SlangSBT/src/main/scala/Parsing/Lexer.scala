@@ -14,9 +14,7 @@ class Lexer(configuration :JsObject, ruleNames:List[String], elementaryTokens:Li
 
   def lex(s: String) : List[Terminal] = {
     val tokens = split(s)
-    println("Elementary tokens = " + elementaryTokens)
-    println("tokens = " + tokens)
-    val getToken = (s:String) => pickToken(s, ruleNames)
+    val getToken: (Token => Terminal) = {case UnParsedToken(string, c, r) => pickToken(string, ruleNames, c, r)}
     tokens.map(getToken)
   }
 
@@ -29,47 +27,57 @@ class Lexer(configuration :JsObject, ruleNames:List[String], elementaryTokens:Li
     str
   }
 
-  def pickToken(s: String, rs: List[String]) : Terminal = {
+  def pickToken(s: String, rs: List[String], col: Int, row: Int) : Terminal = {
     rs match {
       case (r: String)::rss =>
         dfas.get(r) match {
-          case None => pickToken(s, rss)
+          case None => pickToken(s, rss, col, row)
           case Some(dfa) => if (dfa.matchString(s)) {
-            Terminal(r, s)
+            Terminal(r, s).rowIs(row).colIs(col)
           }else{
-            pickToken(s, rss)
+            pickToken(s, rss, row, col)
           }
         }
       case Nil => throw UnrecognisedTokenException(s)
     }
   }
-  def split(s: String) : List[String] = {
-    split(s.toList, Nil, Nil).reverse
+  def split(s: String) : List[Token] = {
+    split(s.toList, Nil, Nil, 1, 1).reverse
   }
 
-  private def split(s: List[Char], currentToken: List[Char], tokens: List[String]) : List[String] = {
+  private def split(s: List[Char], currentToken: List[Char], tokens: List[Token], row: Int, col: Int) : List[Token] = {
     val tokenAsString: String = currentToken.reverse.mkString
     s match {
       case Nil => if (isIgnorable(currentToken)){
         tokens
       } else {
-        tokenAsString :: tokens
+        UnParsedToken(tokenAsString, row, col) :: tokens
       }
-      case c::cs => if (isElementaryToken(c)){
-        var newTokens =  if (!isIgnorable(currentToken)){
-          tokenAsString :: tokens
+      case c::cs =>
+        val (newRow, newCol) =
+          if (c=='\n'){
+            (row+1, 0)
+          } else {
+            (row, col+1)
+          }
+
+        if (isElementaryToken(c)){
+          var newTokens =
+            if (!isIgnorable(currentToken)){
+              UnParsedToken(tokenAsString, row, col) :: tokens
+            } else {
+              tokens
+            }
+          newTokens =
+            if (isIgnorable(List(c))){
+              newTokens
+            } else {
+              UnParsedToken(c.toString, row, col) :: newTokens
+            }
+          split(cs, Nil, newTokens, newRow, newCol)
         } else {
-          tokens
+          split(cs, c::currentToken, tokens,  newRow, newCol)
         }
-        newTokens = if (isIgnorable(List(c))){
-          newTokens
-        } else {
-          c.toString :: newTokens
-        }
-        split(cs, Nil, newTokens)
-      } else {
-        split(cs, c::currentToken, tokens)
-      }
     }
 
   }

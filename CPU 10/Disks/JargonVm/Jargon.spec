@@ -3,10 +3,12 @@
 .\Variables.FASM
 .\Types.FASM
 .\StackTools.FASM
-.\HeapTools.FASM
-.\errors.FASM
+
 .\Opcodes.FASMH
 .\Debug.fth
+
+.\HeapTools.FASM
+.\errors.FASM
 .\Opcodes.FASM
 .\closeNamespaces.fth
 .\init.fasm

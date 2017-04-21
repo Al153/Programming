@@ -98,24 +98,6 @@ READINT !LABEL
 				loop;
 		loop;
 
-		echo( \nbuffer = \n)
-
-		zro, i, mov;
-		zro, acc, mov; // print out the buffer
-		while;
-			acc, i, inBuf ldb[];
-			acc, testr, do;
-				i, inBuf oca[];
-				32 # oca;
-				acc, odr;
-				32 # oca;
-			next;
-			i, one, addr;
-		loop;
-
-		echo( Converting to int..\n)
-
-
 		zro, acc, mov;
 		zro, i, mov;
 		while; // this loop converts the buffer to an int or else throws an error and returns 0
@@ -239,6 +221,7 @@ temp, CONST primBit,
 		[ str(  )] echoKp;
 	else;
 		[ str( Reference: ) ] echoKp;
+		32 # oca;
 		hexVal;
 	endif;
 ;

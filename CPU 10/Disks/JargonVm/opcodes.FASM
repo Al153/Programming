@@ -5,27 +5,35 @@ STACKTLS ->
 
 
 		: BPUSH // ( stack_item -- )
-			dumpStack
+			DEBUG if 
+				dumpStack
+			then
+
 
 			acc, SWAP # ldi;
 			acc, pushr;
 
-			[ str( \nPushing: ) ] echoKp;
-			prntVal;
-
+			DEBUG if
+				[ str( \nPushing: ) ] echoKp;
+				prntVal;
+			then
 		;
 		
 		: BLOOKUPS // ( offset -- )
-			dumpStack
-			[ str( \nLOOKUPS)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nLOOKUPS)] echoKp;
+			then
 
 			acc, SWAP fp, SWAP CELLS STACK + ldi[];
 			acc, pushr;
 		;  // lookup in stack with an offset
 		
 		: BLOOKUPH // ( offset -- )
-			dumpStack
-			[ str( \nLOOKUPH, closure index, closure address = )] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nLOOKUPH, closure index, closure address = )] echoKp;
+			then
 
 			// offset is offset in the closure
 			acc, fp, STACK 1 CELLS - ldi[]; // get a pointer to our closure
@@ -34,21 +42,28 @@ STACKTLS ->
 			ClsrChk;
 		
 			acc, fp, STACK 1 CELLS - ldi[]; // get a pointer to our closure
-			acc, odr;
-			32 # oca;
+
+			DEBUG if
+				acc, odr;
+				32 # oca;
+			then
 
 			acc, acc, HEAPREG ldi[];
 
-			acc, odr;
-		 	
+			DEBUG if
+				acc, odr;
+			then
+
 		 	// get particular bound var out of closure
 			acc, SWAP acc, SWAP ClsHpPos ldi[]; // pick the var
 			acc, pushr;
 		;
 		
 		: BUNARY  // ( unary_oper  -- )
-			dumpStack
-			[ str( \nUNARY)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nUNARY)] echoKp;
+			then
 
 			DUP U_NOT = if DROP
 				0 ts, OTHERS # xora;
@@ -68,9 +83,10 @@ STACKTLS ->
 
 		
 		: BOPER // ( oper -- )
-			
-			dumpStack
-			[ str( OPERAND)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( OPERAND)] echoKp;
+			then
 
 			DUP O_AND = if DROP
 				1 ts, 0 ts, andr;
@@ -81,14 +97,14 @@ STACKTLS ->
 				1 pop
 		
 			else DUP O_EQB = if DROP
-				zro, acc, mov;
+				acc, TOPBIT # ldi; // 0x80000000 = primitive 0
 				1 ts, 0 ts, cmr;
 				equ, acc, ONES # cldi; // conditional load
 				acc, 1 ts, mov;
 				1 pop
 		
 			else DUP O_EQI = if DROP
-				zro, acc, mov;
+				acc, TOPBIT # ldi; // 0x80000000 = primitive 0
 				1 ts, 0 ts, cmr;
 				equ, acc, ONES # cldi; // conditional load
 				acc, 1 ts, mov;
@@ -98,7 +114,7 @@ STACKTLS ->
 				// test if ts[1] < ts[0] 
 
 				// need to account for signs
-				zro, acc, mov;
+				acc, TOPBIT # ldi; // 0x80000000 = primitive 0
 				temp, SIGNBIT # ldi;
 				temp, 1 ts, andr;
 				temp, testr, if;
@@ -122,10 +138,6 @@ STACKTLS ->
 				1 ts, TOPBIT # orra; // account for top bit
 				
 				1 ts, acc, mov;
-				[ str( \nADDED: )] echoKp;
-				prntVal;
-
-
 				1 pop
 		
 			else DUP O_SUB = if DROP
@@ -133,31 +145,16 @@ STACKTLS ->
 				1 ts, TOPBIT # orra; // account for top bit
 				
 				1 ts, acc, mov;
-				[ str( \nSubbed: )] echoKp;
-				prntVal;
-
 				1 pop
 		
 			else DUP O_MUL = if DROP
 				1 ts, OTHERS # anda;
 				0 ts, OTHERS # anda;
 
-				[ str( \nMUL arg1: )] echoKp;
-				1 ts, acc, mov;
-				hexVal;
-
-
-				[ str( \nMUL arg2: )] echoKp;
-				0 ts, acc, mov;
-				hexVal;
-
 				1 ts, 0 ts, mulr; // temp gets clobbered here
 				1 ts, TOPBIT # orra; // account for top bit
 
 				1 ts, acc, mov;
-				[ str( \nMulled: )] echoKp;
-				prntVal;
-
 				1 pop
 			else
 				." ERROR: unrecognised Binary op code: " . CR
@@ -165,30 +162,35 @@ STACKTLS ->
 
 		;
 		: BASSIGN //  ( -- )
-			dumpStack
-			[ str( \nASSIGN)] echoKp;
+			DEBUG if 
+				dumpStack
+				[ str( \nASSIGN)] echoKp;
+			then
 
 			acc, 1 ts, HEAPREG ldi[]; // get pointer to ref from the heap registry
 		
 			t_REF @ TypeChk;
 		
 			0 ts, acc, HEAP 1 CELLS + sti[];	// do the assignment
-			zro, 1 ts, mov; // push a unit value to the stack // required by type system
+			1 ts, TOPBIT # ldi; // push a unit value to the stack // required by type system
 			1 pop
 
 		;
 		: BSWAP  // ( -- )
-
-			dumpStack
-			[ str( \nSWAP)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nSWAP)] echoKp;
+			then
 
 			1 ts, 0 ts, SWAP  xorr;
 			1 ts, 0 ts, xorr;
 			1 ts, 0 ts, SWAP xorr;
 		;
 		: BPOP // ( -- )
-			dumpStack
-			[ str( \nPOP)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nPOP)] echoKp;
+			then
 
 			1 pop
 		; 
@@ -199,39 +201,42 @@ STACKTLS ->
 		//	snd
 		
 		: BFST // ( -- )
-			." Dumping stack"
-			dumpStack
-			[ str( \nFST)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nFST)] echoKp;
+			then
 
-			." Load acc"
 			acc, 0 ts, HEAPREG ldi[];
-			." Type check"
 			t_PAIR @ TypeChk;
-			." Load"
 			0 ts, acc, HEAP 1 CELLS + ldi[]; // load up from the  first part of the index
 		;
 
 		: BSND // ( -- )
-			dumpStack
-			[ str( \nSND)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nSND)] echoKp;
+			then
 
 			acc, 0 ts, HEAPREG ldi[];
 			t_PAIR @ TypeChk;
 			0 ts, acc, HEAP 2 CELLS + ldi[]; // load up from the  first part of the index
 		;
-		: BDEREF  // ( -- )
 
-			dumpStack
-			[ str( \nDEREF)] echoKp;
+		: BDEREF  // ( -- )
+			DEBUG if
+				dumpStack
+				[ str( \nDEREF)] echoKp;
+			then
 
 			acc, 0 ts, HEAPREG  ldi[];
 			t_REF @ TypeChk;
 			0 ts, acc, HEAP 1 CELLS + ldi[]; // load up from the  first part of the index
 		;
 		: BAPPLY // ( -- )
-			dumpStack
-			[ str( \nAPPLY)] echoKp;
-		
+			DEBUG if
+				dumpStack
+				[ str( \nAPPLY)] echoKp;
+			then
 
 			acc, 0 ts, HEAPREG ldi[]; // check for a closure
 		
@@ -261,10 +266,9 @@ STACKTLS ->
 			acc, 3 ts, mov; // Value
 			temp, 2 ts, mov; // closure
 			fp, 1 ts, mov; // fp
-			[ str( \nBefore dupFrame\n)] echoKp;
-			0 ts, pc, 14 INSTRS # ldi[]; // retAddr = 15 instructions until after the jump
+			0 ts, pc, 14 INSTRS # ldi[]; // retAddr = 14 instructions until after the jump
 		
-				 		// 10 instrs
+				 		// 11 instrs
 				dupFrame // duplicate frame into memory, set new fp
 
 			temp, fp, STACK 1 CELLS - ldi[]; // recover closure reference from the stack
@@ -276,31 +280,39 @@ STACKTLS ->
 
 		: BRETURN  //  ( -- )
 
-			dumpStack
-			[ str( \nRETURN)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nRETURN)] echoKp;
+			then
+
 			TopReg @
 				temp, fp, STACK 1 CELLS + ldi[]; // store return addr
 				fp, fp, STACK ldi[]; // get old frame
-				dumpStack
 				
-				temp, odr;
+				DEBUG if
+					dumpStack
+				then
+
 				0 ts, acc, mov; // store return value
-				[ str( \nMiddle )] echoKp;
-				temp, odr;
 				5 pop // remove stack frame (return value, return addr, frame addr, closure, and argument)
 				acc, pushr;
 				4 recentr;
-				[ str( \n about to jump, temp = )] echoKp;
-				temp, odr;
-			
+
+				DEBUG if
+					[ str( \n about to jump, temp = )] echoKp;
+					temp, odr;
+				then
+
 				temp, pc, mov; // jump
 			TopReg ! // this should preserve top reg in a conditional return
 
 		;
 		
 		: BMK_PAIR  //  ( -- )
-			dumpStack
-			[ str( \nMK_PAIR)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nMK_PAIR)] echoKp;
+			then
 
 			t_PAIR @ heapAllc // allocate a heap object into acc. Temp holds the HeapReg index
 			1 ts, acc, HEAP 1 CELLS + sti[]; // fst element
@@ -311,8 +323,10 @@ STACKTLS ->
 		;
 		
 		: BMK_INL // ( -- )
-			dumpStack
-			[ str( \nMK_INL)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nMK_INL)] echoKp;
+			then 
 
 			t_SUM @ heapAllc // allocate a heap object into acc. Temp holds the HeapReg index
 			0 ts, acc, HEAP 2 CELLS + sti[]; // store value
@@ -325,10 +339,10 @@ STACKTLS ->
 		;
 
 		: BMK_INR // ( -- )
-
-			dumpStack
-			[ str( \nMK_INR)] echoKp;
-
+			DEBUG if
+				dumpStack
+				[ str( \nMK_INR)] echoKp;
+			then
 
 			t_SUM @ heapAllc // allocate a heap object into acc. Temp holds the HeapReg index
 			0 ts, acc, HEAP 2 CELLS + sti[]; // store value
@@ -341,10 +355,10 @@ STACKTLS ->
 		;
 
 		: BMK_REF //  ( -- )
-
-			dumpStack
-			[ str( \nMK_REF)] echoKp;
-
+			DEBUG if
+				dumpStack
+				[ str( \nMK_REF)] echoKp;
+			then
 
 			t_REF @ heapAllc // allocate a heap object into acc. Temp holds the HeapReg index
 			0 ts, acc, HEAP 1 CELLS + sti[]; // store TOS to i
@@ -352,12 +366,10 @@ STACKTLS ->
 		;
 		
 		: BMK_CLOSURE //  ( location length -- )
-			OVER ." Location = " .h8
-			OVER ." \n@Location = " @ .h8
-
-			dumpStack
-
-			[ str( \nMK_CLOSURE) ] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nMK_CLOSURE) ] echoKp;
+			then
 
 			CL_LENGTH !
 			CL_LOC !
@@ -367,11 +379,12 @@ STACKTLS ->
 			// t_CLOSURE defined to return an n_closure header when called
 			CL_LENGTH @ t_CLOSURE heapAllc // acc = closure obj, temp = Heapreg index
 
-			[ str( \nAfter allocation, heapreg index, object = ) ] echoKp;
-						temp, odr;
-						32 # oca;
-						acc, odr;
-
+			DEBUG if
+				[ str( \nAfter allocation, heapreg index, object = ) ] echoKp;
+							temp, odr;
+							32 # oca;
+							acc, odr;
+			then
 
 			temp, OP_TEMP sti; // save temp in O(1) space in data -- can't guarantee any spare registers so have to use this variable
 
@@ -385,10 +398,9 @@ STACKTLS ->
 			// acc, temp, HEAP 1 CELLS + sti[];
 			
 			// Can forget about acc now
-
-			[ str( \nBefore loop) ] echoKp;
-
-			." Before closure push loop: " .s CR
+			DEBUG if
+				[ str( \nBefore loop) ] echoKp;
+			then
 
 			CL_LENGTH @
 			DUP while
@@ -400,17 +412,19 @@ STACKTLS ->
 
 			temp, OP_TEMP ldi; // restore Heapreg index
 
-
-			[ str( \n After loop, temp(HEAPREG index\) = )] echoKp;
-			temp, odr;
+			DEBUG if
+				[ str( \n After loop, temp(HEAPREG index\) = )] echoKp;
+				temp, odr;
+			then
 
 			temp, pushr; // push it
-			." End of make closure: " .s CR
 		;
 		
 		: BTEST //    ( location -- )
-			dumpStack
-			[ str( \nTEST)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nTEST)] echoKp;
+			then
 
 			0 ts, OTHERS # anda;
 			0 ts,
@@ -420,8 +434,10 @@ STACKTLS ->
 		;
 
 		: BCASE  //  ( location-- )
-			dumpStack
-			[ str( \nCASE)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nCASE)] echoKp;
+			then
 
 			acc, 0 ts, HEAPREG ldi[];
 		
@@ -435,8 +451,11 @@ STACKTLS ->
 		
 		;
 		: BGOTO
-			dumpStack
-			[ str( \nGOTO)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nGOTO)] echoKp;
+			then
+
 			unc, SWAP bra; // TODO: how to deal with topreg 
 		; //  ( location -- ) call a function
 		: BLABEL // ( labelVar -- ) - labels should be pre declared
@@ -444,8 +463,10 @@ STACKTLS ->
 		;
 		
 		: BHALT // return to forth world, print out result too
-			dumpStack
-			[ str( \nHALT)] echoKp;
+			DEBUG if
+				dumpStack
+				[ str( \nHALT)] echoKp;
+			then
 
 			0 ts, acc, mov;
 			prntVal;
@@ -456,8 +477,9 @@ STACKTLS ->
 			// Extra bytecode for start of program
 			SLANG BLABEL
 
-			[ str( Arrived in assembler land!\n) ] echoKp;
-
+			DEBUG if
+				[ str( Arrived in assembler land!\n) ] echoKp;
+			then
 			// Set up stp
 			zro, stp, mov;
 
@@ -475,7 +497,9 @@ STACKTLS ->
 			4 TopReg ! // set TopReg = 4
 			dupFrame // duplicate frame into memory
 			zro, stp, mov; // reset sp
-			[ str( Finished init\n)] echoKp;
+			DEBUG if
+				[ str( Finished init\n)] echoKp;
+			then
 		;
 
 		: BSTART_F // ( -- )
@@ -489,8 +513,20 @@ STACKTLS ->
 
 		// If
 
-		: BSTART_I
-			// All branches of an if should start with TOPREG = 4
+		: BSTART_E // ( -- n )
+			// else branch of an if should start with  BSTART_E and end wit a BEND_E
+			TopReg @ // gives current value of TopReg to allow  the true code to the same stuff
+			4 recentr;
+		;
+
+		: BEND_E // ( -- )
+			// all
+			4 recentr;
+		;
+
+		: BSTART_I // ( -- n )
+			// else branch of an if should start with  BSTART_E and end wit a BEND_E
+			TopReg ! // store the current "valid" value of topreg
 			4 recentr;
 		;
 
@@ -498,7 +534,6 @@ STACKTLS ->
 			// all
 			4 recentr;
 		;
-
 
 		: BSTART_W
 			0 recentr;

@@ -91,8 +91,8 @@ object CompileAST {
           types3,
           defs1++defs2++defs3,
             c1 ++ List(BTest(new Location(elseLabel, None))) ++
-            List(new BStartIf) ++ c2 ++ List(new BEndIf, BGoto(new Location(afterElseLabel, None)), BLabel(elseLabel)) ++
-              List(new BStartIf) ++ c3 ++ List(new BEndIf,BLabel(afterElseLabel))
+            List(new BStartElse) ++ c2 ++ List(new BEndElse, BGoto(new Location(afterElseLabel, None)), BLabel(elseLabel)) ++
+              List(new BStartIf) ++ c3 ++ List(new BEndIf, BLabel(afterElseLabel))
         )
 
       case SSeq(l) =>
@@ -205,13 +205,6 @@ object CompileAST {
       forthTypeName("default_ref") + " t_SUM !",
       "hex " + (typeString.length * 4).toHexString + " TypeLim !" // set the typeLim value
     )
-    // TODO: convert names to forth viable ones
-
-    def convertLabelName(x: ByteCode): ByteCode = { // TODO needs to do locations too
-      x match { // todo fill in
-        case _ => x
-      }
-    }
 
     def isLabel(x: ByteCode): Boolean = {
       x match {
@@ -238,7 +231,6 @@ object CompileAST {
   }
 
   private def fillInClosures(in: List[RuntimeType], expected: Int): List[RuntimeType] = {
-    // TODO: needs a zero closure
     in match {
       case Closure(m):: rest =>
         if (m == expected) {
@@ -264,19 +256,6 @@ object CompileAST {
           typeIndex += 1
           result
       }
-  }
-
-  var nameIndex = 0
-  var nameLookup = new HashMap[String,String]
-  private def forthName(name: String): String = {
-    nameLookup.get(name) match {
-      case Some(n) => n
-      case None =>
-        val result: String = "N" + typeIndex.toString
-        nameLookup = nameLookup +  (name -> result)
-        typeIndex += 1
-        result
-    }
   }
 
   private def find(list: List[(String, ValuePath)], id: String): ValuePath ={

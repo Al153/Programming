@@ -4,56 +4,55 @@ add3 yes
 add4 yes
 add5 yes
 add6 yes
-add7 // implement comments
+add7 yes
 
 alpha yes
 bool yes
-case1
-eq1
-eq2
-eq3
-eq4
+eq1 yes
+eq2 yes
+eq3 yes
+eq4 yes
 
-expr
-expr2 // wrong value
+expr yes
+expr2 yes
 fib0 yes
 fib1 yes
 fib2 yes
-fib3
-fib4
-fib5
-fib5_v2
-fib10
+fib3 yes
+fib4 yes
+fib5 yes
+fib5_v2 yes
+fib10 yes
 
 fun yes
-gcd yes - issue when run as second JARGON program
+gcd yes
 int yes
 lambda1 yes
 lambda2 yes
 lambda3 yes
 
-let1
-let2
+let1 yes
+let2 yes
 
 lt1 yes
 lt2 yes
 
-nest
-nest2
+nest yes
+nest2 yes
 
 pair1
 pair2
 
-ref1 // need comments
-ref2 // need commentss
-ref3 // need comments
+ref1 yes
+ref2 yes
+ref3 yes
 
 seq0 yes
-seq1  // need comments
-seq2 yes - function refs work!
+seq1  yes
+seq2 yes - function refs work! woo!
 
 stack yes
 stack2 yessss
-sub // need comments
+sub yes
 while yes
 

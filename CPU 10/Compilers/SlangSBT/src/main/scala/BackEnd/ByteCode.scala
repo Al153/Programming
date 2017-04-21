@@ -8,6 +8,7 @@ import Parsing.SyntaxTree._
 sealed abstract class ByteCode {
   def render(): String
   def tab(s: String): String = "\t"+s
+  def twoTab(s: String): String = "\t\t"+s
 }
 
 case class BPush(s: StackItem) extends ByteCode {
@@ -17,7 +18,7 @@ case class BPush(s: StackItem) extends ByteCode {
   private def toPrimitive(i: Int) = "hex " +  (i|primitiveHeader).toHexString + " BPUSH"
   private def toHeapType(ref: Int) = "hex " + (ref&(~primitiveHeader)).toHexString + " BPUSH"
   override def render(): String = {
-    tab(
+    twoTab(
       s match {
         case StackUnit() => toPrimitive(0)
         case StackInt(i) => toPrimitive(i)
@@ -33,7 +34,7 @@ case class BPush(s: StackItem) extends ByteCode {
 
 case class BLookup(p: ValuePath) extends ByteCode {
   override def render(): String = {
-    tab(
+    twoTab(
       p match {
         case StackLocation(sl) =>
           if (sl == -1) {
@@ -55,7 +56,7 @@ case class BUnary(op: UnaryOperator) extends ByteCode {
       case NOT() => "U_NOT"
       case READ() =>"U_READ"
     }
-    tab(
+    twoTab(
       opString + " BUNARY"
     )
   }
@@ -72,63 +73,63 @@ case class BOperator(op: Operator) extends ByteCode {
       case AND() => "O_AND"
     }
 
-    tab(opString + " BOPER")
+    twoTab(opString + " BOPER")
   }
 }
 case class BAssign() extends ByteCode {
-  override def render(): String = tab("BASSIGN")
+  override def render(): String = twoTab("BASSIGN")
 }
 case class BSwap() extends ByteCode {
-  override def render(): String = tab("BSWAP")
+  override def render(): String = twoTab("BSWAP")
 }
 case class BPop() extends ByteCode {
-  override def render(): String = tab("BPOP")
+  override def render(): String = twoTab("BPOP")
 }
 case class BFst() extends ByteCode {
-  override def render(): String = tab("BFST")
+  override def render(): String = twoTab("BFST")
 }
 case class BSnd() extends ByteCode {
-  override def render(): String = tab("BSND")
+  override def render(): String = twoTab("BSND")
 }
 case class BDeref() extends ByteCode {
-  override def render(): String = tab("BDEREF")
+  override def render(): String = twoTab("BDEREF")
 }
 case class BApply() extends ByteCode {
-  override def render(): String = tab("BAPPLY")
+  override def render(): String = twoTab("BAPPLY")
 }
 case class BReturn() extends ByteCode {
-  override def render(): String = tab("BRETURN")
+  override def render(): String = twoTab("BRETURN")
 }
 case class BMakePair() extends ByteCode {
-  override def render(): String = tab("BMK_PAIR")
+  override def render(): String = twoTab("BMK_PAIR")
 }
 case class BMakeInl() extends ByteCode {
-  override def render(): String = tab("BMK_INL")
+  override def render(): String = twoTab("BMK_INL")
 }
 case class BMakeInr() extends ByteCode {
-  override def render(): String = tab("BMK_INR")
+  override def render(): String = twoTab("BMK_INR")
 }
 case class BMakeClosure(loc: Location, length: Int) extends ByteCode {
   override def render(): String = {
-    tab(loc.label + " hex " + length.toHexString + " BMK_CLOSURE")
+    twoTab(loc.label + " hex " + length.toHexString + " BMK_CLOSURE")
   }
 }
 case class BMakeRef() extends ByteCode {
-  override def render(): String = tab("BMK_REF")
+  override def render(): String = twoTab("BMK_REF")
 }
 case class BTest(l: Location) extends ByteCode {
   override def render(): String = {
-    tab(l.label + " " + " BTEST")
+    twoTab(l.label + " " + " BTEST")
   }
 }
 case class BCase(l: Location) extends ByteCode {
   override def render(): String = {
-    tab(l.label + " BCASE")
+    twoTab(l.label + " BCASE")
   }
 }
 case class BGoto(l: Location) extends ByteCode {
   override def render(): String = {
-    tab(l.label + " BGOTO")
+    twoTab(l.label + " BGOTO")
   }
 }
 case class BLabel(label: String) extends ByteCode {
@@ -137,40 +138,49 @@ case class BLabel(label: String) extends ByteCode {
   }
 }
 case class BHalt() extends ByteCode {
-  override def render(): String = tab("BHALT")
+  override def render(): String = twoTab("BHALT")
 }
 
 // Non executable byte codes
 // these byte codes are for use by the assembler for managing register stack manipulation
+// these can be ignored  by other jargon implementations
 
+// start and end of a function block
 case class BStartFunction() extends  ByteCode {
-  override def render(): String = "BSTART_F"
+  override def render(): String = tab("BSTART_F")
 }
 
 case class BEndFunction() extends  ByteCode {
-  override def render(): String = "BEND_F"
+  override def render(): String = tab("BEND_F")
 }
 
 case class  BStartIf() extends  ByteCode {
-  override def render(): String = "BSTART_I"
+  override def render(): String = tab("BSTART_I")
 }
 
 case class  BEndIf() extends  ByteCode {
-  override def render(): String = "BEND_I"
+  override def render(): String = tab("BEND_I")
+}
+case class  BStartElse() extends  ByteCode {
+  override def render(): String = tab("BSTART_E")
+}
+
+case class  BEndElse() extends  ByteCode {
+  override def render(): String = tab("BEND_E")
 }
 
 case class  BStartWhile() extends  ByteCode {
-  override def render(): String = "BSTART_W"
+  override def render(): String = tab("BSTART_W")
 }
 
 case class BEndWhile() extends  ByteCode {
-  override def render(): String = "BEND_W"
+  override def render(): String = tab("BEND_W")
 }
 
 case class BStartCase() extends ByteCode {
-  override def render(): String = "BSTART_C"
+  override def render(): String = tab("BSTART_C")
 }
 
 case class BEndCase() extends  ByteCode {
-  override def render(): String = "BEND_C"
+  override def render(): String = tab("BEND_C")
 }

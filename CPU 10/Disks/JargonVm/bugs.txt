@@ -1,2 +1,0 @@
- Recentre after a BTEST:
- 	lower regs not loaded

@@ -75,7 +75,7 @@ HeapSetp ->
 
 
 
-		r1, .s CR TopHeap ldi; // get top of heap, the result
+		r1, TopHeap ldi; // get top of heap, the result
 		[ str( \nAllocating HR:)] echoKp; r1, odr;
 
 		r1, testr, 1 nskip;
@@ -86,6 +86,7 @@ HeapSetp ->
 
 	 : PushHR;
 	 // ( rTemp r1  -- ) pseudo op, pushes a Heap registry object to the free list
+	 	[ str( Deallocating HR\n)] echoKp;
 		>r1 >rTemp // r1 contains ref to object
 		rTemp, TopHeap ldi;	// get old top of heap reg
 		rTemp, r1, >free; // store into our reg object to be deallocated
@@ -104,6 +105,7 @@ HeapSetp ->
 
 	0 INT STPTR
 	0 INT FPTR
+	0 INT OFFSET
 
 	gp3, CONST blk,
 	one, CONST gr,
@@ -118,11 +120,11 @@ HeapSetp ->
 
 	: doGCRun; // ( -- )
 		// jump to GC run
-		temp, pc, 2 INSTRS # ldi[];
-		temp, GC_RET sti;
+		temp, pc, 1 INSTRS # ldi[];
 		unc, GC_RUN bra;
 	;
 	
+	HpRLimit INT REGSLEFT
 
 
 	: heapAllc // ( itemType -- ) pseudo op
@@ -140,33 +142,59 @@ HeapSetp ->
 	
 		// //////////////////////////////////////////
 		// Simple Heuristic - do we do a GC run?
-		
+		." Start " .s CR
+
 		[ str( \nChecking for Garbage collection)] echoKp;
+
+		zro, temp, mov;
+
+		." Earlier: " .s CR
+
 		acc, HpLimit ldi;
 		acc, sp, subr; // get heap space left
-		acc, GC_LIM cma;
-		." First instrs: " .s CR
-		les, if;
+		
+		[ str( \nSpace left = )] echoKp;
+		acc, odr;
+
+		acc, GC_HLIM cma;
+		les, one, temp, cmov;
+
+		." HEAPALLOC: " .s CR
+
+		acc, REGSLEFT ldi;
+		acc, GC_RLIM cma;
+		[ str( \nRegistry objects left: )] echoKp;
+		acc, odr;
+
+		les, one, temp, cmov;
+
+
+		temp, testr, if;
 			{ STACKTLS -> }
 			TopReg @
 				flshRegs
 				doGCRun;
-				." After GC RUN: " .s CR
 			recentr; // recentre using old TopReg value
 			{ ;; }
 		endif;
 		// ///////////////////////////////////////////
+
+		acc, REGSLEFT ldi; // decrement REGSLEFT
+		acc, testr, acc, one, csubr; // derement if positive
+		acc, REGSLEFT sti;
+
 		
 		[ str( \nGetting Heap reg entry)] echoKp;
 
 		acc, temp, nextHR; // get a heap reg entry
+
+		." Here?\n"
 
 		[ str( \nGot heap reg entry)] echoKp;
 
 		zro, temp, >col; // store colour=white to temp entry
 		zro, temp, >nxtSrt;
 
-		." Done some linkage: " .s CR
 	
 		acc, ENDSRTED ldi; // get last value in the sorted list
 		
@@ -181,12 +209,13 @@ HeapSetp ->
 		temp, ENDSRTED sti; // this is the new last sorted node
 							// stores this object for now to free up a register
 		
-		[ str( \n Done Linkage)] echoKp;
+		[ str( \nDone Linkage)] echoKp;
 
 		acc, HpLimit ldi; // get top of heap
 		acc, OVER TYPELENS + suba; // increment top of heap to the end of our object
 									// this looks up length from the TYPELENS table
 		acc, HpLimit sti; // store the new top of heap
+		[ str( \nHere?)] echoKp;
 		stu, if; // we can't have used up heap space if the stack is entirely in regs (stu)
 			fst, UNDERFLW # ldi;
 	
@@ -204,6 +233,7 @@ HeapSetp ->
 		acc, temp, HEAPREG sti[];  // register the object
 
 		." End of closure: " .s CR
+		[ str( finished\n)] echoKp;
 	; EXPORT
 	
 	VARIABLE thisReg
@@ -233,11 +263,31 @@ HeapSetp ->
 		les, 1 nskip;
 		unc, NoHdr bra;
 	;
-	
 
+	: scanToFP //
+		// scan from current sp to FP + 8 // (ie one above the return address of the closure)
+		while; // while stp > fp + 4
+			stp, fp, 1 CELLS # cma[];
+			gre, do;
+				obj, stp, STACK ldi[];
+				obj, this, mov;
+				this, TOPBIT # anda;
+				this, testr, if;		// if a prim (top bit = 1)
+				else; 					// if a ref (top bit = 0 )
+					gr, obj, >col;
+													// add to grey stack
+					obj, GREY >stack; // Use argument reg
+					[ str( \nWritten object to grey stack\n)] echoKp;
+				endif;
+			next;
+			stp, 1 CELLS # suba;
+		loop;
+	;
+	
 
 	GC_RUN !LABEL
 		temp, GC_RET sti;
+		echo( \nDoing a GC run\n)
 		// STEPS:
 			// Traverse stack - split into frame items and regular stack entries
 				// add references into the grey list
@@ -257,9 +307,10 @@ HeapSetp ->
 		this, GREY ldi;
 		temp, this, nxtCol>;
 		temp, GREY sti;
+
+		echo( Prepped regs\n)
 	
-		LABEL: SETBLACK
-		LABEL: KEEPOBJ
+
 	
 
 	
@@ -279,77 +330,49 @@ HeapSetp ->
 		stp, STPTR sti;
 		fp, FPTR sti;
 
+		echo( Scanning stack\n)
+		dumpStack
 
 		while; // while fp:
 			fp, testr,
 			do;
 
-
-				while; // while stp > fp + 4
-					stp, fp, 1 CELLS # cma[];
-
-
-					gre, do;
-						obj, stp, STACK ldi[];
-						obj, this, mov;
-
-
-						this, TOPBIT # anda;
-						this, testr, if;		// if a prim (top bit = 1)
-						else; 					// if a ref (top bit = 0 )
-							gr, obj, >col;
-												// add to grey stack
-							obj, GREY >stack; // Use argument reg
-						endif;
-					next;
-
-					stp, 1 CELLS # suba;
-				loop;
+				scanToFP
 			next;
-			stp, fp, -4 # ldi[]; // move on stack pointer to point to where closure is 
+			stp, fp, -1 CELLS # ldi[]; // move on stack pointer to point to where frame's closure is 
 			fp, fp, STACK ldi[];
 		loop;
 
+		echo( Bottom of stack scan\n)
 		// Extra search down to zero do deal with arg and closure of bottom frame on stack
-		while; // while stp > fp + 4
-			stp, fp, 1 CELLS # cma[];
+		scanToFP
 
-			gre, do;
-				obj, stp, STACK ldi[];
-					obj, this, mov;
-						this, TOPBIT # anda;
-						this, testr, if;		// if a prim (top bit = 1)
-						else; 					// if a ref (top bit = 0 )
-							gr, obj, >col;
-												// add to grey stack
-							obj, GREY >stack; // Use argument reg
-						endif;
-					next;
-					stp, 1 CELLS # suba;
-				loop;
-		fp, FPTR ldi;
+		fp, FPTR ldi; // restore stack and frame pointers
 		stp, STPTR ldi;
 	
 
 		// ////////////////////////////////////////////////
 		// Phase 2: trace objects to find reacheable set //
 		// ////////////////////////////////////////////////
+		echo( Doing a trace\n)
 		while;
 			this, testr, do;
 				this, obj, obj>; // get the object pointer
 				hdr, obj, HEAP ldi[]; // get the header of the object
 
 				vld8hdr;
-	
-				i, hdr, TYPEOFFS ldi[]; // bound of where the searcheable members end
+				obj, i, mov;
+				i, hdr, TYPEOFFS adda[]; // bound of where the searcheable members end
 				i, LIMIT sti;
-				i, hdr, TYPELENS ldi[]; // start i at typelength associated with the header
+
+				obj, i, mov;
+				i, hdr, TYPELENS adda[]; // start i at typelength associated with the header
 				while;
 					i, LIMIT cma; // while (i > )
 					gre, do;
 
 
-						i, 1 CELLS # suba;
+						i, 1 CELLS # suba; // i-- 
 						temp, i, HEAP ldi[];
 						// need to check if temp is a ref or prim
 						temp, TOPBIT # anda;
@@ -358,15 +381,15 @@ HeapSetp ->
 						else;
 
 
-							temp, i, HEAP ldi[];
-							child, temp, HEAPREG ldi[];
+							child, i, HEAP ldi[];
 							child, colour, col>;
 							colour, testr, if;
 								// if black or grey, need to do nothing
 								contin;
 							else;
 
-								gr, child, >col;
+								gr, child, >col; // otherwise set color = grey, add to grey stack
+								echo( Traced an object\n)
 								child, GREY >stack;
 							endif;
 						endif;
@@ -381,34 +404,27 @@ HeapSetp ->
 		// ////////////////////////////
 		// Phase 3: Sweep/copy phase //
 		// ////////////////////////////
-
-
 	
-		prev, SORTED nextSrt - HEAPREG - # ldi; // prev pointer initialised so >nxtSrt; writes to the sorted pointer
+		prev, 0 # ldi;
 		this, SORTED ldi;
 		offset, 0 # ldi;
+
+		echo( Sweeping\n)
 	
 		while;
+			echo( SWEEP LOOP\n)
 			this, testr, do;
 				this, colour, col>;
-				colour, testr, KEEPOBJ bra; // If white..
-					this, temp, nxtSrt>; // unlink this
-					temp, prev, >nxtSrt;
-					this, obj, obj>;
-					hdr, obj, HEAP ldi[]; // get the header
-	
-					vld8hdr;
-	
-					offset, hdr, HEAP adda[]; // look up and add header from table
-					temp, this, PushHR; // assume this's next field is not changed. reclaims this
-					contin; // do next loop
-	
-				KEEPOBJ !LABEL // otherwise if grey or blacks
+				colour, testr, if;
+ 					// if grey or blacks
 					// Nothing to reclaim
 	
 					// set colour to white
 					wh, this, >col;
+					echo( Keeping an object\n)
 					offset, testr, if; // if there is an offset, the need to move the object
+						
+						offset, OFFSET sti;
 						// when moving:
 							// Heap grows down in addresses,
 							// therefore items need to move up in address
@@ -418,7 +434,8 @@ HeapSetp ->
 						hdr, obj, HEAP ldi[]; // get the header
 						i, hdr, TYPELENS ldi[]; // get the length of the item
 						i, obj, addr; // add on the reference to the item to get to the end
-						offset, i, addr; // offset becomes a pointer to the space to move to
+						offset, i, addr; // offset becomes a pointer to the space to move to. since i = old_i + obj
+											// ergo offset = offset + old_i + obj
 						while;
 							i, obj, cmr;
 							i, 4 # suba;
@@ -430,15 +447,47 @@ HeapSetp ->
 								temp, offset, HEAP sti[];
 							next;
 						loop;
-	
-						zro, offset, mov; // reset the offset
+						// there is still an offset. don't change it
+						offset, OFFSET ldi;
+
+						obj, offset, addr; // get new object pointer and save it
+						obj, this, >obj;
+
 						this, prev, mov; // update previous
 					endif;
+				else;
+					echo( Sweeping an object\n)
+					this, temp, nxtSrt>; // unlink this
+					prev, testr, if;
+						temp, prev, >nxtSrt;
+					else;
+						temp, SORTED sti;
+					endif;
+					
+					this, obj, obj>;
+					hdr, obj, HEAP ldi[]; // get the header
+					
+					vld8hdr;
+
+					temp, REGSLEFT ldi; // use temp to increment REGSLEFT
+					temp, one, addr;
+					temp, REGSLEFT sti;
+	
+					offset, hdr, TYPELENS adda[]; // look up and add length by looking up header in table
+					temp, this, PushHR; // assume this's next field is not changed. reclaims this
+					contin; // do next loop
+				endif;
 			next;
 				this, this, nxtSrt>; // move onto next item in the sorted list
 			loop;
 
-	
+			prev, ENDSRTED sti; // set the last valid sorted HEAPREG entry
+
+			acc, HpLimit ldi; // adjust HpLimit according to the offset removed
+			acc, offset, addr;
+			acc, HpLimit sti;
+
+		echo( Done\n)
 		pc, GC_RET ldi; // return
 ;;
 

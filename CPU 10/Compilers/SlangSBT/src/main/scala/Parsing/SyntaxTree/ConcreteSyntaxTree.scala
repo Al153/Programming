@@ -21,9 +21,22 @@ sealed abstract class ConcreteSyntaxTree(val nodeType: String) {
 }
 case class Terminal(override val nodeType: String, value: String)
   extends ConcreteSyntaxTree(nodeType) {
+  private var row = 0
+  private var col = 0
   override def pretty(indent: Int = 0) : String = {
     indentation(indent) + nodeType + "(" + value + ")"
   }
+  def rowIs(r: Int): Terminal = {
+    row = r
+    this
+  }
+  def colIs(c: Int): Terminal = {
+    col = c
+    this
+  }
+
+  def getCol: Int = col
+  def getRow: Int = row
 }
 case class NonTerminal(override val nodeType: String, children: List[ConcreteSyntaxTree])
   extends ConcreteSyntaxTree(nodeType) {

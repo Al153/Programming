@@ -14,7 +14,8 @@ class Parser(var config: String) {
   val actionTable: Map[(Int, String), ParserAction] = configuration.getLookaheadActionTable
 
   def parseString(input:String): ConcreteSyntaxTree = {
-    var tokens = lexer.lex(input)
+    val preprocessed = PreProcessor.preProcess(input)
+    var tokens = lexer.lex(preprocessed)
     tokens = tokens :+ Terminal("END", "END")
     val sentinel = NonTerminal("SENTINEL", Nil)
     sentinel.setState(0)
@@ -63,17 +64,10 @@ class Parser(var config: String) {
 
   private def throwSyntaxError(inputStream: List[Terminal], previous: List[Terminal], stack: List[ConcreteSyntaxTree]): ConcreteSyntaxTree ={
     val lookahead = inputStream.head
-    val rest = inputStream.tail.take(10)
-    val lengthToDrop = max(previous.length - 10, 0)
-    val past = previous.drop(lengthToDrop)
-    val pretty = (x:Terminal)=>x.value
-    val fullPrint = (x:ConcreteSyntaxTree) => x.pretty()
     val state = stack.head.getState
-    val msg = stack.map(fullPrint) + "\n"+
-      past.map(pretty).mkString +
-      "\t[[[" + lookahead.nodeType + " (" + pretty(lookahead) + ") " + "]]]\t" +
-      rest.map(pretty).mkString + "\n" +
-      "State: " + state + "expected tokens: " + getExpectedTransitions(state)
+    val msg = " \nUnexpected token: " + lookahead.value +
+      "\nNear row: " + lookahead.getCol + " column: " + lookahead.getRow +
+      "\nState: " + state + "expected tokens: " + getExpectedTransitions(state)
 
     throw SlangSyntaxError(msg)
   }

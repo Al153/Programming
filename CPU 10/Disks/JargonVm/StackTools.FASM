@@ -32,7 +32,7 @@ STACKTLS ->
 			TopReg @ while
 				." \nLooping flshRegs" TopReg @ . CR
 				TopReg --
-				TopReg @ gp0, + stp, STACK TopReg @ CELLS + sti[];
+				TopReg @ asReg, stp, STACK TopReg @ CELLS + sti[];
 			TopReg @ loop
 		stp, SWAP CELLS # adda; // make stack space.
 
@@ -53,6 +53,10 @@ STACKTLS ->
 		MovDist !
 		TopReg !
 
+		DEBUG if
+			[ str( Fromstack running: )] echoKp;
+		then
+
 		." FROMSTCK, saved values " .s CR
 		stu, STUFlow bra; // if stu is true (all stack values in reg, then there is an error)
 		sp, MovDist @ CELLS # cma; // First check there are moveDist entries in the stack
@@ -62,11 +66,12 @@ STACKTLS ->
 		//  i = n
  		TopReg @ TopReg @
  		while
+ 			." Fromstack looping " .s CR
  			1 - // i --
  			DUP MovDist @ { COMPARE -> } => { ;; } if 
- 				DUP MovDist @ - gp0, + OVER gp0, + mov;
+ 				DUP MovDist @ - asReg, OVER asReg, mov;
  			else
- 				DUP gp0, + OVER CELLS sp, SWAP STACK + ldi[];
+ 				DUP asReg, OVER sp, SWAP  CELLS STACK + ldi[];
  			then
  			DUP
  		loop DROP
@@ -74,6 +79,10 @@ STACKTLS ->
  
  
  	: toStck // ( n MovDist-- )
+ 		DEBUG if
+	 		[ str( \nTostack running:\n )] echoKp;
+ 		then
+ 		
  		MovDist !
  		TopReg !
  		sp, MovDist @ CELLS # adda; // First check there is moveDist space in the stack
@@ -112,9 +121,9 @@ STACKTLS ->
  		." Before loop: " .s CR
  		0 0 TopReg @ MovDist @ + < while
  			DUP MovDist @ < if
- 				DUP gp0, + OVER CELLS sp, SWAP STACK + sti[]; 
+ 				DUP asReg, OVER sp, SWAP CELLS STACK + sti[]; 
  			else
- 				DUP gp0, + DUP MovDist @ - mov;
+ 				DUP asReg, DUP MovDist @ - mov;
  			then
  			1 + DUP TopReg @ MovDist @ + <
  		loop DROP
@@ -184,7 +193,7 @@ STACKTLS ->
  			." before recentre " .s CR
  			3 recentr;
  		then
- 		TopReg @ gp0, + mov; // reg from argument
+ 		TopReg @ asReg, mov; // reg from argument
  		TopReg ++
  			
 
@@ -198,7 +207,7 @@ STACKTLS ->
  		." ts, stack = " .s CR
  		1 while
  			DUP TopReg @ 1 -  SWAP - check // 1 - since TopReg points to next reg to insert
- 		loop gp0, +
+ 		loop asReg,
 
  		." ts, topReg = " TopReg @ . CR
  	;
@@ -210,7 +219,7 @@ STACKTLS ->
  
  	: ClsHpPos 2 + CELLS HEAP + ; // ( n -- pos ) get heap offset of nth item in a closure
  	: memStPos CELLS STACK + 1 CELLS - ; // ( n -- pos ) get stack offset of nth item in memory location
- 	: rgStPos, TopReg @ OVER - 1 - gp0, + SWAP ; // ( n -- pos) get correct register of nth stack item in regs
+ 	: rgStPos, TopReg @ OVER - 1 - asReg, SWAP ; // ( n -- pos) get correct register of nth stack item in regs
  	: CLSR_PSH // ( n -- )
  		// picks nth item from the stack into the closure
  		." START CLOSURE PUSH: " .s CR
