@@ -76,9 +76,9 @@ object CompileAST {
           types3,
           defs1 ++ defs2 ++ defs3,
           c1 ++
-            (BCase(new Location(inr_label, None)) :: new BStartCase :: c2) ++
-          List(new BApply, new BEndCase , BGoto(new Location(after_inr_label, None)), BLabel(inr_label), new BStartCase) ++
-          c3 ++ List(new BApply, new BEndCase, BLabel(after_inr_label))
+            (BCase(new Location(inr_label, None)) :: new BStartLeftCase :: c2) ++
+          List(new BApply, new BEndLeftCase , BGoto(new Location(after_inr_label, None)), BLabel(inr_label), new BStartRightCase) ++
+          c3 ++ List(new BApply, new BEndRightCase, BLabel(after_inr_label))
         )
       case SIf(e1, e2, e3) =>
         val elseLabel: String = newLabel.apply

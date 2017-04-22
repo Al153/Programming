@@ -535,20 +535,30 @@ STACKTLS ->
 			4 recentr;
 		;
 
-		: BSTART_W
+		: BSTART_W // ( -- )
 			0 recentr;
 		;
 
-		: BEND_W
+		: BEND_W // ( -- )
 			0 recentr;
 		;
 
 
-		: BSTART_C
+		: BSTART_R // ( n -- )
+			TopReg ! // L and R are like If and Else above but for cases
 			1 recentr;
 		;
 
-		: BEND_C
+		: BEND_R // ( -- )
+			1 recentr;
+		;
+
+		: BSTART_L // ( -- n )
+			TopReg @
+			1 recentr;
+		;
+
+		: BEND_L // ( -- )
 			1 recentr;
 		;
 

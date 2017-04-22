@@ -177,10 +177,19 @@ case class BEndWhile() extends  ByteCode {
   override def render(): String = tab("BEND_W")
 }
 
-case class BStartCase() extends ByteCode {
-  override def render(): String = tab("BSTART_C")
+case class BStartLeftCase() extends ByteCode {
+  override def render(): String = tab("BSTART_L")
 }
 
-case class BEndCase() extends  ByteCode {
-  override def render(): String = tab("BEND_C")
+case class BEndLeftCase() extends  ByteCode {
+  override def render(): String = tab("BEND_L")
+}
+
+
+case class BStartRightCase() extends ByteCode {
+  override def render(): String = tab("BSTART_R")
+}
+
+case class BEndRightCase() extends  ByteCode {
+  override def render(): String = tab("BEND_R")
 }
