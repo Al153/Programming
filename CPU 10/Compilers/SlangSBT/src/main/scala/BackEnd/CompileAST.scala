@@ -1,6 +1,7 @@
 package BackEnd
  
 import Exceptions.CompileFindException
+import Intermediate._
 import Parsing.SyntaxTree._
 
 import scala.collection.immutable.HashMap
@@ -202,7 +203,7 @@ object CompileAST {
     val defaultTypesString = List(
       forthTypeName("default_pair") + " t_PAIR !",
       forthTypeName("default_sum") + " t_SUM !",
-      forthTypeName("default_ref") + " t_SUM !",
+      forthTypeName("default_ref") + " t_REF !",
       "hex " + (typeString.length * 4).toHexString + " TypeLim !" // set the typeLim value
     )
 
@@ -238,7 +239,7 @@ object CompileAST {
         } else if (m>expected){
           Closure(expected) :: fillInClosures(in, expected + 1)
         } else {
-          // if m < expected, duplicate closure, delete
+          // if m < expected, duplicated closure, delete
           fillInClosures(rest, expected)
         }
       case _ => EndOfClosures() :: in

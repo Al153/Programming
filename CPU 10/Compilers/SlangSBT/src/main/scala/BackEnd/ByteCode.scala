@@ -1,5 +1,6 @@
 package BackEnd
 
+import Intermediate._
 import Parsing.SyntaxTree._
 
 /**

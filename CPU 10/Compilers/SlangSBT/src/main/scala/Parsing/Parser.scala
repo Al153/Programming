@@ -67,7 +67,7 @@ class Parser(var config: String) {
     val state = stack.head.getState
     val msg = " \nUnexpected token: " + lookahead.value +
       "\nNear row: " + lookahead.getCol + " column: " + lookahead.getRow +
-      "\nState: " + state + "expected tokens: " + getExpectedTransitions(state)
+      "\nState: " + state + " expected tokens: " + getExpectedTransitions(state)
 
     throw SlangSyntaxError(msg)
   }

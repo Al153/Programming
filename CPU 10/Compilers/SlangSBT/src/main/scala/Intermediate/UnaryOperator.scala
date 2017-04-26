@@ -1,7 +1,8 @@
-package Parsing.SyntaxTree
+package Intermediate
 
-import Logging.PrettyPrinter
 import Exceptions.SlangTypeError
+import Logging.PrettyPrinter
+import Typing._
 
 sealed trait UnaryOperator{
   def pretty(indent: Int): String
@@ -14,9 +15,10 @@ case class NEG() extends UnaryOperator {
   }
 
   override def getType(t: Type): Type = {
-    t match {
-      case TSimple(TInt()) => TSimple(new TInt)
-      case _ => throw new SlangTypeError("Unary Operator -  does not take argument of type: " + t.pretty())
+    if  (t.unify(TSimple(TInt()))) {
+      TSimple(new TInt)
+    } else {
+      throw new SlangTypeError("Unary Operator -  does not take argument of type: " + t.pretty())
     }
   }
 }
@@ -26,9 +28,10 @@ case class NOT() extends UnaryOperator {
   }
 
   override def getType(t: Type): Type = {
-    t match {
-      case TSimple(TBool()) => TSimple(new TBool)
-      case _ => throw new SlangTypeError("Unary Operator ~  does not take argument of type: " + t.pretty())
+    if  (t.unify(TSimple(TBool()))) {
+      TSimple(new TBool)
+    } else {
+      throw new SlangTypeError("Unary Operator ~ does not take argument of type: " + t.pretty())
     }
   }
 }
@@ -37,9 +40,10 @@ case class READ() extends UnaryOperator {
     PrettyPrinter.indentation(indent) + "INPUT"
   }
   override def getType(t: Type): Type = {
-    t match {
-      case TSimple(TUnit()) => TSimple(new TInt)
-      case _ => throw new SlangTypeError("Unary Operator ?  does not take argument of type: " + t.pretty())
+    if  (t.unify(TSimple(TUnit()))) {
+      TSimple(new TInt)
+    } else {
+      throw new SlangTypeError("Unary Operator ? does not take argument of type: " + t.pretty())
     }
   }
 }

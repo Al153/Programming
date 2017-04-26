@@ -11,3 +11,5 @@ version := "1.0"
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq("com.typesafe.play" % "play-json_2.11" % "2.4.2", json4sNative)
+
+libraryDependencies += "org.rogach" %% "scallop" % "2.1.1"

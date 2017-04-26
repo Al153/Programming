@@ -1,11 +1,14 @@
-package Parsing.SyntaxTree
+package Intermediate.Slang
 
 import Exceptions.{MissingCSTCaseException, MissingCSTTypeCaseException}
+import Intermediate._
+import Parsing.SyntaxTree._
+import Typing._
 
 /**
   * Created by Al on 13/03/2017.
   */
-object CSTToAST {
+class SlangTranslator extends CSTTranslator{
   def apply(c: ConcreteSyntaxTree): AST = {
     convert(c)
   }
@@ -70,7 +73,7 @@ object CSTToAST {
               t :: Terminal("\")\"", _) ::
               NonTerminal("arrow", _) :: expr ::
               Terminal("\"end\"", _) :: Nil =>
-                SLambda(new Lambda(variable, convert(expr), convertType(t)))
+                SLambda(new Lambda(variable, convert(expr), Some(convertType(t))))
             case _ => throw new MissingCSTCaseException("lambda", children)
           }
           case "let" => children match {
@@ -79,7 +82,7 @@ object CSTToAST {
               t :: Terminal("\"=\"", _) ::
               binding :: Terminal("\"in\"", _) ::
               expr :: Terminal("\"end\"", _) :: Nil =>
-              SApp(SLambda(new Lambda(variable, convert(expr), convertType(t))), convert(binding))
+              SApp(SLambda(new Lambda(variable, convert(expr), Some(convertType(t)))), convert(binding))
             case _ => throw new MissingCSTCaseException("let", children)
           }
           case "let_fn" => children match {
@@ -92,8 +95,8 @@ object CSTToAST {
               expr :: Terminal("\"end\"", _) :: Nil =>
                 SLetFun(
                   fName,
-                  new Lambda(argName, convert(fExpr), convertType(argType)),
-                  convertType(fType), convert(expr)
+                  new Lambda(argName, convert(fExpr), Some(convertType(argType))),
+                  Some(convertType(fType)), convert(expr)
                 )
             case _ => throw new MissingCSTCaseException("let_fn", children)
           }
@@ -108,8 +111,8 @@ object CSTToAST {
               expr :: Terminal("\"end\"", _) :: Nil =>
               SLetRecFun(
                 fName,
-                new Lambda(argName, convert(fExpr), convertType(argType)),
-                convertType(fType), convert(expr)
+                new Lambda(argName, convert(fExpr),  Some(convertType(argType))),
+                Some(convertType(fType)), convert(expr)
               )
             case _ => throw new MissingCSTCaseException("let_rec_fn", children)
           }
@@ -134,8 +137,8 @@ object CSTToAST {
               Terminal("\"end\"", _) :: Nil =>
               SCase(
                 convert(expr),
-                new Lambda(leftVar, convert(leftExpr), convertType(leftType)),
-                new Lambda(rightVar, convert(rightExpr), convertType(rightType))
+                new Lambda(leftVar, convert(leftExpr), Some(convertType(leftType))),
+                new Lambda(rightVar, convert(rightExpr), Some(convertType(rightType)))
               )
             case _ => throw new MissingCSTCaseException("let_rec_fn", children)
           }
