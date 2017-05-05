@@ -13,7 +13,7 @@ class CommandLineConfig(arguments: Seq[String]) extends ScallopConf(arguments) {
            |Options:
            |""".stripMargin)
   footer("")
-  val supportedLanguages = Set("slang", "creole")
+  val supportedLanguages = Set("slang", "creole", "PrototypeTypingSyntax")
   val source = trailArg[String](
     "Source file",
     descr = "Source file to compile"

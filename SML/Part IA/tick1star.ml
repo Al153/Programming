@@ -11,7 +11,7 @@ fun eapproxi(i:int,n:int,total:real,last_term:real) =
 fun eapprox2(n:int) = if n<1 then 1.0 else eapproxi(1,n,1.0,1.0);
 
 (* Exponential *)
-fun expi(i:int,n:int,total:real,last_term:real,z:real) =
+fun expi(i:int, n:int, total:real, last_term:real, z:real) =
     if i = n then total else
     expi(i+1,n,total + (last_term*z/(real i)), last_term*z/(real i),z);
 

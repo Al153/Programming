@@ -28,7 +28,7 @@ Grammar:
 	addop -> "+" | "-"
 	assop -> assign
 
-	expr -> expr addop term | term | lambda | let | assignment | while_loop | seq | case_expr | tDefinition | pMatch -- changed seq rule too
+	expr -> expr addop term | term | lambda | let | assignment | while_loop | seq | case_expr | tDefinition | matchWith -- changed seq rule too
 
 	term -> term mulop factor | factor
 
@@ -63,17 +63,17 @@ Grammar:
 	opt_t_expr -> ":" t_expr | ""
 
 
-tParam -> "'" id
-tDefinition -> "datatype" tBody ";" expr
-tBody -> tParamPrefix id "=" tConstruction tCase tSuffix
-tConstruction -> id constrSuffix
-constrSuffix -> "" | "of" t_expr
+    tParam -> "'" id
+    tDefinition -> "datatype" tBody ";" expr
+    tBody -> tParamPrefix id "=" tConstruction tCase tSuffix
+    tConstruction -> id constrSuffix
+    constrSuffix -> "" | "of" t_expr
 
-tCase -> "" | "|" tConstruction tCase
-tSuffix -> "" | "and" tBody
+    tCase -> "" | "|" tConstruction tCase
+    tSuffix -> "" | "and" tBody
 
-tParamPrefix -> "" | tParam | "(" tParamList ")"
-tParamList -> tParam | tParamList "," tParam
+    tParamPrefix -> "" | tParam | "(" tParamList ")"
+    tParamList -> tParam | tParamList "," tParam
 
 
 	t_expr -> t_sum arrow t_expr | t_sum
@@ -85,10 +85,10 @@ tParamList -> tParam | tParamList "," tParam
 
 
 
-matchWith -> "match" expr "with" pMatch
-pValue -> id | num | unit | "true" | "false"
-pTerm -> pValue | id "(" pTermList ")"
-pTermList -> pTerm | pTermList "," pTerm
+    matchWith -> "match" expr "with" pMatch
+    pValue -> id | num | unit | "true" | "false"
+    pTerm -> pValue | id "(" pTermList ")"
+    pTermList -> pTerm | pTermList "," pTerm
 
-pMatch -> pTerm arrow expr pSuffix
-pSuffix -> "" | "|" pMatch
+    pMatch -> pTerm arrow expr pSuffix
+    pSuffix -> "" | "|" pMatch

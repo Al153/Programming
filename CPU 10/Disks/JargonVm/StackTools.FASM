@@ -30,7 +30,9 @@ STACKTLS ->
 		
 		TopReg @
 			TopReg @ while
-				." \nLooping flshRegs" TopReg @ . CR
+				DEBUG if
+					." \nLooping flshRegs" TopReg @ . CR
+				then
 				TopReg --
 				TopReg @ asReg, stp, STACK TopReg @ CELLS + sti[];
 			TopReg @ loop
@@ -55,9 +57,9 @@ STACKTLS ->
 
 		DEBUG if
 			[ str( Fromstack running: )] echoKp;
+			." FROMSTCK, saved values " .s CR
 		then
 
-		." FROMSTCK, saved values " .s CR
 		stu, STUFlow bra; // if stu is true (all stack values in reg, then there is an error)
 		sp, MovDist @ CELLS # cma; // First check there are moveDist entries in the stack
 		les, fst, UNDERFLW # cldi; // Gone into underflow state, so sets the stu, flag
@@ -66,7 +68,10 @@ STACKTLS ->
 		//  i = n
  		TopReg @ TopReg @
  		while
- 			." Fromstack looping " .s CR
+ 			DEBUG if
+	 			." Fromstack looping " .s CR
+ 			then
+
  			1 - // i --
  			DUP MovDist @ { COMPARE -> } => { ;; } if 
  				DUP MovDist @ - asReg, OVER asReg, mov;
@@ -118,7 +123,10 @@ STACKTLS ->
  	//		} else {
  	//			mov(reg(i) => reg(i-moveDist))
  	//		}
- 		." Before loop: " .s CR
+ 		DEBUG if
+	 		." Before loop: " .s CR
+ 		then
+
  		0 0 TopReg @ MovDist @ + < while
  			DUP MovDist @ < if
  				DUP asReg, OVER sp, SWAP CELLS STACK + sti[]; 
@@ -132,35 +140,51 @@ STACKTLS ->
  	;
  
  	: recentr; // ( n -- ) spill regs to stack, or fill, leaving n values in registers
- 		." Start recentre: " .s CR
+ 		DEBUG if
+	 		." Start recentre: " .s CR
+ 		then
+
  		TopReg @ OVER = if 
  			// do Nothing, n values in registers already
  			DROP
- 			." Path1\n"
+ 			DEBUG if
+	 			." Path1\n"
+ 			then
  		else 
  			TopReg @ OVER < if
  				// if TopReg < n
  				// move regs up by the above value, then shift in from stack
- 				." Path2\n"
+ 				DEBUG if
+	 				." Path2\n"
+ 				then
  				DUP TopReg @ - fromStck
  			else
  				// if TopReg > n
- 				." Path3\n"
+ 				DEBUG if
+	 				." Path3\n"
+ 				then
  				TopReg @ OVER -
- 				." Before toStck: " .s CR
+ 				
+ 				DEBUG if
+ 					." Before toStck: " .s CR
+ 				then
  				toStck
 
  			then
  		then
 
- 		." recentre, TopReg = " TopReg @ . CR
- 		." recentr, Stack: " .s CR
+ 		DEBUG if
+	 		." recentre, TopReg = " TopReg @ . CR
+ 			." recentr, Stack: " .s CR
+ 		then
  	;
  
  	: expand TopReg SWAP += TopReg @ topLimit < if else ." ERROR, top reg has got too high.\n" then ; // ( n -- ) Sets TopReg to make space on the stack. Assumes there is enough space
  
  	: check // ( offset, calculated -- [ reg 0 | stackOffset 1 ])
- 		." CheckSTack = " .s CR
+ 		DEBUG if
+	 		." CheckSTack = " .s CR
+ 		then
  		DUP
  		topLimit < if // if there is no underflow..
  			SWAP DROP
@@ -174,7 +198,9 @@ STACKTLS ->
  	;
  
  	: pop // ( n -- )
- 		." Pop, n = " DUP . CR
+ 		DEBUG if
+	 		." Pop, n = " DUP . CR
+ 		then
  		// pop n values from the stack
  		DUP TopReg @ { COMPARE -> } <= { ;; } if
  			TopReg SWAP -= // reduce the top reg pointer by n
@@ -183,33 +209,43 @@ STACKTLS ->
  			0 TopReg !
  			sp, SWAP CELLS # suba;
  		then
-
- 		." Pop, TopReg = " TopReg @ . CR
+ 		DEBUG if
+	 		." Pop, TopReg = " TopReg @ . CR
+ 		then
  	;
  
  	: pushr; // ( reg -- ) pseudo instr to move a register to the top of the stack, reg should be acc, zro, one etc
- 		." Start of pushr: " .s CR
+ 		DEBUG if
+ 			." Start of pushr: " .s CR
+ 		then
+
  		TopReg @ topLimit { COMPARE -> } >= { ;; } if 
- 			." before recentre " .s CR
+ 			DEBUG if
+	 			." before recentre " .s CR
+ 			then
  			3 recentr;
  		then
  		TopReg @ asReg, mov; // reg from argument
  		TopReg ++
  			
-
- 		." Pushr, TopReg = " TopReg @ . CR
+ 		DEBUG if
+	 		." Pushr, TopReg = " TopReg @ . CR
+ 		then
  	; 
 	 
  
  	: ts, // ( offset -- reg ) gets the register for a particular stack offset
  		// in any one instruction, one should get the register with the greatest offset first
  		// this is in order to ensure that all stack values are in the registers first
- 		." ts, stack = " .s CR
+ 		DEBUG if
+	 		." ts, stack = " .s CR
+ 		then
  		1 while
  			DUP TopReg @ 1 -  SWAP - check // 1 - since TopReg points to next reg to insert
  		loop asReg,
-
- 		." ts, topReg = " TopReg @ . CR
+ 		DEBUG if
+	 		." ts, topReg = " TopReg @ . CR
+ 		then
  	;
  
  	: restStck // ( -- )
@@ -222,7 +258,10 @@ STACKTLS ->
  	: rgStPos, TopReg @ OVER - 1 - asReg, SWAP ; // ( n -- pos) get correct register of nth stack item in regs
  	: CLSR_PSH // ( n -- )
  		// picks nth item from the stack into the closure
- 		." START CLOSURE PUSH: " .s CR
+ 		DEBUG if
+	 		." START CLOSURE PUSH: " .s CR
+ 		then
+
  		DUP TopReg @ < if
  			rgStPos, acc, SWAP ClsHpPos sti[];
  		else 
@@ -231,11 +270,15 @@ STACKTLS ->
  			temp, SWAP sp, SWAP ldi[];
  			temp, SWAP acc, SWAP  sti[]; 
  		then
- 		." END CLOSURE PUSH: " .s CR
+ 		DEBUG if
+	 		." END CLOSURE PUSH: " .s CR
+ 		then
  	;
  
  	: dupFrame  // ( -- )
- 		." start dupframe"
+ 		DEBUG if
+ 			." start dupframe"
+ 		then
  		stu, 3 nskip; // using nskips for a reliable number of instructions
  			temp, HpLimit ldi;
  			temp, sp, 4 # cma[]; // need space for 4 registers, so check there is space
@@ -249,8 +292,10 @@ STACKTLS ->
  		1 ts, sp, STACK 2 CELLS + sti[];
  		0 ts, sp, STACK 3 CELLS + sti[];
 
- 		 sp, 4 CELLS # adda;
- 		." Done dupFrame\n"
+ 		sp, 4 CELLS # adda;
+ 		DEBUG if
+	 		." Done dupFrame\n"
+ 		then
  	;
  ;;
 

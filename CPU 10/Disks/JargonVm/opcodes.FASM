@@ -444,7 +444,7 @@ STACKTLS ->
 			t_SUM @ TypeChk;
 		
 			temp, acc, HEAP 2 CELLS + ldi[]; // load the value
-			temp, pushr; // put it onto stack
+			temp, 0 ts, mov; // put it onto stack
 		
 			acc, acc, HEAP 1 CELLS + ldi[]; // get the marker
 			acc, testr, SWAP bra; // if an INR, then goto the label, otherwise stay here
@@ -550,7 +550,7 @@ STACKTLS ->
 		;
 
 		: BEND_R // ( -- )
-			1 recentr;
+			0 DROP // The apply in a case block means that we always have TopReg = 4 at the end of a case branch
 		;
 
 		: BSTART_L // ( -- n )
@@ -559,7 +559,7 @@ STACKTLS ->
 		;
 
 		: BEND_L // ( -- )
-			1 recentr;
+			0 DROP
 		;
 
 	;;
