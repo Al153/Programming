@@ -3,6 +3,7 @@ import java.io.{File, PrintWriter}
 import BackEnd.CompileAST
 import Intermediate.CSTTranslator
 import Intermediate.Creole.CreoleTranslator
+import Intermediate.Prototype.PrototypeTranslator
 import Intermediate.Slang.SlangTranslator
 import Parsing.Parser
 import Typing.Type
@@ -29,7 +30,8 @@ object Main {
 
     val GetCSTTranslator: HashMap[String, CSTTranslator] = new HashMap[String, CSTTranslator] + (
       "slang" -> new SlangTranslator,
-      "creole" -> new CreoleTranslator
+      "creole" -> new CreoleTranslator,
+      "PrototypeTypingSyntax" -> new PrototypeTranslator
     )
 
     val CSTToAST = GetCSTTranslator(language)
