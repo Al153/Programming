@@ -38,6 +38,7 @@ object Main {
 
     ifFileExists(sourceFile, (source: String) => {
       val CST = new Parser(Source.fromInputStream(cfg).mkString).parseString(source)
+      println("Parse done")
       val AST = CSTToAST(CST)
       println("CST = " + CST.pretty())
       println("AST = " + AST.pretty())

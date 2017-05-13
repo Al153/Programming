@@ -1,5 +1,5 @@
 ElementaryTokens:
-	" " | "\t" | "\n" | "\r" | "(" | ")" | "-"| "~"| "+"| "-"| "*"| "<"| "=" | "&" | "|" | ">" | "?" | ":" | ";" | "," | "!"
+	" " | "\t" | "\n" | "\r" | "(" | ")" | "-"| "~"| "+"| "-"| "*"| "<"| "=" | "&" | "|" | ">" | "?" | ":" | ";" | "," | "!" | "'"
 Ignore:
 	" " | "\t" | "\n" | "\r"
 Terminals:
@@ -28,7 +28,8 @@ Grammar:
 	addop -> "+" | "-"
 	assop -> assign
 
-	expr -> expr addop term | term | lambda | let | assignment | while_loop | seq | case_expr | tDefinition | matchWith -- changed seq rule too
+    expr -> sexpr | sexpr ";" expr -- this new formulation of expression will need a new CSTToAST case
+	sexpr -> sexpr addop term | term | lambda | let | assignment | while_loop  | case_expr | tDefinition | matchWith
 
 	term -> term mulop factor | factor
 
@@ -38,7 +39,7 @@ Grammar:
 
 
 
-	seq -> expr | expr ";" seq
+
 	ternary_expr -> "if" expr "then" expr "else" expr "end"
 	while_loop -> "while" expr "do" expr "end"
 	lambda -> "fun" "(" id opt_t_expr ")" arrow expr "end"

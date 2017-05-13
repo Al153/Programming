@@ -66,7 +66,7 @@ object CompileAST {
         val (types1, defs, c1) = comp(types, e, vmap)
         (types1, defs, c1 ++ List(new BMakeInr))
 
-      case SCase(e1, lam1, lam2) => // TODO: this implementation
+      case SCase(e1, lam1, lam2) =>
 
         val inr_label = newLabel.apply
         val after_inr_label = newLabel.apply

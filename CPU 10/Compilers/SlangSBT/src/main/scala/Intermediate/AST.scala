@@ -719,3 +719,12 @@ sealed trait AST {
       e.getFreeAux(id::bound, getFreeLambda(id::bound, free, l))
     }
   }
+
+//case class SDefType(types: List[AlgebraicType], expr: AST) extends AST {
+  // TODO nodes of this class represent the result of
+    // datatype 'a x = ...
+  // It defines the types of constructors
+  // Compiling this node should also create a closure for constructor
+  // Typechecking it should define the function types of constructors
+
+// }

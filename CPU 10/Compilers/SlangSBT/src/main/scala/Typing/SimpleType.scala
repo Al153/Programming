@@ -46,4 +46,15 @@ case class TInt() extends SimpleType {
   }
 }
 
-// case class TId(id: String) extends SimpleType // Will be used in a full Hindley Milner type system
+case class TId(id: String) extends SimpleType{
+  // Represents user defined types
+  // We do nominal type comparison
+  override def pretty(): String = id
+
+  override def equalTo(s: SimpleType): Boolean = {
+    s match {
+      case TId(id2) => id2 == id
+      case _ => false
+    }
+  }
+}

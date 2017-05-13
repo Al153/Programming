@@ -4,9 +4,6 @@ import Logging.PrettyPrinter
 import Exceptions._
 import Parsing.SyntaxTree.{ConcreteSyntaxTree, NonTerminal, Terminal}
 
-// TODO: fix || token error
-// TODO: comm
-
 class Parser(var config: String) {
   val configuration:ParserConfiguration = new ParserConfiguration(config)
   val lexer: Lexer = configuration.getLexer
@@ -15,7 +12,9 @@ class Parser(var config: String) {
 
   def parseString(input:String): ConcreteSyntaxTree = {
     val preprocessed = PreProcessor.preProcess(input)
+    println("Preprocessed")
     var tokens = lexer.lex(preprocessed)
+    println("Lexed")
     tokens = tokens :+ Terminal("END", "END")
     val sentinel = NonTerminal("SENTINEL", Nil)
     sentinel.setState(0)
@@ -56,8 +55,6 @@ class Parser(var config: String) {
             }
           }
         case Done => top
-
-
       }
     }
   }
@@ -66,7 +63,7 @@ class Parser(var config: String) {
     val lookahead = inputStream.head
     val state = stack.head.getState
     val msg = " \nUnexpected token: " + lookahead.value +
-      "\nNear row: " + lookahead.getCol + " column: " + lookahead.getRow +
+      "\nNear row: " + lookahead.getRow + " column: " + lookahead.getCol +
       "\nState: " + state + " expected tokens: " + getExpectedTransitions(state)
 
     throw SlangSyntaxError(msg)
