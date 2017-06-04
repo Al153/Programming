@@ -26,7 +26,7 @@ fun takeDrop([], _) = ([], []) (* Splits a list by some number*)
 		end;
 
 fun
-	player (Lf(v), _, _) = v (* At a leaf, return the value *)
+	player (Lf(v), _, _) = v (* At a leaf, return the value   *)
 	| player (Br(children), alpha, beta) =
 		playerRound children minInt alpha beta	(* Otherwise do a prune at of the children*)
 and

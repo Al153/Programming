@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AC3.jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/AC3_jar</output-path>
+    <root id="archive" name="artificialntelligence.jar">
+      <element id="module-output" name="artificialntelligence" />
+      <element id="extracted-dir" path="$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.10.2.jar" path-in-jar="/" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src" />
+    </root>
+  </artifact>
+</component>

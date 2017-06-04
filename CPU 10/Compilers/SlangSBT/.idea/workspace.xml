@@ -8,63 +8,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="703edd54-a801-4173-9cd2-c8c8fc7b4d8c" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/.spec" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/Badgers.PAL" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/Badgers.source" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/Badgers.spec" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/cll.PAL" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/cll.spec" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/exampleProgram.fcl" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/example_fcl.spec" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/fcl.PAL" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/fcl.spec" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/hackScriptExample.hs" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/hackscript.pal" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/parantheses.example" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/parantheses.pal" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/parantheses.spec" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/slang.pal" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Examples/slang.spec" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/DFA_builder.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/Errors.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/LR1_parser.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/LexerGenerator.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/NFA_builder.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/PALgenerator.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/lexerRegex.grammar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/lexerRegex.parse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/parseTreeNodes.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/Generator/parser_generator_neatened.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/PAL.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/ParserLexer/LR1_parser.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/ParserLexer/ParserAndLexer.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/ParserLexer/TerminalLexer.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/ParserLexer/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/ParserLexer/errors.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/ParserLexer/parseTreeNodes.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/ParserLexer/strippedDFA.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../../../ParserLexerGenerator/readme.txt" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Main$$anonfun$main$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Main$$anonfun$main$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Main$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Main$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$getExpectedTransitions$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$getExpectedTransitions$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$getExpectedTransitions$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$getExpectedTransitions$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyActionTable$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyActionTable$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyActionTable$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyActionTable$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyGotoTable$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyGotoTable$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyGotoTable$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser$$anonfun$prettyGotoTable$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/Parsing/Parser.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../C Source/10_2 IMD Values and reg optimisation/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../../C Source/10_2 IMD Values and reg optimisation/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/slangsbt.iml" afterPath="$PROJECT_DIR$/.idea/modules/slangsbt.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/PrototypeTypingSyntax.pal" afterPath="$PROJECT_DIR$/src/main/resources/PrototypeTypingSyntax.pal" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/PrototypeTypingSyntax.spec" afterPath="$PROJECT_DIR$/src/main/resources/PrototypeTypingSyntax.spec" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/BackEnd/CompileAST.scala" afterPath="$PROJECT_DIR$/src/main/scala/BackEnd/CompileAST.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Compiler.scala" afterPath="$PROJECT_DIR$/src/main/scala/Compiler.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Intermediate/AST.scala" afterPath="$PROJECT_DIR$/src/main/scala/Intermediate/AST.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Parsing/Parser.scala" afterPath="$PROJECT_DIR$/src/main/scala/Parsing/Parser.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Typing/SimpleType.scala" afterPath="$PROJECT_DIR$/src/main/scala/Typing/SimpleType.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/PrototypeTypingSyntax.pal" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/PrototypeTypingSyntax.pal" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/PrototypeTypingSyntax.spec" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/PrototypeTypingSyntax.spec" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt$sources_2.11/1.0/resolved.xml.properties" afterPath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt$sources_2.11/1.0/resolved.xml.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt$sources_2.11/1.0/resolved.xml.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/default/slangsbt$sources_2.11/1.0/resolved.xml.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-compile-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-compile-internal.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-compile.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-compile.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-docs.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-docs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-optional.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-optional.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-plugin.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-plugin.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-pom.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-provided.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-provided.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-runtime-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-runtime-internal.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-runtime.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-runtime.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-scala-tool.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-scala-tool.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-sources.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-sources.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-test-internal.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-test-internal.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-test.xml" afterPath="$PROJECT_DIR$/target/resolution-cache/reports/default-slangsbt$sources_2.11-test.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/streams/$global/updateClassifiers/$global/streams/out" afterPath="$PROJECT_DIR$/target/streams/$global/updateClassifiers/$global/streams/out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../supervision work/Artificialntelligence/.idea/misc.xml" afterPath="$PROJECT_DIR$/../../../supervision work/Artificialntelligence/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../supervision work/Artificialntelligence/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../../../supervision work/Artificialntelligence/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/project/project/target/" />
@@ -108,11 +72,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.43062827">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="Compiler.scala" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Compiler.scala" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/scala/Compiler.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="272">
-                  <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="27" />
+                <state relative-caret-position="266">
+                  <caret line="33" column="10" lean-forward="false" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
                   <folding>
                     <element signature="e#0#34#0" expanded="true" />
                   </folding>
@@ -125,9 +89,7 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="119">
                   <caret line="10" column="6" lean-forward="false" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
-                  <folding>
-                    <element signature="e#28#100#0" expanded="false" />
-                  </folding>
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -155,8 +117,8 @@
           <file leaf-file-name="AST.scala" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/scala/Intermediate/AST.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="127">
-                  <caret line="691" column="0" lean-forward="true" selection-start-line="691" selection-start-column="0" selection-end-line="691" selection-end-column="0" />
+                <state relative-caret-position="11696">
+                  <caret line="691" column="0" lean-forward="false" selection-start-line="691" selection-start-column="0" selection-end-line="691" selection-end-column="0" />
                   <folding>
                     <marker date="1494693058479" expanded="true" signature="24681:24687" ph="{...}" />
                   </folding>
@@ -167,18 +129,18 @@
           <file leaf-file-name="PrototypeTypingSyntax.pal" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/resources/PrototypeTypingSyntax.pal">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-592">
+                <state relative-caret-position="510">
                   <caret line="30" column="102" lean-forward="false" selection-start-line="30" selection-start-column="102" selection-end-line="30" selection-end-column="102" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Parser.scala" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Parser.scala" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/Parser.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="221">
-                  <caret line="15" column="40" lean-forward="true" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
+                <state relative-caret-position="646">
+                  <caret line="40" column="28" lean-forward="false" selection-start-line="40" selection-start-column="28" selection-end-line="40" selection-end-column="28" />
                   <folding />
                 </state>
               </provider>
@@ -189,7 +151,9 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="357">
                   <caret line="23" column="34" lean-forward="false" selection-start-line="23" selection-start-column="34" selection-end-line="23" selection-end-column="34" />
-                  <folding />
+                  <folding>
+                    <element signature="e#17#60#0" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -201,8 +165,8 @@
           <file leaf-file-name="CompileAST.scala" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/scala/BackEnd/CompileAST.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="354">
-                  <caret line="90" column="9" lean-forward="true" selection-start-line="90" selection-start-column="9" selection-end-line="90" selection-end-column="9" />
+                <state relative-caret-position="1462">
+                  <caret line="90" column="9" lean-forward="false" selection-start-line="90" selection-start-column="9" selection-end-line="90" selection-end-column="9" />
                   <folding />
                 </state>
               </provider>
@@ -211,7 +175,7 @@
           <file leaf-file-name="Type.scala" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/scala/Typing/Type.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="193">
+                <state relative-caret-position="357">
                   <caret line="21" column="11" lean-forward="false" selection-start-line="21" selection-start-column="11" selection-end-line="21" selection-end-column="11" />
                   <folding />
                 </state>
@@ -221,7 +185,7 @@
           <file leaf-file-name="SimpleType.scala" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/scala/Typing/SimpleType.scala">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="773">
+                <state relative-caret-position="986">
                   <caret line="58" column="3" lean-forward="false" selection-start-line="58" selection-start-column="3" selection-end-line="58" selection-end-column="3" />
                   <folding />
                 </state>
@@ -241,7 +205,7 @@
           <file leaf-file-name="PrototypeTypingSyntax.spec" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/resources/PrototypeTypingSyntax.spec">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-51">
+                <state relative-caret-position="0">
                   <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
                   <folding />
                 </state>
@@ -262,7 +226,7 @@
             <entry file="file://$PROJECT_DIR$/src/main/resources/creole.pal">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="394">
-                  <caret line="40" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="64" selection-end-column="33" />
+                  <caret line="40" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="64" selection-end-column="33" />
                   <folding />
                 </state>
               </provider>
@@ -271,8 +235,8 @@
           <file leaf-file-name="slang.pal" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/resources/slang.pal">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="284">
-                  <caret line="43" column="30" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="56" selection-end-column="74" />
+                <state relative-caret-position="731">
+                  <caret line="43" column="30" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="56" selection-end-column="74" />
                   <folding />
                 </state>
               </provider>
@@ -283,9 +247,7 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="221">
                   <caret line="15" column="73" lean-forward="false" selection-start-line="15" selection-start-column="73" selection-end-line="15" selection-end-column="73" />
-                  <folding>
-                    <element signature="e#0#25#0" expanded="false" />
-                  </folding>
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -419,9 +381,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
+    <option name="x" value="125" />
+    <option name="y" value="114" />
+    <option name="width" value="1932" />
     <option name="height" value="1056" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -458,8 +420,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -511,66 +473,10 @@
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scala" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Typing" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SlangSBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SlangSBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scala" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Intermediate" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SlangSBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SlangSBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -582,7 +488,7 @@
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="js.eslint.eslintPackage" value="" />
     <property name="js-jscs-nodeInterpreter" value="C:\Program Files\nodejs\node.exe" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../supervision work/Artificialntelligence/build.sbt" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../supervision work/Artificialntelligence" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.scala.settings.ScalaProjectSettingsConfigurable" />
   </component>
@@ -1140,7 +1046,7 @@
     </list>
   </component>
   <component name="SbtLocalSettings">
-    <option name="lastUpdateTimestamp" value="1494667534457" />
+    <option name="lastUpdateTimestamp" value="1495563211671" />
     <option name="availableProjects">
       <map>
         <entry>
@@ -1225,11 +1131,16 @@
       <workItem from="1494019772375" duration="614000" />
       <workItem from="1494592594171" duration="4649000" />
       <workItem from="1494667498682" duration="9140000" />
+      <workItem from="1494954948891" duration="614000" />
+      <workItem from="1495292234237" duration="632000" />
+      <workItem from="1495391735629" duration="931000" />
+      <workItem from="1495440269673" duration="604000" />
+      <workItem from="1495563170764" duration="176000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="310910000" />
+    <option name="totallyTimeSpent" value="313867000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1241,39 +1152,39 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="125" y="114" width="1932" height="1056" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31982476" sideWeight="0.51458335" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31078225" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.58064514" sideWeight="0.90833336" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="SBT" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31982476" sideWeight="0.51458335" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4281184" sideWeight="0.48541668" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20416667" sideWeight="0.9003286" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875264" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17849687" sideWeight="0.9003286" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296875" sideWeight="0.099671416" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31078225" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.58064514" sideWeight="0.90833336" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32875264" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1407,7 +1318,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="13" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1462,9 +1372,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
           <caret line="23" column="3" lean-forward="false" selection-start-line="23" selection-start-column="3" selection-end-line="23" selection-end-column="3" />
-          <folding>
-            <element signature="e#22#45#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1479,7 +1386,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="20" column="47" lean-forward="false" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1487,9 +1393,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="867">
           <caret line="53" column="23" lean-forward="false" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="23" />
-          <folding>
-            <element signature="e#22#54#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1497,7 +1400,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="10" column="23" lean-forward="false" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1513,7 +1415,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1531,9 +1432,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="10" column="6" lean-forward="false" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
-          <folding>
-            <element signature="e#28#100#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1557,16 +1456,8 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="23" column="34" lean-forward="false" selection-start-line="23" selection-start-column="34" selection-end-line="23" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/Compiler.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="27" />
           <folding>
-            <element signature="e#0#34#0" expanded="true" />
+            <element signature="e#17#60#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1575,9 +1466,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="15" column="73" lean-forward="false" selection-start-line="15" selection-start-column="73" selection-end-line="15" selection-end-column="73" />
-          <folding>
-            <element signature="e#0#25#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1591,7 +1480,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/PrototypeTypingSyntax.spec">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -1599,32 +1488,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/BackEnd/CompileAST.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="90" column="9" lean-forward="true" selection-start-line="90" selection-start-column="9" selection-end-line="90" selection-end-column="9" />
+        <state relative-caret-position="1462">
+          <caret line="90" column="9" lean-forward="false" selection-start-line="90" selection-start-column="9" selection-end-line="90" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/Typing/Type.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
+        <state relative-caret-position="357">
           <caret line="21" column="11" lean-forward="false" selection-start-line="21" selection-start-column="11" selection-end-line="21" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/Typing/AlgebraicType.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="52" lean-forward="false" selection-start-line="15" selection-start-column="52" selection-end-line="15" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/Typing/AlgebraicType.scala" />
     <entry file="file://$PROJECT_DIR$/src/main/scala/Intermediate/AST.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="691" column="0" lean-forward="true" selection-start-line="691" selection-start-column="0" selection-end-line="691" selection-end-column="0" />
+        <state relative-caret-position="11696">
+          <caret line="691" column="0" lean-forward="false" selection-start-line="691" selection-start-column="0" selection-end-line="691" selection-end-column="0" />
           <folding>
             <marker date="1494693058479" expanded="true" signature="24681:24687" ph="{...}" />
           </folding>
@@ -1633,7 +1515,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/PrototypeTypingSyntax.pal">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-592">
+        <state relative-caret-position="510">
           <caret line="30" column="102" lean-forward="false" selection-start-line="30" selection-start-column="102" selection-end-line="30" selection-end-column="102" />
           <folding />
         </state>
@@ -1641,41 +1523,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/Typing/SimpleType.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="773">
+        <state relative-caret-position="986">
           <caret line="58" column="3" lean-forward="false" selection-start-line="58" selection-start-column="3" selection-end-line="58" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/Parser.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="15" column="40" lean-forward="true" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/slang.pal">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="43" column="30" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="56" selection-end-column="74" />
+        <state relative-caret-position="731">
+          <caret line="43" column="30" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="56" selection-end-column="74" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/Creole2.pal">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-255">
-          <caret line="24" column="36" lean-forward="false" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/Creole2.pal" />
     <entry file="file://$PROJECT_DIR$/src/main/resources/creole.pal">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="394">
-          <caret line="40" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="64" selection-end-column="33" />
+          <caret line="40" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="64" selection-end-column="33" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/Parsing/Parser.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="40" column="28" lean-forward="false" selection-start-line="40" selection-start-column="28" selection-end-line="40" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/Compiler.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="33" column="10" lean-forward="false" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -1,0 +1,33 @@
+// Code for new  jargon VM opcodes ()
+	// For now, generalisations of tuple
+: BMK_OBJ // ( header -- ) create an ML style constructed object of header type and populate its fields from the stack
+ 		DEBUG if
+			dumpStack
+			[ str( \nMK_OBJ)] echoKp;
+		then
+
+		DUP heapAllc // allocate a heap object into acc. Temp holds the HeapReg index
+		DUP TYPELENS SWAP INT[@] // get length of type
+		TYPEOFFS INT[@] // get offset
+		SWAP OVER - // ( stack = offset, number of objects)
+		while loop // TODO loop over generating the bottom
+		// TODO: generalise this:
+			1 ts, acc, HEAP 1 CELLS + sti[]; // fst element
+			0 ts, acc, HEAP 2 CELLS + sti[]; // snd element
+		temp, 1 ts, mov;
+		1 pop
+;
+
+: B_GETNTH // ( n -- ) get the nth member of Object on top of stack
+	// TODO: generalise fst code
+
+			DEBUG if
+				dumpStack
+				[ str( \n #n)] echoKp;
+			then
+
+			acc, 0 ts, HEAPREG ldi[];
+			// TODO: typecheck to make sure this is long enough
+			// TODO add offset to acc
+			0 ts, SWAP acc, SWAP HEAP SWAP CELLS + ldi[]; // load up from the index
+;
