@@ -7,15 +7,15 @@
 		revision="1.0"
 		conf="compile-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170424124431"/>
+		date="20170607212720"/>
 	<dependencies>
 		<module organisation="org.rogach" name="scallop_2.11">
 			<revision name="2.1.1" status="release" pubdate="20170227223700" resolver="public" artresolver="public" homepage="https://github.com/scallop/scallop" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="21">
 				<license name="MIT License" url="http://www.opensource.org/licenses/mit-license.php"/>
-				<metadata-artifact status="successful" details="" size="1983" time="150" location="C:\Users\Al\.ivy2\cache\org.rogach\scallop_2.11\ivy-2.1.1.xml" searched="true" original-local-location="C:\Users\Al\.ivy2\cache\org.rogach\scallop_2.11\ivy-2.1.1.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/rogach/scallop_2.11/2.1.1/scallop_2.11-2.1.1.pom"/>
+				<metadata-artifact status="successful" details="" size="1983" time="342" location="C:\Users\Al\.ivy2\cache\org.rogach\scallop_2.11\ivy-2.1.1.xml" searched="true" original-local-location="C:\Users\Al\.ivy2\cache\org.rogach\scallop_2.11\ivy-2.1.1.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/rogach/scallop_2.11/2.1.1/scallop_2.11-2.1.1.pom"/>
 				<caller organisation="default" name="slangsbt_2.11" conf="compile-internal, compile, provided, optional" rev="2.1.1" rev-constraint-default="2.1.1" rev-constraint-dynamic="2.1.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="scallop_2.11" type="jar" ext="jar" status="successful" details="" size="714821" time="170" location="C:\Users\Al\.ivy2\cache\org.rogach\scallop_2.11\jars\scallop_2.11-2.1.1.jar">
+					<artifact name="scallop_2.11" type="jar" ext="jar" status="successful" details="" size="714821" time="1412" location="C:\Users\Al\.ivy2\cache\org.rogach\scallop_2.11\jars\scallop_2.11-2.1.1.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/rogach/scallop_2.11/2.1.1/scallop_2.11-2.1.1.jar"/>
 					</artifact>
 				</artifacts>

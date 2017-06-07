@@ -76,7 +76,7 @@ READINT !LABEL
 				equ, if;
 					// decrement i, if it's valid to
 					i, testr, i, one, csubr;
-					8 # oca; // draw a backspace adn space to overwrite deleted char
+					8 # oca; // draw a backspace and space to overwrite deleted char
 					32 # oca;
 					zro, i, inBuf stb[];
 				else;

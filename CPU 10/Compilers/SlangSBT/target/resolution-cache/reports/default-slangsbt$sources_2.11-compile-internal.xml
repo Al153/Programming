@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="compile-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20170523191327"/>
+		date="20170607212945"/>
 	<dependencies>
 		<module organisation="org.rogach" name="scallop_2.11">
 			<revision name="2.1.1" status="release" pubdate="20170227223700" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/scallop/scallop" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="17">

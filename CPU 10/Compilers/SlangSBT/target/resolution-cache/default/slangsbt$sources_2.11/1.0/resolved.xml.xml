@@ -4,7 +4,7 @@
 		module="slangsbt$sources_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20170523191327"
+		publication="20170607212945"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>

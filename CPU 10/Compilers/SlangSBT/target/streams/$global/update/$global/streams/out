@@ -617,7 +617,7 @@
 [debug] 	public: downloading https://repo1.maven.org/maven2/org/rogach/scallop_2.11/2.1.1/scallop_2.11-2.1.1.pom
 [debug] 	public: downloading https://repo1.maven.org/maven2/org/rogach/scallop_2.11/2.1.1/scallop_2.11-2.1.1.pom.sha1
 [debug] sha1 OK for https://repo1.maven.org/maven2/org/rogach/scallop_2.11/2.1.1/scallop_2.11-2.1.1.pom
-[debug] 	[SUCCESSFUL ] org.rogach#scallop_2.11;2.1.1!scallop_2.11.pom(pom.original) (150ms)
+[debug] 	[SUCCESSFUL ] org.rogach#scallop_2.11;2.1.1!scallop_2.11.pom(pom.original) (342ms)
 [debug] 		tried C:\Users\Al\.ivy2\local\org.rogach\scallop_2.11\2.1.1\jars\scallop_2.11.jar
 [debug] 		tried https://repo1.maven.org/maven2/org/rogach/scallop_2.11/2.1.1/scallop_2.11-2.1.1.jar
 [debug] 	found org.rogach#scallop_2.11;2.1.1 in public
@@ -4126,7 +4126,7 @@
 [debug] 	public: downloading https://repo1.maven.org/maven2/org/rogach/scallop_2.11/2.1.1/scallop_2.11-2.1.1.jar
 [debug] 	public: downloading https://repo1.maven.org/maven2/org/rogach/scallop_2.11/2.1.1/scallop_2.11-2.1.1.jar.sha1
 [debug] sha1 OK for https://repo1.maven.org/maven2/org/rogach/scallop_2.11/2.1.1/scallop_2.11-2.1.1.jar
-[info] 	[SUCCESSFUL ] org.rogach#scallop_2.11;2.1.1!scallop_2.11.jar (170ms)
+[info] 	[SUCCESSFUL ] org.rogach#scallop_2.11;2.1.1!scallop_2.11.jar (1412ms)
 [debug] 	[NOT REQUIRED] com.typesafe.play#play-iteratees_2.11;2.4.2!play-iteratees_2.11.jar
 [debug] 	[NOT REQUIRED] com.typesafe.play#play-functional_2.11;2.4.2!play-functional_2.11.jar
 [debug] 	[NOT REQUIRED] com.typesafe.play#play-datacommons_2.11;2.4.2!play-datacommons_2.11.jar
@@ -4149,7 +4149,7 @@
 [debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-xml_2.11;1.0.4!scala-xml_2.11.jar(bundle)
 [debug] 	[NOT REQUIRED] org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4!scala-parser-combinators_2.11.jar(bundle)
 [debug] 	[NOT REQUIRED] jline#jline;2.12.1!jline.jar
-[debug] :: resolution report :: resolve 2478ms :: artifacts dl 210ms
+[debug] :: resolution report :: resolve 12521ms :: artifacts dl 1443ms
 [debug] 	report for default#slangsbt_2.11;1.0 compile produced in C:\dev\Programming\CPU 10\Compilers\SlangSBT\target\resolution-cache\reports\default-slangsbt_2.11-compile.xml
 [debug] 	report for default#slangsbt_2.11;1.0 runtime produced in C:\dev\Programming\CPU 10\Compilers\SlangSBT\target\resolution-cache\reports\default-slangsbt_2.11-runtime.xml
 [debug] 	report for default#slangsbt_2.11;1.0 test produced in C:\dev\Programming\CPU 10\Compilers\SlangSBT\target\resolution-cache\reports\default-slangsbt_2.11-test.xml
@@ -4163,5 +4163,5 @@
 [debug] 	report for default#slangsbt_2.11;1.0 docs produced in C:\dev\Programming\CPU 10\Compilers\SlangSBT\target\resolution-cache\reports\default-slangsbt_2.11-docs.xml
 [debug] 	report for default#slangsbt_2.11;1.0 pom produced in C:\dev\Programming\CPU 10\Compilers\SlangSBT\target\resolution-cache\reports\default-slangsbt_2.11-pom.xml
 [debug] 	report for default#slangsbt_2.11;1.0 scala-tool produced in C:\dev\Programming\CPU 10\Compilers\SlangSBT\target\resolution-cache\reports\default-slangsbt_2.11-scala-tool.xml
-[debug] 	resolve done (2478ms resolve - 210ms download)
+[debug] 	resolve done (12521ms resolve - 1443ms download)
 [info] Done updating.
