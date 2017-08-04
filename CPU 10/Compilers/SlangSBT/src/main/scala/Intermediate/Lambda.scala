@@ -1,34 +1,38 @@
 package Intermediate
 
 import BackEnd.newLabel
-import Exceptions.LambdaUntypedException
 import Logging.PrettyPrinter
-import Typing.{TFn, TVariable, Type}
+import Typing.{TFn, Type, newTypeParameter}
 
 class Lambda(bound: String, e: AST, t: Option[Type]) {
+  // Lambdas have bound types (type of bound var is not cloned)
+  def getExpr : AST = e
+  def getArg: String = bound
+  protected val argType: Type = newTypeParameter.newVar()
+
+
+  def getArgType: Type = {
+      argType
+  }
+
   def pretty(indent: Int = 0): String = {
     val i = PrettyPrinter.indentation(indent)
     val typeString = t match {
       case None => ""
       case Some(t1) => " : " + t1.pretty()
     }
-    i + "LAMBDA " + bound + typeString + " {\n" + e.pretty(indent + 1) + "\n" + i + "}"
+    i + "B_LAMBDA " + bound + typeString + " {\n" + e.pretty(indent + 1) + "\n" + i + "}"
   }
-  def getExpr : AST = e
-  def getArg: String = bound
-  private val argType = new TVariable
 
-  def getType(gamma: Map[String, Type]): Type = {
-    val resultType = e.getType(gamma + (bound -> argType)) // //, nongen + argType)
+  def getType(gamma: Map[String, Type], noClone: Set[String]): Type = {
+    val newNoClone = noClone + bound
+    val resultType = e.getType(gamma + (bound -> argType), newNoClone) // //, nongen + argType)
     TFn(argType, resultType)
-  }
-  def getArgType: Type = {
-      argType
   }
 
   def alpha(oldName: String, newName: String): Lambda = {
     if (oldName == bound) { // if bound variable has the same name as the one to change,
-                            // then all instances of oldName are actually instances of bound
+      // then all instances of oldName are actually instances of bound
       this
     } else { // otherwise
       val (checkedExpr, checkedBound) =
@@ -39,7 +43,7 @@ class Lambda(bound: String, e: AST, t: Option[Type]) {
           (e,bound)
         }
 
-      new Lambda(checkedBound, checkedExpr.alpha(oldName, newName), t)
+     new Lambda(checkedBound, checkedExpr.alpha(oldName, newName), t)
     }
   }
 }

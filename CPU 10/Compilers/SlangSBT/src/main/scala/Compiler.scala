@@ -42,7 +42,7 @@ object Main {
       val AST = CSTToAST(CST)
       println("CST = " + CST.pretty())
       println("AST = " + AST.pretty())
-      println("Type = " + AST.getType(new HashMap[String, Type]).pretty())
+      println("Type = " + AST.getType(new HashMap[String, Type], Set()).pretty())
       val byteCode = CompileAST(AST)
       println("Bytecode = \n" + byteCode)
       val pw = new PrintWriter(new File(outputFile))

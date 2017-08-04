@@ -24,6 +24,7 @@ class CreoleTranslator extends  CSTTranslator{
         case "GOAL" => NonTerminal(nodeType, children map slangify)
         case "PROGRAM" => NonTerminal(nodeType, children map slangify)
         case "expr" => NonTerminal(nodeType, children map slangify)
+        case "sum" => NonTerminal("expr", children map slangify) // turn a sum node to an expr node
         case "term" => NonTerminal(nodeType, children map slangify)
         case "factor" => NonTerminal(nodeType, children map slangify)
         case "composition" => NonTerminal(nodeType, children map slangify)
@@ -33,8 +34,7 @@ class CreoleTranslator extends  CSTTranslator{
         case "while_loop" => NonTerminal(nodeType, children map slangify)
         case "lambda" => NonTerminal(nodeType, children map slangify)
         case "let" =>
-          println(children.mkString("\n\t"))
-          val _ :: definitions :: _ :: expr :: _ :: Nil = children
+          val _ :: definitions :: _ :: expr :: Nil = children
 
           createLetDefinitions(definitions, slangify(expr))
 
@@ -42,7 +42,7 @@ class CreoleTranslator extends  CSTTranslator{
         case "assignment" => NonTerminal(nodeType, children map slangify)
         case "case_expr" => NonTerminal(nodeType, children map slangify)
         case _ => c
-        case _ => throw new MissingCSTCaseException(nodeType, children)
+        case _ => throw MissingCSTCaseException(nodeType, children)
       }
     }
   }
@@ -59,22 +59,22 @@ class CreoleTranslator extends  CSTTranslator{
             case List(Terminal("\"begin\"", _), seq: NonTerminal, Terminal("\"end\"", _)) =>
               convert(seq)
             case head :: Nil => convert(head)
-            case _ => throw new MissingCSTCaseException("expr", children)
+            case _ => throw MissingCSTCaseException("expr", children)
           }
           case "term" => children match {
             case List(e1: NonTerminal, op: NonTerminal, e2: NonTerminal) =>
               convertOp(op, convert(e1), convert(e2))
             case expr :: Nil => convert(expr)
-            case _ => throw new MissingCSTCaseException("term", children)
+            case _ => throw MissingCSTCaseException("term", children)
           }
           case "factor" => children match {
             case nt::Nil => convert(nt)
-            case _ => throw new MissingCSTCaseException("factor", children)
+            case _ => throw MissingCSTCaseException("factor", children)
           }
           case "composition" => children match {
             case expr :: value :: Nil => SApp(convert(expr), convert(value))
             case value :: Nil => convert(value)
-            case _ => throw new MissingCSTCaseException("composition", children)
+            case _ => throw MissingCSTCaseException("composition", children)
           }
           case "value" => children match {
             case NonTerminal("const", _) :: Nil =>
@@ -85,7 +85,7 @@ class CreoleTranslator extends  CSTTranslator{
               SPair(convert(e1), convert(e2))
             case uop :: value :: Nil =>
               convertUOp(uop, convert(value))
-            case _ => throw new MissingCSTCaseException("value", children)
+            case _ => throw MissingCSTCaseException("value", children)
           }
           case "seq" => SSeq(convertSequence(c))
           case "ternary_expr" => children match {
@@ -93,22 +93,21 @@ class CreoleTranslator extends  CSTTranslator{
               Terminal("\"then\"", _) :: eTrue ::
               Terminal("\"else\"", _) :: eFalse ::
               Terminal("\"end\"", _) :: Nil => SIf(convert(cond), convert(eTrue), convert(eFalse))
-            case _ => throw new MissingCSTCaseException("ternary_expr", children)
+            case _ => throw MissingCSTCaseException("ternary_expr", children)
           }
           case "while_loop" => children match {
             case Terminal("\"while\"", _) :: cond ::
               Terminal("\"do\"", _) :: expr ::
               Terminal("\"end\"", _) :: Nil => SWhile(convert(cond), convert(expr))
-            case _ => throw new MissingCSTCaseException("while_loop", children)
+            case _ => throw MissingCSTCaseException("while_loop", children)
           }
           case "lambda" => children match {
-            case Terminal("\"fun\"", _) :: Terminal("\"(\"", _) ::
-              Terminal("id", variable) ::
-              tOpt :: Terminal("\")\"", _) ::
+            case Terminal("\"fun\"", _) ::
+              Terminal("id", variable) :: tOpt ::
               NonTerminal("arrow", _) :: expr ::
-              Terminal("\"end\"", _) :: Nil =>
+              /* Terminal("\"end\"", _) :: */ Nil =>
                 SLambda(new Lambda(variable, convert(expr), convertTypeOption(tOpt)))
-            case _ => throw new MissingCSTCaseException("lambda", children)
+            case _ => throw MissingCSTCaseException("lambda", children)
           }
           case "let" => children match {
             case Terminal("\"let\"", _) ::
@@ -116,8 +115,8 @@ class CreoleTranslator extends  CSTTranslator{
               tOpt :: Terminal("\"=\"", _) ::
               binding :: Terminal("\"in\"", _) ::
               expr :: Terminal("\"end\"", _) :: Nil =>
-              SApp(SLambda(new Lambda(variable, convert(expr), convertTypeOption(tOpt))), convert(binding))
-            case _ => throw new MissingCSTCaseException("let", children)
+              SLetVal(variable, convertTypeOption(tOpt), convert(binding), convert(expr))
+            case _ => throw MissingCSTCaseException("let", children)
           }
           case "let_fn" => children match {
             case Terminal("\"let\"", _) ::
@@ -132,7 +131,7 @@ class CreoleTranslator extends  CSTTranslator{
                   new Lambda(argName, convert(fExpr), convertTypeOption(argType)),
                   convertTypeOption(fType), convert(expr)
                 )
-            case _ => throw new MissingCSTCaseException("let_fn", children)
+            case _ => throw MissingCSTCaseException("let_fn", children)
           }
 
           case "let_rec_fn" => children match {
@@ -148,14 +147,14 @@ class CreoleTranslator extends  CSTTranslator{
                 new Lambda(argName, convert(fExpr),  convertTypeOption(argType)),
                 convertTypeOption(fType), convert(expr)
               )
-            case _ => throw new MissingCSTCaseException("let_rec_fn", children)
+            case _ => throw MissingCSTCaseException("let_rec_fn", children)
           }
 
           case "assignment" => children match {
             case lhs :: NonTerminal("assop", _) ::
               expr :: Nil =>
                 SAssign(convert(lhs), convert(expr))
-            case _ => throw new MissingCSTCaseException("assignment", children)
+            case _ => throw MissingCSTCaseException("assignment", children)
           }
 
           case "case_expr" => children match{
@@ -174,9 +173,9 @@ class CreoleTranslator extends  CSTTranslator{
                 new Lambda(leftVar, convert(leftExpr),convertTypeOption(leftType)),
                 new Lambda(rightVar, convert(rightExpr), convertTypeOption(rightType))
               )
-            case _ => throw new MissingCSTCaseException("let_rec_fn", children)
+            case _ => throw MissingCSTCaseException("let_rec_fn", children)
           }
-          case _ => throw new MissingCSTCaseException(nodeType, children)
+          case _ => throw MissingCSTCaseException(nodeType, children)
         }
       case Terminal(nodeType, _) => throw  new MissingCSTCaseException(nodeType, Nil)
     }
@@ -192,7 +191,7 @@ class CreoleTranslator extends  CSTTranslator{
         case Terminal("\"=\"", _) :: Nil => SOp(new EQ, e1, e2)
         case NonTerminal("and", _) :: Nil => SOp(new AND, e1, e2)
         case NonTerminal("or", _) :: Nil => SOp(new OR, e1, e2)
-        case _ => throw new MissingCSTCaseException(opClass, children)
+        case _ => throw MissingCSTCaseException(opClass, children)
       }
       case Terminal(opClass, _) => throw  new MissingCSTCaseException(opClass, Nil)
     }
@@ -209,7 +208,7 @@ class CreoleTranslator extends  CSTTranslator{
         println("Expr = \n" + expression.pretty())
         convertDef(thisDefinition, expression)
       case NonTerminal(nodeType, children) =>
-        throw new MissingCSTCaseException(nodeType, children)
+        throw MissingCSTCaseException(nodeType, children)
     }
   }
 
@@ -228,19 +227,55 @@ class CreoleTranslator extends  CSTTranslator{
 
       case NonTerminal("let_def", List(NonTerminal("let_fun", children))) =>
         val fName = children(1)
-        val argName = children(3)
-        val argTypeOpt = children(4)
-        val fTypeOpt = children(6)
-        val fExpr = slangify(children(8))
+        val fTypeOpt = children(2)
+        val args = children(3)
+        val fExpr = slangify(children(5))
+
+        val (firstArgName, firstArgTypeOpt, topExpr) = convertMultiArgFn(args, fExpr)
 
         val newChildren = Terminal("\"let\"", "\"let\"") :: Terminal("\"rec\"", "\"rec\"") ::
         fName :: Terminal("\"(\"", "\"(\"") ::
-        argName :: argTypeOpt :: Terminal("\")\"", "\")\"") ::
+        firstArgName :: firstArgTypeOpt :: Terminal("\")\"", "\")\"") ::
         fTypeOpt :: Terminal("\"=\"", "\"=\"") ::
-        fExpr :: Terminal("\"in\"", "\"in\"") ::
+        topExpr :: Terminal("\"in\"", "\"in\"") ::
         expr :: Terminal("\"end\"", "\"end\"") :: Nil
 
         NonTerminal("let_rec_fn", newChildren)
+    }
+  }
+
+  private def convertMultiArgFn(
+                                 args: ConcreteSyntaxTree,
+                                 endExpr: ConcreteSyntaxTree
+                               ):
+    (ConcreteSyntaxTree, ConcreteSyntaxTree, ConcreteSyntaxTree) = {
+    args match {
+      case NonTerminal("arg_list", id :: typeOption :: Nil) =>
+        (id, typeOption, endExpr)
+      case NonTerminal("arg_list", id :: typeOption :: rest :: Nil) =>
+        (id, typeOption, createMultiArgLambdas(rest, endExpr))
+    }
+  }
+
+  private def createMultiArgLambdas(args: ConcreteSyntaxTree, expr: ConcreteSyntaxTree): ConcreteSyntaxTree = {
+    // this function converts an arg list and an expression to a series of lambdas
+    args match {
+      case NonTerminal("arg_list", id :: typeOption :: Nil) =>
+        NonTerminal("lambda",
+            Terminal("\"fun\"", "\"fun\"") ::
+            id :: typeOption ::
+            NonTerminal("arrow", Nil) :: expr ::
+            /* Terminal("\"end\"", "\"end\"") :: */
+            Nil
+        )
+      case NonTerminal("arg_list", id :: typeOption :: rest :: Nil) =>
+        NonTerminal("lambda",
+          Terminal("\"fun\"", "\"fun\"") ::
+            id :: typeOption ::
+            NonTerminal("arrow", Nil) :: createMultiArgLambdas(rest, expr) ::
+            /* Terminal("\"end\"", "\"end\"") :: */
+            Nil
+        )
     }
   }
 
@@ -252,11 +287,11 @@ class CreoleTranslator extends  CSTTranslator{
             children match {
               case Terminal("\":\"", _) :: t_expr :: Nil => Some(convertType(t_expr))
               case Nil => None
-              case _ => throw new MissingCSTTypeCaseException(t.nodeType, children)
+              case _ => throw MissingCSTTypeCaseException(t.nodeType, children)
             }
-          case _ => throw new MissingCSTTypeCaseException(t.nodeType, children)
+          case _ => throw MissingCSTTypeCaseException(t.nodeType, children)
         }
-      case _ => throw new MissingCSTTypeCaseException(t.nodeType, Nil)
+      case _ => throw MissingCSTTypeCaseException(t.nodeType, Nil)
     }
   }
 
@@ -267,17 +302,17 @@ class CreoleTranslator extends  CSTTranslator{
           case "t_expr" => children match {
             case t1 :: NonTerminal("arrow", _) :: t2 :: Nil => TFn(convertType(t1), convertType(t2))
             case NonTerminal("t_sum", _) :: Nil => convertType(children.head)
-            case _ =>  throw new MissingCSTTypeCaseException(nodeType, children)
+            case _ =>  throw MissingCSTTypeCaseException(nodeType, children)
           }
           case "t_sum" => children match {
             case t1 :: Terminal("\"+\"", _) :: t2 :: Nil => TSum(convertType(t1), convertType(t2))
             case NonTerminal("t_term", _) :: Nil => convertType(children.head)
-            case _ =>  throw new MissingCSTTypeCaseException(nodeType, children)
+            case _ =>  throw MissingCSTTypeCaseException(nodeType, children)
           }
           case "t_term" => children match {
             case t1 :: Terminal("\"*\"", _) :: t2 :: Nil => TProduct(convertType(t1), convertType(t2))
             case NonTerminal("t_fact", _) :: Nil => convertType(children.head)
-            case _ =>  throw new MissingCSTTypeCaseException(nodeType, children)
+            case _ =>  throw MissingCSTTypeCaseException(nodeType, children)
           }
           case "t_fact" => children match {
             case Terminal("\"bool\"", _) :: Nil => TSimple(new TBool)
@@ -285,10 +320,10 @@ class CreoleTranslator extends  CSTTranslator{
             case Terminal("\"unit\"", _) :: Nil => TSimple(new TUnit)
             case Terminal("\"(\"", _) :: t1 :: Terminal("\")\"", _) :: Nil => convertType(t1)
             case t1 :: Terminal("\"ref\"", _) :: Nil => TRef(convertType(t1))
-            case _ =>  throw new MissingCSTTypeCaseException(nodeType, children)
+            case _ =>  throw MissingCSTTypeCaseException(nodeType, children)
           }
         }
-      case Terminal(nodeType, _) => throw new MissingCSTTypeCaseException(nodeType, Nil)
+      case Terminal(nodeType, _) => throw MissingCSTTypeCaseException(nodeType, Nil)
     }
   }
 
@@ -297,9 +332,9 @@ class CreoleTranslator extends  CSTTranslator{
       case NonTerminal(nodeType, children) => children match {
         case NonTerminal("expr", _) :: Nil => convert(children.head) :: Nil
         case expr :: Terminal("\";\"", _) :: rest :: Nil => convert(expr) :: convertSequence(rest)
-        case _ => throw new MissingCSTCaseException(nodeType, children)
+        case _ => throw MissingCSTCaseException(nodeType, children)
       }
-      case Terminal(nodeType, _) => throw new MissingCSTCaseException(nodeType, Nil)
+      case Terminal(nodeType, _) => throw MissingCSTCaseException(nodeType, Nil)
     }
   }
 
@@ -316,9 +351,9 @@ class CreoleTranslator extends  CSTTranslator{
           case Terminal("\"inl\"", _) :: t :: Nil => SInl(convertType(t), e)
           case Terminal("\"inr\"", _) :: t :: Nil => SInr(convertType(t), e)
 
-          case _ => throw new MissingCSTCaseException(nodeType, children)
+          case _ => throw MissingCSTCaseException(nodeType, children)
         }
-      case Terminal(nodeType, _) => throw new MissingCSTCaseException(nodeType, Nil)
+      case Terminal(nodeType, _) => throw MissingCSTCaseException(nodeType, Nil)
     }
   }
 
@@ -330,10 +365,10 @@ class CreoleTranslator extends  CSTTranslator{
         case Terminal("\"true\"", _) :: Nil => SBoolean(true)
         case Terminal("\"false\"", _) :: Nil => SBoolean(false)
         case Terminal("what", _) :: Nil => SUnaryOp(new READ, new SUnit)
-        case _ => throw new  MissingCSTCaseException("const", children)
+        case _ => throw  MissingCSTCaseException("const", children)
       }
-      case NonTerminal(nodeType, children) =>  throw new MissingCSTCaseException(nodeType, children)
-      case _ :Terminal =>  throw new MissingCSTCaseException(c.nodeType, Nil)
+      case NonTerminal(nodeType, children) =>  throw MissingCSTCaseException(nodeType, children)
+      case _ :Terminal =>  throw MissingCSTCaseException(c.nodeType, Nil)
     }
   }
 }

@@ -2,6 +2,8 @@ package Typing
 
 import Exceptions.OccursCheckException
 
+import scala.collection.immutable.HashMap
+
 /**
   * Created by Al on 13/03/2017.
   */
@@ -11,7 +13,7 @@ sealed trait Type {
     val ct = t.prune()
     val cThis = this.prune()
     ct match {
-      case TVariable() => ct.unifyAux(cThis) // if t is a top level variable, then want to unify it
+      case TVariable(id) => ct.unifyAux(cThis) // if t is a top level variable, then want to unify it
       case _ => cThis.unifyAux(ct) // otherwise this is either a top level type variable or a defined type, so use this to unify
     }
   }
@@ -35,8 +37,7 @@ case class TSimple(s: SimpleType) extends Type {
   override def prune(): TSimple = this
 }
 
-case class TVariable() extends Type { // Variable type for use in the Creole language's milner Hindley Type system
-  val id: Int = newTypeParameter.apply
+case class TVariable(id: Int) extends Type { // Variable type for use in the Creole language's milner Hindley Type system
   var typeValue: Option[Type] = None
 
   override def pretty(): String = {
@@ -56,7 +57,7 @@ case class TVariable() extends Type { // Variable type for use in the Creole lan
           typeValue = Some(t)
           true
         } else {
-          throw new OccursCheckException(id)
+          throw OccursCheckException(id)
         }
        }
     }

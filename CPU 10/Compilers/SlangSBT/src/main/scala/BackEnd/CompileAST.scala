@@ -139,6 +139,8 @@ object CompileAST {
 
       case SVar(x) => (types, Nil, List(BLookup(find(vmap, x))))
       case SLetFun(f, lam1, t, e2) => comp(types, SApp(SLambda(new Lambda(f, e2, t)), SLambda(lam1)) , vmap)
+      case SLetVal(x, tOpt, e1, e2) =>
+        comp(types, SApp(SLambda(new Lambda(x, e2, tOpt)), e1), vmap)
       case SLambda(l) =>
         compLambda(types, vmap) (None, l.getArg, l.getExpr)
       case SLetRecFun(f, l, t, e2) =>
@@ -261,7 +263,7 @@ object CompileAST {
 
   private def find(list: List[(String, ValuePath)], id: String): ValuePath ={
     list match {
-      case Nil => throw new CompileFindException(id)
+      case Nil => throw CompileFindException(id)
       case (x, loc):: rest =>
         if (x == id) {
           loc

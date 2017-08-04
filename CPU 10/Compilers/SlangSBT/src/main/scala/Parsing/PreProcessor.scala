@@ -9,6 +9,8 @@ import scala.collection.immutable.Queue
   */
 object PreProcessor {
   def preProcess(s: String): String ={
+   s.replaceFirst("\\(\\*.*\\*\\)", "")
+
     val chars = s.toList
     val noComments = removeComments(chars)
     noComments.mkString("")
@@ -45,7 +47,7 @@ object PreProcessor {
   def endComment(input: List[Char]): List[Char] ={
     // scrolls to the end of the comment
     input match {
-      case Nil => throw new UnmatchedCommentException()
+      case Nil => throw UnmatchedCommentException()
       case '*' :: ')' :: rest => removeComments(rest)
       case c :: rest => endComment(rest)
     }

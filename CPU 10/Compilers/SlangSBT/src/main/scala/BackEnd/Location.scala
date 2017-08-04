@@ -1,4 +1,4 @@
 package BackEnd
 
-sealed class Location(var label: String, var codeIndex: Option[Int])
+case class Location(label: String, codeIndex: Option[Int])
 

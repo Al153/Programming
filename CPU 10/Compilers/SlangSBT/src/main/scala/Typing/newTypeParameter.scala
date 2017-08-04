@@ -12,4 +12,6 @@ object newTypeParameter {
     typeCounter += 1
     result
   }
+
+  def newVar(): Type = TVariable(apply)
 }

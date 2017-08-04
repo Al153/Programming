@@ -17,7 +17,7 @@ case class ADD() extends Operator {
     if (t1.unify(TSimple(TInt())) && t2.unify(TSimple(TInt()))) {
       TSimple(new TInt)
     } else {
-      throw new SlangTypeError("Operator +  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+      throw SlangTypeError("Operator +  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
     }
   }
 }
@@ -29,7 +29,7 @@ case class MUL() extends Operator {
     if (t1.unify(TSimple(TInt())) && t2.unify(TSimple(TInt()))) {
       TSimple(new TInt)
     } else {
-      throw new SlangTypeError("Operator *  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+      throw SlangTypeError("Operator *  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
     }
   }
 }
@@ -41,7 +41,7 @@ case class SUB() extends Operator {
     if (t1.unify(TSimple(TInt())) && t2.unify(TSimple(TInt()))) {
       TSimple(new TInt)
     } else {
-      throw new SlangTypeError("Operator -  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+      throw SlangTypeError("Operator -  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
     }
   }
 }
@@ -53,7 +53,7 @@ case class LT() extends Operator {
     if (t1.unify(TSimple(TInt())) && t2.unify(TSimple(TInt()))) {
       TSimple(new TBool)
     } else {
-      throw new SlangTypeError("Operator < does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+      throw SlangTypeError("Operator < does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
     }
   }
 }
@@ -66,7 +66,7 @@ case class AND() extends Operator {
     if (t1.unify(TSimple(TBool())) && t2.unify(TSimple(TBool()))) {
       TSimple(new TBool)
     } else {
-      throw new SlangTypeError("Operator && does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+      throw SlangTypeError("Operator && does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
     }
   }
 }
@@ -79,7 +79,7 @@ case class OR() extends Operator {
     if (t1.unify(TSimple(TBool())) && t2.unify(TSimple(TBool()))) {
       TSimple(new TBool)
     } else {
-      throw new SlangTypeError("Operator && does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+      throw SlangTypeError("Operator && does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
     }
   }
 }
@@ -98,32 +98,32 @@ case class EQ() extends Operator {
         if (t2.unify(TSimple(new TBool))) {
           TSimple(new TBool)
         } else {
-          throw new SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+          throw SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
         }
       case TSimple(TInt()) =>
         if (t2.unify(TSimple(new TInt))) {
           TSimple(new TBool)
         } else {
-          throw new SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+          throw SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
         }
-      case TVariable() =>
+      case TVariable(_) =>
         t2.prune() match {
           case TSimple(TBool()) =>
             if (t1.unify(TSimple(new TBool))) {
               TSimple(new TBool)
             } else {
-              throw new SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+              throw SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
             }
           case TSimple(TInt()) =>
             if (t1.unify(TSimple(new TInt))) {
               TSimple(new TBool)
             } else {
-              throw new SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+              throw SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
             }
-          case TVariable() =>
-            throw new SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+          case TVariable(_) =>
+            throw SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
         }
-      case _ => throw new SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
+      case _ => throw SlangTypeError("Operator =  does not take arguments of type: " + t1.pretty() + " and " + t2.pretty())
     }
   }
 }

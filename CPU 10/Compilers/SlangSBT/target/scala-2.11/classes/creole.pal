@@ -31,7 +31,9 @@ Grammar:
 	t_term -> t_term "*" t_fact | t_fact
 	t_fact -> "bool" | "int" | "unit" | "(" t_expr ")" | t_expr "ref"
 
-	expr -> expr addop term | term | lambda | let | assignment | while_loop | "begin" seq "end" | case_expr
+	expr -> sum | lambda | let | assignment | while_loop | "begin" seq "end" | case_expr
+
+    sum -> sum addop term | term
 
 	term -> term mulop factor | factor
 
@@ -44,15 +46,17 @@ Grammar:
 	seq -> expr | expr ";" seq
 	ternary_expr -> "if" expr "then" expr "else" expr "end"
 	while_loop -> "while" expr "do" expr "end"
-	lambda -> "fun" "(" id opt_t_expr ")" arrow expr "end"
-	let -> "let" let_defs "in" expr "end"
+	lambda -> "fun" id opt_t_expr arrow expr
+	let -> "let" let_defs "in" expr
 
 
     let_defs -> let_defs ";" let_def | let_def
     let_def -> let_val | let_fun
 
-	let_fun -> "fun" id "(" id opt_t_expr ")" opt_t_expr "=" expr
+	let_fun -> "fun" id opt_t_expr arg_list "=" expr
 	let_val -> "val" id opt_t_expr "=" expr
+
+	arg_list -> id opt_t_expr | id opt_t_expr arg_list
 
 	assignment -> value assop expr
 	case_expr -> "case" expr "of" "inl" "(" id opt_t_expr ")" arrow expr "|" "inr" "(" id opt_t_expr ")" arrow expr "end"

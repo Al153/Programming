@@ -5,10 +5,7 @@ package Exceptions
   */
 case class PALConfigTypeException (
                                     expectedType: String,
-                                    attributePath: List[String],
-                                    cause: Throwable = null
-                                  ) extends Exception(
-  "PAL config is has a type mismatch under path "
-    + attributePath.mkString(".")
-    + " Expected: " + expectedType,
-    cause)
+                                    attributePath: List[String]
+                                  ) extends Throwable{
+  override def toString = s"PAL config is has a type mismatch under path ${attributePath.mkString(".")} Expected: $expectedType"
+}

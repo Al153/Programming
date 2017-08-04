@@ -66,7 +66,7 @@ class Parser(var config: String) {
       "\nNear row: " + lookahead.getRow + " column: " + lookahead.getCol +
       "\nState: " + state + " expected tokens: " + getExpectedTransitions(state)
 
-    throw SlangSyntaxError(msg)
+    throw SlangSyntaxError(msg + "\n" + previous.map(x => x.pretty()).mkString(" "))
   }
 
   def getExpectedTransitions(state: Int): String ={

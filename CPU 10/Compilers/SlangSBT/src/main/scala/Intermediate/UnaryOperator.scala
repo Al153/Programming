@@ -18,7 +18,7 @@ case class NEG() extends UnaryOperator {
     if  (t.unify(TSimple(TInt()))) {
       TSimple(new TInt)
     } else {
-      throw new SlangTypeError("Unary Operator -  does not take argument of type: " + t.pretty())
+      throw SlangTypeError("Unary Operator -  does not take argument of type: " + t.pretty())
     }
   }
 }
@@ -31,7 +31,7 @@ case class NOT() extends UnaryOperator {
     if  (t.unify(TSimple(TBool()))) {
       TSimple(new TBool)
     } else {
-      throw new SlangTypeError("Unary Operator ~ does not take argument of type: " + t.pretty())
+      throw SlangTypeError("Unary Operator ~ does not take argument of type: " + t.pretty())
     }
   }
 }
@@ -43,7 +43,7 @@ case class READ() extends UnaryOperator {
     if  (t.unify(TSimple(TUnit()))) {
       TSimple(new TInt)
     } else {
-      throw new SlangTypeError("Unary Operator ? does not take argument of type: " + t.pretty())
+      throw SlangTypeError("Unary Operator ? does not take argument of type: " + t.pretty())
     }
   }
 }

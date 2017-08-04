@@ -31,7 +31,7 @@ class LexerConfiguration(configuration :JsObject, ruleNames:List[String]) {
 
 
         startState match {
-          case _:JsUndefined => throw new PALLexerStartError(name)
+          case _:JsUndefined => throw PALLexerStartError(name)
           case JsDefined(JsString(n)) =>
             val newDFA = buildDFA(dfaStates.as[JsObject], n, acceptingStates)
             buildDFAs(JSONdfas, rest, table + (name -> newDFA))

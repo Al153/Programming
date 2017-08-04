@@ -9,7 +9,7 @@ import play.api.libs.json.JsObject
 /**
   * Created by Al on 09/03/2017.
   */
-class Lexer(configuration :JsObject, ruleNames:List[String], elementaryTokens:List[String], toIgnore:List[String]){
+class Lexer(configuration: JsObject, ruleNames: List[String], elementaryTokens: List[String], toIgnore: List[String]){
   val dfas:Map[String,DFA] = new LexerConfiguration(configuration, ruleNames).getDFAs
 
   def lex(s: String) : List[Terminal] = {
@@ -18,14 +18,9 @@ class Lexer(configuration :JsObject, ruleNames:List[String], elementaryTokens:Li
     tokens.map(getToken)
   }
 
-  def pretty(indent: Int = 0): String ={
-    var str = ""
-    for ((name, dfa) <- dfas){
-      str += PrettyPrinter.indentation(indent) + name + ":\n"
-      str += dfa.pretty(indent)
-    }
-    str
-  }
+  def pretty(indent: Int = 0): String =
+    dfas.map{pair => val (name, dfa) = pair; s"${PrettyPrinter.indentation(indent) + name}:\n${dfa.pretty(indent)}"}.mkString("")
+
 
   def pickToken(s: String, rs: List[String], col: Int, row: Int) : Terminal = {
     rs match {
@@ -35,12 +30,13 @@ class Lexer(configuration :JsObject, ruleNames:List[String], elementaryTokens:Li
           case Some(dfa) => if (dfa.matchString(s)) {
             Terminal(r, s).rowIs(row).colIs(col)
           }else{
-            pickToken(s, rss, row, col)
+            pickToken(s, rss, col, row)
           }
         }
       case Nil => throw UnrecognisedTokenException(s)
     }
   }
+
   def split(s: String) : List[Token] = {
     split(s.toList, Nil, Nil, 1, 1).reverse
   }
@@ -89,6 +85,8 @@ class Lexer(configuration :JsObject, ruleNames:List[String], elementaryTokens:Li
     toIgnore.contains(tokenAsString)  || tokenAsString.isEmpty
   }
 }
+
+
 
 
 
